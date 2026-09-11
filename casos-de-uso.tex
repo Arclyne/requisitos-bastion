@@ -1,0 +1,236 @@
+%=====================================================================
+%  Casos de Uso - Documento base (solo estructura)
+%  Compilar con: pdflatex casos-de-uso.tex  (dos veces, por el indice)
+%=====================================================================
+\documentclass[11pt,letterpaper]{article}
+
+%---------------------------------------------------------------------
+% Paquetes
+%---------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[letterpaper,margin=2.5cm,includehead,headsep=8mm]{geometry}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{ragged2e}
+\usepackage[hidelinks]{hyperref}
+
+%---------------------------------------------------------------------
+% Datos del documento (editar aqui)
+%---------------------------------------------------------------------
+\newcommand{\tituloDoc}{Casos de Uso}
+\newcommand{\sistema}{Bastion}
+\newcommand{\versionDoc}{Versión 1.0}
+\newcommand{\fechaDoc}{\today}
+\newcommand{\organizacion}{Universidad Veracruzana}
+\newcommand{\encabezadoCorto}{Casos de uso para Bastion}
+
+%---------------------------------------------------------------------
+% Encabezado y pie de pagina
+%---------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\itshape\bfseries \encabezadoCorto}
+\fancyhead[R]{\footnotesize\itshape\bfseries Página \thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+%---------------------------------------------------------------------
+% Tipos de columna
+%---------------------------------------------------------------------
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{J}[1]{>{\justifying\arraybackslash}p{#1}}
+
+% Anchos de las columnas de la plantilla de caso de uso
+\newlength{\colEtiqueta}\setlength{\colEtiqueta}{0.20\textwidth}
+\newlength{\colValor}   \setlength{\colValor}{0.26\textwidth}
+\newlength{\colEtiquetaB}\setlength{\colEtiquetaB}{0.21\textwidth}
+\newlength{\colValorB}  \setlength{\colValorB}{0.21\textwidth}
+% Ancho de una celda que ocupa las 3 ultimas columnas
+\newlength{\colAncho}
+\setlength{\colAncho}{\dimexpr\colValor+\colEtiquetaB+\colValorB+4\tabcolsep+2\arrayrulewidth\relax}
+
+%---------------------------------------------------------------------
+% Plantilla de caso de uso
+%
+%   \begin{casodeuso}{CU-00. Nombre del caso de uso}
+%       \cuDoble{Creado Por:}{...}{Fecha de Creación:}{...}
+%       \cuFila{Actor Primario:}{...}
+%       ...
+%   \end{casodeuso}
+%---------------------------------------------------------------------
+\newenvironment{casodeuso}[1]
+{%
+  \par\vspace{1em}\noindent
+  \setlength{\extrarowheight}{2pt}%
+  \begin{longtable}{|L{\colEtiqueta}|L{\colValor}|L{\colEtiquetaB}|L{\colValorB}|}
+  \hline
+  \textbf{ID y Nombre del Caso de Uso:} & \multicolumn{3}{l|}{\textbf{#1}} \\ \hline
+  \endfirsthead
+  \hline
+  \multicolumn{4}{|l|}{\textit{#1 (continuación)}} \\ \hline
+  \endhead
+}
+{%
+  \end{longtable}\par\vspace{1em}%
+}
+
+% Fila simple: etiqueta + contenido a todo lo ancho
+\newcommand{\cuFila}[2]{#1 & \multicolumn{3}{J{\colAncho}|}{#2} \\ \hline}
+
+% Fila doble: dos pares etiqueta/valor en el mismo renglon
+\newcommand{\cuDoble}[4]{#1 & #2 & #3 & #4 \\ \hline}
+
+% Lista numerada compacta para flujos
+\newenvironment{flujo}
+{\begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=1pt,parsep=0pt]}
+{\end{enumerate}}
+
+%=====================================================================
+\begin{document}
+
+%---------------------------------------------------------------------
+% PORTADA
+%---------------------------------------------------------------------
+\thispagestyle{empty}
+\noindent\rule{\textwidth}{2pt}
+\begin{flushright}
+  {\Huge\bfseries\sffamily \tituloDoc}\\[2.5em]
+  {\large\bfseries\sffamily para}\\[2.5em]
+  {\Huge\bfseries\sffamily \sistema}\\[2.5em]
+  {\large\bfseries\sffamily \versionDoc}\\[2.5em]
+  {\large\bfseries\sffamily Preparado por}\\[2.5em]
+  {\large\bfseries\sffamily Autor}\\[2.5em]
+  {\large\bfseries\sffamily \organizacion}\\[2.5em]
+  {\large\bfseries\sffamily \fechaDoc}
+\end{flushright}
+\newpage
+
+%---------------------------------------------------------------------
+% SECCIÓN 1: HISTORIAL DE REVISIÓN
+%---------------------------------------------------------------------
+\section*{Historial de revisión}
+\addcontentsline{toc}{section}{Historial de revisión}
+
+\noindent
+\begin{longtable}{|L{0.22\textwidth}|L{0.14\textwidth}|L{0.40\textwidth}|L{0.14\textwidth}|}
+\hline
+\textbf{Nombre} & \textbf{Fecha} & \textbf{Razón de cambios} & \textbf{Versión} \\ \hline
+\endfirsthead
+\hline
+\textbf{Nombre} & \textbf{Fecha} & \textbf{Razón de cambios} & \textbf{Versión} \\ \hline
+\endhead
+  &   &   &   \\ \hline
+  &   &   &   \\ \hline
+\end{longtable}
+\newpage
+
+%---------------------------------------------------------------------
+% SECCIÓN 2: LISTA DE CASOS DE USO
+%---------------------------------------------------------------------
+\section*{Lista de Casos de Uso}
+\addcontentsline{toc}{section}{Lista de Casos de Uso}
+
+\noindent
+\begin{longtable}{|L{0.35\textwidth}|L{0.55\textwidth}|}
+\hline
+\textbf{\textit{Actor primario}} & \textbf{\textit{Caso de uso}} \\ \hline
+\endfirsthead
+\hline
+\textbf{\textit{Actor primario}} & \textbf{\textit{Caso de uso}} \\ \hline
+\endhead
+  & CU-01  \\ \hline
+  & CU-02  \\ \hline
+  & CU-03  \\ \hline
+\end{longtable}
+\newpage
+
+%---------------------------------------------------------------------
+% SECCIÓN 3: CASOS DE USO
+%---------------------------------------------------------------------
+\section*{Casos de uso}
+\addcontentsline{toc}{section}{Casos de uso}
+
+%---------------------------- CU-01 ----------------------------------
+\begin{casodeuso}{CU-01. Nombre del caso de uso}
+  \cuDoble{Creado Por:}{}{Fecha de Creación:}{}
+  \cuDoble{Actor Primario:}{}{Actores Secundarios:}{}
+  \cuFila{Disparador:}{}
+  \cuFila{Descripción:}{}
+  \cuFila{Precondiciones:}{PRE-01: }
+  \cuFila{Postcondiciones:}{POS-01: }
+  \cuFila{Flujo Normal:}{%
+    \begin{flujo}
+      \item
+      \item Termina el caso de uso
+    \end{flujo}}
+  \cuFila{Flujos Alternativos:}{FA-01:
+    \begin{flujo}
+      \item
+    \end{flujo}}
+  \cuFila{Excepciones:}{EX-01:
+    \begin{flujo}
+      \item
+    \end{flujo}}
+  \cuFila{Prioridad:}{}
+  \cuFila{Frecuencia de Uso:}{}
+  \cuFila{Reglas de Negocio:}{RN-}
+  \cuFila{Otra Información:}{N/A}
+  \cuFila{Suposiciones:}{N/A}
+\end{casodeuso}
+
+%---------------------------- CU-02 ----------------------------------
+\begin{casodeuso}{CU-02. Nombre del caso de uso}
+  \cuDoble{Creado Por:}{}{Fecha de Creación:}{}
+  \cuDoble{Actor Primario:}{}{Actores Secundarios:}{}
+  \cuFila{Disparador:}{}
+  \cuFila{Descripción:}{}
+  \cuFila{Precondiciones:}{PRE-01: }
+  \cuFila{Postcondiciones:}{POS-01: }
+  \cuFila{Flujo Normal:}{%
+    \begin{flujo}
+      \item
+      \item Termina el caso de uso
+    \end{flujo}}
+  \cuFila{Flujos Alternativos:}{FA-01:
+    \begin{flujo}
+      \item
+    \end{flujo}}
+  \cuFila{Excepciones:}{EX-01:
+    \begin{flujo}
+      \item
+    \end{flujo}}
+  \cuFila{Prioridad:}{}
+  \cuFila{Frecuencia de Uso:}{}
+  \cuFila{Reglas de Negocio:}{RN-}
+  \cuFila{Otra Información:}{N/A}
+  \cuFila{Suposiciones:}{N/A}
+\end{casodeuso}
+
+% Copiar el bloque anterior para CU-03, CU-04, ... CU-NN
+
+\newpage
+
+%---------------------------------------------------------------------
+% SECCIÓN 4: REGLAS DE NEGOCIO
+%---------------------------------------------------------------------
+\section*{Reglas de Negocio}
+\addcontentsline{toc}{section}{Reglas de Negocio}
+
+\noindent
+\begin{longtable}{|L{0.20\textwidth}|J{0.45\textwidth}|L{0.22\textwidth}|}
+\hline
+\textbf{ID Regla} & \textbf{Regla del Negocio} & \textbf{Tipo} \\ \hline
+\endfirsthead
+\hline
+\textbf{ID Regla} & \textbf{Regla del Negocio} & \textbf{Tipo} \\ \hline
+\endhead
+RN-01 &   & Restricción \\ \hline
+RN-02 &   & Restricción \\ \hline
+RN-03 &   & Restricción \\ \hline
+\end{longtable}
+
+\end{document}

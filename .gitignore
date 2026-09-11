@@ -1,0 +1,9 @@
+casos-de-uso.pdf
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex*
+.DS_Store
