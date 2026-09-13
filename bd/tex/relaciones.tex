@@ -1,0 +1,97 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/bastion.sql. No editar a mano.
+\begin{center}\small
+\begin{longtable}{|L{0.2\textwidth}|L{0.2\textwidth}|L{0.1\textwidth}|L{0.38\textwidth}|}
+\hline
+\textbf{Entidad padre} & \textbf{Entidad hija} & \textbf{Card.} & \textbf{Significado} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad padre} & \textbf{Entidad hija} & \textbf{Card.} & \textbf{Significado} \\ \hline
+\endhead
+\multicolumn{4}{|l|}{\textbf{Catálogos precargados (\mbox{D-09})}} \\ \hline
+\textit{Ranura} & \textit{Objeto\-Cosmetico} & 1:N & Una ranura agrupa muchos objetos; cada objeto pertenece a una ranura. \\ \hline
+\textit{Tipo\-Caja} & \textit{Tipo\-Caja\-Objeto} & 1:N & Un tipo de caja tiene muchos objetos posibles. \\ \hline
+\textit{Objeto\-Cosmetico} & \textit{Tipo\-Caja\-Objeto} & 1:N & Un objeto puede salir en muchos tipos de caja. \\ \hline
+\multicolumn{4}{|l|}{\textbf{Cuenta y acceso}} \\ \hline
+\textit{Usuario} & \textit{Sesion} & 1:N & Un usuario abre muchas sesiones; cada sesión es de un usuario. \\ \hline
+\textit{Usuario} & \textit{Codigo\-Segundo\-Factor} & 1:N & Un usuario recibe muchos códigos a lo largo del tiempo. \\ \hline
+\textit{Usuario} & \textit{Token\-Verificacion\-Correo} & 1:N & Un usuario recibe muchos tokens de verificación. \\ \hline
+\textit{Usuario} & \textit{Token\-Recuperacion} & 1:N & Un usuario solicita muchas recuperaciones a lo largo del tiempo. \\ \hline
+\textit{Usuario} & \textit{Aceptacion\-Terminos} & 1:N & Un usuario acepta una o más versiones de los términos. \\ \hline
+\multicolumn{4}{|l|}{\textbf{Perfil y personalización}} \\ \hline
+\textit{Usuario} & \textit{Historial\-Nickname} & 1:1 & Un usuario tiene a lo sumo un cambio de nombre registrado. \\ \hline
+\textit{Usuario} & \textit{Avatar} & 1:N & Un usuario sube muchos avatares; solo uno está vigente. \\ \hline
+\textit{Usuario} & \textit{Enlace\-Red} & 1:N & Un usuario publica hasta cuatro enlaces. \\ \hline
+\textit{Usuario} & \textit{Usuario\-Objeto} & 1:N & Un usuario posee muchos objetos. \\ \hline
+\textit{Objeto\-Cosmetico} & \textit{Usuario\-Objeto} & 1:N & Un objeto lo poseen muchos usuarios. \\ \hline
+\textit{Usuario\-Objeto} & \textit{Equipamiento} & 1:0..1 & Solo se equipa lo que se posee (\mbox{CU-14} \mbox{RN-02}); un objeto poseído está equipado a lo sumo en una ranura. \\ \hline
+\textit{Objeto\-Cosmetico} & \textit{Equipamiento} & 1:N & El objeto equipado pertenece a la ranura de la fila. \\ \hline
+\textit{Ranura} & \textit{Equipamiento} & 1:N & Cada usuario tiene una fila por ranura del catálogo. \\ \hline
+\multicolumn{4}{|l|}{\textbf{Partida}} \\ \hline
+\textit{Modo} & \textit{Partida} & 1:N & Un modo se juega en muchas partidas; cada partida es de un modo. \\ \hline
+\textit{Nivel\-IA} & \textit{Partida} & 0..1:N & Un nivel de IA se enfrenta en muchas partidas; solo las de tipo IA lo tienen. \\ \hline
+\textit{Participacion} & \textit{Partida} & 0..1:0..1 & El ganador, si lo hay, es uno de los participantes de la misma partida. \\ \hline
+\textit{Partida} & \textit{Participacion} & 1:N & Una partida tiene de 1 a 4 participaciones (1 contra la IA). \\ \hline
+\textit{Usuario} & \textit{Participacion} & 1:N & Un usuario participa en muchas partidas. \\ \hline
+\textit{Participacion} & \textit{Participacion\-Objeto} & 1:N & Una participación fija un objeto por cada ranura. \\ \hline
+\textit{Objeto\-Cosmetico} & \textit{Participacion\-Objeto} & 1:N & Un objeto aparece en muchas participaciones, siempre en su ranura. \\ \hline
+\textit{Partida} & \textit{Jugada} & 1:N & Una partida tiene muchas jugadas. \\ \hline
+\textit{Participacion} & \textit{Jugada} & 0..1:N & Un participante hace muchas jugadas; las de la IA no tienen participante. \\ \hline
+\textit{Participacion} & \textit{Oferta\-Tablas} & 1:N & Un participante hace muchas ofertas en su partida. \\ \hline
+\textit{Participacion} & \textit{Enlace\-Espectador} & 1:N & Un participante comparte uno o más enlaces de su partida. \\ \hline
+\multicolumn{4}{|l|}{\textbf{Emparejamiento, salas y chat}} \\ \hline
+\textit{Usuario} & \textit{Cola\-Emparejamiento} & 1:0..1 & Un usuario ocupa a lo sumo un lugar en la cola. \\ \hline
+\textit{Modo} & \textit{Cola\-Emparejamiento} & 1:N & En la cola de un modo esperan muchos jugadores. \\ \hline
+\textit{Usuario} & \textit{Sala} & 1:N & Un usuario es anfitrión de muchas salas a lo largo del tiempo. \\ \hline
+\textit{Modo} & \textit{Sala} & 1:N & Un modo se juega en muchas salas. \\ \hline
+\textit{Partida} & \textit{Sala} & 0..1:0..1 & Una sala inicia a lo sumo una partida; una partida privada viene de una sala. \\ \hline
+\textit{Sala} & \textit{Sala\-Participante} & 1:N & Una sala tiene de 1 a 4 miembros. \\ \hline
+\textit{Usuario} & \textit{Sala\-Participante} & 1:0..1 & Un usuario ocupa a lo sumo una plaza. \\ \hline
+\textit{Sala} & \textit{Invitacion} & 1:N & Una sala recibe muchas invitaciones. \\ \hline
+\textit{Usuario} & \textit{Invitacion} & 1:N & Un usuario envía muchas invitaciones (rol emisor). \\ \hline
+\textit{Usuario} & \textit{Invitacion} & 1:N & Un usuario recibe muchas invitaciones (rol destinatario). \\ \hline
+\textit{Usuario} & \textit{Mensaje} & 1:N & Un usuario escribe muchos mensajes. \\ \hline
+\textit{Partida} & \textit{Mensaje} & 0..1:N & Una partida tiene muchos mensajes de jugadores y de espectadores. \\ \hline
+\textit{Sala} & \textit{Mensaje} & 0..1:N & Una sala tiene muchos mensajes de espera. \\ \hline
+\multicolumn{4}{|l|}{\textbf{Clasificación y economía}} \\ \hline
+\textit{Usuario} & \textit{Estadistica\-Modo} & 1:N & Un usuario tiene una fila de estadísticas por cada modo. \\ \hline
+\textit{Modo} & \textit{Estadistica\-Modo} & 1:N & Un modo tiene estadísticas de muchos usuarios. \\ \hline
+\textit{Division} & \textit{Estadistica\-Modo} & 0..1:N & En una división hay muchos jugadores de cada modo. \\ \hline
+\textit{Estadistica\-Modo} & \textit{Historial\-Division} & 1:N & Las estadísticas de un modo acumulan muchos cambios de división. \\ \hline
+\textit{Division} & \textit{Historial\-Division} & 0..1:N & Una división es el origen de muchos cambios (rol anterior). \\ \hline
+\textit{Division} & \textit{Historial\-Division} & 1:N & Una división es el destino de muchos cambios (rol nueva). \\ \hline
+\textit{Usuario} & \textit{Caja} & 1:N & Un usuario tiene muchas cajas. \\ \hline
+\textit{Tipo\-Caja} & \textit{Caja} & 1:N & Un tipo de caja se concreta en muchas cajas. \\ \hline
+\textit{Caja} & \textit{Caja\-Contenido} & 1:N & Una caja abierta tiene tres objetos. \\ \hline
+\textit{Objeto\-Cosmetico} & \textit{Caja\-Contenido} & 1:N & Un objeto sale en muchas cajas. \\ \hline
+\textit{Usuario} & \textit{Movimiento\-Moneda} & 1:N & Un usuario acumula muchos movimientos. \\ \hline
+\textit{Partida} & \textit{Movimiento\-Moneda} & 0..1:N & Una partida clasificatoria genera un movimiento por participante. \\ \hline
+\textit{Objeto\-Cosmetico} & \textit{Movimiento\-Moneda} & 0..1:N & Un objeto aparece en muchos movimientos de compra o conversión. \\ \hline
+\textit{Caja} & \textit{Movimiento\-Moneda} & 0..1:N & Una caja genera su cobro y sus conversiones. \\ \hline
+\multicolumn{4}{|l|}{\textbf{Relaciones entre jugadores y tutorial}} \\ \hline
+\textit{Usuario} & \textit{Amistad} & 1:N & Un usuario es amigo de muchos (como el menor del par). \\ \hline
+\textit{Usuario} & \textit{Amistad} & 1:N & Un usuario es amigo de muchos (como el mayor del par). \\ \hline
+\textit{Usuario} & \textit{Solicitud} & 1:N & Un usuario envía muchas solicitudes (rol solicitante). \\ \hline
+\textit{Usuario} & \textit{Solicitud} & 1:N & Un usuario recibe muchas solicitudes (rol destinatario). \\ \hline
+\textit{Usuario} & \textit{Silencio} & 1:N & Un usuario silencia a muchos (rol quien silencia). \\ \hline
+\textit{Usuario} & \textit{Silencio} & 1:N & Un usuario es silenciado por muchos (rol silenciado). \\ \hline
+\textit{Usuario} & \textit{Bloqueo} & 1:N & Un usuario bloquea a muchos (rol bloqueador). \\ \hline
+\textit{Usuario} & \textit{Bloqueo} & 1:N & Un usuario es bloqueado por muchos (rol bloqueado). \\ \hline
+\textit{Usuario} & \textit{Progreso\-Tutorial} & 1:N & Un usuario avanza en muchas lecciones. \\ \hline
+\textit{Leccion} & \textit{Progreso\-Tutorial} & 1:N & Una lección la cursan muchos usuarios. \\ \hline
+\multicolumn{4}{|l|}{\textbf{Moderación y bitácoras}} \\ \hline
+\textit{Usuario} & \textit{Reporte} & 1:N & Un usuario emite muchos reportes (relación Emite del diagrama). \\ \hline
+\textit{Usuario} & \textit{Reporte} & 1:N & Un usuario recibe muchos reportes (relación Señala del diagrama). \\ \hline
+\textit{Motivo\-Reporte} & \textit{Reporte} & 1:N & Un motivo clasifica muchos reportes. \\ \hline
+\textit{Partida} & \textit{Reporte} & 0..1:N & Una partida es prueba de muchos reportes (relación Sobre del diagrama). \\ \hline
+\textit{Usuario} & \textit{Reporte} & 0..1:N & Un moderador revisa muchos reportes. \\ \hline
+\textit{Usuario} & \textit{Sancion} & 1:N & Un usuario recibe muchas sanciones (relación Recibe del diagrama). \\ \hline
+\textit{Usuario} & \textit{Sancion} & 1:N & Un moderador aplica muchas sanciones. \\ \hline
+\textit{Reporte} & \textit{Sancion} & 0..1:N & Un reporte origina ninguna, una o varias sanciones (relación Origina del diagrama). \\ \hline
+\textit{Sancion} & \textit{Sancion} & 0..1:0..1 & Una sanción puede ser sustituida por otra posterior. \\ \hline
+\textit{Sancion} & \textit{Apelacion} & 1:0..1 & Una sanción tiene a lo sumo una apelación. \\ \hline
+\textit{Usuario} & \textit{Apelacion} & 0..1:N & Un moderador resuelve muchas apelaciones. \\ \hline
+\textit{Usuario} & \textit{Bitacora\-Moderacion} & 1:N & Un usuario realiza muchas acciones registradas (rol autor). \\ \hline
+\textit{Usuario} & \textit{Bitacora\-Moderacion} & 0..1:N & Un usuario es objeto de muchas acciones (rol afectado). \\ \hline
+\textit{Usuario} & \textit{Bitacora\-Acceso} & 0..1:N & Una cuenta acumula muchos registros de acceso. \\ \hline
+\end{longtable}
+\end{center}

@@ -1,0 +1,58 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/bastion.sql. No editar a mano.
+\begin{center}\small
+\begin{longtable}{|L{0.19\textwidth}|L{0.23\textwidth}|L{0.08\textwidth}|L{0.38\textwidth}|}
+\hline
+\textbf{Entidad} & \textbf{Llaves candidatas} & \textbf{Forma} & \textbf{Justificación} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad} & \textbf{Llaves candidatas} & \textbf{Forma} & \textbf{Justificación} \\ \hline
+\endhead
+\textit{Ranura} & (\texttt{id\_\allowbreak{}ranura}); (\texttt{nombre}) & FNBC & Llave simple; \texttt{nombre} depende solo de ella y es llave candidata. \\ \hline
+\textit{Objeto\-Cosmetico} & (\texttt{id\_\allowbreak{}objeto}) & FNBC & Llave simple. De la ranura se guarda solo su llave, no sus datos. (\texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}ranura}) es superllave, no llave candidata: existe para las llaves foráneas compuestas. \\ \hline
+\textit{Modo} & (\texttt{id\_\allowbreak{}modo}); (\texttt{nombre}) & FNBC & Llave simple. Recoge \texttt{num\_\allowbreak{}jugadores}, que en el diagrama estaba en \textit{Partida} y dependía de ella a través del modo. \\ \hline
+\textit{Division} & (\texttt{id\_\allowbreak{}division}); (\texttt{nombre}); (\texttt{orden}) & FNBC & Llave simple; \texttt{nombre} y \texttt{orden} son llaves candidatas. \\ \hline
+\textit{Nivel\-IA} & (\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}); (\texttt{nombre}) & FNBC & Llave simple; \texttt{nombre} es llave candidata. \\ \hline
+\textit{Leccion} & (\texttt{id\_\allowbreak{}leccion}); (\texttt{orden}) & FNBC & Llave simple; \texttt{orden} es llave candidata. \\ \hline
+\textit{Tipo\-Caja} & (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}); (\texttt{nombre}) & FNBC & Llave simple; \texttt{nombre} es llave candidata. \\ \hline
+\textit{Tipo\-Caja\-Objeto} & (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}, \texttt{id\_\allowbreak{}objeto}) & FNBC & Llave compuesta; \texttt{probabilidad} depende del par completo: el mismo objeto tiene probabilidades distintas en cajas distintas. \\ \hline
+\textit{Palabra\-Prohibida} & (\texttt{id\_\allowbreak{}palabra}); (\texttt{termino}, \texttt{idioma}, \texttt{ambito}) & FNBC & Llave sustituta; la natural (\texttt{termino}, \texttt{idioma}, \texttt{ambito}) se declara única. \\ \hline
+\textit{Motivo\-Reporte} & (\texttt{id\_\allowbreak{}motivo}); (\texttt{nombre}) & FNBC & Llave simple. Sustituye al texto \texttt{motivo} del \textit{Reporte} del diagrama, que repetía la misma descripción en cada reporte. \\ \hline
+\textit{Usuario} & (\texttt{id\_\allowbreak{}usuario}); (\texttt{nickname}) & FNBC & Llave simple; \texttt{nickname} es llave candidata. Sin el atributo compuesto \texttt{nombre\_\allowbreak{}completo} ni el derivado edad del diagrama. \texttt{saldo\_\allowbreak{}monedas} es redundancia controlada. \\ \hline
+\textit{Sesion} & (\texttt{id\_\allowbreak{}sesion}); (\texttt{token\_\allowbreak{}hash}) & FNBC & Llave simple; \texttt{token\_\allowbreak{}hash} es llave candidata. \\ \hline
+\textit{Codigo\-Segundo\-Factor} & (\texttt{id\_\allowbreak{}codigo}) & FNBC & Llave simple. \texttt{estado} sustituye a dos indicadores, consumido e invalidado, que no pueden ser verdaderos a la vez. \\ \hline
+\textit{Token\-Verificacion\-Correo} & (\texttt{id\_\allowbreak{}token}); (\texttt{token\_\allowbreak{}hash}) & FNBC & Llave simple; \texttt{token\_\allowbreak{}hash} es llave candidata. En \texttt{ALTA} no guarda el correo, que sería una copia del de \textit{Usuario}; el correo pendiente vive aquí y no en \textit{Usuario} (\mbox{CU-09}). \\ \hline
+\textit{Token\-Recuperacion} & (\texttt{id\_\allowbreak{}token}) & FNBC & Llave simple. \\ \hline
+\textit{Aceptacion\-Terminos} & (\texttt{id\_\allowbreak{}aceptacion}); (\texttt{id\_\allowbreak{}usuario}, \texttt{version\_\allowbreak{}terminos}) & FNBC & Llave sustituta; (\texttt{id\_\allowbreak{}usuario}, \texttt{version\_\allowbreak{}terminos}) es llave candidata. \\ \hline
+\textit{Historial\-Nickname} & (\texttt{id\_\allowbreak{}usuario}) & FNBC & La llave es la llave foránea: relación 1:0..1 con \textit{Usuario}. El nombre vigente se lee de \textit{Usuario}; aquí queda el que ya no está (\mbox{CU-13}). \\ \hline
+\textit{Avatar} & (\texttt{id\_\allowbreak{}avatar}) & FNBC & Llave simple. \\ \hline
+\textit{Enlace\-Red} & (\texttt{id\_\allowbreak{}enlace}); (\texttt{id\_\allowbreak{}usuario}, \texttt{orden}) & FNBC & Llave sustituta; (\texttt{id\_\allowbreak{}usuario}, \texttt{orden}) es llave candidata. \\ \hline
+\textit{Usuario\-Objeto} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & FNBC & Llave compuesta; \texttt{fecha\_\allowbreak{}obtencion} y \texttt{origen} dependen del par usuario-objeto completo. Es la relación Posee del diagrama. \\ \hline
+\textit{Equipamiento} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}ranura}); (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & 3FN & Llaves candidatas (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}ranura}) e (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}). La dependencia \texttt{id\_\allowbreak{}objeto} $\rightarrow$ \texttt{id\_\allowbreak{}ranura} parte de algo que no es superllave, pero \texttt{id\_\allowbreak{}ranura} es atributo primo: cumple 3FN y no FNBC. La llave foránea compuesta impide que ranura y objeto se contradigan. \\ \hline
+\textit{Partida} & (\texttt{id\_\allowbreak{}partida}) & FNBC & Llave simple. Sin \texttt{num\_\allowbreak{}jugadores} ni la duración del diagrama (dependencia transitiva y dato derivado). \texttt{tipo} es discriminador; \texttt{id\_\allowbreak{}ganador} es redundancia controlada. \\ \hline
+\textit{Participacion} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}); (\texttt{id\_\allowbreak{}partida}, \texttt{orden\_\allowbreak{}turno}) & FNBC & Llaves candidatas (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) e (\texttt{id\_\allowbreak{}partida}, \texttt{orden\_\allowbreak{}turno}). \texttt{diferencia\_\allowbreak{}elo} pasó a calculada porque dependía de \texttt{elo\_\allowbreak{}inicial} y \texttt{elo\_\allowbreak{}final}. \\ \hline
+\textit{Participacion\-Objeto} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}ranura}); (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & 3FN & Mismo caso que \textit{Equipamiento}: \texttt{id\_\allowbreak{}objeto} $\rightarrow$ \texttt{id\_\allowbreak{}ranura} con \texttt{id\_\allowbreak{}ranura} dentro de la llave; cumple 3FN y no FNBC. \\ \hline
+\textit{Jugada} & (\texttt{id\_\allowbreak{}partida}, \texttt{numero\_\allowbreak{}jugada}) & FNBC & Llave compuesta; cada atributo describe la jugada entera. \texttt{tipo} discrimina qué casillas aplican. \\ \hline
+\textit{Oferta\-Tablas} & (\texttt{id\_\allowbreak{}oferta}) & FNBC & Llave simple. \\ \hline
+\textit{Enlace\-Espectador} & (\texttt{id\_\allowbreak{}enlace}); (\texttt{token\_\allowbreak{}hash}) & FNBC & Llave simple; \texttt{token\_\allowbreak{}hash} es llave candidata. \\ \hline
+\textit{Cola\-Emparejamiento} & (\texttt{id\_\allowbreak{}usuario}) & FNBC & La llave es la llave foránea: relación 1:0..1 con \textit{Usuario}. \texttt{elo} es el valor al entrar, no una copia viva de \textit{EstadisticaModo}. \\ \hline
+\textit{Sala} & (\texttt{id\_\allowbreak{}sala}) & FNBC & Llave simple. \texttt{codigo} solo es único entre las salas no cerradas, así que no es llave candidata. \\ \hline
+\textit{Sala\-Participante} & (\texttt{id\_\allowbreak{}usuario}); (\texttt{id\_\allowbreak{}sala}, \texttt{plaza}) & FNBC & La llave es \texttt{id\_\allowbreak{}usuario}: un jugador está en una sola sala a la vez (\mbox{CU-18} \mbox{RN-02}). (\texttt{id\_\allowbreak{}sala}, \texttt{plaza}) es llave candidata. \\ \hline
+\textit{Invitacion} & (\texttt{id\_\allowbreak{}invitacion}) & FNBC & Llave simple. \\ \hline
+\textit{Mensaje} & (\texttt{id\_\allowbreak{}mensaje}) & FNBC & Llave simple; \texttt{canal} discrimina si aplica partida o sala. \\ \hline
+\textit{Estadistica\-Modo} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}modo}) & FNBC & Llave compuesta usuario-modo; cada contador depende de los dos. Sustituye a la entidad Estadísticas 1:1 del diagrama, que habría obligado a repetir los contadores de cada modo. Sin el derivado \texttt{porcentaje\_\allowbreak{}victorias}. Los contadores son redundancia controlada. \\ \hline
+\textit{Historial\-Division} & (\texttt{id\_\allowbreak{}historial\_\allowbreak{}division}) & FNBC & Llave simple. \\ \hline
+\textit{Caja} & (\texttt{id\_\allowbreak{}caja}) & FNBC & Llave simple. \\ \hline
+\textit{Caja\-Contenido} & (\texttt{id\_\allowbreak{}caja}, \texttt{numero}) & FNBC & Llave compuesta. \texttt{convertido} pasó a calculada porque dependía de \texttt{monedas\_\allowbreak{}conversion}. \\ \hline
+\textit{Movimiento\-Moneda} & (\texttt{id\_\allowbreak{}movimiento}) & FNBC & Llave simple; \texttt{tipo} discrimina qué origen aplica. \\ \hline
+\textit{Amistad} & (\texttt{id\_\allowbreak{}usuario\_\allowbreak{}a}, \texttt{id\_\allowbreak{}usuario\_\allowbreak{}b}) & FNBC & Llave compuesta de par ordenado: el CHECK impide guardar la misma amistad en los dos sentidos. \\ \hline
+\textit{Solicitud} & (\texttt{id\_\allowbreak{}solicitud}); (\texttt{id\_\allowbreak{}solicitante}, \texttt{id\_\allowbreak{}destinatario}) & FNBC & Llave sustituta; (\texttt{id\_\allowbreak{}solicitante}, \texttt{id\_\allowbreak{}destinatario}) es llave candidata. \\ \hline
+\textit{Silencio} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}silenciado}) & FNBC & Llave compuesta; \texttt{fecha\_\allowbreak{}silencio} depende del par completo. \\ \hline
+\textit{Bloqueo} & (\texttt{id\_\allowbreak{}bloqueador}, \texttt{id\_\allowbreak{}bloqueado}) & FNBC & Llave compuesta; \texttt{fecha\_\allowbreak{}bloqueo} depende del par completo. \\ \hline
+\textit{Progreso\-Tutorial} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}leccion}) & FNBC & Llave compuesta usuario-lección. \texttt{completada} pasó a calculada porque dependía de \texttt{fecha\_\allowbreak{}completada}. \\ \hline
+\textit{Reporte} & (\texttt{id\_\allowbreak{}reporte}) & FNBC & Llave simple. El motivo pasó a catálogo (\textit{MotivoReporte}). \\ \hline
+\textit{Sancion} & (\texttt{id\_\allowbreak{}sancion}) & FNBC & Llave simple. \texttt{activa} pasó a calculada porque dependía de \texttt{fecha\_\allowbreak{}retiro}. Sin \texttt{num\_\allowbreak{}reportes} ni activo del Baneo del diagrama, que eran derivados. \texttt{tipo} es discriminador. \\ \hline
+\textit{Apelacion} & (\texttt{id\_\allowbreak{}apelacion}); (\texttt{id\_\allowbreak{}sancion}) & FNBC & Llave sustituta; \texttt{id\_\allowbreak{}sancion} es llave candidata. \\ \hline
+\textit{Bitacora\-Moderacion} & (\texttt{id\_\allowbreak{}bitacora}) & FNBC & Llave simple; solo admite inserción. \\ \hline
+\textit{Bitacora\-Acceso} & (\texttt{id\_\allowbreak{}bitacora}) & FNBC & Llave simple; solo admite inserción. \\ \hline
+\end{longtable}
+\end{center}

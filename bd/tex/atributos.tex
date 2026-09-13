@@ -1,0 +1,532 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/bastion.sql. No editar a mano.
+\subsubsection*{Catálogos precargados (\mbox{D-09})} 
+\atributosde{Ranura}{Catálogo de las seis ranuras de personalización: peón, muro, tablero, título, marco y emotes (\mbox{D-03}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}ranura} & \texttt{TINYINT} & No & PK & Identificador de la ranura. \\ \hline
+\texttt{nombre} & \texttt{VARCHAR(20)} & No & UQ & \texttt{PEON}, \texttt{MURO}, \texttt{TABLERO}, \texttt{TITULO}, \texttt{MARCO} o \texttt{EMOTES}. Sin CHECK: añadir una ranura es insertar una fila (\mbox{CU-14}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{ObjetoCosmetico}{Catálogo de objetos cosméticos. Cada objeto pertenece a una sola ranura (\mbox{D-03}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & PK & Identificador del objeto. \\ \hline
+\texttt{id\_\allowbreak{}ranura} & \texttt{TINYINT} & No & FK & Ranura en la que se equipa. \\ \hline
+\texttt{nombre} & \texttt{NVARCHAR(60)} & No &  & Nombre visible. \\ \hline
+\texttt{rareza} & \texttt{VARCHAR(10)} & No &  & \texttt{COMUN}, \texttt{RARO}, \texttt{EPICO} o \texttt{LEGENDARIO}. \\ \hline
+\texttt{precio} & \texttt{INT} & No &  & Precio en monedas del juego; el válido es este y no el del cliente (\mbox{CU-38} \mbox{RN-03}). Por omisión, \texttt{0}. \\ \hline
+\texttt{nivel\_\allowbreak{}requerido} & \texttt{SMALLINT} & No &  & Nivel mínimo para comprarlo (\mbox{CU-38} \mbox{RN-04}). Por omisión, \texttt{1}. \\ \hline
+\texttt{a\_\allowbreak{}la\_\allowbreak{}venta} & \texttt{BIT} & No &  & Si se ofrece en la tienda. Por omisión, \texttt{0}. \\ \hline
+\texttt{activo} & \texttt{BIT} & No &  & En falso, retirado del catálogo; quien lo tiene equipado lo conserva (\mbox{CU-14} \mbox{RN-04}). Por omisión, \texttt{1}. \\ \hline
+\texttt{es\_\allowbreak{}inicial} & \texttt{BIT} & No &  & Se otorga al dar de alta la cuenta. Por omisión, \texttt{0}. \\ \hline
+\texttt{es\_\allowbreak{}predeterminado} & \texttt{BIT} & No &  & Se equipa al dar de alta; exactamente uno por ranura. Por omisión, \texttt{0}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Modo}{Catálogo de modos de juego; cada modo fija tablero, jugadores y muros (\mbox{D-04}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & PK & Identificador del modo. \\ \hline
+\texttt{nombre} & \texttt{NVARCHAR(40)} & No & UQ & Clásico 9×9, cuatro jugadores o rápida 7×7. \\ \hline
+\texttt{tamano\_\allowbreak{}tablero} & \texttt{TINYINT} & No &  & Casillas por lado: 7 o 9. \\ \hline
+\texttt{num\_\allowbreak{}jugadores} & \texttt{TINYINT} & No &  & Plazas de la partida: 2 o 4 (\mbox{CU-17} \mbox{RN-02}). \\ \hline
+\texttt{muros\_\allowbreak{}por\_\allowbreak{}jugador} & \texttt{TINYINT} & No &  & Muros de cada jugador: 10, 5 o 6 (\mbox{CU-21} \mbox{RN-02}). \\ \hline
+\texttt{activo} & \texttt{BIT} & No &  & Solo los modos activos reciben estadísticas al dar de alta (\mbox{CU-02}). Por omisión, \texttt{1}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Division}{Catálogo de divisiones del ranking con sus umbrales de ascenso y descenso.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}division} & \texttt{TINYINT} & No & PK & Identificador de la división. \\ \hline
+\texttt{nombre} & \texttt{NVARCHAR(30)} & No & UQ & Nombre visible. \\ \hline
+\texttt{orden} & \texttt{TINYINT} & No & UQ & Posición de la división, de la más baja a la más alta. \\ \hline
+\texttt{elo\_\allowbreak{}minimo} & \texttt{SMALLINT} & No &  & Elo con el que se asciende a esta división. \\ \hline
+\texttt{elo\_\allowbreak{}descenso} & \texttt{SMALLINT} & No &  & Elo por debajo del cual se desciende; es el umbral visible (\mbox{CU-25} \mbox{RN-07}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{NivelIA}{Catálogo de los cuatro niveles de la IA (\mbox{CU-27} \mbox{RN-02}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia} & \texttt{TINYINT} & No & PK & Identificador del nivel. \\ \hline
+\texttt{nombre} & \texttt{NVARCHAR(20)} & No & UQ & Aprendiz, constructor, arquitecto o bastión. \\ \hline
+\texttt{elo\_\allowbreak{}aproximado} & \texttt{SMALLINT} & No &  & Fuerza aproximada: 1000, 1500, 1900 o 2300. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Leccion}{Catálogo de las siete lecciones del tutorial (\mbox{CU-41} \mbox{RN-01}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}leccion} & \texttt{TINYINT} & No & PK & Identificador de la lección. \\ \hline
+\texttt{orden} & \texttt{TINYINT} & No & UQ & Posición en el índice del tutorial. \\ \hline
+\texttt{nombre} & \texttt{NVARCHAR(60)} & No &  & Nombre visible. \\ \hline
+\texttt{num\_\allowbreak{}pasos} & \texttt{TINYINT} & No &  & Pasos de la lección. \\ \hline
+\end{tablaatributos}
+
+\atributosde{TipoCaja}{Catálogo de tipos de caja que se venden o se otorgan (\mbox{CU-39}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja} & \texttt{TINYINT} & No & PK & Identificador del tipo de caja. \\ \hline
+\texttt{nombre} & \texttt{NVARCHAR(40)} & No & UQ & Nombre visible. \\ \hline
+\texttt{precio} & \texttt{INT} & No &  & Precio en monedas del juego. \\ \hline
+\texttt{activo} & \texttt{BIT} & No &  & En falso, ya no se vende. Por omisión, \texttt{1}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{TipoCajaObjeto}{Objetos que puede contener cada tipo de caja y su probabilidad; es la relación N:M entre TipoCaja y ObjetoCosmetico.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja} & \texttt{TINYINT} & No & PK, FK & Tipo de caja. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & PK, FK & Objeto que puede salir. \\ \hline
+\texttt{probabilidad} & \texttt{DECIMAL(6,3)} & No &  & Porcentaje exacto que se muestra antes de comprar (\mbox{CU-39} \mbox{RN-01}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{PalabraProhibida}{Catálogo del filtro de palabras que se aplica en el servidor al nickname y al chat (\mbox{CON-09}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}palabra} & \texttt{INT}, identidad & No & PK & Identificador del término. \\ \hline
+\texttt{termino} & \texttt{NVARCHAR(100)} & No &  & Término prohibido; se compara sin mayúsculas ni acentos. \\ \hline
+\texttt{idioma} & \texttt{VARCHAR(10)} & No &  & Código de cultura del término. \\ \hline
+\texttt{ambito} & \texttt{VARCHAR(10)} & No &  & \texttt{NICKNAME} o \texttt{CHAT}. \\ \hline
+\texttt{activo} & \texttt{BIT} & No &  & En falso, el término deja de filtrarse. Por omisión, \texttt{1}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{MotivoReporte}{Catálogo de los cinco motivos de reporte (\mbox{CU-42} \mbox{RN-08}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}motivo} & \texttt{TINYINT} & No & PK & Identificador del motivo. \\ \hline
+\texttt{nombre} & \texttt{NVARCHAR(60)} & No & UQ & Descripción visible del motivo. \\ \hline
+\end{tablaatributos}
+
+\subsubsection*{Cuenta y acceso} 
+\atributosde{Usuario}{Cuenta de un jugador, invitado, moderador o administrador. Es la entidad central: casi todas las demás dependen de ella y su fila nunca se borra (\mbox{D-07}, \mbox{D-17}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT}, identidad & No & PK & Identificador de la cuenta; no cambia al vincular un invitado (\mbox{D-02}). \\ \hline
+\texttt{tipo\_\allowbreak{}cuenta} & \texttt{VARCHAR(10)} & No &  & \texttt{INVITADO} o \texttt{REGISTRADA}. Discrimina qué credenciales aplican. \\ \hline
+\texttt{estado\_\allowbreak{}cuenta} & \texttt{VARCHAR(10)} & No &  & \texttt{PENDIENTE}, \texttt{ACTIVA}, \texttt{SUSPENDIDA}, \texttt{BANEADA} o \texttt{ELIMINADA} (\mbox{CU-01} \mbox{RN-04}). Por omisión, \texttt{PENDIENTE}. \\ \hline
+\texttt{rol} & \texttt{VARCHAR(13)} & No &  & \texttt{JUGADOR}, \texttt{MODERADOR} o \texttt{ADMINISTRADOR}; exactamente uno (\mbox{CU-46} \mbox{RN-03}). Por omisión, \texttt{JUGADOR}. \\ \hline
+\texttt{nickname} & \texttt{NVARCHAR(30)} & No & UQ & Nombre visible, de 3 a 30 caracteres; único sin distinguir mayúsculas ni acentos (\mbox{CU-02} \mbox{RN-01}). \\ \hline
+\texttt{correo} & \texttt{NVARCHAR(254)} & Sí &  & Correo normalizado a minúsculas; nulo solo en invitados (\mbox{CU-02} \mbox{RN-02}). \\ \hline
+\texttt{contrasena\_\allowbreak{}hash} & \texttt{VARBINARY(64)} & Sí &  & Resumen criptográfico de la contraseña; nunca en claro (\mbox{CU-01} \mbox{RN-02}). \\ \hline
+\texttt{contrasena\_\allowbreak{}sal} & \texttt{VARBINARY(32)} & Sí &  & Sal del resumen. \\ \hline
+\texttt{fecha\_\allowbreak{}nacimiento} & \texttt{DATE} & Sí &  & Para comprobar la edad mínima de ocho años; la edad no se guarda (\mbox{CU-02}). \\ \hline
+\texttt{idioma\_\allowbreak{}preferido} & \texttt{VARCHAR(10)} & No &  & Código de cultura; viaja con el jugador a cualquier dispositivo (\mbox{CU-12} \mbox{RN-08}). Por omisión, \texttt{es-MX}. \\ \hline
+\texttt{codigo\_\allowbreak{}amigo} & \texttt{CHAR(8)} & Sí &  & Código para encontrar al jugador sin su nickname (\mbox{CU-30} \mbox{RN-06}). \\ \hline
+\texttt{id\_\allowbreak{}icono} & \texttt{TINYINT} & No &  & Icono predefinido, de 1 a 32 (\mbox{CU-08} \mbox{RN-03}). Por omisión, \texttt{1}. \\ \hline
+\texttt{permite\_\allowbreak{}espectadores} & \texttt{BIT} & No &  & Si admite espectadores en sus partidas (\mbox{CU-34} \mbox{RN-02}). Por omisión, \texttt{1}. \\ \hline
+\texttt{nivel} & \texttt{SMALLINT} & No &  & Nivel alcanzado. Por omisión, \texttt{1}. \\ \hline
+\texttt{experiencia} & \texttt{INT} & No &  & Experiencia acumulada. Por omisión, \texttt{0}. \\ \hline
+\texttt{saldo\_\allowbreak{}monedas} & \texttt{INT} & No &  & Copia de la suma de \textit{MovimientoMoneda}; redundancia controlada (\mbox{CU-40} \mbox{RN-02}). Por omisión, \texttt{0}. \\ \hline
+\texttt{cajas\_\allowbreak{}sin\_\allowbreak{}raro} & \texttt{TINYINT} & No &  & Cajas seguidas sin objeto raro, para la garantía (\mbox{CU-39} \mbox{RN-05}). Por omisión, \texttt{0}. \\ \hline
+\texttt{intentos\_\allowbreak{}fallidos} & \texttt{TINYINT} & No &  & Intentos fallidos consecutivos de inicio de sesión (\mbox{CU-01} \mbox{RN-03}). Por omisión, \texttt{0}. \\ \hline
+\texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido} & \texttt{DATETIME2(0)} & Sí &  & Para restablecer el contador a las 24 horas (\mbox{CU-01} \mbox{RN-03}). \\ \hline
+\texttt{bloqueada\_\allowbreak{}hasta} & \texttt{DATETIME2(0)} & Sí &  & Fin del bloqueo escalonado vigente. \\ \hline
+\texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} & \texttt{BIT} & No &  & Si la cuenta pide segundo factor (\mbox{CU-01} \mbox{RN-08}). Por omisión, \texttt{0}. \\ \hline
+\texttt{fecha\_\allowbreak{}registro} & \texttt{DATETIME2(0)} & No &  & Alta de la cuenta. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}verificacion} & \texttt{DATETIME2(0)} & Sí &  & Verificación del correo (\mbox{CU-04}). \\ \hline
+\texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} & \texttt{DATETIME2(0)} & Sí &  & Marca de la configuración de primera vez (\mbox{CU-08} \mbox{RN-01}). \\ \hline
+\texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}acceso} & \texttt{DATETIME2(0)} & Sí &  & Último inicio de sesión exitoso. \\ \hline
+\texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} & \texttt{DATETIME2(0)} & Sí &  & Limita el reenvío del correo de verificación (\mbox{CU-01} \mbox{RN-10}). \\ \hline
+\texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion} & \texttt{DATETIME2(0)} & Sí &  & Limita el envío del correo de recuperación (\mbox{CU-03} \mbox{RN-06}). \\ \hline
+\texttt{fecha\_\allowbreak{}baja} & \texttt{DATETIME2(0)} & Sí &  & Inicio del plazo de recuperación de catorce días (\mbox{D-07}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{Sesion}{Sesión abierta desde un dispositivo. Una cuenta puede tener varias a la vez (\mbox{D-01}); al cerrarse no se borra.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}sesion} & \texttt{INT}, identidad & No & PK & Identificador de la sesión. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta dueña de la sesión. \\ \hline
+\texttt{token\_\allowbreak{}hash} & \texttt{VARBINARY(32)} & No & UQ & Resumen del token de sesión. \\ \hline
+\texttt{fecha\_\allowbreak{}inicio} & \texttt{DATETIME2(0)} & No &  & Apertura de la sesión. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}expiracion} & \texttt{DATETIME2(0)} & No &  & Vigencia máxima de veinticuatro horas (\mbox{CU-01} \mbox{RN-07}). \\ \hline
+\texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}uso} & \texttt{DATETIME2(0)} & No &  & Para reconocer sesiones olvidadas (\mbox{CU-10}); se actualiza por minutos. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}fin} & \texttt{DATETIME2(0)} & Sí &  & Cierre explícito; nula mientras está abierta. \\ \hline
+\texttt{motivo\_\allowbreak{}cierre} & \texttt{VARCHAR(20)} & Sí &  & \texttt{CIERRE\_\allowbreak{}VOLUNTARIO}, \texttt{CIERRE\_\allowbreak{}REMOTO}, \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}, \texttt{BAJA\_\allowbreak{}CUENTA} o \texttt{SANCION}. \\ \hline
+\texttt{direccion\_\allowbreak{}ip} & \texttt{VARCHAR(45)} & No &  & Dirección de red de origen. \\ \hline
+\texttt{huella\_\allowbreak{}dispositivo} & \texttt{VARCHAR(128)} & No &  & Huella del dispositivo. \\ \hline
+\texttt{nombre\_\allowbreak{}dispositivo} & \texttt{NVARCHAR(100)} & Sí &  & Nombre legible del dispositivo (\mbox{D-01}). \\ \hline
+\texttt{version\_\allowbreak{}cliente} & \texttt{VARCHAR(20)} & No &  & Versión del cliente que abrió la sesión. \\ \hline
+\end{tablaatributos}
+
+\atributosde{CodigoSegundoFactor}{Código del segundo factor emitido en un inicio de sesión (\mbox{CU-01} \mbox{RN-08}, \mbox{RN-09}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}codigo} & \texttt{INT}, identidad & No & PK & Identificador del código. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta que inicia sesión. \\ \hline
+\texttt{codigo\_\allowbreak{}hash} & \texttt{VARBINARY(32)} & No &  & Resumen del código; nunca en claro (\mbox{CU-01} \mbox{RN-02}). \\ \hline
+\texttt{canal} & \texttt{VARCHAR(20)} & No &  & Mecanismo de entrega que usó el proveedor del segundo factor. \\ \hline
+\texttt{fecha\_\allowbreak{}generacion} & \texttt{DATETIME2(0)} & No &  & Emisión del código. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}expiracion} & \texttt{DATETIME2(0)} & No &  & Vigencia de cinco minutos. \\ \hline
+\texttt{intentos} & \texttt{TINYINT} & No &  & Intentos de verificación; máximo tres. Por omisión, \texttt{0}. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{PENDIENTE}, \texttt{CONSUMIDO} o \texttt{INVALIDADO}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{TokenVerificacionCorreo}{Token del enlace que verifica el correo del alta o confirma un cambio de correo (\mbox{CU-04}, \mbox{D-20}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}token} & \texttt{INT}, identidad & No & PK & Identificador del token. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta a la que pertenece. \\ \hline
+\texttt{token\_\allowbreak{}hash} & \texttt{VARBINARY(32)} & No & UQ & Resumen del token del enlace (\mbox{CU-04} \mbox{RN-06}). \\ \hline
+\texttt{proposito} & \texttt{VARCHAR(15)} & No &  & \texttt{ALTA} o \texttt{CAMBIO\_\allowbreak{}CORREO}. \\ \hline
+\texttt{correo\_\allowbreak{}destino} & \texttt{NVARCHAR(254)} & Sí &  & Correo nuevo; solo en \texttt{CAMBIO\_\allowbreak{}CORREO}. En \texttt{ALTA} es el de la cuenta y no se repite. \\ \hline
+\texttt{fecha\_\allowbreak{}generacion} & \texttt{DATETIME2(0)} & No &  & Emisión del token. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}expiracion} & \texttt{DATETIME2(0)} & No &  & Vigencia de veinticuatro horas (\mbox{CU-04} \mbox{RN-02}). \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{PENDIENTE}, \texttt{USADO} o \texttt{INVALIDADO}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{TokenRecuperacion}{Código enviado por correo para recuperar la contraseña (\mbox{CU-03}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}token} & \texttt{INT}, identidad & No & PK & Identificador del token. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta que se recupera. \\ \hline
+\texttt{token\_\allowbreak{}hash} & \texttt{VARBINARY(32)} & No &  & Resumen del código (\mbox{CU-03} \mbox{RN-08}). \\ \hline
+\texttt{fecha\_\allowbreak{}generacion} & \texttt{DATETIME2(0)} & No &  & Emisión del código. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}expiracion} & \texttt{DATETIME2(0)} & No &  & Vigencia de treinta minutos (\mbox{CU-03} \mbox{RN-04}). \\ \hline
+\texttt{intentos} & \texttt{TINYINT} & No &  & Intentos de verificación; máximo tres (\mbox{CU-03} \mbox{RN-09}). Por omisión, \texttt{0}. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{PENDIENTE}, \texttt{USADO} o \texttt{INVALIDADO}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{AceptacionTerminos}{Registro de la versión de los términos de uso que aceptó cada cuenta (\mbox{CU-02} \mbox{RN-12}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}aceptacion} & \texttt{INT}, identidad & No & PK & Identificador de la aceptación. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta que aceptó. \\ \hline
+\texttt{version\_\allowbreak{}terminos} & \texttt{VARCHAR(20)} & No &  & Versión del texto aceptado. \\ \hline
+\texttt{fecha\_\allowbreak{}aceptacion} & \texttt{DATETIME2(0)} & No &  & Momento de la aceptación. Por omisión, la fecha actual. \\ \hline
+\texttt{direccion\_\allowbreak{}ip} & \texttt{VARCHAR(45)} & No &  & Dirección de red desde la que se aceptó. \\ \hline
+\end{tablaatributos}
+
+\subsubsection*{Perfil y personalización} 
+\atributosde{HistorialNickname}{Cambio de nombre de una cuenta, para que un jugador reportado no se vuelva irreconocible (\mbox{CU-13} \mbox{RN-03}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Cuenta que cambió su nombre. Como llave primaria, impide un segundo cambio (\mbox{CU-13} \mbox{RN-01}). \\ \hline
+\texttt{nickname\_\allowbreak{}anterior} & \texttt{NVARCHAR(30)} & No &  & Nombre antes del cambio. \\ \hline
+\texttt{nickname\_\allowbreak{}nuevo} & \texttt{NVARCHAR(30)} & No &  & Nombre elegido en el cambio. \\ \hline
+\texttt{fecha\_\allowbreak{}cambio} & \texttt{DATETIME2(0)} & No &  & Momento del cambio. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Avatar}{Imagen subida por el jugador como foto de perfil (\mbox{CU-12} \mbox{FA-01}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}avatar} & \texttt{INT}, identidad & No & PK & Identificador del avatar. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta que lo subió. \\ \hline
+\texttt{ruta\_\allowbreak{}imagen} & \texttt{NVARCHAR(260)} & No &  & Ubicación del archivo en el almacenamiento del servidor. \\ \hline
+\texttt{formato} & \texttt{VARCHAR(4)} & No &  & \texttt{JPG} o \texttt{PNG} (\mbox{CU-12} \mbox{RN-05}). \\ \hline
+\texttt{tamano\_\allowbreak{}bytes} & \texttt{INT} & No &  & Tamaño del archivo; hasta dos megabytes. \\ \hline
+\texttt{fecha\_\allowbreak{}subida} & \texttt{DATETIME2(0)} & No &  & Momento de la subida. Por omisión, la fecha actual. \\ \hline
+\texttt{vigente} & \texttt{BIT} & No &  & Si es el avatar que se muestra; el anterior pasa a falso (\mbox{CU-12} \mbox{RN-06}). Por omisión, \texttt{1}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{EnlaceRed}{Enlace a una red social que el jugador muestra en su perfil (\mbox{CU-12}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}enlace} & \texttt{INT}, identidad & No & PK & Identificador del enlace. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta que lo publica. \\ \hline
+\texttt{orden} & \texttt{TINYINT} & No &  & Posición en el perfil, de 1 a 4. \\ \hline
+\texttt{url} & \texttt{NVARCHAR(500)} & No &  & Dirección web; no se admiten acortadores (\mbox{CU-12} \mbox{RN-04}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{UsuarioObjeto}{Objetos cosméticos que posee cada cuenta; es la relación N:M entre Usuario y ObjetoCosmetico (relación Posee del diagrama).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Cuenta que posee el objeto. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & PK, FK & Objeto poseído. \\ \hline
+\texttt{fecha\_\allowbreak{}obtencion} & \texttt{DATETIME2(0)} & No &  & Momento en que se obtuvo. Por omisión, la fecha actual. \\ \hline
+\texttt{origen} & \texttt{VARCHAR(10)} & No &  & \texttt{INICIAL}, \texttt{COMPRA}, \texttt{CAJA} o \texttt{PARTIDA}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Equipamiento}{Objeto que cada cuenta lleva equipado en cada ranura; siempre hay exactamente uno por ranura (\mbox{CU-14} \mbox{RN-01}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Cuenta. \\ \hline
+\texttt{id\_\allowbreak{}ranura} & \texttt{TINYINT} & No & PK, FK & Ranura; con la cuenta forma la llave, así que no puede haber dos objetos en la misma ranura. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & FK & Objeto equipado; debe ser de la ranura y debe poseerse. \\ \hline
+\end{tablaatributos}
+
+\subsubsection*{Partida} 
+\atributosde{Partida}{Partida clasificatoria, privada o contra la IA. Se guarda completa porque de ella dependen el historial, la repetición, la reconexión y los reportes.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}partida} & \texttt{INT}, identidad & No & PK, FK & Identificador de la partida. \\ \hline
+\texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & FK & Modo; de él salen tablero, plazas y muros, que no se repiten aquí. \\ \hline
+\texttt{tipo} & \texttt{VARCHAR(15)} & No &  & \texttt{CLASIFICATORIA}, \texttt{PRIVADA} o \texttt{IA}. Discrimina qué atributos aplican. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(20)} & No &  & \texttt{EN\_\allowbreak{}CURSO}, \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} o \texttt{FINALIZADA} (\mbox{CU-25} \mbox{RN-13}). Por omisión, \texttt{EN\_\allowbreak{}CURSO}. \\ \hline
+\texttt{minutos\_\allowbreak{}reloj} & \texttt{TINYINT} & Sí &  & 3, 5 o 10; nulo solo en partidas contra la IA sin reloj (\mbox{CU-27} \mbox{RN-06}). \\ \hline
+\texttt{fecha\_\allowbreak{}inicio} & \texttt{DATETIME2(0)} & No &  & Inicio. La duración se calcula y no se guarda (\mbox{CU-36} \mbox{RN-02}). Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}fin} & \texttt{DATETIME2(0)} & Sí &  & Cierre de la partida. \\ \hline
+\texttt{forma\_\allowbreak{}termino} & \texttt{VARCHAR(15)} & Sí &  & \texttt{META}, \texttt{TIEMPO\_\allowbreak{}AGOTADO}, \texttt{RENDICION}, \texttt{TABLAS} o \texttt{ABANDONO} (\mbox{CU-25} \mbox{RN-01}). \\ \hline
+\texttt{id\_\allowbreak{}ganador} & \texttt{INT} & Sí & FK & Participante que ganó; nulo en tablas o si ganó la IA. Redundancia controlada. \\ \hline
+\texttt{turno\_\allowbreak{}actual} & \texttt{TINYINT} & No &  & \texttt{orden\_\allowbreak{}turno} del participante que tiene el turno. Por omisión, \texttt{1}. \\ \hline
+\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia} & \texttt{TINYINT} & Sí & FK & Nivel de la IA; solo en partidas \texttt{IA} (\mbox{D-12}). \\ \hline
+\texttt{permite\_\allowbreak{}deshacer} & \texttt{BIT} & Sí &  & Opción elegida al empezar; solo en partidas \texttt{IA}. \\ \hline
+\texttt{permite\_\allowbreak{}sugerencias} & \texttt{BIT} & Sí &  & Opción elegida al empezar; solo en partidas \texttt{IA}. \\ \hline
+\texttt{deshacer\_\allowbreak{}usados} & \texttt{TINYINT} & Sí &  & Veces que se usó deshacer; solo en partidas \texttt{IA}. \\ \hline
+\texttt{sugerencias\_\allowbreak{}usadas} & \texttt{TINYINT} & Sí &  & Sugerencias pedidas; solo en partidas \texttt{IA}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Participacion}{Participación de un jugador en una partida; es la relación N:M entre Usuario y Partida (relación Participa del diagrama). La IA no tiene participación (\mbox{D-12}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & No & PK, FK & Partida. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Jugador. \\ \hline
+\texttt{orden\_\allowbreak{}turno} & \texttt{TINYINT} & No &  & Orden en que juega, de 1 a 4. \\ \hline
+\texttt{simbolo\_\allowbreak{}peon} & \texttt{VARCHAR(10)} & No &  & Símbolo y color que distinguen su peón (\texttt{color\_\allowbreak{}ficha} en el diagrama). \\ \hline
+\texttt{casilla\_\allowbreak{}actual} & \texttt{VARCHAR(3)} & No &  & Casilla que ocupa el peón, en notación de tablero. \\ \hline
+\texttt{muros\_\allowbreak{}restantes} & \texttt{TINYINT} & No &  & Muros que le quedan; nace con los del modo o de la sala (\mbox{CU-18}). \\ \hline
+\texttt{reloj\_\allowbreak{}restante} & \texttt{INT} & Sí &  & Milisegundos que le quedan; nulo si la partida no tiene reloj. \\ \hline
+\texttt{elo\_\allowbreak{}inicial} & \texttt{SMALLINT} & Sí &  & Elo con el que entró; base del cálculo (\mbox{CU-17} \mbox{RN-04}, \mbox{CU-25} \mbox{RN-04}). \\ \hline
+\texttt{elo\_\allowbreak{}final} & \texttt{SMALLINT} & Sí &  & Elo resultante; solo en partidas clasificatorias. \\ \hline
+\texttt{diferencia\_\allowbreak{}elo} & calculada & --- &  & Cambio de elo que muestra el historial (\mbox{CU-36} \mbox{RN-03}). Calculada y no almacenada: depende de otras dos columnas de la fila. \\ \hline
+\texttt{resultado} & \texttt{VARCHAR(10)} & Sí &  & \texttt{VICTORIA}, \texttt{DERROTA} o \texttt{EMPATE}. \\ \hline
+\texttt{posicion} & \texttt{TINYINT} & Sí &  & Posición final o de clasificación, de 1 a 4. \\ \hline
+\texttt{fecha\_\allowbreak{}clasificacion} & \texttt{DATETIME2(0)} & Sí &  & Momento en que quedó clasificado o fuera antes del cierre (\mbox{CU-20} \mbox{FA-08}). \\ \hline
+\texttt{forma\_\allowbreak{}termino} & \texttt{VARCHAR(15)} & Sí &  & Forma en que salió antes que la partida, en cuatro jugadores: \texttt{META}, \texttt{RENDICION}, \texttt{ABANDONO} o \texttt{TIEMPO\_\allowbreak{}AGOTADO}. \\ \hline
+\texttt{conectado} & \texttt{BIT} & No &  & Estado de conexión; se guarda para sobrevivir a un reinicio (\mbox{CU-26}). Por omisión, \texttt{1}. \\ \hline
+\texttt{fecha\_\allowbreak{}desconexion} & \texttt{DATETIME2(0)} & Sí &  & Inicio de la desconexión, para el plazo de sesenta segundos (\mbox{CU-24} \mbox{RN-06}). \\ \hline
+\texttt{terminada} & \texttt{BIT} & No &  & Si la participación está cerrada; base de la regla de una sola participación sin terminar (\mbox{D-11}). Por omisión, \texttt{0}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{ParticipacionObjeto}{Aspecto con el que cada jugador entró a la partida, una fila por ranura; no cambia aunque el jugador equipe otra cosa (\mbox{CU-14} \mbox{RN-03}, \mbox{CU-37} \mbox{RN-03}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & No & PK, FK & Partida. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Jugador. \\ \hline
+\texttt{id\_\allowbreak{}ranura} & \texttt{TINYINT} & No & PK, FK & Ranura. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & FK & Objeto que tenía equipado en esa ranura al empezar. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Jugada}{Movimiento de peón o colocación de muro, en orden. El tablero se reconstruye sumando las jugadas; los muros no tienen tabla propia (\mbox{CU-21}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & No & PK, FK & Partida. \\ \hline
+\texttt{numero\_\allowbreak{}jugada} & \texttt{SMALLINT} & No & PK & Número consecutivo dentro de la partida (\mbox{CU-20} \mbox{RN-06}). \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & Sí & FK & Jugador que la hizo; nulo si la hizo la IA (\mbox{CU-27} \mbox{RN-03}). \\ \hline
+\texttt{tipo} & \texttt{VARCHAR(10)} & No &  & \texttt{MOVIMIENTO} o \texttt{MURO}. Discrimina qué casillas aplican. \\ \hline
+\texttt{casilla\_\allowbreak{}origen} & \texttt{VARCHAR(3)} & Sí &  & Casilla de salida del peón; solo en \texttt{MOVIMIENTO}. \\ \hline
+\texttt{casilla\_\allowbreak{}destino} & \texttt{VARCHAR(3)} & Sí &  & Casilla de llegada del peón; solo en \texttt{MOVIMIENTO}. \\ \hline
+\texttt{surco} & \texttt{VARCHAR(3)} & Sí &  & Surco donde se colocó el muro; solo en \texttt{MURO}. \\ \hline
+\texttt{orientacion} & \texttt{CHAR(1)} & Sí &  & \texttt{H} horizontal o \texttt{V} vertical; solo en \texttt{MURO}. \\ \hline
+\texttt{tiempo\_\allowbreak{}consumido} & \texttt{INT} & No &  & Milisegundos que tardó el jugador. \\ \hline
+\texttt{fecha\_\allowbreak{}jugada} & \texttt{DATETIME2(3)} & No &  & Momento en que se registró. Por omisión, la fecha actual. \\ \hline
+\texttt{deshecha} & \texttt{BIT} & No &  & Marca de deshacer contra la IA; la jugada no se borra (\mbox{CU-27} \mbox{RN-05}). Por omisión, \texttt{0}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{OfertaTablas}{Oferta de tablas en una partida de dos jugadores (\mbox{CU-22}). Se guarda para la reconexión y como prueba de acoso.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}oferta} & \texttt{INT}, identidad & No & PK & Identificador de la oferta. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & No & FK & Partida. \\ \hline
+\texttt{id\_\allowbreak{}ofertante} & \texttt{INT} & No & FK & Participante que la ofrece. \\ \hline
+\texttt{numero\_\allowbreak{}jugada} & \texttt{SMALLINT} & No &  & Jugada tras la que se ofreció; limita una oferta cada cinco jugadas (\mbox{CU-22} \mbox{RN-03}). \\ \hline
+\texttt{fecha\_\allowbreak{}oferta} & \texttt{DATETIME2(0)} & No &  & Momento de la oferta. Por omisión, la fecha actual. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{PENDIENTE}, \texttt{ACEPTADA}, \texttt{RECHAZADA} o \texttt{CADUCADA}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\texttt{fecha\_\allowbreak{}respuesta} & \texttt{DATETIME2(0)} & Sí &  & Momento en que se aceptó, rechazó o caducó. \\ \hline
+\end{tablaatributos}
+
+\atributosde{EnlaceEspectador}{Enlace compartido para ver una partida desde fuera del juego. Es lo único que se guarda de los espectadores (\mbox{D-19}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}enlace} & \texttt{INT}, identidad & No & PK & Identificador del enlace. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & No & FK & Partida que se comparte. \\ \hline
+\texttt{id\_\allowbreak{}creador} & \texttt{INT} & No & FK & Participante que lo compartió. \\ \hline
+\texttt{token\_\allowbreak{}hash} & \texttt{VARBINARY(32)} & No & UQ & Resumen del token del enlace. \\ \hline
+\texttt{fecha\_\allowbreak{}creacion} & \texttt{DATETIME2(0)} & No &  & Momento en que se compartió. Por omisión, la fecha actual. \\ \hline
+\texttt{activo} & \texttt{BIT} & No &  & Pasa a falso al terminar la partida (\mbox{CU-34} \mbox{RN-06}). Por omisión, \texttt{1}. \\ \hline
+\end{tablaatributos}
+
+\subsubsection*{Emparejamiento, salas y chat} 
+\atributosde{ColaEmparejamiento}{Jugadores que esperan partida clasificatoria. Se persiste para poder vaciarla y avisar si el servidor se reinicia (\mbox{CU-17}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Jugador en espera; como llave, impide que esté dos veces en la cola. \\ \hline
+\texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & FK & Modo buscado. \\ \hline
+\texttt{minutos\_\allowbreak{}reloj} & \texttt{TINYINT} & No &  & Reloj buscado: 3, 5 o 10. \\ \hline
+\texttt{elo} & \texttt{SMALLINT} & No &  & Elo del modo al entrar; la ventana de búsqueda se amplía con la espera (\mbox{CU-17} \mbox{RN-03}). \\ \hline
+\texttt{fecha\_\allowbreak{}entrada} & \texttt{DATETIME2(0)} & No &  & Inicio de la espera. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Sala}{Sala privada con código, con los ajustes que elige el anfitrión (\mbox{CU-18}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}sala} & \texttt{INT}, identidad & No & PK & Identificador de la sala. \\ \hline
+\texttt{codigo} & \texttt{CHAR(6)} & No &  & Seis caracteres sin 0, O, 1 ni I; único entre las salas no cerradas (\mbox{CU-18} \mbox{RN-01}). \\ \hline
+\texttt{id\_\allowbreak{}anfitrion} & \texttt{INT} & No & FK & Jugador que creó la sala. \\ \hline
+\texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & FK & Modo, que fija el tablero y las plazas. \\ \hline
+\texttt{muros\_\allowbreak{}por\_\allowbreak{}jugador} & \texttt{TINYINT} & No &  & De 1 a 20, elegido por el anfitrión (\mbox{CU-18} \mbox{RN-04}). \\ \hline
+\texttt{minutos\_\allowbreak{}reloj} & \texttt{TINYINT} & No &  & 3, 5 o 10. \\ \hline
+\texttt{permite\_\allowbreak{}espectadores} & \texttt{BIT} & No &  & Si la partida de la sala admite espectadores. Por omisión, \texttt{1}. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{ABIERTA}, \texttt{EN\_\allowbreak{}PARTIDA} o \texttt{CERRADA}. Por omisión, \texttt{ABIERTA}. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & Sí & FK & Partida que se inició desde la sala. \\ \hline
+\texttt{fecha\_\allowbreak{}creacion} & \texttt{DATETIME2(0)} & No &  & Creación de la sala. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}actividad} & \texttt{DATETIME2(0)} & No &  & Para cerrar la sala a los treinta minutos sin actividad (\mbox{CU-18} \mbox{RN-08}). Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{SalaParticipante}{Plaza que ocupa un jugador en una sala. Describe un estado presente y se borra al salir (\mbox{CU-19}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Jugador; como llave, impide que esté en dos salas a la vez (\mbox{CU-18} \mbox{RN-02}). \\ \hline
+\texttt{id\_\allowbreak{}sala} & \texttt{INT} & No & FK & Sala. \\ \hline
+\texttt{plaza} & \texttt{TINYINT} & No &  & Número de plaza, de 1 a 4. \\ \hline
+\texttt{listo} & \texttt{BIT} & No &  & Nadie está listo hasta declararlo (\mbox{CU-19} \mbox{RN-03}). Por omisión, \texttt{0}. \\ \hline
+\texttt{fecha\_\allowbreak{}union} & \texttt{DATETIME2(0)} & No &  & Momento en que entró. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Invitacion}{Invitación a jugar, que da acceso a una sala sin conocer su código (\mbox{CU-32}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}invitacion} & \texttt{INT}, identidad & No & PK & Identificador de la invitación. \\ \hline
+\texttt{id\_\allowbreak{}sala} & \texttt{INT} & No & FK & Sala a la que se invita. \\ \hline
+\texttt{id\_\allowbreak{}emisor} & \texttt{INT} & No & FK & Jugador que invita. \\ \hline
+\texttt{id\_\allowbreak{}destinatario} & \texttt{INT} & No & FK & Jugador invitado. \\ \hline
+\texttt{fecha\_\allowbreak{}invitacion} & \texttt{DATETIME2(0)} & No &  & Envío. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}expiracion} & \texttt{DATETIME2(0)} & No &  & Sesenta segundos después del envío (\mbox{CU-32} \mbox{RN-04}). \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{PENDIENTE}, \texttt{ACEPTADA}, \texttt{RECHAZADA} o \texttt{EXPIRADA}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Mensaje}{Mensaje de chat. Se guarda porque el reporte lo adjunta como prueba (\mbox{CU-28}, \mbox{CU-42}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}mensaje} & \texttt{BIGINT}, identidad & No & PK & Identificador del mensaje. \\ \hline
+\texttt{id\_\allowbreak{}autor} & \texttt{INT} & No & FK & Jugador que lo escribió. \\ \hline
+\texttt{canal} & \texttt{VARCHAR(12)} & No &  & \texttt{PARTIDA}, \texttt{ESPECTADORES}, \texttt{SALA}, \texttt{GLOBAL} o \texttt{AMIGOS}. Discrimina a qué pertenece el mensaje. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & Sí & FK & Partida; solo en los canales \texttt{PARTIDA} y \texttt{ESPECTADORES}. \\ \hline
+\texttt{id\_\allowbreak{}sala} & \texttt{INT} & Sí & FK & Sala; solo en el canal \texttt{SALA}. \\ \hline
+\texttt{texto} & \texttt{NVARCHAR(500)} & No &  & Texto tal como se escribió, en Unicode y sin traducir (\mbox{CU-28} \mbox{RN-12}). \\ \hline
+\texttt{fecha\_\allowbreak{}envio} & \texttt{DATETIME2(3)} & No &  & Momento del envío. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\subsubsection*{Clasificación y economía} 
+\atributosde{EstadisticaModo}{Estadísticas y elo de cada cuenta en cada modo; es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, \mbox{D-04}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Cuenta. \\ \hline
+\texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & PK, FK & Modo. \\ \hline
+\texttt{puntos\_\allowbreak{}elo} & \texttt{SMALLINT} & No &  & Elo actual en el modo; lo escribe solo el \mbox{CU-25}. Por omisión, \texttt{1000}. \\ \hline
+\texttt{fecha\_\allowbreak{}elo} & \texttt{DATETIME2(0)} & Sí &  & Momento en que se alcanzó el elo actual; desempata el ranking (\mbox{CU-35} \mbox{RN-06}). \\ \hline
+\texttt{elo\_\allowbreak{}maximo} & \texttt{SMALLINT} & No &  & Elo más alto alcanzado. Por omisión, \texttt{1000}. \\ \hline
+\texttt{partidas\_\allowbreak{}jugadas} & \texttt{INT} & No &  & Incluye las tablas, que no son victoria ni derrota (\mbox{CU-25} \mbox{FA-05}). Por omisión, \texttt{0}. \\ \hline
+\texttt{partidas\_\allowbreak{}ganadas} & \texttt{INT} & No &  & Victorias. El porcentaje se calcula y no se guarda (\mbox{CU-15} \mbox{RN-01}). Por omisión, \texttt{0}. \\ \hline
+\texttt{partidas\_\allowbreak{}perdidas} & \texttt{INT} & No &  & Derrotas, incluidas rendiciones y abandonos. Por omisión, \texttt{0}. \\ \hline
+\texttt{racha\_\allowbreak{}actual} & \texttt{SMALLINT} & No &  & Victorias seguidas por llegada a meta (\mbox{CU-25} \mbox{RN-11}). Por omisión, \texttt{0}. \\ \hline
+\texttt{mejor\_\allowbreak{}racha} & \texttt{SMALLINT} & No &  & Racha más larga. Por omisión, \texttt{0}. \\ \hline
+\texttt{tiempo\_\allowbreak{}total\_\allowbreak{}jugado} & \texttt{INT} & No &  & Segundos jugados en el modo. Por omisión, \texttt{0}. \\ \hline
+\texttt{barreras\_\allowbreak{}colocadas} & \texttt{INT} & No &  & Muros colocados, contados desde \textit{Jugada} al cerrar cada partida. Por omisión, \texttt{0}. \\ \hline
+\texttt{abandonos} & \texttt{INT} & No &  & Abandonos en partidas en línea, para la moderación (\mbox{CU-24} \mbox{RN-05}). Por omisión, \texttt{0}. \\ \hline
+\texttt{id\_\allowbreak{}division} & \texttt{TINYINT} & Sí & FK & División actual; nula hasta jugar cinco partidas en el modo (\mbox{CU-25} \mbox{RN-14}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{HistorialDivision}{Cambio de división de una cuenta en un modo. No se deduce de una sola partida por las partidas de margen, así que se guarda (\mbox{CU-15}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}historial\_\allowbreak{}division} & \texttt{INT}, identidad & No & PK & Identificador del cambio. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta. \\ \hline
+\texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & FK & Modo en que cambió de división. \\ \hline
+\texttt{id\_\allowbreak{}division\_\allowbreak{}anterior} & \texttt{TINYINT} & Sí & FK & División de la que sale; nula al obtener la primera. \\ \hline
+\texttt{id\_\allowbreak{}division\_\allowbreak{}nueva} & \texttt{TINYINT} & No & FK & División a la que llega. \\ \hline
+\texttt{fecha\_\allowbreak{}cambio} & \texttt{DATETIME2(0)} & No &  & Momento del cambio; lo marca la gráfica de elo. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Caja}{Caja comprada u obtenida al subir de nivel. Existe sin abrir entre la compra y la apertura (\mbox{CU-39} \mbox{RN-09}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}caja} & \texttt{INT}, identidad & No & PK & Identificador de la caja. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta dueña de la caja. \\ \hline
+\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja} & \texttt{TINYINT} & No & FK & Tipo, que fija el contenido posible. \\ \hline
+\texttt{origen} & \texttt{VARCHAR(10)} & No &  & \texttt{COMPRA} o \texttt{PARTIDA}. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{SIN\_\allowbreak{}ABRIR}, \texttt{ABIERTA} o \texttt{CADUCADA}. Por omisión, \texttt{SIN\_\allowbreak{}ABRIR}. \\ \hline
+\texttt{fecha\_\allowbreak{}obtencion} & \texttt{DATETIME2(0)} & No &  & Momento en que se obtuvo. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}apertura} & \texttt{DATETIME2(0)} & Sí &  & Momento en que se abrió. \\ \hline
+\texttt{fecha\_\allowbreak{}caducidad} & \texttt{DATETIME2(0)} & Sí &  & Solo en cajas ganadas jugando, a los catorce días; las compradas no caducan (\mbox{CU-39} \mbox{RN-06}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{CajaContenido}{Los tres objetos que salieron al abrir una caja, registrados para poder comprobarlos después (\mbox{CU-39} \mbox{RN-07}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}caja} & \texttt{INT} & No & PK, FK & Caja abierta. \\ \hline
+\texttt{numero} & \texttt{TINYINT} & No & PK & Posición del objeto en la caja, de 1 a 3. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & FK & Objeto que salió. \\ \hline
+\texttt{monedas\_\allowbreak{}conversion} & \texttt{INT} & Sí &  & Monedas recibidas si el objeto estaba repetido y se convirtió (\mbox{CU-39} \mbox{RN-03}). \\ \hline
+\texttt{convertido} & calculada & --- &  & Si el objeto se convirtió en monedas. Calculada: es exactamente que \texttt{monedas\_\allowbreak{}conversion} no sea nula. \\ \hline
+\end{tablaatributos}
+
+\atributosde{MovimientoMoneda}{Entrada o salida de monedas. El saldo verdadero es su suma; nunca se modifica ni se elimina (\mbox{CU-40} \mbox{RN-01}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}movimiento} & \texttt{BIGINT}, identidad & No & PK & Identificador del movimiento. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta afectada. \\ \hline
+\texttt{tipo} & \texttt{VARCHAR(12)} & No &  & \texttt{PARTIDA}, \texttt{NIVEL}, \texttt{COMPRA}, \texttt{COMPRA\_\allowbreak{}CAJA}, \texttt{CONVERSION} o \texttt{DEVOLUCION}. Discrimina qué origen aplica. \\ \hline
+\texttt{importe} & \texttt{INT} & No &  & Monedas; negativo en las compras. \\ \hline
+\texttt{fecha\_\allowbreak{}movimiento} & \texttt{DATETIME2(0)} & No &  & Momento del movimiento. Por omisión, la fecha actual. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & Sí & FK & Partida que lo originó, en \texttt{PARTIDA}. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & Sí & FK & Objeto comprado o convertido, en \texttt{COMPRA} y \texttt{CONVERSION}. \\ \hline
+\texttt{id\_\allowbreak{}caja} & \texttt{INT} & Sí & FK & Caja comprada o abierta, en \texttt{COMPRA\_\allowbreak{}CAJA} y \texttt{CONVERSION}. \\ \hline
+\end{tablaatributos}
+
+\subsubsection*{Relaciones entre jugadores y tutorial} 
+\atributosde{Amistad}{Amistad recíproca entre dos cuentas, guardada una sola vez por par ordenado (\mbox{CU-31} \mbox{RN-03}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario\_\allowbreak{}a} & \texttt{INT} & No & PK, FK & El menor de los dos identificadores. \\ \hline
+\texttt{id\_\allowbreak{}usuario\_\allowbreak{}b} & \texttt{INT} & No & PK, FK & El mayor de los dos identificadores. \\ \hline
+\texttt{fecha\_\allowbreak{}amistad} & \texttt{DATETIME2(0)} & No &  & Momento en que se aceptó la solicitud. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Solicitud}{Solicitud de amistad pendiente. Tiene dirección, a diferencia de la amistad, y se borra al responderse (\mbox{CU-30}, \mbox{CU-31}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}solicitud} & \texttt{INT}, identidad & No & PK & Identificador de la solicitud. \\ \hline
+\texttt{id\_\allowbreak{}solicitante} & \texttt{INT} & No & FK & Jugador que la envía. \\ \hline
+\texttt{id\_\allowbreak{}destinatario} & \texttt{INT} & No & FK & Jugador que la recibe. \\ \hline
+\texttt{fecha\_\allowbreak{}solicitud} & \texttt{DATETIME2(0)} & No &  & Envío; caduca a los treinta días (\mbox{CU-31} \mbox{RN-05}). Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Silencio}{Jugador silenciado por otro; solo lo consulta quien silenció (\mbox{CU-33}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Jugador que silencia. \\ \hline
+\texttt{id\_\allowbreak{}silenciado} & \texttt{INT} & No & PK, FK & Jugador silenciado. \\ \hline
+\texttt{fecha\_\allowbreak{}silencio} & \texttt{DATETIME2(0)} & No &  & Momento del silencio. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Bloqueo}{Bloqueo entre dos jugadores; impide emparejar, invitar, buscar, solicitar y compartir sala (\mbox{CU-33} \mbox{RN-05}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}bloqueador} & \texttt{INT} & No & PK, FK & Jugador que bloquea. \\ \hline
+\texttt{id\_\allowbreak{}bloqueado} & \texttt{INT} & No & PK, FK & Jugador bloqueado. \\ \hline
+\texttt{fecha\_\allowbreak{}bloqueo} & \texttt{DATETIME2(0)} & No &  & Momento del bloqueo. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{ProgresoTutorial}{Avance de cada cuenta en cada lección del tutorial; es la relación N:M entre Usuario y Leccion (\mbox{CU-41}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Cuenta. \\ \hline
+\texttt{id\_\allowbreak{}leccion} & \texttt{TINYINT} & No & PK, FK & Lección. \\ \hline
+\texttt{paso\_\allowbreak{}actual} & \texttt{TINYINT} & No &  & Último paso completado. \\ \hline
+\texttt{fecha\_\allowbreak{}actualizacion} & \texttt{DATETIME2(0)} & No &  & Último avance. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}completada} & \texttt{DATETIME2(0)} & Sí &  & Momento en que se terminó la lección. \\ \hline
+\texttt{completada} & calculada & --- &  & Si la lección está terminada. Calculada: es exactamente que \texttt{fecha\_\allowbreak{}completada} no sea nula. \\ \hline
+\end{tablaatributos}
+
+\subsubsection*{Moderación y bitácoras} 
+\atributosde{Reporte}{Denuncia de un jugador contra otro. Las pruebas se adjuntan por referencia a la partida, no por copia (\mbox{CU-42} \mbox{RN-01}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}reporte} & \texttt{INT}, identidad & No & PK & Identificador del reporte. \\ \hline
+\texttt{id\_\allowbreak{}denunciante} & \texttt{INT} & No & FK & Jugador que reporta (rol reportante del diagrama). \\ \hline
+\texttt{id\_\allowbreak{}reportado} & \texttt{INT} & No & FK & Jugador reportado. \\ \hline
+\texttt{id\_\allowbreak{}motivo} & \texttt{TINYINT} & No & FK & Motivo del catálogo. \\ \hline
+\texttt{descripcion} & \texttt{NVARCHAR(500)} & Sí &  & Texto opcional del denunciante. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & Sí & FK & Partida de la que salen las pruebas, si se reportó desde una. \\ \hline
+\texttt{fecha\_\allowbreak{}reporte} & \texttt{DATETIME2(0)} & No &  & Envío. Por omisión, la fecha actual. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(20)} & No &  & \texttt{PENDIENTE}, \texttt{EN\_\allowbreak{}REVISION}, \texttt{RESUELTO\_\allowbreak{}SIN\_\allowbreak{}SANCION} o \texttt{RESUELTO\_\allowbreak{}CON\_\allowbreak{}SANCION}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\texttt{id\_\allowbreak{}moderador} & \texttt{INT} & Sí & FK & Moderador que lo tiene en revisión o lo resolvió. \\ \hline
+\texttt{fecha\_\allowbreak{}asignacion} & \texttt{DATETIME2(0)} & Sí &  & Momento en que se tomó; a los treinta minutos vuelve a la cola (\mbox{CU-43} \mbox{RN-03}). \\ \hline
+\texttt{nota\_\allowbreak{}resolucion} & \texttt{NVARCHAR(1000)} & Sí &  & Nota obligatoria al resolver (\mbox{CU-43} \mbox{RN-07}). \\ \hline
+\texttt{fecha\_\allowbreak{}resolucion} & \texttt{DATETIME2(0)} & Sí &  & Momento de la resolución. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Sancion}{Sanción aplicada por un moderador, de ámbito de cuenta o de chat (\mbox{D-05}). Sustituye al Baneo del diagrama; al retirarse se desactiva, no se borra.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}sancion} & \texttt{INT}, identidad & No & PK & Identificador de la sanción. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Jugador sancionado. \\ \hline
+\texttt{id\_\allowbreak{}moderador} & \texttt{INT} & No & FK & Moderador que la aplicó; la conserva aunque se le retire el rol (\mbox{CU-47} \mbox{RN-03}). \\ \hline
+\texttt{id\_\allowbreak{}reporte} & \texttt{INT} & Sí & FK & Reporte que la originó, si lo hay. \\ \hline
+\texttt{ambito} & \texttt{VARCHAR(10)} & No &  & \texttt{CUENTA} o \texttt{CHAT} (\mbox{CU-44} \mbox{RN-03}). \\ \hline
+\texttt{tipo} & \texttt{VARCHAR(10)} & No &  & \texttt{TEMPORAL} o \texttt{PERMANENTE}. Discrimina si aplica \texttt{fecha\_\allowbreak{}fin}. \\ \hline
+\texttt{motivo} & \texttt{NVARCHAR(500)} & No &  & Lo que comprobó el moderador (\mbox{CU-44} \mbox{RN-06}). \\ \hline
+\texttt{fecha\_\allowbreak{}inicio} & \texttt{DATETIME2(0)} & No &  & Inicio de la sanción. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}fin} & \texttt{DATETIME2(0)} & Sí &  & Fin de una sanción temporal; nula si es permanente (\mbox{CU-44} \mbox{RN-04}). \\ \hline
+\texttt{fecha\_\allowbreak{}retiro} & \texttt{DATETIME2(0)} & Sí &  & Retiro manual por apelación o por sustitución (\mbox{CU-43} \mbox{RN-06}). \\ \hline
+\texttt{id\_\allowbreak{}sancion\_\allowbreak{}sustituta} & \texttt{INT} & Sí & FK & Sanción del mismo ámbito que la sustituyó (\mbox{CU-44} \mbox{RN-09}). \\ \hline
+\texttt{activa} & calculada & --- &  & Si no fue retirada. Calculada: es exactamente que \texttt{fecha\_\allowbreak{}retiro} sea nula. Que surta efecto hoy depende además de \texttt{fecha\_\allowbreak{}fin}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Apelacion}{Apelación de una sanción por parte del sancionado; hay a lo sumo una por sanción (\mbox{CU-45} \mbox{RN-01}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}apelacion} & \texttt{INT}, identidad & No & PK & Identificador de la apelación. \\ \hline
+\texttt{id\_\allowbreak{}sancion} & \texttt{INT} & No & FK, UQ & Sanción apelada. \\ \hline
+\texttt{texto} & \texttt{NVARCHAR(1000)} & No &  & Texto del sancionado; no se rechaza por lenguaje (\mbox{CU-45} \mbox{RN-04}). \\ \hline
+\texttt{marca\_\allowbreak{}lenguaje} & \texttt{BIT} & No &  & Si el filtro de palabras encontró un término, como aviso al moderador. Por omisión, \texttt{0}. \\ \hline
+\texttt{fecha\_\allowbreak{}apelacion} & \texttt{DATETIME2(0)} & No &  & Envío. Por omisión, la fecha actual. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(12)} & No &  & \texttt{PENDIENTE}, \texttt{EN\_\allowbreak{}REVISION}, \texttt{ACEPTADA} o \texttt{RECHAZADA}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\texttt{id\_\allowbreak{}moderador} & \texttt{INT} & Sí & FK & Moderador que la revisa; distinto del que aplicó la sanción (\mbox{CU-45} \mbox{RN-06}). \\ \hline
+\texttt{fecha\_\allowbreak{}asignacion} & \texttt{DATETIME2(0)} & Sí &  & Momento en que se tomó; a los treinta minutos vuelve a la cola (\mbox{CU-43} \mbox{RN-03}). \\ \hline
+\texttt{nota\_\allowbreak{}resolucion} & \texttt{NVARCHAR(1000)} & Sí &  & Nota obligatoria al resolver. \\ \hline
+\texttt{fecha\_\allowbreak{}resolucion} & \texttt{DATETIME2(0)} & Sí &  & Momento de la resolución. \\ \hline
+\end{tablaatributos}
+
+\atributosde{BitacoraModeracion}{Registro de cada acción de moderación y administración, incluida la consulta de las bitácoras (\mbox{CU-48} \mbox{RN-04}). Solo admite inserción.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}bitacora} & \texttt{BIGINT}, identidad & No & PK & Identificador del registro. \\ \hline
+\texttt{id\_\allowbreak{}moderador} & \texttt{INT} & No & FK & Usuario que actuó: moderador, administrador o quien intentó actuar sin rol. \\ \hline
+\texttt{accion} & \texttt{VARCHAR(30)} & No &  & Acción, por ejemplo \texttt{ROL\_\allowbreak{}OTORGADO}, \texttt{ROL\_\allowbreak{}RETIRADO} o \texttt{CONSULTA\_\allowbreak{}BITACORA}. \\ \hline
+\texttt{id\_\allowbreak{}usuario\_\allowbreak{}afectado} & \texttt{INT} & Sí & FK & Usuario sobre el que se actuó, si lo hay. \\ \hline
+\texttt{detalle} & \texttt{NVARCHAR(1000)} & Sí &  & Motivo, reporte, sanción o filtros de la acción. \\ \hline
+\texttt{fecha\_\allowbreak{}hora} & \texttt{DATETIME2(0)} & No &  & Momento de la acción. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{BitacoraAcceso}{Registro de cada intento de acceso y de cada cambio de credenciales, exitoso o no. Nunca contiene contraseñas ni códigos (\mbox{CU-48} \mbox{RN-05}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}bitacora} & \texttt{BIGINT}, identidad & No & PK & Identificador del registro. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & Sí & FK & Cuenta, si se identificó; nula en intentos contra cuentas inexistentes. \\ \hline
+\texttt{identificador\_\allowbreak{}capturado} & \texttt{NVARCHAR(254)} & Sí &  & Nickname o correo tecleado; único rastro de un intento contra una cuenta inexistente (\mbox{CU-48} \mbox{RN-06}). \\ \hline
+\texttt{resultado} & \texttt{VARCHAR(40)} & No &  & Resultado, por ejemplo \texttt{EXITO}, \texttt{CONTRASENA\_\allowbreak{}INCORRECTA} o \texttt{REGISTRO\_\allowbreak{}EXITOSO}. \\ \hline
+\texttt{direccion\_\allowbreak{}ip} & \texttt{VARCHAR(45)} & No &  & Dirección de red de origen. \\ \hline
+\texttt{fecha\_\allowbreak{}hora} & \texttt{DATETIME2(0)} & No &  & Momento del intento. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+

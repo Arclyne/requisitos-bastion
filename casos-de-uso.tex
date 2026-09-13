@@ -22,6 +22,8 @@
 \usepackage{ragged2e}
 \usepackage{needspace}
 \usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
 
 %---------------------------------------------------------------------
@@ -165,6 +167,36 @@
 {\begin{itemize}[nosep,label=\textbullet,leftmargin=1.1em]}
 {\end{itemize}}
 
+% Modelo de datos: atributo en el texto, con corte de línea permitido tras cada guion bajo
+\newcommand{\atund}{\textunderscore\allowbreak}
+\newcommand{\at}[1]{{\let\_\atund\texttt{#1}}}
+
+% Modelo de datos: tabla de atributos de una entidad (generada desde bd/bastion.sql)
+\newcommand{\atributosde}[2]{\par\needspace{7\baselineskip}\medskip\noindent\textbf{\textit{#1}}. #2\par\nopagebreak}
+\newenvironment{tablaatributos}
+{%
+  \par\small\setlength{\tabcolsep}{4pt}\setlength{\extrarowheight}{1pt}%
+  \setlength{\LTpre}{3pt}\setlength{\LTpost}{6pt}%
+  \begin{longtable}{|L{0.23\textwidth}|L{0.155\textwidth}|L{0.055\textwidth}|L{0.075\textwidth}|L{0.365\textwidth}|}
+  \hline
+  \textbf{Atributo} & \textbf{Tipo} & \textbf{Nulo} & \textbf{Llave} & \textbf{Descripción} \\ \hline
+  \endfirsthead
+  \hline
+  \textbf{Atributo} & \textbf{Tipo} & \textbf{Nulo} & \textbf{Llave} & \textbf{Descripción} \\ \hline
+  \endhead
+}
+{\end{longtable}\normalsize\par}
+
+% Código SQL
+\lstdefinestyle{sql}{
+  language=SQL, basicstyle=\ttfamily\small, keywordstyle=\bfseries,
+  commentstyle=\itshape\color{black!60}, stringstyle=\color{black!80},
+  morekeywords={LOGIN,PASSWORD,CHECK_POLICY,CHECK_EXPIRATION,DEFAULT_DATABASE,DEFAULT_SCHEMA,EXECUTE,IF,GO,SUSER_ID,USER_ID},
+  columns=fullflexible, keepspaces=true, breaklines=true, frame=single, framesep=4pt,
+  xleftmargin=4pt, xrightmargin=4pt, aboveskip=8pt, belowskip=8pt, upquote=true
+}
+\input{bd/tex/resumen}
+
 %=====================================================================
 \begin{document}
 
@@ -296,5 +328,13 @@ página donde empieza cada uno.
 % SECCIÓN 6: DECISIONES DE DISEÑO
 %---------------------------------------------------------------------
 \input{decisiones}
+\newpage
+
+%---------------------------------------------------------------------
+% SECCIÓN 7: MODELO DE DATOS
+%   Las tablas de bd/tex se generan desde bd/bastion.sql con
+%   bd/generar_tablas.ps1; se editan en el script, no aquí.
+%---------------------------------------------------------------------
+\input{modelo-datos}
 
 \end{document}
