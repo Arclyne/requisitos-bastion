@@ -110,12 +110,12 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre las temporadas.}\par
     \texttt{descripcion.md} deja abierto si el ranking se organiza por temporadas. Este caso lo resuelve sin ellas, porque las recompensas de fin de temporada se descartaron y sin recompensa la temporada solo añade un reinicio que castiga a quien juega poco. Si se decide adoptarlas, el cambio no toca este caso sino el modelo: haría falta una entidad \textit{Temporada} y que \textit{EstadisticaModo} dependa de ella, lo que convertiría la clave de usuario y modo en una de usuario, modo y temporada.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 3)}
-      \item \textit{EstadisticaModo}: lee \texttt{puntos\_\allowbreak{}elo}, \texttt{partidas\_\allowbreak{}jugadas}, \texttt{division} del modo \textit{(pasos 4, 6)}
-      \item \textit{Usuario}: lee \texttt{nickname}, \texttt{id\_\allowbreak{}icono}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{codigo\_\allowbreak{}amigo} \textit{(pasos 4, 5, \mbox{FA-06})}
-      \item \textit{Division}: lee, para la vista por divisiones \textit{(paso \mbox{FA-05})}
-      \item \textit{Amistad}: lee, para el alcance entre amigos \textit{(paso \mbox{FA-03})}
-      \item \textit{Bloqueo}: lee, para la búsqueda \textit{(paso \mbox{FA-06})}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 3)}
+      \item \textbf{\textit{EstadisticaModo}:} lee \texttt{puntos\_\allowbreak{}elo}, \texttt{partidas\_\allowbreak{}jugadas}, \texttt{division} del modo \textit{(pasos 4, 6)}
+      \item \textbf{\textit{Usuario}:} lee \texttt{nickname}, \texttt{id\_\allowbreak{}icono}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{codigo\_\allowbreak{}amigo} \textit{(pasos 4, 5, \mbox{FA-06})}
+      \item \textbf{\textit{Division}:} lee, para la vista por divisiones \textit{(paso \mbox{FA-05})}
+      \item \textbf{\textit{Amistad}:} lee, para el alcance entre amigos \textit{(paso \mbox{FA-03})}
+      \item \textbf{\textit{Bloqueo}:} lee, para la búsqueda \textit{(paso \mbox{FA-06})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

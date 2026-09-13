@@ -162,14 +162,14 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué la sanción caduca sola y no hay caso que la levante.}\par
     Una sanción temporal no necesita un caso de uso que la retire: deja de aplicarse en cuanto su \texttt{fecha\_\allowbreak{}fin} queda atrás, y todos los flujos que la consultan —el inicio de sesión, el emparejamiento y el chat— comparan esa fecha con la actual. Escribir un proceso que recorriera las sanciones vencidas para desactivarlas añadiría un trabajo periódico cuyo único efecto sería cambiar una bandera que nadie lee sin mirar también la fecha. \texttt{activa} existe para el \mbox{RN-09}, es decir, para distinguir una sanción retirada a mano de una que simplemente venció, no para saber si está surtiendo efecto ahora.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token; cierra las del sancionado \textit{(pasos 7, 15)}
-      \item \textit{Usuario}: lee el rol del moderador y del sancionado \textit{(pasos 7, 9)}
-      \item \textit{Usuario}: escribe \texttt{estado\_\allowbreak{}cuenta}, solo si el ámbito es de cuenta \textit{(paso 14)}
-      \item \textit{Sancion}: lee las activas del mismo ámbito \textit{(paso 10)}
-      \item \textit{Sancion}: crea, y desactiva la anterior en el \mbox{FA-07} \textit{(pasos 13, \mbox{FA-07})}
-      \item \textit{Reporte}: lee el de origen; escribe su resolución \textit{(pasos 1, 18)}
-      \item \textit{Participacion}: cierra la que esté sin terminar, solo si el ámbito es de cuenta \textit{(paso 16)}
-      \item \textit{BitacoraModeracion}: inserta \textit{(paso 20)}
+      \item \textbf{\textit{Sesion}:} lee por token; cierra las del sancionado \textit{(pasos 7, 15)}
+      \item \textbf{\textit{Usuario}:} lee el rol del moderador y del sancionado \textit{(pasos 7, 9)}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{estado\_\allowbreak{}cuenta}, solo si el ámbito es de cuenta \textit{(paso 14)}
+      \item \textbf{\textit{Sancion}:} lee las activas del mismo ámbito \textit{(paso 10)}
+      \item \textbf{\textit{Sancion}:} crea, y desactiva la anterior en el \mbox{FA-07} \textit{(pasos 13, \mbox{FA-07})}
+      \item \textbf{\textit{Reporte}:} lee el de origen; escribe su resolución \textit{(pasos 1, 18)}
+      \item \textbf{\textit{Participacion}:} cierra la que esté sin terminar, solo si el ámbito es de cuenta \textit{(paso 16)}
+      \item \textbf{\textit{BitacoraModeracion}:} inserta \textit{(paso 20)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

@@ -125,12 +125,12 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué Equipamiento es una tabla y no seis columnas.}\par
     Se consideró guardar las seis ranuras como seis claves foráneas en \textit{Usuario}. Se descartó porque cualquier ranura nueva —un fondo de menú, un efecto de victoria— obligaría a alterar la tabla de \textit{Usuario}, que es la más consultada del sistema, y porque las seis columnas no podrían declararse contra un catálogo distinto cada una sin repetir la misma restricción seis veces. Con \textit{Equipamiento} como tabla, la clave primaria compuesta de usuario y ranura garantiza por sí sola el \mbox{RN-01}, y añadir una ranura es insertar una fila en un catálogo.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 8)}
-      \item \textit{Ranura}: lee el catálogo de las seis \textit{(paso 1)}
-      \item \textit{ObjetoCosmetico}: lee la rejilla de la ranura y comprueba que esté activo \textit{(pasos 3, 9)}
-      \item \textit{UsuarioObjeto}: lee, para distinguir lo poseído y acreditar la posesión \textit{(pasos 3, 10)}
-      \item \textit{Equipamiento}: actualiza la fila de esa ranura \textit{(paso 11)}
-      \item \textit{Usuario}: lee el saldo de monedas y el nivel, para pintar la rejilla \textit{(pasos 1, 3)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 8)}
+      \item \textbf{\textit{Ranura}:} lee el catálogo de las seis \textit{(paso 1)}
+      \item \textbf{\textit{ObjetoCosmetico}:} lee la rejilla de la ranura y comprueba que esté activo \textit{(pasos 3, 9)}
+      \item \textbf{\textit{UsuarioObjeto}:} lee, para distinguir lo poseído y acreditar la posesión \textit{(pasos 3, 10)}
+      \item \textbf{\textit{Equipamiento}:} actualiza la fila de esa ranura \textit{(paso 11)}
+      \item \textbf{\textit{Usuario}:} lee el saldo de monedas y el nivel, para pintar la rejilla \textit{(pasos 1, 3)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

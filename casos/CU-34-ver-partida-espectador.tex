@@ -131,13 +131,13 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué los espectadores no se guardan.}\par
     El catálogo previó una estructura de espectadores. Al detallar el caso resultó innecesaria: el aforo solo importa mientras la partida está en curso, y el servidor que retransmite ya lleva la cuenta en memoria; si se reinicia, los espectadores reconectan y el conteo se reconstruye. Guardar cada entrada y salida escribiría hasta doscientas filas por partida sin que ninguna funcionalidad las lea después. Lo único que sí debe persistir es el enlace compartido, porque se abre desde fuera del juego y tiene que sobrevivir a un reinicio.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token, cuando hay sesión \textit{(paso 2)}
-      \item \textit{Partida}: lee \texttt{estado}, \texttt{tipo} \textit{(paso 3)}
-      \item \textit{Participacion}, \textit{Usuario}: lee los participantes y su \texttt{permite\_\allowbreak{}espectadores} \textit{(pasos 4, 7, 8)}
-      \item \textit{Sala}: lee \texttt{permite\_\allowbreak{}espectadores}, si la partida viene de una sala \textit{(paso 4)}
-      \item \textit{Bloqueo}: lee entre el espectador y los participantes \textit{(paso 5)}
-      \item \textit{Jugada}, \textit{ParticipacionObjeto}: lee \textit{(paso 8)}
-      \item \textit{EnlaceEspectador}: lee por \texttt{token\_\allowbreak{}hash}; crea; marca \texttt{activo} en falso al terminar \textit{(pasos \mbox{FA-02}, \mbox{FA-09})}
+      \item \textbf{\textit{Sesion}:} lee por token, cuando hay sesión \textit{(paso 2)}
+      \item \textbf{\textit{Partida}:} lee \texttt{estado}, \texttt{tipo} \textit{(paso 3)}
+      \item \textbf{\textit{Participacion}, \textit{Usuario}:} lee los participantes y su \texttt{permite\_\allowbreak{}espectadores} \textit{(pasos 4, 7, 8)}
+      \item \textbf{\textit{Sala}:} lee \texttt{permite\_\allowbreak{}espectadores}, si la partida viene de una sala \textit{(paso 4)}
+      \item \textbf{\textit{Bloqueo}:} lee entre el espectador y los participantes \textit{(paso 5)}
+      \item \textbf{\textit{Jugada}, \textit{ParticipacionObjeto}:} lee \textit{(paso 8)}
+      \item \textbf{\textit{EnlaceEspectador}:} lee por \texttt{token\_\allowbreak{}hash}; crea; marca \texttt{activo} en falso al terminar \textit{(pasos \mbox{FA-02}, \mbox{FA-09})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

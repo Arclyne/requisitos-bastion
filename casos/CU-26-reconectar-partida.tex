@@ -113,12 +113,12 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué conectado se guarda en la base de datos.}\par
     El estado de conexión cambia con mucha frecuencia y parece propio de la memoria del servidor. Se guarda de todos modos por el \mbox{FA-07}: si el servidor se reinicia, necesita saber qué jugadores estaban desconectados y desde cuándo para que el plazo de sesenta segundos siga contando bien, y para que nadie pueda reclamar una victoria sobre un jugador que en realidad cayó junto con el servidor.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 6)}
-      \item \textit{Participacion}: escribe \texttt{conectado} y \texttt{fecha\_\allowbreak{}desconexion} \textit{(pasos 1, 10, \mbox{FA-07})}
-      \item \textit{Participacion}: lee las de todos los jugadores con casilla, muros, reloj y posición \textit{(pasos 7, 9)}
-      \item \textit{Partida}: lee \texttt{estado}, \texttt{turno\_\allowbreak{}actual} \textit{(paso 7)}
-      \item \textit{Jugada}: lee todas las de la partida en orden \textit{(paso 9)}
-      \item \textit{ParticipacionObjeto}, \textit{OfertaTablas}: lee \textit{(paso 9)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 6)}
+      \item \textbf{\textit{Participacion}:} escribe \texttt{conectado} y \texttt{fecha\_\allowbreak{}desconexion} \textit{(pasos 1, 10, \mbox{FA-07})}
+      \item \textbf{\textit{Participacion}:} lee las de todos los jugadores con casilla, muros, reloj y posición \textit{(pasos 7, 9)}
+      \item \textbf{\textit{Partida}:} lee \texttt{estado}, \texttt{turno\_\allowbreak{}actual} \textit{(paso 7)}
+      \item \textbf{\textit{Jugada}:} lee todas las de la partida en orden \textit{(paso 9)}
+      \item \textbf{\textit{ParticipacionObjeto}, \textit{OfertaTablas}:} lee \textit{(paso 9)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

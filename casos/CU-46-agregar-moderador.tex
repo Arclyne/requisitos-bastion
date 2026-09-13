@@ -109,11 +109,11 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué el rol es un atributo y no una tabla.}\par
     Un usuario tiene exactamente un rol y los tres roles son excluyentes, así que \texttt{rol} es un atributo de \textit{Usuario} con un dominio de tres valores. Una tabla de roles con una relación de muchos a muchos solo tendría sentido si un usuario pudiera tener varios roles a la vez o si los permisos de cada rol se configuraran desde la aplicación, y ninguna de las dos cosas está prevista. La historia de los cambios de rol, que sí interesa conservar, está en la \textit{BitacoraModeracion}.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}, \textit{Usuario}: lee el \texttt{rol} del administrador \textit{(paso 7)}
-      \item \textit{Usuario}: lee el candidato por \texttt{nickname} o \texttt{codigo\_\allowbreak{}amigo} \textit{(pasos 3, 8)}
-      \item \textit{Sancion}, \textit{Reporte}: lee el historial del candidato \textit{(pasos 4, 9)}
-      \item \textit{Usuario}: escribe \texttt{rol} \textit{(paso 11)}
-      \item \textit{BitacoraModeracion}: inserta \textit{(pasos 11, \mbox{FA-03})}
+      \item \textbf{\textit{Sesion}, \textit{Usuario}:} lee el \texttt{rol} del administrador \textit{(paso 7)}
+      \item \textbf{\textit{Usuario}:} lee el candidato por \texttt{nickname} o \texttt{codigo\_\allowbreak{}amigo} \textit{(pasos 3, 8)}
+      \item \textbf{\textit{Sancion}, \textit{Reporte}:} lee el historial del candidato \textit{(pasos 4, 9)}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{rol} \textit{(paso 11)}
+      \item \textbf{\textit{BitacoraModeracion}:} inserta \textit{(pasos 11, \mbox{FA-03})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

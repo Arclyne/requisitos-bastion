@@ -99,10 +99,10 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre la redundancia de saldo\_monedas.}\par
     Este caso es el que hace explícita una decisión que el modelo tendrá que justificar en su evidencia de tercera forma normal. \texttt{saldo\_\allowbreak{}monedas} depende de todos los movimientos del usuario y no solo de la clave de \textit{Usuario}, así que es un dato derivado guardado. Se conserva porque el saldo se muestra en la tienda, en la personalización y en cada compra, y sumar el historial completo en cada una sería costoso. La redundancia se controla de dos formas: todo caso que mueve monedas escribe el movimiento y el saldo en la misma transacción, y este caso comprueba que ambos coincidan cada vez que se consulta.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 3)}
-      \item \textit{MovimientoMoneda}: lee los del jugador y calcula su suma \textit{(pasos 4, 6)}
-      \item \textit{ObjetoCosmetico}, \textit{Caja}, \textit{TipoCaja}, \textit{Partida}, \textit{Modo}, \textit{CajaContenido}: lee, para describir cada movimiento \textit{(pasos 5, \mbox{FA-04})}
-      \item \textit{Usuario}: lee \texttt{saldo\_\allowbreak{}monedas} \textit{(paso 6)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 3)}
+      \item \textbf{\textit{MovimientoMoneda}:} lee los del jugador y calcula su suma \textit{(pasos 4, 6)}
+      \item \textbf{\textit{ObjetoCosmetico}, \textit{Caja}, \textit{TipoCaja}, \textit{Partida}, \textit{Modo}, \textit{CajaContenido}:} lee, para describir cada movimiento \textit{(pasos 5, \mbox{FA-04})}
+      \item \textbf{\textit{Usuario}:} lee \texttt{saldo\_\allowbreak{}monedas} \textit{(paso 6)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

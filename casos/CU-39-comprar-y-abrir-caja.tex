@@ -177,15 +177,15 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué la caja es una tabla y no un cobro directo.}\par
     Se consideró que comprar una caja sorteara y entregara en el mismo acto, sin dejar la caja como entidad. Se descartó porque el documento de diseño del juego prevé cajas ganadas jugando que caducan a los catorce días: eso exige que la caja exista sin abrir, con un origen y una fecha. Una vez que la caja tiene que existir, el estado \texttt{SIN\_\allowbreak{}ABRIR} sirve además para el \mbox{RN-10}, porque distingue el cobro realizado de la entrega pendiente, y para el \mbox{EX-05}, porque permite dejarla sin abrir cuando el sorteo falla en lugar de cobrarla y no dar nada.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 7)}
-      \item \textit{TipoCaja}: lee precio, actividad y tabla de probabilidades \textit{(pasos 2, 8, 20)}
-      \item \textit{TipoCajaObjeto}: lee los objetos posibles y su probabilidad \textit{(pasos 2, 20)}
-      \item \textit{Caja}: crea, lee y marca como abierta o caducada \textit{(pasos 11, 18, 26)}
-      \item \textit{CajaContenido}: crea tres \textit{(paso 24)}
-      \item \textit{ObjetoCosmetico}: lee los candidatos del sorteo \textit{(paso 20)}
-      \item \textit{UsuarioObjeto}: lee, para descartar repetidos; crea los nuevos \textit{(pasos 20, 22)}
-      \item \textit{Usuario}: lee y escribe saldo y contador de cajas sin raro \textit{(pasos 9, 12, 23, 25)}
-      \item \textit{MovimientoMoneda}: crea de tipo \texttt{COMPRA\_\allowbreak{}CAJA}, \texttt{CONVERSION} y, si procede, \texttt{DEVOLUCION} \textit{(pasos 12, 23)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 7)}
+      \item \textbf{\textit{TipoCaja}:} lee precio, actividad y tabla de probabilidades \textit{(pasos 2, 8, 20)}
+      \item \textbf{\textit{TipoCajaObjeto}:} lee los objetos posibles y su probabilidad \textit{(pasos 2, 20)}
+      \item \textbf{\textit{Caja}:} crea, lee y marca como abierta o caducada \textit{(pasos 11, 18, 26)}
+      \item \textbf{\textit{CajaContenido}:} crea tres \textit{(paso 24)}
+      \item \textbf{\textit{ObjetoCosmetico}:} lee los candidatos del sorteo \textit{(paso 20)}
+      \item \textbf{\textit{UsuarioObjeto}:} lee, para descartar repetidos; crea los nuevos \textit{(pasos 20, 22)}
+      \item \textbf{\textit{Usuario}:} lee y escribe saldo y contador de cajas sin raro \textit{(pasos 9, 12, 23, 25)}
+      \item \textbf{\textit{MovimientoMoneda}:} crea de tipo \texttt{COMPRA\_\allowbreak{}CAJA}, \texttt{CONVERSION} y, si procede, \texttt{DEVOLUCION} \textit{(pasos 12, 23)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

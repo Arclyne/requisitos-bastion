@@ -152,18 +152,18 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué este caso es el único que escribe el elo.}\par
     Es el caso de uso más caro del sistema y el que más tablas toca de una vez, y por eso conviene decir en voz alta por qué no se reparte. El elo, las monedas y los contadores dependen todos del mismo resultado y deben moverse juntos o no moverse: un jugador con el elo actualizado y las monedas sin otorgar es un error que nadie sabría reparar después. Repartirlo entre varios casos —uno que cierre, otro que puntúe, otro que pague— obligaría a coordinarlos con una transacción que los abarcara a todos, que es exactamente lo que este caso ya es.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Partida}: escribe estado, \texttt{fecha\_\allowbreak{}fin}, forma de término, ganador \textit{(paso 5)}
-      \item \textit{Participacion}: escribe resultado, posición, elo final, diferencia, reloj restante \textit{(pasos 6, 8, 13)}
-      \item \textit{Jugada}: lee, para contar muros colocados y para el repaso de la IA \textit{(pasos 9, \mbox{FA-01})}
-      \item \textit{EstadisticaModo}: escribe todos los contadores y la división \textit{(pasos 9, \mbox{FA-02})}
-      \item \textit{HistorialDivision}: crea uno por cambio de división \textit{(paso FA-02)}
-      \item \textit{Usuario}: escribe experiencia, nivel y saldo de monedas \textit{(pasos 11, 12, \mbox{FA-03})}
-      \item \textit{MovimientoMoneda}: crea uno por participante \textit{(pasos 12, \mbox{FA-03})}
-      \item \textit{UsuarioObjeto}: crea, por las recompensas de nivel \textit{(paso \mbox{FA-03})}
-      \item \textit{Caja}: crea las de recompensa \textit{(paso FA-03)}
-      \item \textit{EnlaceEspectador}: desactiva los de la partida \textit{(paso FA-08)}
-      \item \textit{Sala}, \textit{SalaParticipante}: cierra la sala de origen y elimina sus miembros \textit{(paso FA-08)}
-      \item \textit{Modo}: lee, para los parámetros de puntuación \textit{(paso 7)}
+      \item \textbf{\textit{Partida}:} escribe estado, \texttt{fecha\_\allowbreak{}fin}, forma de término, ganador \textit{(paso 5)}
+      \item \textbf{\textit{Participacion}:} escribe resultado, posición, elo final, diferencia, reloj restante \textit{(pasos 6, 8, 13)}
+      \item \textbf{\textit{Jugada}:} lee, para contar muros colocados y para el repaso de la IA \textit{(pasos 9, \mbox{FA-01})}
+      \item \textbf{\textit{EstadisticaModo}:} escribe todos los contadores y la división \textit{(pasos 9, \mbox{FA-02})}
+      \item \textbf{\textit{HistorialDivision}:} crea uno por cambio de división \textit{(paso FA-02)}
+      \item \textbf{\textit{Usuario}:} escribe experiencia, nivel y saldo de monedas \textit{(pasos 11, 12, \mbox{FA-03})}
+      \item \textbf{\textit{MovimientoMoneda}:} crea uno por participante \textit{(pasos 12, \mbox{FA-03})}
+      \item \textbf{\textit{UsuarioObjeto}:} crea, por las recompensas de nivel \textit{(paso \mbox{FA-03})}
+      \item \textbf{\textit{Caja}:} crea las de recompensa \textit{(paso FA-03)}
+      \item \textbf{\textit{EnlaceEspectador}:} desactiva los de la partida \textit{(paso FA-08)}
+      \item \textbf{\textit{Sala}, \textit{SalaParticipante}:} cierra la sala de origen y elimina sus miembros \textit{(paso FA-08)}
+      \item \textbf{\textit{Modo}:} lee, para los parámetros de puntuación \textit{(paso 7)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

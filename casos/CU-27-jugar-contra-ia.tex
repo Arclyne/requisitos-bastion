@@ -134,12 +134,12 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué la partida se guarda si no da elo.}\par
     Guardar las partidas contra la IA escribe filas que no afectan a la clasificación, y podría parecer desperdicio. Se guardan porque de ellas dependen tres cosas que el diseño promete: que aparezcan en el historial, que tengan repetición y que el repaso de errores se calcule en el servidor, donde está el motor que sabe cuál era la jugada correcta. Además, la experiencia sí se otorga, y otorgar algo a partir de una partida que el servidor no conoce sería aceptar un resultado dictado por el cliente.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 4)}
-      \item \textit{ColaEmparejamiento}, \textit{SalaParticipante}, \textit{Participacion}: lee, para las exclusiones \textit{(pasos 4, \mbox{FA-03})}
-      \item \textit{NivelIA}, \textit{Modo}: lee \textit{(pasos 1, 6)}
-      \item \textit{Partida}: cierra la de IA pendiente; crea con \texttt{tipo} \texttt{IA}, \texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}, \texttt{permite\_\allowbreak{}deshacer}, \texttt{permite\_\allowbreak{}sugerencias}; escribe \texttt{deshacer\_\allowbreak{}usados} y \texttt{sugerencias\_\allowbreak{}usadas} \textit{(pasos 5, 6, \mbox{FA-04}, \mbox{FA-05})}
-      \item \textit{Participacion}, \textit{ParticipacionObjeto}: crea la del jugador \textit{(paso 7)}
-      \item \textit{Jugada}: crea las de la IA con \texttt{id\_\allowbreak{}usuario} nulo; marca \texttt{deshecha} \textit{(pasos 11, \mbox{FA-04})}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 4)}
+      \item \textbf{\textit{ColaEmparejamiento}, \textit{SalaParticipante}, \textit{Participacion}:} lee, para las exclusiones \textit{(pasos 4, \mbox{FA-03})}
+      \item \textbf{\textit{NivelIA}, \textit{Modo}:} lee \textit{(pasos 1, 6)}
+      \item \textbf{\textit{Partida}:} cierra la de IA pendiente; crea con \texttt{tipo} \texttt{IA}, \texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}, \texttt{permite\_\allowbreak{}deshacer}, \texttt{permite\_\allowbreak{}sugerencias}; escribe \texttt{deshacer\_\allowbreak{}usados} y \texttt{sugerencias\_\allowbreak{}usadas} \textit{(pasos 5, 6, \mbox{FA-04}, \mbox{FA-05})}
+      \item \textbf{\textit{Participacion}, \textit{ParticipacionObjeto}:} crea la del jugador \textit{(paso 7)}
+      \item \textbf{\textit{Jugada}:} crea las de la IA con \texttt{id\_\allowbreak{}usuario} nulo; marca \texttt{deshecha} \textit{(pasos 11, \mbox{FA-04})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

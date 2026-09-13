@@ -9,6 +9,9 @@
 %---------------------------------------------------------------------
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+% Latin Modern Mono en lugar de cmtt: cmtt no tiene negrita y los
+% atributos en \texttt dentro de etiquetas en negrita no se veian resaltados
+\renewcommand{\ttdefault}{lmtt}
 \usepackage[spanish,es-tabla,es-noshorthands]{babel}
 \usepackage[letterpaper,margin=2.5cm,includehead,headsep=8mm]{geometry}
 \usepackage{array}

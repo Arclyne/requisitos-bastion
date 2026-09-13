@@ -135,10 +135,10 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué se necesita fecha\_ultimo\_uso.}\par
     La \texttt{fecha\_\allowbreak{}inicio} de una sesión dice cuándo se abrió, pero no si todavía se usa: una sesión abierta hace veinte horas en el equipo de casa y una abierta hace veinte horas en un equipo ajeno se ven iguales. Mostrar la fecha de último uso es lo que permite al jugador reconocer una sesión olvidada. El servidor la actualiza al atender mensajes de esa sesión, con una granularidad de minutos para no escribir en cada jugada.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee las abiertas del usuario con \texttt{nombre\_\allowbreak{}dispositivo}, \texttt{direccion\_\allowbreak{}ip}, \texttt{fecha\_\allowbreak{}inicio}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}uso}, \texttt{fecha\_\allowbreak{}expiracion} \textit{(paso 4)}
-      \item \textit{Sesion}: escribe \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} \textit{(pasos 14, \mbox{FA-03})}
-      \item \textit{BitacoraAcceso}: inserta \textit{(pasos 15, \mbox{FA-03})}
-      \item \textit{Participacion}: lee, para el \mbox{FA-08} \textit{(paso \mbox{FA-08})}
+      \item \textbf{\textit{Sesion}:} lee las abiertas del usuario con \texttt{nombre\_\allowbreak{}dispositivo}, \texttt{direccion\_\allowbreak{}ip}, \texttt{fecha\_\allowbreak{}inicio}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}uso}, \texttt{fecha\_\allowbreak{}expiracion} \textit{(paso 4)}
+      \item \textbf{\textit{Sesion}:} escribe \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} \textit{(pasos 14, \mbox{FA-03})}
+      \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(pasos 15, \mbox{FA-03})}
+      \item \textbf{\textit{Participacion}:} lee, para el \mbox{FA-08} \textit{(paso \mbox{FA-08})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

@@ -72,31 +72,31 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \crudFila{Actor}{Jugador sin cuenta}
   \crudFila{Prototipos}{Sin prototipo. La pantalla 6c solo ofrece la opción ``crear cuenta''; el formulario de registro no está prototipado.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item \texttt{nickname}: texto de 3 a 30 caracteres, sin espacios.
-    \item \texttt{correo}: texto de hasta 254 caracteres con formato de correo.
-    \item Contraseña y su confirmación: texto de al menos 8 caracteres. No se almacena.
-    \item \texttt{fecha\_\allowbreak{}nacimiento}: fecha.
-    \item \texttt{idioma\_\allowbreak{}preferido}: código de cultura, por ejemplo \texttt{es-MX}.
+    \item \textbf{\texttt{nickname}:} texto de 3 a 30 caracteres, sin espacios.
+    \item \textbf{\texttt{correo}:} texto de hasta 254 caracteres con formato de correo.
+    \item \textbf{Contraseña y su confirmación:} texto de al menos 8 caracteres. No se almacena.
+    \item \textbf{\texttt{fecha\_\allowbreak{}nacimiento}:} fecha.
+    \item \textbf{\texttt{idioma\_\allowbreak{}preferido}:} código de cultura, por ejemplo \texttt{es-MX}.
     \item Versión de los términos de uso aceptada.
     \item Huella del dispositivo y \texttt{version\_\allowbreak{}cliente}, que envía el cliente sin intervención del jugador.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{nickname} y \texttt{correo} de las cuentas existentes, para comprobar unicidad.
-    \item \textit{PalabraProhibida}: \texttt{termino}, \texttt{idioma}, \texttt{ambito} y \texttt{activo}, para filtrar el \texttt{nickname}.
-    \item \textit{ObjetoCosmetico}: los marcados con \texttt{es\_\allowbreak{}inicial} y el marcado con \texttt{es\_\allowbreak{}predeterminado} en cada \textit{Ranura}.
-    \item \textit{Modo}: los modos activos.
+    \item \textbf{\textit{Usuario}:} \texttt{nickname} y \texttt{correo} de las cuentas existentes, para comprobar unicidad.
+    \item \textbf{\textit{PalabraProhibida}:} \texttt{termino}, \texttt{idioma}, \texttt{ambito} y \texttt{activo}, para filtrar el \texttt{nickname}.
+    \item \textbf{\textit{ObjetoCosmetico}:} los marcados con \texttt{es\_\allowbreak{}inicial} y el marcado con \texttt{es\_\allowbreak{}predeterminado} en cada \textit{Ranura}.
+    \item \textbf{\textit{Modo}:} los modos activos.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{tipo\_\allowbreak{}cuenta} = \texttt{REGISTRADA}, \texttt{estado\_\allowbreak{}cuenta} = \texttt{PENDIENTE}, \texttt{rol} = \texttt{JUGADOR}, \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}nacimiento}, \texttt{idioma\_\allowbreak{}preferido}, \texttt{codigo\_\allowbreak{}amigo}, \texttt{fecha\_\allowbreak{}registro}; \texttt{intentos\_\allowbreak{}fallidos}, \texttt{experiencia} y \texttt{saldo\_\allowbreak{}monedas} en cero; \texttt{nivel} en 1; \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} y \texttt{bloqueada\_\allowbreak{}hasta} en nulo; \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} en falso.
-    \item \textit{EstadisticaModo}: una por cada \textit{Modo}, con los contadores en cero y el elo inicial.
-    \item \textit{UsuarioObjeto}: uno por cada objeto inicial, con \texttt{origen} = \texttt{INICIAL}.
-    \item \textit{Equipamiento}: una fila por cada una de las seis \textit{Ranura}, apuntando al objeto predeterminado.
-    \item \textit{AceptacionTerminos}: \texttt{version\_\allowbreak{}terminos}, \texttt{fecha\_\allowbreak{}aceptacion}, \texttt{direccion\_\allowbreak{}ip}.
-    \item \textit{TokenVerificacionCorreo}: \texttt{token\_\allowbreak{}hash}, \texttt{proposito} = \texttt{ALTA}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{usado} = 0.
-    \item \textit{BitacoraAcceso}: \texttt{REGISTRO\_\allowbreak{}EXITOSO}, \texttt{REGISTRO\_\allowbreak{}RECHAZADO} o \texttt{REGISTRO\_\allowbreak{}SIN\_\allowbreak{}CORREO}.
+    \item \textbf{\textit{Usuario}:} \texttt{tipo\_\allowbreak{}cuenta} = \texttt{REGISTRADA}, \texttt{estado\_\allowbreak{}cuenta} = \texttt{PENDIENTE}, \texttt{rol} = \texttt{JUGADOR}, \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}nacimiento}, \texttt{idioma\_\allowbreak{}preferido}, \texttt{codigo\_\allowbreak{}amigo}, \texttt{fecha\_\allowbreak{}registro}; \texttt{intentos\_\allowbreak{}fallidos}, \texttt{experiencia} y \texttt{saldo\_\allowbreak{}monedas} en cero; \texttt{nivel} en 1; \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} y \texttt{bloqueada\_\allowbreak{}hasta} en nulo; \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} en falso.
+    \item \textbf{\textit{EstadisticaModo}:} una por cada \textit{Modo}, con los contadores en cero y el elo inicial.
+    \item \textbf{\textit{UsuarioObjeto}:} uno por cada objeto inicial, con \texttt{origen} = \texttt{INICIAL}.
+    \item \textbf{\textit{Equipamiento}:} una fila por cada una de las seis \textit{Ranura}, apuntando al objeto predeterminado.
+    \item \textbf{\textit{AceptacionTerminos}:} \texttt{version\_\allowbreak{}terminos}, \texttt{fecha\_\allowbreak{}aceptacion}, \texttt{direccion\_\allowbreak{}ip}.
+    \item \textbf{\textit{TokenVerificacionCorreo}:} \texttt{token\_\allowbreak{}hash}, \texttt{proposito} = \texttt{ALTA}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{usado} = 0.
+    \item \textbf{\textit{BitacoraAcceso}:} \texttt{REGISTRO\_\allowbreak{}EXITOSO}, \texttt{REGISTRO\_\allowbreak{}RECHAZADO} o \texttt{REGISTRO\_\allowbreak{}SIN\_\allowbreak{}CORREO}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, una vez enviado el correo.
+    \item \textbf{\textit{Usuario}:} \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, una vez enviado el correo.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -118,19 +118,19 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \crudFila{Actor}{Invitado}
   \crudFila{Prototipos}{6c, la opción ``jugar como invitado'' (\mbox{F-14}).}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item Ninguna captura del jugador: basta con elegir la opción.
+    \item \textbf{Ninguna captura del jugador:} basta con elegir la opción.
     \item Huella del dispositivo y \texttt{version\_\allowbreak{}cliente}.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{nickname}, para comprobar que el provisional esté libre.
-    \item \textit{BitacoraAcceso}: altas de invitado desde la misma \texttt{direccion\_\allowbreak{}ip} en la última hora.
+    \item \textbf{\textit{Usuario}:} \texttt{nickname}, para comprobar que el provisional esté libre.
+    \item \textbf{\textit{BitacoraAcceso}:} altas de invitado desde la misma \texttt{direccion\_\allowbreak{}ip} en la última hora.
     \item \textit{Modo}, \textit{Ranura} y \textit{ObjetoCosmetico} iniciales y predeterminados.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{tipo\_\allowbreak{}cuenta} = \texttt{INVITADO}, \texttt{estado\_\allowbreak{}cuenta} = \texttt{ACTIVA}, \texttt{rol} = \texttt{JUGADOR}, \texttt{nickname} provisional, \texttt{fecha\_\allowbreak{}registro}; \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal} en nulo.
+    \item \textbf{\textit{Usuario}:} \texttt{tipo\_\allowbreak{}cuenta} = \texttt{INVITADO}, \texttt{estado\_\allowbreak{}cuenta} = \texttt{ACTIVA}, \texttt{rol} = \texttt{JUGADOR}, \texttt{nickname} provisional, \texttt{fecha\_\allowbreak{}registro}; \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal} en nulo.
     \item \textit{EstadisticaModo}, \textit{UsuarioObjeto} y \textit{Equipamiento}, igual que al registrar una cuenta.
-    \item \textit{Sesion}: \texttt{token\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}inicio}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{direccion\_\allowbreak{}ip}, \texttt{huella\_\allowbreak{}dispositivo}, \texttt{version\_\allowbreak{}cliente}.
-    \item \textit{BitacoraAcceso}: \texttt{resultado} = \texttt{ALTA\_\allowbreak{}INVITADO}.
+    \item \textbf{\textit{Sesion}:} \texttt{token\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}inicio}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{direccion\_\allowbreak{}ip}, \texttt{huella\_\allowbreak{}dispositivo}, \texttt{version\_\allowbreak{}cliente}.
+    \item \textbf{\textit{BitacoraAcceso}:} \texttt{resultado} = \texttt{ALTA\_\allowbreak{}INVITADO}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
@@ -150,23 +150,23 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \crudFila{Actor}{Invitado}
   \crudFila{Prototipos}{9e, Invitado · vincular cuenta.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item \texttt{nickname} definitivo, \texttt{correo}, contraseña y confirmación, \texttt{fecha\_\allowbreak{}nacimiento}: mismos formatos que al registrar.
+    \item \textbf{\texttt{nickname} definitivo, \texttt{correo}, contraseña y confirmación, \texttt{fecha\_\allowbreak{}nacimiento}:} mismos formatos que al registrar.
     \item Versión de los términos aceptada.
     \item Token de la sesión de invitado.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Sesion}: la del token, que debe pertenecer a un \textit{Usuario} con \texttt{tipo\_\allowbreak{}cuenta} = \texttt{INVITADO}.
-    \item \textit{Usuario}: \texttt{nickname} y \texttt{correo} de las demás cuentas.
+    \item \textbf{\textit{Sesion}:} la del token, que debe pertenecer a un \textit{Usuario} con \texttt{tipo\_\allowbreak{}cuenta} = \texttt{INVITADO}.
+    \item \textbf{\textit{Usuario}:} \texttt{nickname} y \texttt{correo} de las demás cuentas.
     \item \textit{PalabraProhibida}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
     \item \textit{AceptacionTerminos}.
     \item \textit{TokenVerificacionCorreo} con \texttt{proposito} = \texttt{ALTA}.
-    \item \textit{BitacoraAcceso}: \texttt{resultado} = \texttt{VINCULACION\_\allowbreak{}EXITOSA}.
+    \item \textbf{\textit{BitacoraAcceso}:} \texttt{resultado} = \texttt{VINCULACION\_\allowbreak{}EXITOSA}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{tipo\_\allowbreak{}cuenta} pasa a \texttt{REGISTRADA} y \texttt{estado\_\allowbreak{}cuenta} a \texttt{PENDIENTE}; se escriben \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}nacimiento} y \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}.
-    \item \textit{Sesion} de invitado: \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}.
+    \item \textbf{\textit{Usuario}:} \texttt{tipo\_\allowbreak{}cuenta} pasa a \texttt{REGISTRADA} y \texttt{estado\_\allowbreak{}cuenta} a \texttt{PENDIENTE}; se escriben \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}nacimiento} y \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}.
+    \item \textbf{\textit{Sesion} de invitado:} \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -181,7 +181,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/9e}\par\smallskip
-{\footnotesize\textit{Prototipo 9e: Invitado · vincular cuenta}}
+{\footnotesize\textit{\textbf{Prototipo 9e:} Invitado · vincular cuenta}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -196,16 +196,16 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item Token incluido en el enlace del correo.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{TokenVerificacionCorreo}: \texttt{token\_\allowbreak{}hash}, \texttt{proposito}, \texttt{correo\_\allowbreak{}destino}, \texttt{usado}, \texttt{fecha\_\allowbreak{}expiracion}.
-    \item \textit{Usuario}: \texttt{estado\_\allowbreak{}cuenta}, \texttt{idioma\_\allowbreak{}preferido}.
-    \item \textit{Sancion}: activas con \texttt{ambito} = \texttt{CUENTA}.
+    \item \textbf{\textit{TokenVerificacionCorreo}:} \texttt{token\_\allowbreak{}hash}, \texttt{proposito}, \texttt{correo\_\allowbreak{}destino}, \texttt{usado}, \texttt{fecha\_\allowbreak{}expiracion}.
+    \item \textbf{\textit{Usuario}:} \texttt{estado\_\allowbreak{}cuenta}, \texttt{idioma\_\allowbreak{}preferido}.
+    \item \textbf{\textit{Sancion}:} activas con \texttt{ambito} = \texttt{CUENTA}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{BitacoraAcceso}: \texttt{resultado} = \texttt{CUENTA\_\allowbreak{}VERIFICADA}.
+    \item \textbf{\textit{BitacoraAcceso}:} \texttt{resultado} = \texttt{CUENTA\_\allowbreak{}VERIFICADA}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{estado\_\allowbreak{}cuenta} pasa de \texttt{PENDIENTE} a \texttt{ACTIVA}; se escribe \texttt{fecha\_\allowbreak{}verificacion}.
-    \item \textit{TokenVerificacionCorreo}: \texttt{usado} = 1, y los demás pendientes del usuario quedan invalidados.
+    \item \textbf{\textit{Usuario}:} \texttt{estado\_\allowbreak{}cuenta} pasa de \texttt{PENDIENTE} a \texttt{ACTIVA}; se escribe \texttt{fecha\_\allowbreak{}verificacion}.
+    \item \textbf{\textit{TokenVerificacionCorreo}:} \texttt{usado} = 1, y los demás pendientes del usuario quedan invalidados.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -225,17 +225,17 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \crudFila{Prototipos}{6d, Primera vez · nombre, peón e icono.}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \texttt{id\_\allowbreak{}objeto} del peón elegido, opcional.
-    \item \texttt{id\_\allowbreak{}icono}: entero de 1 a 32, opcional.
+    \item \textbf{\texttt{id\_\allowbreak{}icono}:} entero de 1 a 32, opcional.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial}, que debe ser nula.
-    \item \textit{UsuarioObjeto} y \textit{ObjetoCosmetico}: los peones iniciales que posee el usuario.
+    \item \textbf{\textit{Usuario}:} \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial}, que debe ser nula.
+    \item \textbf{\textit{UsuarioObjeto} y \textit{ObjetoCosmetico}:} los peones iniciales que posee el usuario.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Equipamiento}: la fila de la ranura de peón apunta al peón elegido.
-    \item \textit{Usuario}: \texttt{id\_\allowbreak{}icono} y \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial}.
+    \item \textbf{\textit{Equipamiento}:} la fila de la ranura de peón apunta al peón elegido.
+    \item \textbf{\textit{Usuario}:} \texttt{id\_\allowbreak{}icono} y \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -250,7 +250,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/6d}\par\smallskip
-{\footnotesize\textit{Prototipo 6d: Primera vez · nombre, peón e icono}}
+{\footnotesize\textit{\textbf{Prototipo 6d:} Primera vez · nombre, peón e icono}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -267,13 +267,13 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{nickname}, \texttt{nivel}, \texttt{experiencia}, \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}registro}, \texttt{tipo\_\allowbreak{}cuenta}, \texttt{estado\_\allowbreak{}cuenta}.
+    \item \textbf{\textit{Usuario}:} \texttt{nickname}, \texttt{nivel}, \texttt{experiencia}, \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}registro}, \texttt{tipo\_\allowbreak{}cuenta}, \texttt{estado\_\allowbreak{}cuenta}.
     \item \textit{Avatar} vigente, \textit{EnlaceRed} y, de \textit{Equipamiento}, el título y el marco.
-    \item \textit{EstadisticaModo}, por modo: \texttt{partidas\_\allowbreak{}jugadas}, \texttt{partidas\_\allowbreak{}ganadas}, \texttt{partidas\_\allowbreak{}perdidas}, \texttt{puntos\_\allowbreak{}elo}, \texttt{elo\_\allowbreak{}maximo}, \texttt{racha\_\allowbreak{}actual}, \texttt{mejor\_\allowbreak{}racha}, \texttt{division}.
-    \item \textit{Division}: \texttt{elo\_\allowbreak{}minimo} y \texttt{elo\_\allowbreak{}descenso}, para el umbral de la gráfica.
-    \item \textit{Participacion} y \textit{Partida}: \texttt{elo\_\allowbreak{}final} y \texttt{fecha\_\allowbreak{}fin} de las clasificatorias; en el perfil de otro jugador, además, las partidas en común para el marcador.
-    \item \textit{HistorialDivision}: los cambios de división del modo.
-    \item \textit{Bloqueo}, \textit{Amistad}, \textit{Solicitud} y \textit{Silencio}: la relación entre ambos jugadores.
+    \item \textbf{\textit{EstadisticaModo}, por modo:} \texttt{partidas\_\allowbreak{}jugadas}, \texttt{partidas\_\allowbreak{}ganadas}, \texttt{partidas\_\allowbreak{}perdidas}, \texttt{puntos\_\allowbreak{}elo}, \texttt{elo\_\allowbreak{}maximo}, \texttt{racha\_\allowbreak{}actual}, \texttt{mejor\_\allowbreak{}racha}, \texttt{division}.
+    \item \textbf{\textit{Division}:} \texttt{elo\_\allowbreak{}minimo} y \texttt{elo\_\allowbreak{}descenso}, para el umbral de la gráfica.
+    \item \textbf{\textit{Participacion} y \textit{Partida}:} \texttt{elo\_\allowbreak{}final} y \texttt{fecha\_\allowbreak{}fin} de las clasificatorias; en el perfil de otro jugador, además, las partidas en común para el marcador.
+    \item \textbf{\textit{HistorialDivision}:} los cambios de división del modo.
+    \item \textbf{\textit{Bloqueo}, \textit{Amistad}, \textit{Solicitud} y \textit{Silencio}:} la relación entre ambos jugadores.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{Ninguno.}
@@ -290,16 +290,16 @@ La cuenta es el objeto de información central: casi todas las demás estructura
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/5a}\par\smallskip
-{\footnotesize\textit{Prototipo 5a: Perfil propio · estadísticas y títulos}}
+{\footnotesize\textit{\textbf{Prototipo 5a:} Perfil propio · estadísticas y títulos}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/5b}\par\smallskip
-{\footnotesize\textit{Prototipo 5b: Perfil de otro jugador · historial común}}
+{\footnotesize\textit{\textbf{Prototipo 5b:} Perfil de otro jugador · historial común}}
 \end{minipage}
 \par\medskip
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/16c}\par\smallskip
-{\footnotesize\textit{Prototipo 16c: Evolución del elo}}
+{\footnotesize\textit{\textbf{Prototipo 16c:} Evolución del elo}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -311,27 +311,27 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \crudFila{Actor}{Jugador}
   \crudFila{Prototipos}{9c, Editar perfil · foto, nombre y título; 12c, Ajustes · idioma.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item \texttt{id\_\allowbreak{}icono}: entero de 1 a 32, o bien una imagen jpg o png de hasta 2 MB.
+    \item \textbf{\texttt{id\_\allowbreak{}icono}:} entero de 1 a 32, o bien una imagen jpg o png de hasta 2 MB.
     \item \texttt{id\_\allowbreak{}objeto} del título a equipar.
     \item Hasta cuatro direcciones web de redes sociales.
     \item \texttt{idioma\_\allowbreak{}preferido}.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{UsuarioObjeto}: que el título elegido lo posea el usuario.
+    \item \textbf{\textit{UsuarioObjeto}:} que el título elegido lo posea el usuario.
     \item Catálogo de idiomas admitidos.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{EnlaceRed}: \texttt{url} y \texttt{orden} de cada enlace nuevo.
-    \item \textit{Avatar}: \texttt{ruta\_\allowbreak{}imagen}, \texttt{formato}, \texttt{tamano\_\allowbreak{}bytes}, \texttt{fecha\_\allowbreak{}subida}, \texttt{vigente} = 1, si se subió imagen.
+    \item \textbf{\textit{EnlaceRed}:} \texttt{url} y \texttt{orden} de cada enlace nuevo.
+    \item \textbf{\textit{Avatar}:} \texttt{ruta\_\allowbreak{}imagen}, \texttt{formato}, \texttt{tamano\_\allowbreak{}bytes}, \texttt{fecha\_\allowbreak{}subida}, \texttt{vigente} = 1, si se subió imagen.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{id\_\allowbreak{}icono}, \texttt{idioma\_\allowbreak{}preferido}.
-    \item \textit{Equipamiento}: la fila de la ranura de título.
-    \item \textit{Avatar} anterior: \texttt{vigente} = 0.
+    \item \textbf{\textit{Usuario}:} \texttt{id\_\allowbreak{}icono}, \texttt{idioma\_\allowbreak{}preferido}.
+    \item \textbf{\textit{Equipamiento}:} la fila de la ranura de título.
+    \item \textbf{\textit{Avatar} anterior:} \texttt{vigente} = 0.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{\begin{crudlista}
-    \item \textit{EnlaceRed}: los que el jugador quitó. Borrado físico.
+    \item \textbf{\textit{EnlaceRed}:} los que el jugador quitó. Borrado físico.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item El \texttt{nickname} no se modifica aquí (\mbox{CU-12} \mbox{RN-01}).
@@ -346,11 +346,11 @@ La cuenta es el objeto de información central: casi todas las demás estructura
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/9c}\par\smallskip
-{\footnotesize\textit{Prototipo 9c: Editar perfil · foto, nombre y título}}
+{\footnotesize\textit{\textbf{Prototipo 9c:} Editar perfil · foto, nombre y título}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/12c}\par\smallskip
-{\footnotesize\textit{Prototipo 12c: Ajustes · idioma}}
+{\footnotesize\textit{\textbf{Prototipo 12c:} Ajustes · idioma}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -362,20 +362,20 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \crudFila{Actor}{Jugador con cuenta registrada}
   \crudFila{Prototipos}{9d, Cambio de nombre · confirmación.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item \texttt{nickname} nuevo: texto de 3 a 30 caracteres.
+    \item \textbf{\texttt{nickname} nuevo:} texto de 3 a 30 caracteres.
     \item Confirmación explícita del cambio.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{HistorialNickname}: si el usuario ya cambió su nombre.
-    \item \textit{Usuario}: \texttt{nickname} de las demás cuentas.
+    \item \textbf{\textit{HistorialNickname}:} si el usuario ya cambió su nombre.
+    \item \textbf{\textit{Usuario}:} \texttt{nickname} de las demás cuentas.
     \item \textit{PalabraProhibida}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{HistorialNickname}: \texttt{nickname\_\allowbreak{}anterior}, \texttt{nickname\_\allowbreak{}nuevo}, \texttt{fecha\_\allowbreak{}cambio}.
+    \item \textbf{\textit{HistorialNickname}:} \texttt{nickname\_\allowbreak{}anterior}, \texttt{nickname\_\allowbreak{}nuevo}, \texttt{fecha\_\allowbreak{}cambio}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{nickname}.
+    \item \textbf{\textit{Usuario}:} \texttt{nickname}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -390,7 +390,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/9d}\par\smallskip
-{\footnotesize\textit{Prototipo 9d: Cambio de nombre · confirmación}}
+{\footnotesize\textit{\textbf{Prototipo 9d:} Cambio de nombre · confirmación}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -407,17 +407,17 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item Contraseña nueva y su confirmación.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{correo}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion}, \texttt{idioma\_\allowbreak{}preferido}.
-    \item \textit{TokenRecuperacion}: \texttt{token\_\allowbreak{}hash}, \texttt{usado}, \texttt{intentos}, \texttt{fecha\_\allowbreak{}expiracion}.
+    \item \textbf{\textit{Usuario}:} \texttt{correo}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion}, \texttt{idioma\_\allowbreak{}preferido}.
+    \item \textbf{\textit{TokenRecuperacion}:} \texttt{token\_\allowbreak{}hash}, \texttt{usado}, \texttt{intentos}, \texttt{fecha\_\allowbreak{}expiracion}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{TokenRecuperacion}: \texttt{token\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{intentos} = 0, \texttt{usado} = 0.
-    \item \textit{BitacoraAcceso}: \texttt{RECUPERACION\_\allowbreak{}SOLICITADA} y \texttt{RECUPERACION\_\allowbreak{}EXITOSA}.
+    \item \textbf{\textit{TokenRecuperacion}:} \texttt{token\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{intentos} = 0, \texttt{usado} = 0.
+    \item \textbf{\textit{BitacoraAcceso}:} \texttt{RECUPERACION\_\allowbreak{}SOLICITADA} y \texttt{RECUPERACION\_\allowbreak{}EXITOSA}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion}; \texttt{intentos\_\allowbreak{}fallidos} = 0 y \texttt{bloqueada\_\allowbreak{}hasta} en nulo.
-    \item \textit{TokenRecuperacion}: \texttt{intentos}, \texttt{usado}.
-    \item \textit{Sesion}: todas las abiertas reciben \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}.
+    \item \textbf{\textit{Usuario}:} \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion}; \texttt{intentos\_\allowbreak{}fallidos} = 0 y \texttt{bloqueada\_\allowbreak{}hasta} en nulo.
+    \item \textbf{\textit{TokenRecuperacion}:} \texttt{intentos}, \texttt{usado}.
+    \item \textbf{\textit{Sesion}:} todas las abiertas reciben \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -432,11 +432,11 @@ La cuenta es el objeto de información central: casi todas las demás estructura
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/9a}\par\smallskip
-{\footnotesize\textit{Prototipo 9a: Recuperar contraseña · pedir el correo}}
+{\footnotesize\textit{\textbf{Prototipo 9a:} Recuperar contraseña · pedir el correo}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/9b}\par\smallskip
-{\footnotesize\textit{Prototipo 9b: Recuperar contraseña · nueva contraseña}}
+{\footnotesize\textit{\textbf{Prototipo 9b:} Recuperar contraseña · nueva contraseña}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -449,19 +449,19 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \crudFila{Prototipos}{9f, Ajustes de cuenta · sesión y baja.}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item Contraseña actual.
-    \item Contraseña nueva y su confirmación: al menos 8 caracteres.
+    \item \textbf{Contraseña nueva y su confirmación:} al menos 8 caracteres.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{correo}.
+    \item \textbf{\textit{Usuario}:} \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{correo}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{BitacoraAcceso}: \texttt{CAMBIO\_\allowbreak{}CONTRASENA}, o \texttt{CONTRASENA\_\allowbreak{}INCORRECTA} si la actual no coincide.
+    \item \textbf{\textit{BitacoraAcceso}:} \texttt{CAMBIO\_\allowbreak{}CONTRASENA}, o \texttt{CONTRASENA\_\allowbreak{}INCORRECTA} si la actual no coincide.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal}; si la actual es incorrecta, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido} y \texttt{bloqueada\_\allowbreak{}hasta}.
-    \item \textit{Sesion}: todas las abiertas salvo la que hace el cambio reciben \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}.
-    \item \textit{TokenRecuperacion}: los pendientes quedan invalidados.
+    \item \textbf{\textit{Usuario}:} \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal}; si la actual es incorrecta, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido} y \texttt{bloqueada\_\allowbreak{}hasta}.
+    \item \textbf{\textit{Sesion}:} todas las abiertas salvo la que hace el cambio reciben \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}.
+    \item \textbf{\textit{TokenRecuperacion}:} los pendientes quedan invalidados.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -476,7 +476,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/9f}\par\smallskip
-{\footnotesize\textit{Prototipo 9f: Ajustes de cuenta · sesión y baja}}
+{\footnotesize\textit{\textbf{Prototipo 9f:} Ajustes de cuenta · sesión y baja}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -488,21 +488,21 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \crudFila{Actor}{Jugador con cuenta registrada}
   \crudFila{Prototipos}{9f, la fila de correo (\mbox{F-10}).}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item Correo nuevo: hasta 254 caracteres con formato de correo.
+    \item \textbf{Correo nuevo:} hasta 254 caracteres con formato de correo.
     \item Contraseña actual.
     \item Token de sesión; después, el token del enlace enviado al correo nuevo.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{contrasena\_\allowbreak{}hash}, \texttt{correo} de todas las cuentas, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}.
-    \item \textit{TokenVerificacionCorreo}: el de \texttt{proposito} = \texttt{CAMBIO\_\allowbreak{}CORREO}, al confirmar.
+    \item \textbf{\textit{Usuario}:} \texttt{contrasena\_\allowbreak{}hash}, \texttt{correo} de todas las cuentas, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}.
+    \item \textbf{\textit{TokenVerificacionCorreo}:} el de \texttt{proposito} = \texttt{CAMBIO\_\allowbreak{}CORREO}, al confirmar.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{TokenVerificacionCorreo}: \texttt{proposito} = \texttt{CAMBIO\_\allowbreak{}CORREO}, \texttt{correo\_\allowbreak{}destino}, \texttt{token\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}expiracion}.
-    \item \textit{BitacoraAcceso}: \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}SOLICITADO} y \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}CONFIRMADO}.
+    \item \textbf{\textit{TokenVerificacionCorreo}:} \texttt{proposito} = \texttt{CAMBIO\_\allowbreak{}CORREO}, \texttt{correo\_\allowbreak{}destino}, \texttt{token\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}expiracion}.
+    \item \textbf{\textit{BitacoraAcceso}:} \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}SOLICITADO} y \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}CONFIRMADO}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} al solicitar; \texttt{correo} al confirmar.
-    \item \textit{TokenVerificacionCorreo}: los pendientes quedan invalidados al solicitar; el usado se marca al confirmar.
+    \item \textbf{\textit{Usuario}:} \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} al solicitar; \texttt{correo} al confirmar.
+    \item \textbf{\textit{TokenVerificacionCorreo}:} los pendientes quedan invalidados al solicitar; el usado se marca al confirmar.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -526,22 +526,22 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{rol}.
-    \item \textit{Participacion}: que no haya ninguna sin terminar en una partida en línea.
+    \item \textbf{\textit{Usuario}:} \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{rol}.
+    \item \textbf{\textit{Participacion}:} que no haya ninguna sin terminar en una partida en línea.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{BitacoraAcceso}: \texttt{CUENTA\_\allowbreak{}ELIMINADA} y, a los catorce días, \texttt{CUENTA\_\allowbreak{}ANONIMIZADA}.
+    \item \textbf{\textit{BitacoraAcceso}:} \texttt{CUENTA\_\allowbreak{}ELIMINADA} y, a los catorce días, \texttt{CUENTA\_\allowbreak{}ANONIMIZADA}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{estado\_\allowbreak{}cuenta} = \texttt{ELIMINADA} y \texttt{fecha\_\allowbreak{}baja}; a los catorce días, \texttt{nickname} y \texttt{correo} anónimos y contraseña en nulo.
-    \item \textit{Sesion}: todas las abiertas reciben \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{BAJA\_\allowbreak{}CUENTA}.
-    \item \textit{Invitacion}: las pendientes pasan a \texttt{EXPIRADA}.
-    \item \textit{Reporte}: los que tuviera en revisión como moderador vuelven a \texttt{PENDIENTE}.
-    \item \textit{Avatar}: \texttt{vigente} = 0 al anonimizar.
+    \item \textbf{\textit{Usuario}:} \texttt{estado\_\allowbreak{}cuenta} = \texttt{ELIMINADA} y \texttt{fecha\_\allowbreak{}baja}; a los catorce días, \texttt{nickname} y \texttt{correo} anónimos y contraseña en nulo.
+    \item \textbf{\textit{Sesion}:} todas las abiertas reciben \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{BAJA\_\allowbreak{}CUENTA}.
+    \item \textbf{\textit{Invitacion}:} las pendientes pasan a \texttt{EXPIRADA}.
+    \item \textbf{\textit{Reporte}:} los que tuviera en revisión como moderador vuelven a \texttt{PENDIENTE}.
+    \item \textbf{\textit{Avatar}:} \texttt{vigente} = 0 al anonimizar.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{\begin{crudlista}
-    \item Al darse de baja: su fila de \textit{ColaEmparejamiento} y de \textit{SalaParticipante}, y sus \textit{Solicitud} pendientes.
-    \item Al anonimizar: sus \textit{EnlaceRed}, \textit{Amistad}, \textit{Silencio} y \textit{Bloqueo}.
+    \item \textbf{Al darse de baja:} su fila de \textit{ColaEmparejamiento} y de \textit{SalaParticipante}, y sus \textit{Solicitud} pendientes.
+    \item \textbf{Al anonimizar:} sus \textit{EnlaceRed}, \textit{Amistad}, \textit{Silencio} y \textit{Bloqueo}.
     \item La fila de \textit{Usuario} nunca se elimina (\mbox{D-07}).
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -557,7 +557,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/9g}\par\smallskip
-{\footnotesize\textit{Prototipo 9g: Borrar cuenta · confirmación en dos pasos}}
+{\footnotesize\textit{\textbf{Prototipo 9g:} Borrar cuenta · confirmación en dos pasos}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -573,14 +573,14 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item Confirmación de que desea recuperar la cuenta.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}baja}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}.
+    \item \textbf{\textit{Usuario}:} \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}baja}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{BitacoraAcceso}: \texttt{resultado} = \texttt{CUENTA\_\allowbreak{}RECUPERADA}.
-    \item \textit{Sesion}: la que se abre al continuar el inicio de sesión.
+    \item \textbf{\textit{BitacoraAcceso}:} \texttt{resultado} = \texttt{CUENTA\_\allowbreak{}RECUPERADA}.
+    \item \textbf{\textit{Sesion}:} la que se abre al continuar el inicio de sesión.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{estado\_\allowbreak{}cuenta} vuelve a \texttt{ACTIVA} y \texttt{fecha\_\allowbreak{}baja} queda en nulo.
+    \item \textbf{\textit{Usuario}:} \texttt{estado\_\allowbreak{}cuenta} vuelve a \texttt{ACTIVA} y \texttt{fecha\_\allowbreak{}baja} queda en nulo.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -603,24 +603,24 @@ Una cuenta puede tener varias sesiones abiertas, una por dispositivo (\mbox{D-01
   \crudFila{Actor}{Jugador}
   \crudFila{Prototipos}{6c, Inicio de sesión; 3b, Menú principal · tablero 3D de fondo.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item Identificador: \texttt{nickname} o \texttt{correo}.
+    \item \textbf{Identificador:} \texttt{nickname} o \texttt{correo}.
     \item Contraseña.
     \item Código del segundo factor, si la cuenta lo tiene habilitado.
     \item Huella del dispositivo y \texttt{version\_\allowbreak{}cliente}.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{nickname}, \texttt{correo}, \texttt{tipo\_\allowbreak{}cuenta}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}baja}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}, \texttt{idioma\_\allowbreak{}preferido}, \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial}.
-    \item \textit{Sancion}: activas con \texttt{ambito} = \texttt{CUENTA}.
+    \item \textbf{\textit{Usuario}:} \texttt{nickname}, \texttt{correo}, \texttt{tipo\_\allowbreak{}cuenta}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}baja}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}, \texttt{idioma\_\allowbreak{}preferido}, \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial}.
+    \item \textbf{\textit{Sancion}:} activas con \texttt{ambito} = \texttt{CUENTA}.
     \item \textit{EstadisticaModo}, \textit{Equipamiento} y la \textit{Participacion} sin terminar, para cargar el menú.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Sesion}: \texttt{token\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}inicio}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{direccion\_\allowbreak{}ip}, \texttt{huella\_\allowbreak{}dispositivo}, \texttt{nombre\_\allowbreak{}dispositivo}, \texttt{version\_\allowbreak{}cliente}.
-    \item \textit{CodigoSegundoFactor}: \texttt{codigo\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}generacion}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{intentos}, \texttt{consumido}, \texttt{canal}, si aplica.
+    \item \textbf{\textit{Sesion}:} \texttt{token\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}inicio}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{direccion\_\allowbreak{}ip}, \texttt{huella\_\allowbreak{}dispositivo}, \texttt{nombre\_\allowbreak{}dispositivo}, \texttt{version\_\allowbreak{}cliente}.
+    \item \textbf{\textit{CodigoSegundoFactor}:} \texttt{codigo\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}generacion}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{intentos}, \texttt{consumido}, \texttt{canal}, si aplica.
     \item \textit{TokenVerificacionCorreo}, si una cuenta pendiente pide reenviar el correo.
-    \item \textit{BitacoraAcceso}: con el resultado del intento, sea exitoso o no.
+    \item \textbf{\textit{BitacoraAcceso}:} con el resultado del intento, sea exitoso o no.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}acceso} y, en el reenvío, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}.
+    \item \textbf{\textit{Usuario}:} \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}acceso} y, en el reenvío, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -637,11 +637,11 @@ Una cuenta puede tener varias sesiones abiertas, una por dispositivo (\mbox{D-01
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/6c}\par\smallskip
-{\footnotesize\textit{Prototipo 6c: Inicio de sesión}}
+{\footnotesize\textit{\textbf{Prototipo 6c:} Inicio de sesión}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/3b}\par\smallskip
-{\footnotesize\textit{Prototipo 3b: Menú principal · tablero 3D de fondo}}
+{\footnotesize\textit{\textbf{Prototipo 3b:} Menú principal · tablero 3D de fondo}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -656,7 +656,7 @@ Una cuenta puede tener varias sesiones abiertas, una por dispositivo (\mbox{D-01
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Sesion}: las del usuario con \texttt{fecha\_\allowbreak{}fin} nula y \texttt{fecha\_\allowbreak{}expiracion} futura; de cada una, \texttt{nombre\_\allowbreak{}dispositivo}, \texttt{direccion\_\allowbreak{}ip}, \texttt{fecha\_\allowbreak{}inicio} y \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}uso}.
+    \item \textbf{\textit{Sesion}:} las del usuario con \texttt{fecha\_\allowbreak{}fin} nula y \texttt{fecha\_\allowbreak{}expiracion} futura; de cada una, \texttt{nombre\_\allowbreak{}dispositivo}, \texttt{direccion\_\allowbreak{}ip}, \texttt{fecha\_\allowbreak{}inicio} y \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}uso}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{Ninguno.}
@@ -680,14 +680,14 @@ Una cuenta puede tener varias sesiones abiertas, una por dispositivo (\mbox{D-01
     \item Opcionalmente, \texttt{id\_\allowbreak{}sesion} de otra sesión propia, o la orden de cerrar todas las demás.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Sesion}: la del token y, si aplica, las demás del usuario.
-    \item \textit{Participacion}: si hay una partida sin terminar, para advertirlo.
+    \item \textbf{\textit{Sesion}:} la del token y, si aplica, las demás del usuario.
+    \item \textbf{\textit{Participacion}:} si hay una partida sin terminar, para advertirlo.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{BitacoraAcceso}: \texttt{CIERRE\_\allowbreak{}VOLUNTARIO} o \texttt{CIERRE\_\allowbreak{}REMOTO}.
+    \item \textbf{\textit{BitacoraAcceso}:} \texttt{CIERRE\_\allowbreak{}VOLUNTARIO} o \texttt{CIERRE\_\allowbreak{}REMOTO}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Sesion}: \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CIERRE\_\allowbreak{}VOLUNTARIO} para la propia, o \texttt{CIERRE\_\allowbreak{}REMOTO} para las cerradas desde otro dispositivo.
+    \item \textbf{\textit{Sesion}:} \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CIERRE\_\allowbreak{}VOLUNTARIO} para la propia, o \texttt{CIERRE\_\allowbreak{}REMOTO} para las cerradas desde otro dispositivo.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguna fila. La sesión se cierra, no se borra.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -710,30 +710,30 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
   \crudFila{Actor}{Jugador}
   \crudFila{Prototipos}{16a, Elegir modo · pantalla propia; 1g, Emparejamiento · rival encontrado (VS).}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item \texttt{id\_\allowbreak{}modo}: clásico 9×9, cuatro jugadores o rápida 7×7.
-    \item \texttt{minutos\_\allowbreak{}reloj}: 3, 5 o 10.
+    \item \textbf{\texttt{id\_\allowbreak{}modo}:} clásico 9×9, cuatro jugadores o rápida 7×7.
+    \item \textbf{\texttt{minutos\_\allowbreak{}reloj}:} 3, 5 o 10.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Participacion}: que el jugador no tenga ninguna sin terminar en una partida en línea.
-    \item \textit{Sancion}: activas con \texttt{ambito} = \texttt{CUENTA}.
-    \item \textit{EstadisticaModo}: \texttt{puntos\_\allowbreak{}elo} del modo elegido.
-    \item \textit{ColaEmparejamiento}: candidatos del mismo modo y reloj.
-    \item \textit{Bloqueo}: entre los candidatos.
-    \item \textit{Modo}: \texttt{tamano\_\allowbreak{}tablero}, \texttt{num\_\allowbreak{}jugadores}, \texttt{muros\_\allowbreak{}por\_\allowbreak{}jugador}.
+    \item \textbf{\textit{Participacion}:} que el jugador no tenga ninguna sin terminar en una partida en línea.
+    \item \textbf{\textit{Sancion}:} activas con \texttt{ambito} = \texttt{CUENTA}.
+    \item \textbf{\textit{EstadisticaModo}:} \texttt{puntos\_\allowbreak{}elo} del modo elegido.
+    \item \textbf{\textit{ColaEmparejamiento}:} candidatos del mismo modo y reloj.
+    \item \textbf{\textit{Bloqueo}:} entre los candidatos.
+    \item \textbf{\textit{Modo}:} \texttt{tamano\_\allowbreak{}tablero}, \texttt{num\_\allowbreak{}jugadores}, \texttt{muros\_\allowbreak{}por\_\allowbreak{}jugador}.
     \item \textit{Equipamiento} de cada participante.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{ColaEmparejamiento}: \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}modo}, \texttt{minutos\_\allowbreak{}reloj}, \texttt{elo}, \texttt{fecha\_\allowbreak{}entrada}.
-    \item \textit{Partida}: \texttt{id\_\allowbreak{}modo}, \texttt{minutos\_\allowbreak{}reloj}, \texttt{tipo} = \texttt{CLASIFICATORIA}, \texttt{estado} = \texttt{EN\_\allowbreak{}CURSO}, \texttt{fecha\_\allowbreak{}inicio}, \texttt{turno\_\allowbreak{}actual}.
-    \item \textit{Participacion}: una por jugador, con \texttt{orden\_\allowbreak{}turno}, \texttt{simbolo\_\allowbreak{}peon}, \texttt{casilla\_\allowbreak{}actual}, \texttt{muros\_\allowbreak{}restantes}, \texttt{reloj\_\allowbreak{}restante}, \texttt{elo\_\allowbreak{}inicial} y \texttt{conectado} = 1.
-    \item \textit{ParticipacionObjeto}: el objeto equipado en cada ranura al empezar.
+    \item \textbf{\textit{ColaEmparejamiento}:} \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}modo}, \texttt{minutos\_\allowbreak{}reloj}, \texttt{elo}, \texttt{fecha\_\allowbreak{}entrada}.
+    \item \textbf{\textit{Partida}:} \texttt{id\_\allowbreak{}modo}, \texttt{minutos\_\allowbreak{}reloj}, \texttt{tipo} = \texttt{CLASIFICATORIA}, \texttt{estado} = \texttt{EN\_\allowbreak{}CURSO}, \texttt{fecha\_\allowbreak{}inicio}, \texttt{turno\_\allowbreak{}actual}.
+    \item \textbf{\textit{Participacion}:} una por jugador, con \texttt{orden\_\allowbreak{}turno}, \texttt{simbolo\_\allowbreak{}peon}, \texttt{casilla\_\allowbreak{}actual}, \texttt{muros\_\allowbreak{}restantes}, \texttt{reloj\_\allowbreak{}restante}, \texttt{elo\_\allowbreak{}inicial} y \texttt{conectado} = 1.
+    \item \textbf{\textit{ParticipacionObjeto}:} el objeto equipado en cada ranura al empezar.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Partida} contra la IA sin terminar, si la hay: se cierra con \texttt{forma\_\allowbreak{}termino} = \texttt{ABANDONO} (\mbox{D-11}).
+    \item \textbf{\textit{Partida} contra la IA sin terminar, si la hay:} se cierra con \texttt{forma\_\allowbreak{}termino} = \texttt{ABANDONO} (\mbox{D-11}).
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{\begin{crudlista}
-    \item \textit{ColaEmparejamiento}: las filas de los jugadores emparejados. Borrado físico.
+    \item \textbf{\textit{ColaEmparejamiento}:} las filas de los jugadores emparejados. Borrado físico.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item Un jugador no puede tener más de una participación sin terminar (\mbox{CU-17} \mbox{RN-01}, \mbox{D-11}).
@@ -749,11 +749,11 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/16a}\par\smallskip
-{\footnotesize\textit{Prototipo 16a: Elegir modo · pantalla propia}}
+{\footnotesize\textit{\textbf{Prototipo 16a:} Elegir modo · pantalla propia}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/1g}\par\smallskip
-{\footnotesize\textit{Prototipo 1g: Emparejamiento · rival encontrado (VS)}}
+{\footnotesize\textit{\textbf{Prototipo 1g:} Emparejamiento · rival encontrado (VS)}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -768,12 +768,12 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{ColaEmparejamiento}: la fila del jugador.
+    \item \textbf{\textit{ColaEmparejamiento}:} la fila del jugador.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{\begin{crudlista}
-    \item \textit{ColaEmparejamiento}: la fila del jugador. Borrado físico.
+    \item \textbf{\textit{ColaEmparejamiento}:} la fila del jugador. Borrado físico.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item La cola es transitoria y no conserva historial.
@@ -785,7 +785,7 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/1f}\par\smallskip
-{\footnotesize\textit{Prototipo 1f: Emparejamiento · modal sobre el menú}}
+{\footnotesize\textit{\textbf{Prototipo 1f:} Emparejamiento · modal sobre el menú}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -798,30 +798,30 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
   \crudFila{Prototipos}{1h, Privada · crear o unirse, con ajustes de sala; 5d, Sala de espera · 2 jugadores.}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \texttt{id\_\allowbreak{}modo}.
-    \item \texttt{muros\_\allowbreak{}por\_\allowbreak{}jugador}: entero de 1 a 20.
-    \item \texttt{minutos\_\allowbreak{}reloj}: 3, 5 o 10.
-    \item \texttt{permite\_\allowbreak{}espectadores}: sí o no.
+    \item \textbf{\texttt{muros\_\allowbreak{}por\_\allowbreak{}jugador}:} entero de 1 a 20.
+    \item \textbf{\texttt{minutos\_\allowbreak{}reloj}:} 3, 5 o 10.
+    \item \textbf{\texttt{permite\_\allowbreak{}espectadores}:} sí o no.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Participacion}, \textit{ColaEmparejamiento} y \textit{SalaParticipante}: que el anfitrión no esté en partida, cola ni otra sala.
-    \item \textit{Sancion}: activas con \texttt{ambito} = \texttt{CUENTA}.
-    \item \textit{Modo}: número de plazas.
-    \item \textit{Sala}: códigos en uso entre las abiertas.
+    \item \textbf{\textit{Participacion}, \textit{ColaEmparejamiento} y \textit{SalaParticipante}:} que el anfitrión no esté en partida, cola ni otra sala.
+    \item \textbf{\textit{Sancion}:} activas con \texttt{ambito} = \texttt{CUENTA}.
+    \item \textbf{\textit{Modo}:} número de plazas.
+    \item \textbf{\textit{Sala}:} códigos en uso entre las abiertas.
     \item \textit{EstadisticaModo} y \textit{Equipamiento} de cada miembro, al iniciar.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Sala}: \texttt{codigo}, \texttt{id\_\allowbreak{}anfitrion}, \texttt{id\_\allowbreak{}modo}, \texttt{muros\_\allowbreak{}por\_\allowbreak{}jugador}, \texttt{minutos\_\allowbreak{}reloj}, \texttt{permite\_\allowbreak{}espectadores}, \texttt{estado} = \texttt{ABIERTA}, \texttt{fecha\_\allowbreak{}creacion}.
-    \item \textit{SalaParticipante}: la del anfitrión, con \texttt{plaza}, \texttt{listo} = 1 y \texttt{fecha\_\allowbreak{}union}.
-    \item \textit{Mensaje}: los del chat de sala, con \texttt{canal} = \texttt{SALA}.
-    \item Al iniciar: \textit{Partida} con \texttt{tipo} = \texttt{PRIVADA}, una \textit{Participacion} y su \textit{ParticipacionObjeto} por miembro.
+    \item \textbf{\textit{Sala}:} \texttt{codigo}, \texttt{id\_\allowbreak{}anfitrion}, \texttt{id\_\allowbreak{}modo}, \texttt{muros\_\allowbreak{}por\_\allowbreak{}jugador}, \texttt{minutos\_\allowbreak{}reloj}, \texttt{permite\_\allowbreak{}espectadores}, \texttt{estado} = \texttt{ABIERTA}, \texttt{fecha\_\allowbreak{}creacion}.
+    \item \textbf{\textit{SalaParticipante}:} la del anfitrión, con \texttt{plaza}, \texttt{listo} = 1 y \texttt{fecha\_\allowbreak{}union}.
+    \item \textbf{\textit{Mensaje}:} los del chat de sala, con \texttt{canal} = \texttt{SALA}.
+    \item \textbf{Al iniciar:} \textit{Partida} con \texttt{tipo} = \texttt{PRIVADA}, una \textit{Participacion} y su \textit{ParticipacionObjeto} por miembro.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Sala}: ajustes; \texttt{estado} = \texttt{EN\_\allowbreak{}PARTIDA} e \texttt{id\_\allowbreak{}partida} al iniciar; \texttt{estado} = \texttt{CERRADA} si el anfitrión sale o por inactividad.
-    \item \textit{SalaParticipante}: \texttt{listo} = 0 de los demás miembros al cambiar los ajustes.
+    \item \textbf{\textit{Sala}:} ajustes; \texttt{estado} = \texttt{EN\_\allowbreak{}PARTIDA} e \texttt{id\_\allowbreak{}partida} al iniciar; \texttt{estado} = \texttt{CERRADA} si el anfitrión sale o por inactividad.
+    \item \textbf{\textit{SalaParticipante}:} \texttt{listo} = 0 de los demás miembros al cambiar los ajustes.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{\begin{crudlista}
-    \item \textit{SalaParticipante}: la de cada miembro que sale y todas al cerrar la sala. Borrado físico.
+    \item \textbf{\textit{SalaParticipante}:} la de cada miembro que sale y todas al cerrar la sala. Borrado físico.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item El código tiene seis caracteres sin ambiguos y es único entre las salas abiertas (\mbox{CU-18} \mbox{RN-01}).
@@ -837,11 +837,11 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/1h}\par\smallskip
-{\footnotesize\textit{Prototipo 1h: Privada · crear o unirse, con ajustes de sala}}
+{\footnotesize\textit{\textbf{Prototipo 1h:} Privada · crear o unirse, con ajustes de sala}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/5d}\par\smallskip
-{\footnotesize\textit{Prototipo 5d: Sala de espera · 2 jugadores}}
+{\footnotesize\textit{\textbf{Prototipo 5d:} Sala de espera · 2 jugadores}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -853,25 +853,25 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
   \crudFila{Actor}{Jugador o invitado}
   \crudFila{Prototipos}{5e, Sala de espera · 4 plazas y chat de sala.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item \texttt{codigo}: seis caracteres.
+    \item \textbf{\texttt{codigo}:} seis caracteres.
     \item Marca de listo.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Participacion}, \textit{ColaEmparejamiento}, \textit{SalaParticipante} y \textit{Sancion}: las mismas exclusiones que al crear una sala.
-    \item \textit{Sala}: por \texttt{codigo} y \texttt{estado} = \texttt{ABIERTA}.
-    \item \textit{Bloqueo}: entre el jugador y los miembros.
-    \item \textit{Modo}: plazas.
-    \item \textit{Mensaje}: los recientes del chat de sala.
+    \item \textbf{\textit{Participacion}, \textit{ColaEmparejamiento}, \textit{SalaParticipante} y \textit{Sancion}:} las mismas exclusiones que al crear una sala.
+    \item \textbf{\textit{Sala}:} por \texttt{codigo} y \texttt{estado} = \texttt{ABIERTA}.
+    \item \textbf{\textit{Bloqueo}:} entre el jugador y los miembros.
+    \item \textbf{\textit{Modo}:} plazas.
+    \item \textbf{\textit{Mensaje}:} los recientes del chat de sala.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{SalaParticipante}: \texttt{id\_\allowbreak{}sala}, \texttt{id\_\allowbreak{}usuario}, \texttt{plaza}, \texttt{listo} = 0, \texttt{fecha\_\allowbreak{}union}.
+    \item \textbf{\textit{SalaParticipante}:} \texttt{id\_\allowbreak{}sala}, \texttt{id\_\allowbreak{}usuario}, \texttt{plaza}, \texttt{listo} = 0, \texttt{fecha\_\allowbreak{}union}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{SalaParticipante}: \texttt{listo}.
+    \item \textbf{\textit{SalaParticipante}:} \texttt{listo}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{\begin{crudlista}
-    \item \textit{SalaParticipante}: al salir de la sala, o si el jugador no reconecta en sesenta segundos. Borrado físico.
+    \item \textbf{\textit{SalaParticipante}:} al salir de la sala, o si el jugador no reconecta en sesenta segundos. Borrado físico.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item Solo se entra a salas \texttt{ABIERTA} (\mbox{CU-19} \mbox{RN-01}).
@@ -886,7 +886,7 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/5e}\par\smallskip
-{\footnotesize\textit{Prototipo 5e: Sala de espera · 4 plazas y chat de sala}}
+{\footnotesize\textit{\textbf{Prototipo 5e:} Sala de espera · 4 plazas y chat de sala}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -900,22 +900,22 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \texttt{id\_\allowbreak{}usuario} del invitado.
     \item Ajustes de la sala, si no existe.
-    \item Respuesta del invitado: aceptar o rechazar.
+    \item \textbf{Respuesta del invitado:} aceptar o rechazar.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Participacion} y \textit{ColaEmparejamiento}: del emisor y del invitado.
-    \item \textit{Bloqueo} y \textit{Usuario}: disponibilidad del invitado.
-    \item \textit{Sesion}: que el invitado esté conectado.
-    \item \textit{Invitacion}: pendientes del mismo emisor al mismo invitado.
+    \item \textbf{\textit{Participacion} y \textit{ColaEmparejamiento}:} del emisor y del invitado.
+    \item \textbf{\textit{Bloqueo} y \textit{Usuario}:} disponibilidad del invitado.
+    \item \textbf{\textit{Sesion}:} que el invitado esté conectado.
+    \item \textbf{\textit{Invitacion}:} pendientes del mismo emisor al mismo invitado.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
     \item \textit{Sala} y \textit{SalaParticipante} del emisor, si no estaba en una.
-    \item \textit{Invitacion}: \texttt{id\_\allowbreak{}sala}, \texttt{id\_\allowbreak{}emisor}, \texttt{id\_\allowbreak{}destinatario}, \texttt{fecha\_\allowbreak{}invitacion}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{estado} = \texttt{PENDIENTE}.
+    \item \textbf{\textit{Invitacion}:} \texttt{id\_\allowbreak{}sala}, \texttt{id\_\allowbreak{}emisor}, \texttt{id\_\allowbreak{}destinatario}, \texttt{fecha\_\allowbreak{}invitacion}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{estado} = \texttt{PENDIENTE}.
     \item \textit{SalaParticipante} del invitado, al aceptar.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Invitacion}: \texttt{estado} = \texttt{ACEPTADA}, \texttt{RECHAZADA} o \texttt{EXPIRADA}.
+    \item \textbf{\textit{Invitacion}:} \texttt{estado} = \texttt{ACEPTADA}, \texttt{RECHAZADA} o \texttt{EXPIRADA}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -939,24 +939,24 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \crudFila{Actor}{Jugador}
   \crudFila{Prototipos}{20a, Partida · peón seleccionado; 21a, Partida · muro cogido con cartel flotante.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item \texttt{tipo}: \texttt{MOVIMIENTO} o \texttt{MURO}.
-    \item Para un movimiento: \texttt{casilla\_\allowbreak{}destino}.
-    \item Para un muro: \texttt{surco} y \texttt{orientacion} (horizontal o vertical).
+    \item \textbf{\texttt{tipo}:} \texttt{MOVIMIENTO} o \texttt{MURO}.
+    \item \textbf{Para un movimiento:} \texttt{casilla\_\allowbreak{}destino}.
+    \item \textbf{Para un muro:} \texttt{surco} y \texttt{orientacion} (horizontal o vertical).
     \item \texttt{numero\_\allowbreak{}jugada} esperado.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Partida}: \texttt{estado}, \texttt{turno\_\allowbreak{}actual}.
-    \item \textit{Participacion} de todos los jugadores: \texttt{casilla\_\allowbreak{}actual}, \texttt{muros\_\allowbreak{}restantes}, \texttt{reloj\_\allowbreak{}restante}, \texttt{posicion}.
-    \item \textit{Jugada}: todas las de la partida, para reconstruir el tablero.
+    \item \textbf{\textit{Partida}:} \texttt{estado}, \texttt{turno\_\allowbreak{}actual}.
+    \item \textbf{\textit{Participacion} de todos los jugadores:} \texttt{casilla\_\allowbreak{}actual}, \texttt{muros\_\allowbreak{}restantes}, \texttt{reloj\_\allowbreak{}restante}, \texttt{posicion}.
+    \item \textbf{\textit{Jugada}:} todas las de la partida, para reconstruir el tablero.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Jugada}: \texttt{id\_\allowbreak{}partida}, \texttt{numero\_\allowbreak{}jugada}, \texttt{id\_\allowbreak{}usuario}, \texttt{tipo}, \texttt{casilla\_\allowbreak{}origen}, \texttt{casilla\_\allowbreak{}destino}, \texttt{surco}, \texttt{orientacion}, \texttt{tiempo\_\allowbreak{}consumido}, \texttt{fecha\_\allowbreak{}jugada}, \texttt{deshecha} = 0.
+    \item \textbf{\textit{Jugada}:} \texttt{id\_\allowbreak{}partida}, \texttt{numero\_\allowbreak{}jugada}, \texttt{id\_\allowbreak{}usuario}, \texttt{tipo}, \texttt{casilla\_\allowbreak{}origen}, \texttt{casilla\_\allowbreak{}destino}, \texttt{surco}, \texttt{orientacion}, \texttt{tiempo\_\allowbreak{}consumido}, \texttt{fecha\_\allowbreak{}jugada}, \texttt{deshecha} = 0.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Participacion}: \texttt{casilla\_\allowbreak{}actual} o \texttt{muros\_\allowbreak{}restantes}, \texttt{reloj\_\allowbreak{}restante} y, si llega a meta, \texttt{posicion}.
-    \item \textit{Partida}: \texttt{turno\_\allowbreak{}actual}.
-    \item \textit{OfertaTablas} pendiente del rival: \texttt{estado} = \texttt{CADUCADA} (\mbox{CU-22} \mbox{RN-05}).
+    \item \textbf{\textit{Participacion}:} \texttt{casilla\_\allowbreak{}actual} o \texttt{muros\_\allowbreak{}restantes}, \texttt{reloj\_\allowbreak{}restante} y, si llega a meta, \texttt{posicion}.
+    \item \textbf{\textit{Partida}:} \texttt{turno\_\allowbreak{}actual}.
+    \item \textbf{\textit{OfertaTablas} pendiente del rival:} \texttt{estado} = \texttt{CADUCADA} (\mbox{CU-22} \mbox{RN-05}).
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguna. Las jugadas no se borran y los muros no se retiran.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -973,11 +973,11 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/20a}\par\smallskip
-{\footnotesize\textit{Prototipo 20a: Partida · peón seleccionado}}
+{\footnotesize\textit{\textbf{Prototipo 20a:} Partida · peón seleccionado}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/21a}\par\smallskip
-{\footnotesize\textit{Prototipo 21a: Partida · muro cogido con cartel flotante}}
+{\footnotesize\textit{\textbf{Prototipo 21a:} Partida · muro cogido con cartel flotante}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -989,18 +989,18 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \crudFila{Actor}{Jugador, y su rival al responder}
   \crudFila{Prototipos}{19d, Menú de partida · rendirse y tablas.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item Oferta: token de sesión.
-    \item Respuesta: aceptar o rechazar.
+    \item \textbf{Oferta:} token de sesión.
+    \item \textbf{Respuesta:} aceptar o rechazar.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Partida} y \textit{Modo}: \texttt{estado}, \texttt{tipo} y número de jugadores.
-    \item \textit{OfertaTablas}: pendientes de la partida y ofertas recientes del jugador.
+    \item \textbf{\textit{Partida} y \textit{Modo}:} \texttt{estado}, \texttt{tipo} y número de jugadores.
+    \item \textbf{\textit{OfertaTablas}:} pendientes de la partida y ofertas recientes del jugador.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{OfertaTablas}: \texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}ofertante}, \texttt{numero\_\allowbreak{}jugada}, \texttt{fecha\_\allowbreak{}oferta}, \texttt{estado} = \texttt{PENDIENTE}.
+    \item \textbf{\textit{OfertaTablas}:} \texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}ofertante}, \texttt{numero\_\allowbreak{}jugada}, \texttt{fecha\_\allowbreak{}oferta}, \texttt{estado} = \texttt{PENDIENTE}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{OfertaTablas}: \texttt{estado} = \texttt{ACEPTADA}, \texttt{RECHAZADA} o \texttt{CADUCADA}, y \texttt{fecha\_\allowbreak{}respuesta}.
+    \item \textbf{\textit{OfertaTablas}:} \texttt{estado} = \texttt{ACEPTADA}, \texttt{RECHAZADA} o \texttt{CADUCADA}, y \texttt{fecha\_\allowbreak{}respuesta}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -1016,7 +1016,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/19d}\par\smallskip
-{\footnotesize\textit{Prototipo 19d: Menú de partida · rendirse y tablas}}
+{\footnotesize\textit{\textbf{Prototipo 19d:} Menú de partida · rendirse y tablas}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1032,14 +1032,14 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Participacion}: \texttt{elo\_\allowbreak{}inicial} del jugador y de sus rivales, para la vista previa.
-    \item \textit{Partida} y \textit{Modo}: \texttt{estado}, \texttt{tipo} y número de jugadores.
+    \item \textbf{\textit{Participacion}:} \texttt{elo\_\allowbreak{}inicial} del jugador y de sus rivales, para la vista previa.
+    \item \textbf{\textit{Partida} y \textit{Modo}:} \texttt{estado}, \texttt{tipo} y número de jugadores.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{OfertaTablas} pendiente: \texttt{estado} = \texttt{CADUCADA}.
-    \item En cuatro jugadores: la \textit{Participacion} del jugador recibe \texttt{resultado}, \texttt{posicion}, \texttt{forma\_\allowbreak{}termino} = \texttt{RENDICION} y \texttt{terminada} = 1.
-    \item En dos jugadores: el cierre de la partida con \texttt{forma\_\allowbreak{}termino} = \texttt{RENDICION}.
+    \item \textbf{\textit{OfertaTablas} pendiente:} \texttt{estado} = \texttt{CADUCADA}.
+    \item \textbf{En cuatro jugadores:} la \textit{Participacion} del jugador recibe \texttt{resultado}, \texttt{posicion}, \texttt{forma\_\allowbreak{}termino} = \texttt{RENDICION} y \texttt{terminada} = 1.
+    \item \textbf{En dos jugadores:} el cierre de la partida con \texttt{forma\_\allowbreak{}termino} = \texttt{RENDICION}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -1058,20 +1058,20 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \crudFila{Actor}{Jugador, o el rival de un jugador desconectado}
   \crudFila{Prototipos}{8e, 4 jugadores · eliminado y abandono; 6f, Rival desconectado · esperando.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item Abandonar: la palabra de confirmación escrita.
-    \item Reclamar la victoria: la orden, tras sesenta segundos de desconexión del rival.
+    \item \textbf{Abandonar:} la palabra de confirmación escrita.
+    \item \textbf{Reclamar la victoria:} la orden, tras sesenta segundos de desconexión del rival.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Participacion}: la propia y, al reclamar, \texttt{conectado} y \texttt{fecha\_\allowbreak{}desconexion} del rival.
-    \item \textit{Partida} y \textit{Modo}: \texttt{estado}, \texttt{tipo} y número de jugadores.
+    \item \textbf{\textit{Participacion}:} la propia y, al reclamar, \texttt{conectado} y \texttt{fecha\_\allowbreak{}desconexion} del rival.
+    \item \textbf{\textit{Partida} y \textit{Modo}:} \texttt{estado}, \texttt{tipo} y número de jugadores.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{EstadisticaModo} del que abandona: \texttt{abandonos}, en partidas en línea.
-    \item \textit{OfertaTablas} pendiente: \texttt{estado} = \texttt{CADUCADA}.
-    \item \textit{Participacion} del que abandona en cuatro jugadores: \texttt{resultado}, \texttt{posicion}, \texttt{forma\_\allowbreak{}termino} = \texttt{ABANDONO}, \texttt{terminada} = 1.
-    \item En dos jugadores: el cierre de la partida con \texttt{forma\_\allowbreak{}termino} = \texttt{ABANDONO}.
+    \item \textbf{\textit{EstadisticaModo} del que abandona:} \texttt{abandonos}, en partidas en línea.
+    \item \textbf{\textit{OfertaTablas} pendiente:} \texttt{estado} = \texttt{CADUCADA}.
+    \item \textbf{\textit{Participacion} del que abandona en cuatro jugadores:} \texttt{resultado}, \texttt{posicion}, \texttt{forma\_\allowbreak{}termino} = \texttt{ABANDONO}, \texttt{terminada} = 1.
+    \item \textbf{En dos jugadores:} el cierre de la partida con \texttt{forma\_\allowbreak{}termino} = \texttt{ABANDONO}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -1087,11 +1087,11 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/8e}\par\smallskip
-{\footnotesize\textit{Prototipo 8e: 4 jugadores · eliminado y abandono}}
+{\footnotesize\textit{\textbf{Prototipo 8e:} 4 jugadores · eliminado y abandono}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/6f}\par\smallskip
-{\footnotesize\textit{Prototipo 6f: Rival desconectado · esperando}}
+{\footnotesize\textit{\textbf{Prototipo 6f:} Rival desconectado · esperando}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1107,13 +1107,13 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
     \item \textit{Participacion} sin terminar del jugador y las de todos los participantes.
-    \item \textit{Partida}: \texttt{estado}, \texttt{turno\_\allowbreak{}actual}.
-    \item \textit{Jugada}: todas en orden.
+    \item \textbf{\textit{Partida}:} \texttt{estado}, \texttt{turno\_\allowbreak{}actual}.
+    \item \textbf{\textit{Jugada}:} todas en orden.
     \item \textit{ParticipacionObjeto} y \textit{OfertaTablas} pendiente.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Participacion}: \texttt{conectado} = 0 y \texttt{fecha\_\allowbreak{}desconexion} al perder la conexión; \texttt{conectado} = 1 al volver.
+    \item \textbf{\textit{Participacion}:} \texttt{conectado} = 0 y \texttt{fecha\_\allowbreak{}desconexion} al perder la conexión; \texttt{conectado} = 1 al volver.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -1128,7 +1128,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/6e}\par\smallskip
-{\footnotesize\textit{Prototipo 6e: Reconexión · la partida sigue viva}}
+{\footnotesize\textit{\textbf{Prototipo 6e:} Reconexión · la partida sigue viva}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1140,27 +1140,27 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \crudFila{Actor}{Jugador o invitado}
   \crudFila{Prototipos}{8f, Contra la IA · elegir dificultad; 12f, Contra la IA · deshacer y sugerencia.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item \texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}: aprendiz, constructor, arquitecto o bastión.
-    \item \texttt{id\_\allowbreak{}modo}: 9×9 o 7×7.
+    \item \textbf{\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}:} aprendiz, constructor, arquitecto o bastión.
+    \item \textbf{\texttt{id\_\allowbreak{}modo}:} 9×9 o 7×7.
     \item \texttt{minutos\_\allowbreak{}reloj}, o sin reloj.
     \item \texttt{permite\_\allowbreak{}deshacer} y \texttt{permite\_\allowbreak{}sugerencias}.
-    \item Durante la partida: órdenes de deshacer y de sugerencia.
+    \item \textbf{Durante la partida:} órdenes de deshacer y de sugerencia.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
     \item \textit{NivelIA} y \textit{Modo}.
-    \item \textit{ColaEmparejamiento}, \textit{SalaParticipante} y \textit{Participacion}: exclusiones.
-    \item \textit{Jugada}: para calcular la jugada de la IA, las sugerencias y el repaso.
+    \item \textbf{\textit{ColaEmparejamiento}, \textit{SalaParticipante} y \textit{Participacion}:} exclusiones.
+    \item \textbf{\textit{Jugada}:} para calcular la jugada de la IA, las sugerencias y el repaso.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Partida}: \texttt{tipo} = \texttt{IA}, \texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}, \texttt{id\_\allowbreak{}modo}, \texttt{minutos\_\allowbreak{}reloj}, \texttt{permite\_\allowbreak{}deshacer}, \texttt{permite\_\allowbreak{}sugerencias}, \texttt{estado} = \texttt{EN\_\allowbreak{}CURSO}, \texttt{fecha\_\allowbreak{}inicio}.
+    \item \textbf{\textit{Partida}:} \texttt{tipo} = \texttt{IA}, \texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}, \texttt{id\_\allowbreak{}modo}, \texttt{minutos\_\allowbreak{}reloj}, \texttt{permite\_\allowbreak{}deshacer}, \texttt{permite\_\allowbreak{}sugerencias}, \texttt{estado} = \texttt{EN\_\allowbreak{}CURSO}, \texttt{fecha\_\allowbreak{}inicio}.
     \item \textit{Participacion} y \textit{ParticipacionObjeto} del jugador; la IA no tiene participación.
     \item \textit{Jugada} de la IA, con \texttt{id\_\allowbreak{}usuario} nulo.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Partida}: \texttt{deshacer\_\allowbreak{}usados}, \texttt{sugerencias\_\allowbreak{}usadas}; se cierra con \texttt{ABANDONO} la partida contra la IA anterior sin terminar.
-    \item \textit{Jugada}: \texttt{deshecha} = 1 al deshacer.
-    \item \textit{Participacion}: se restablece al estado anterior al deshacer.
+    \item \textbf{\textit{Partida}:} \texttt{deshacer\_\allowbreak{}usados}, \texttt{sugerencias\_\allowbreak{}usadas}; se cierra con \texttt{ABANDONO} la partida contra la IA anterior sin terminar.
+    \item \textbf{\textit{Jugada}:} \texttt{deshecha} = 1 al deshacer.
+    \item \textbf{\textit{Participacion}:} se restablece al estado anterior al deshacer.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -1176,11 +1176,11 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/8f}\par\smallskip
-{\footnotesize\textit{Prototipo 8f: Contra la IA · elegir dificultad}}
+{\footnotesize\textit{\textbf{Prototipo 8f:} Contra la IA · elegir dificultad}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/12f}\par\smallskip
-{\footnotesize\textit{Prototipo 12f: Contra la IA · deshacer y sugerencia}}
+{\footnotesize\textit{\textbf{Prototipo 12f:} Contra la IA · deshacer y sugerencia}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1193,30 +1193,30 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \crudFila{Prototipos}{2g, Fin de partida · tarjeta sobre el tablero; 11a, Subida de nivel; 11b, Subida de división.}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \texttt{id\_\allowbreak{}partida}.
-    \item \texttt{forma\_\allowbreak{}termino}: \texttt{META}, \texttt{TIEMPO\_\allowbreak{}AGOTADO}, \texttt{RENDICION}, \texttt{TABLAS} o \texttt{ABANDONO}.
+    \item \textbf{\texttt{forma\_\allowbreak{}termino}:} \texttt{META}, \texttt{TIEMPO\_\allowbreak{}AGOTADO}, \texttt{RENDICION}, \texttt{TABLAS} o \texttt{ABANDONO}.
     \item Jugador que provocó el término, si aplica.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Partida}: \texttt{tipo}, \texttt{id\_\allowbreak{}modo}.
-    \item \textit{Participacion}: \texttt{elo\_\allowbreak{}inicial} de cada jugador.
-    \item \textit{Jugada}: las de tipo \texttt{MURO} de cada jugador y, contra la IA, todas para el repaso.
-    \item \textit{Modo}, \textit{Division}, \textit{EstadisticaModo} y \textit{Usuario}: \texttt{nivel}, \texttt{experiencia}.
+    \item \textbf{\textit{Partida}:} \texttt{tipo}, \texttt{id\_\allowbreak{}modo}.
+    \item \textbf{\textit{Participacion}:} \texttt{elo\_\allowbreak{}inicial} de cada jugador.
+    \item \textbf{\textit{Jugada}:} las de tipo \texttt{MURO} de cada jugador y, contra la IA, todas para el repaso.
+    \item \textbf{\textit{Modo}, \textit{Division}, \textit{EstadisticaModo} y \textit{Usuario}:} \texttt{nivel}, \texttt{experiencia}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{MovimientoMoneda}: \texttt{tipo} = \texttt{PARTIDA} por participante y, si sube de nivel, \texttt{NIVEL}.
-    \item \textit{HistorialDivision}: por cada cambio de división.
-    \item \textit{UsuarioObjeto} y \textit{Caja} con \texttt{origen} = \texttt{PARTIDA}: recompensas de nivel.
+    \item \textbf{\textit{MovimientoMoneda}:} \texttt{tipo} = \texttt{PARTIDA} por participante y, si sube de nivel, \texttt{NIVEL}.
+    \item \textbf{\textit{HistorialDivision}:} por cada cambio de división.
+    \item \textbf{\textit{UsuarioObjeto} y \textit{Caja} con \texttt{origen} = \texttt{PARTIDA}:} recompensas de nivel.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Partida}: \texttt{estado} = \texttt{FINALIZADA}, \texttt{fecha\_\allowbreak{}fin}, \texttt{forma\_\allowbreak{}termino}, \texttt{id\_\allowbreak{}ganador}.
-    \item \textit{Participacion}: \texttt{resultado}, \texttt{posicion}, \texttt{elo\_\allowbreak{}final}, \texttt{diferencia\_\allowbreak{}elo}, \texttt{reloj\_\allowbreak{}restante}, \texttt{terminada} = 1.
-    \item \textit{EstadisticaModo}: \texttt{partidas\_\allowbreak{}jugadas}, \texttt{partidas\_\allowbreak{}ganadas} o \texttt{partidas\_\allowbreak{}perdidas}, \texttt{puntos\_\allowbreak{}elo}, \texttt{elo\_\allowbreak{}maximo}, \texttt{racha\_\allowbreak{}actual}, \texttt{mejor\_\allowbreak{}racha}, \texttt{tiempo\_\allowbreak{}total\_\allowbreak{}jugado}, \texttt{barreras\_\allowbreak{}colocadas}, \texttt{division}.
-    \item \textit{Usuario}: \texttt{experiencia}, \texttt{nivel}, \texttt{saldo\_\allowbreak{}monedas}.
-    \item \textit{EnlaceEspectador}: \texttt{activo} = 0.
-    \item \textit{Sala} de origen: \texttt{estado} = \texttt{CERRADA}.
+    \item \textbf{\textit{Partida}:} \texttt{estado} = \texttt{FINALIZADA}, \texttt{fecha\_\allowbreak{}fin}, \texttt{forma\_\allowbreak{}termino}, \texttt{id\_\allowbreak{}ganador}.
+    \item \textbf{\textit{Participacion}:} \texttt{resultado}, \texttt{posicion}, \texttt{elo\_\allowbreak{}final}, \texttt{diferencia\_\allowbreak{}elo}, \texttt{reloj\_\allowbreak{}restante}, \texttt{terminada} = 1.
+    \item \textbf{\textit{EstadisticaModo}:} \texttt{partidas\_\allowbreak{}jugadas}, \texttt{partidas\_\allowbreak{}ganadas} o \texttt{partidas\_\allowbreak{}perdidas}, \texttt{puntos\_\allowbreak{}elo}, \texttt{elo\_\allowbreak{}maximo}, \texttt{racha\_\allowbreak{}actual}, \texttt{mejor\_\allowbreak{}racha}, \texttt{tiempo\_\allowbreak{}total\_\allowbreak{}jugado}, \texttt{barreras\_\allowbreak{}colocadas}, \texttt{division}.
+    \item \textbf{\textit{Usuario}:} \texttt{experiencia}, \texttt{nivel}, \texttt{saldo\_\allowbreak{}monedas}.
+    \item \textbf{\textit{EnlaceEspectador}:} \texttt{activo} = 0.
+    \item \textbf{\textit{Sala} de origen:} \texttt{estado} = \texttt{CERRADA}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{\begin{crudlista}
-    \item \textit{SalaParticipante}: los miembros de la sala de origen.
+    \item \textbf{\textit{SalaParticipante}:} los miembros de la sala de origen.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item Solo las partidas clasificatorias otorgan elo y monedas (\mbox{CU-25} \mbox{RN-03}).
@@ -1231,16 +1231,16 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/2g}\par\smallskip
-{\footnotesize\textit{Prototipo 2g: Fin de partida · tarjeta sobre el tablero}}
+{\footnotesize\textit{\textbf{Prototipo 2g:} Fin de partida · tarjeta sobre el tablero}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/11a}\par\smallskip
-{\footnotesize\textit{Prototipo 11a: Subida de nivel}}
+{\footnotesize\textit{\textbf{Prototipo 11a:} Subida de nivel}}
 \end{minipage}
 \par\medskip
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/11b}\par\smallskip
-{\footnotesize\textit{Prototipo 11b: Subida de división}}
+{\footnotesize\textit{\textbf{Prototipo 11b:} Subida de división}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1252,15 +1252,15 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \crudFila{Actor}{Jugador o invitado}
   \crudFila{Prototipos}{17f, Historial · filtros por modo y final.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item Filtros opcionales: \texttt{id\_\allowbreak{}modo} y \texttt{forma\_\allowbreak{}termino}.
+    \item \textbf{Filtros opcionales:} \texttt{id\_\allowbreak{}modo} y \texttt{forma\_\allowbreak{}termino}.
     \item Página solicitada.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Participacion} del jugador: \texttt{resultado}, \texttt{posicion}, \texttt{diferencia\_\allowbreak{}elo}.
-    \item \textit{Partida}: \texttt{id\_\allowbreak{}modo}, \texttt{tipo}, \texttt{estado}, \texttt{forma\_\allowbreak{}termino}, \texttt{fecha\_\allowbreak{}inicio}, \texttt{fecha\_\allowbreak{}fin}.
-    \item \textit{Modo} y \textit{NivelIA}: nombres.
-    \item \textit{Participacion} de los rivales y su \textit{Usuario}: \texttt{nickname}.
+    \item \textbf{\textit{Participacion} del jugador:} \texttt{resultado}, \texttt{posicion}, \texttt{diferencia\_\allowbreak{}elo}.
+    \item \textbf{\textit{Partida}:} \texttt{id\_\allowbreak{}modo}, \texttt{tipo}, \texttt{estado}, \texttt{forma\_\allowbreak{}termino}, \texttt{fecha\_\allowbreak{}inicio}, \texttt{fecha\_\allowbreak{}fin}.
+    \item \textbf{\textit{Modo} y \textit{NivelIA}:} nombres.
+    \item \textbf{\textit{Participacion} de los rivales y su \textit{Usuario}:} \texttt{nickname}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{Ninguno.}
@@ -1276,7 +1276,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/17f}\par\smallskip
-{\footnotesize\textit{Prototipo 17f: Historial · filtros por modo y final}}
+{\footnotesize\textit{\textbf{Prototipo 17f:} Historial · filtros por modo y final}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1292,11 +1292,11 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Partida} y \textit{Modo}: \texttt{estado}, tamaño del tablero.
-    \item \textit{Participacion} y \textit{Usuario}: \texttt{orden\_\allowbreak{}turno}, \texttt{simbolo\_\allowbreak{}peon}, \texttt{nickname}, y si el jugador participó.
-    \item \textit{Reporte}: para el acceso de un moderador.
-    \item \textit{ParticipacionObjeto}: el aspecto de cada jugador en esa partida.
-    \item \textit{Jugada}: todas, ordenadas por \texttt{numero\_\allowbreak{}jugada}, con \texttt{deshecha}.
+    \item \textbf{\textit{Partida} y \textit{Modo}:} \texttt{estado}, tamaño del tablero.
+    \item \textbf{\textit{Participacion} y \textit{Usuario}:} \texttt{orden\_\allowbreak{}turno}, \texttt{simbolo\_\allowbreak{}peon}, \texttt{nickname}, y si el jugador participó.
+    \item \textbf{\textit{Reporte}:} para el acceso de un moderador.
+    \item \textbf{\textit{ParticipacionObjeto}:} el aspecto de cada jugador en esa partida.
+    \item \textbf{\textit{Jugada}:} todas, ordenadas por \texttt{numero\_\allowbreak{}jugada}, con \texttt{deshecha}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{Ninguno.}
@@ -1312,7 +1312,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/2f}\par\smallskip
-{\footnotesize\textit{Prototipo 2f: Repetición · tablero con línea de tiempo}}
+{\footnotesize\textit{\textbf{Prototipo 2f:} Repetición · tablero con línea de tiempo}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1325,19 +1325,19 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \crudFila{Prototipos}{10g, Espectador · con chat de espectadores; 13e, Compartir tu partida.}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \texttt{id\_\allowbreak{}partida}, o el token de un enlace compartido.
-    \item Para compartir: la orden del participante.
+    \item \textbf{Para compartir:} la orden del participante.
     \item Token de sesión, si lo hay.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Partida}: \texttt{estado}, \texttt{tipo}.
-    \item \textit{Participacion} y \textit{Usuario}: participantes y su \texttt{permite\_\allowbreak{}espectadores}.
-    \item \textit{Sala}: \texttt{permite\_\allowbreak{}espectadores}, si la partida viene de una sala.
-    \item \textit{Bloqueo}: entre el espectador y los participantes.
+    \item \textbf{\textit{Partida}:} \texttt{estado}, \texttt{tipo}.
+    \item \textbf{\textit{Participacion} y \textit{Usuario}:} participantes y su \texttt{permite\_\allowbreak{}espectadores}.
+    \item \textbf{\textit{Sala}:} \texttt{permite\_\allowbreak{}espectadores}, si la partida viene de una sala.
+    \item \textbf{\textit{Bloqueo}:} entre el espectador y los participantes.
     \item \textit{Jugada} y \textit{ParticipacionObjeto}.
-    \item \textit{EnlaceEspectador}: por \texttt{token\_\allowbreak{}hash}.
+    \item \textbf{\textit{EnlaceEspectador}:} por \texttt{token\_\allowbreak{}hash}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{EnlaceEspectador}: \texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}creador}, \texttt{token\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}creacion}, \texttt{activo} = 1, al compartir.
+    \item \textbf{\textit{EnlaceEspectador}:} \texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}creador}, \texttt{token\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}creacion}, \texttt{activo} = 1, al compartir.
     \item \textit{Mensaje} con \texttt{canal} = \texttt{ESPECTADORES}, si el espectador escribe.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{Ninguno.}
@@ -1355,11 +1355,11 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/10g}\par\smallskip
-{\footnotesize\textit{Prototipo 10g: Espectador · con chat de espectadores}}
+{\footnotesize\textit{\textbf{Prototipo 10g:} Espectador · con chat de espectadores}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/13e}\par\smallskip
-{\footnotesize\textit{Prototipo 13e: Compartir tu partida}}
+{\footnotesize\textit{\textbf{Prototipo 13e:} Compartir tu partida}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1371,18 +1371,18 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \crudFila{Actor}{Jugador o invitado}
   \crudFila{Prototipos}{2c, Ranking · tabla con tu fila fijada; 2d, Ranking · divisiones con top 3.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item Alcance: global o entre amigos.
+    \item \textbf{Alcance:} global o entre amigos.
     \item \texttt{id\_\allowbreak{}modo}.
     \item Búsqueda opcional por \texttt{nickname} o \texttt{codigo\_\allowbreak{}amigo}.
-    \item Vista: tabla o divisiones.
+    \item \textbf{Vista:} tabla o divisiones.
     \item Página solicitada.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{EstadisticaModo}: \texttt{puntos\_\allowbreak{}elo}, \texttt{division}, \texttt{partidas\_\allowbreak{}jugadas}.
-    \item \textit{Usuario}: \texttt{nickname}, \texttt{id\_\allowbreak{}icono}, \texttt{codigo\_\allowbreak{}amigo}, \texttt{estado\_\allowbreak{}cuenta}.
-    \item \textit{Division}: para la vista por divisiones.
-    \item \textit{Amistad}: para el alcance entre amigos.
-    \item \textit{Bloqueo}: para la búsqueda.
+    \item \textbf{\textit{EstadisticaModo}:} \texttt{puntos\_\allowbreak{}elo}, \texttt{division}, \texttt{partidas\_\allowbreak{}jugadas}.
+    \item \textbf{\textit{Usuario}:} \texttt{nickname}, \texttt{id\_\allowbreak{}icono}, \texttt{codigo\_\allowbreak{}amigo}, \texttt{estado\_\allowbreak{}cuenta}.
+    \item \textbf{\textit{Division}:} para la vista por divisiones.
+    \item \textbf{\textit{Amistad}:} para el alcance entre amigos.
+    \item \textbf{\textit{Bloqueo}:} para la búsqueda.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{Ninguno.}
@@ -1399,11 +1399,11 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/2c}\par\smallskip
-{\footnotesize\textit{Prototipo 2c: Ranking · tabla con tu fila fijada}}
+{\footnotesize\textit{\textbf{Prototipo 2c:} Ranking · tabla con tu fila fijada}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/2d}\par\smallskip
-{\footnotesize\textit{Prototipo 2d: Ranking · divisiones con top 3}}
+{\footnotesize\textit{\textbf{Prototipo 2d:} Ranking · divisiones con top 3}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1425,14 +1425,14 @@ El tutorial es la única funcionalidad del sistema en la que el servidor no vali
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Leccion}: \texttt{orden}, \texttt{nombre}, \texttt{num\_\allowbreak{}pasos}.
-    \item \textit{ProgresoTutorial}: el del jugador en cada lección.
+    \item \textbf{\textit{Leccion}:} \texttt{orden}, \texttt{nombre}, \texttt{num\_\allowbreak{}pasos}.
+    \item \textbf{\textit{ProgresoTutorial}:} el del jugador en cada lección.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{ProgresoTutorial}: \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}leccion}, \texttt{paso\_\allowbreak{}actual}, \texttt{completada} = 0, \texttt{fecha\_\allowbreak{}actualizacion}, al completar el primer paso de una lección.
+    \item \textbf{\textit{ProgresoTutorial}:} \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}leccion}, \texttt{paso\_\allowbreak{}actual}, \texttt{completada} = 0, \texttt{fecha\_\allowbreak{}actualizacion}, al completar el primer paso de una lección.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{ProgresoTutorial}: \texttt{paso\_\allowbreak{}actual} y \texttt{fecha\_\allowbreak{}actualizacion} en cada paso; \texttt{completada} = 1 y \texttt{fecha\_\allowbreak{}completada} al terminar.
+    \item \textbf{\textit{ProgresoTutorial}:} \texttt{paso\_\allowbreak{}actual} y \texttt{fecha\_\allowbreak{}actualizacion} en cada paso; \texttt{completada} = 1 y \texttt{fecha\_\allowbreak{}completada} al terminar.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -1448,11 +1448,11 @@ El tutorial es la única funcionalidad del sistema en la que el servidor no vali
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/6b}\par\smallskip
-{\footnotesize\textit{Prototipo 6b: Tutorial · índice de lecciones}}
+{\footnotesize\textit{\textbf{Prototipo 6b:} Tutorial · índice de lecciones}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/6a}\par\smallskip
-{\footnotesize\textit{Prototipo 6a: Tutorial · pasos sobre el tablero}}
+{\footnotesize\textit{\textbf{Prototipo 6a:} Tutorial · pasos sobre el tablero}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1474,16 +1474,16 @@ Todo lo que se compra es cosmético y se paga solo con monedas del juego. La pos
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{ObjetoCosmetico}: \texttt{precio}, \texttt{a\_\allowbreak{}la\_\allowbreak{}venta}, \texttt{activo}, \texttt{nivel\_\allowbreak{}requerido}.
-    \item \textit{UsuarioObjeto}: que el usuario no lo posea ya.
-    \item \textit{Usuario}: \texttt{saldo\_\allowbreak{}monedas}, \texttt{nivel}.
+    \item \textbf{\textit{ObjetoCosmetico}:} \texttt{precio}, \texttt{a\_\allowbreak{}la\_\allowbreak{}venta}, \texttt{activo}, \texttt{nivel\_\allowbreak{}requerido}.
+    \item \textbf{\textit{UsuarioObjeto}:} que el usuario no lo posea ya.
+    \item \textbf{\textit{Usuario}:} \texttt{saldo\_\allowbreak{}monedas}, \texttt{nivel}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{UsuarioObjeto}: \texttt{fecha\_\allowbreak{}obtencion}, \texttt{origen} = \texttt{COMPRA}.
-    \item \textit{MovimientoMoneda}: \texttt{tipo} = \texttt{COMPRA}, \texttt{importe} negativo, \texttt{id\_\allowbreak{}objeto}, \texttt{fecha\_\allowbreak{}movimiento}.
+    \item \textbf{\textit{UsuarioObjeto}:} \texttt{fecha\_\allowbreak{}obtencion}, \texttt{origen} = \texttt{COMPRA}.
+    \item \textbf{\textit{MovimientoMoneda}:} \texttt{tipo} = \texttt{COMPRA}, \texttt{importe} negativo, \texttt{id\_\allowbreak{}objeto}, \texttt{fecha\_\allowbreak{}movimiento}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{saldo\_\allowbreak{}monedas}.
+    \item \textbf{\textit{Usuario}:} \texttt{saldo\_\allowbreak{}monedas}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -1499,11 +1499,11 @@ Todo lo que se compra es cosmético y se paga solo con monedas del juego. La pos
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/4d}\par\smallskip
-{\footnotesize\textit{Prototipo 4d: Tienda · destacado y rejilla}}
+{\footnotesize\textit{\textbf{Prototipo 4d:} Tienda · destacado y rejilla}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/4f}\par\smallskip
-{\footnotesize\textit{Prototipo 4f: Tienda · confirmación de compra}}
+{\footnotesize\textit{\textbf{Prototipo 4f:} Tienda · confirmación de compra}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1515,26 +1515,26 @@ Todo lo que se compra es cosmético y se paga solo con monedas del juego. La pos
   \crudFila{Actor}{Jugador o invitado}
   \crudFila{Prototipos}{14d, Contenido y probabilidades; 14e, Confirmar compra de caja; 14c, Resultado de la caja.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item Para comprar: \texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja} y el precio mostrado.
-    \item Para abrir: \texttt{id\_\allowbreak{}caja}.
+    \item \textbf{Para comprar:} \texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja} y el precio mostrado.
+    \item \textbf{Para abrir:} \texttt{id\_\allowbreak{}caja}.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{TipoCaja}: \texttt{precio}, \texttt{activo}.
-    \item \textit{TipoCajaObjeto}: \texttt{id\_\allowbreak{}objeto} y \texttt{probabilidad} de cada objeto posible.
-    \item \textit{UsuarioObjeto}: para detectar repetidos.
-    \item \textit{Usuario}: \texttt{saldo\_\allowbreak{}monedas}, \texttt{cajas\_\allowbreak{}sin\_\allowbreak{}raro}.
-    \item \textit{Caja}: \texttt{estado}, \texttt{origen}, \texttt{fecha\_\allowbreak{}caducidad}.
+    \item \textbf{\textit{TipoCaja}:} \texttt{precio}, \texttt{activo}.
+    \item \textbf{\textit{TipoCajaObjeto}:} \texttt{id\_\allowbreak{}objeto} y \texttt{probabilidad} de cada objeto posible.
+    \item \textbf{\textit{UsuarioObjeto}:} para detectar repetidos.
+    \item \textbf{\textit{Usuario}:} \texttt{saldo\_\allowbreak{}monedas}, \texttt{cajas\_\allowbreak{}sin\_\allowbreak{}raro}.
+    \item \textbf{\textit{Caja}:} \texttt{estado}, \texttt{origen}, \texttt{fecha\_\allowbreak{}caducidad}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Caja}: \texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}, \texttt{origen} = \texttt{COMPRA}, \texttt{estado} = \texttt{SIN\_\allowbreak{}ABRIR}, \texttt{fecha\_\allowbreak{}obtencion}.
-    \item \textit{MovimientoMoneda}: \texttt{COMPRA\_\allowbreak{}CAJA} al comprar, \texttt{CONVERSION} por cada repetido y \texttt{DEVOLUCION} si la caja cobrada no llega a crearse.
-    \item \textit{UsuarioObjeto}: los objetos nuevos, con \texttt{origen} = \texttt{CAJA}.
-    \item \textit{CajaContenido}: tres filas con \texttt{id\_\allowbreak{}objeto}, \texttt{convertido} y \texttt{monedas\_\allowbreak{}conversion}.
+    \item \textbf{\textit{Caja}:} \texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}, \texttt{origen} = \texttt{COMPRA}, \texttt{estado} = \texttt{SIN\_\allowbreak{}ABRIR}, \texttt{fecha\_\allowbreak{}obtencion}.
+    \item \textbf{\textit{MovimientoMoneda}:} \texttt{COMPRA\_\allowbreak{}CAJA} al comprar, \texttt{CONVERSION} por cada repetido y \texttt{DEVOLUCION} si la caja cobrada no llega a crearse.
+    \item \textbf{\textit{UsuarioObjeto}:} los objetos nuevos, con \texttt{origen} = \texttt{CAJA}.
+    \item \textbf{\textit{CajaContenido}:} tres filas con \texttt{id\_\allowbreak{}objeto}, \texttt{convertido} y \texttt{monedas\_\allowbreak{}conversion}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{saldo\_\allowbreak{}monedas}, \texttt{cajas\_\allowbreak{}sin\_\allowbreak{}raro}.
-    \item \textit{Caja}: \texttt{estado} = \texttt{ABIERTA} y \texttt{fecha\_\allowbreak{}apertura}, o \texttt{CADUCADA}.
+    \item \textbf{\textit{Usuario}:} \texttt{saldo\_\allowbreak{}monedas}, \texttt{cajas\_\allowbreak{}sin\_\allowbreak{}raro}.
+    \item \textbf{\textit{Caja}:} \texttt{estado} = \texttt{ABIERTA} y \texttt{fecha\_\allowbreak{}apertura}, o \texttt{CADUCADA}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -1550,16 +1550,16 @@ Todo lo que se compra es cosmético y se paga solo con monedas del juego. La pos
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/14d}\par\smallskip
-{\footnotesize\textit{Prototipo 14d: Contenido y probabilidades}}
+{\footnotesize\textit{\textbf{Prototipo 14d:} Contenido y probabilidades}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/14e}\par\smallskip
-{\footnotesize\textit{Prototipo 14e: Confirmar compra de caja}}
+{\footnotesize\textit{\textbf{Prototipo 14e:} Confirmar compra de caja}}
 \end{minipage}
 \par\medskip
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/14c}\par\smallskip
-{\footnotesize\textit{Prototipo 14c: Resultado de la caja}}
+{\footnotesize\textit{\textbf{Prototipo 14c:} Resultado de la caja}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1575,12 +1575,12 @@ Todo lo que se compra es cosmético y se paga solo con monedas del juego. La pos
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{ObjetoCosmetico}: \texttt{id\_\allowbreak{}ranura}, \texttt{activo}.
-    \item \textit{UsuarioObjeto}: que el usuario lo posea.
+    \item \textbf{\textit{ObjetoCosmetico}:} \texttt{id\_\allowbreak{}ranura}, \texttt{activo}.
+    \item \textbf{\textit{UsuarioObjeto}:} que el usuario lo posea.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Equipamiento}: la fila (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}ranura}) pasa a apuntar al \texttt{id\_\allowbreak{}objeto} elegido.
+    \item \textbf{\textit{Equipamiento}:} la fila (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}ranura}) pasa a apuntar al \texttt{id\_\allowbreak{}objeto} elegido.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -1595,7 +1595,7 @@ Todo lo que se compra es cosmético y se paga solo con monedas del juego. La pos
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/4a}\par\smallskip
-{\footnotesize\textit{Prototipo 4a: Personalizar · vista previa 3D y rejilla}}
+{\footnotesize\textit{\textbf{Prototipo 4a:} Personalizar · vista previa 3D y rejilla}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1611,12 +1611,12 @@ Todo lo que se compra es cosmético y se paga solo con monedas del juego. La pos
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Ranura}: las seis.
-    \item \textit{ObjetoCosmetico}: \texttt{nombre}, \texttt{rareza}, \texttt{precio}, \texttt{nivel\_\allowbreak{}requerido}, \texttt{a\_\allowbreak{}la\_\allowbreak{}venta}, \texttt{activo}.
-    \item \textit{UsuarioObjeto}: lo que posee el usuario.
-    \item \textit{Equipamiento}: lo que tiene equipado.
-    \item \textit{TipoCaja} y \textit{Caja}: las cajas a la venta y las que el usuario tiene sin abrir.
-    \item \textit{Usuario}: \texttt{saldo\_\allowbreak{}monedas}, \texttt{nivel}, \texttt{cajas\_\allowbreak{}sin\_\allowbreak{}raro}.
+    \item \textbf{\textit{Ranura}:} las seis.
+    \item \textbf{\textit{ObjetoCosmetico}:} \texttt{nombre}, \texttt{rareza}, \texttt{precio}, \texttt{nivel\_\allowbreak{}requerido}, \texttt{a\_\allowbreak{}la\_\allowbreak{}venta}, \texttt{activo}.
+    \item \textbf{\textit{UsuarioObjeto}:} lo que posee el usuario.
+    \item \textbf{\textit{Equipamiento}:} lo que tiene equipado.
+    \item \textbf{\textit{TipoCaja} y \textit{Caja}:} las cajas a la venta y las que el usuario tiene sin abrir.
+    \item \textbf{\textit{Usuario}:} \texttt{saldo\_\allowbreak{}monedas}, \texttt{nivel}, \texttt{cajas\_\allowbreak{}sin\_\allowbreak{}raro}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{Ninguno.}
@@ -1631,7 +1631,7 @@ Todo lo que se compra es cosmético y se paga solo con monedas del juego. La pos
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/4c}\par\smallskip
-{\footnotesize\textit{Prototipo 4c: Personalizar · lista de ranuras equipadas}}
+{\footnotesize\textit{\textbf{Prototipo 4c:} Personalizar · lista de ranuras equipadas}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1643,14 +1643,14 @@ Todo lo que se compra es cosmético y se paga solo con monedas del juego. La pos
   \crudFila{Actor}{Jugador o invitado}
   \crudFila{Prototipos}{16e, Historial de monedas.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item Filtro opcional: ingresos, gastos o conversiones.
+    \item \textbf{Filtro opcional:} ingresos, gastos o conversiones.
     \item Página solicitada.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{MovimientoMoneda}: \texttt{tipo}, \texttt{importe}, \texttt{fecha\_\allowbreak{}movimiento}, \texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}caja}, y la suma de todos los del usuario.
-    \item \textit{ObjetoCosmetico}, \textit{Caja}, \textit{TipoCaja}, \textit{CajaContenido}, \textit{Partida} y \textit{Modo}: para describir cada movimiento.
-    \item \textit{Usuario}: \texttt{saldo\_\allowbreak{}monedas}, para comprobar que coincide con la suma.
+    \item \textbf{\textit{MovimientoMoneda}:} \texttt{tipo}, \texttt{importe}, \texttt{fecha\_\allowbreak{}movimiento}, \texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}caja}, y la suma de todos los del usuario.
+    \item \textbf{\textit{ObjetoCosmetico}, \textit{Caja}, \textit{TipoCaja}, \textit{CajaContenido}, \textit{Partida} y \textit{Modo}:} para describir cada movimiento.
+    \item \textbf{\textit{Usuario}:} \texttt{saldo\_\allowbreak{}monedas}, para comprobar que coincide con la suma.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{Ninguno.}
@@ -1665,7 +1665,7 @@ Todo lo que se compra es cosmético y se paga solo con monedas del juego. La pos
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/16e}\par\smallskip
-{\footnotesize\textit{Prototipo 16e: Historial de monedas}}
+{\footnotesize\textit{\textbf{Prototipo 16e:} Historial de monedas}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1687,14 +1687,14 @@ Amistades, solicitudes, silencios y bloqueos son las únicas estructuras del sis
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{nickname}, \texttt{codigo\_\allowbreak{}amigo}, \texttt{estado\_\allowbreak{}cuenta}.
-    \item \textit{Bloqueo}: entre ambos.
-    \item \textit{Amistad}: si ya son amigos, y cuántos amigos tiene cada uno.
-    \item \textit{Solicitud}: pendientes en cualquier sentido.
-    \item \textit{Participacion}: rivales recientes, para las sugerencias.
+    \item \textbf{\textit{Usuario}:} \texttt{nickname}, \texttt{codigo\_\allowbreak{}amigo}, \texttt{estado\_\allowbreak{}cuenta}.
+    \item \textbf{\textit{Bloqueo}:} entre ambos.
+    \item \textbf{\textit{Amistad}:} si ya son amigos, y cuántos amigos tiene cada uno.
+    \item \textbf{\textit{Solicitud}:} pendientes en cualquier sentido.
+    \item \textbf{\textit{Participacion}:} rivales recientes, para las sugerencias.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Solicitud}: \texttt{id\_\allowbreak{}solicitante}, \texttt{id\_\allowbreak{}destinatario}, \texttt{fecha\_\allowbreak{}solicitud}.
+    \item \textbf{\textit{Solicitud}:} \texttt{id\_\allowbreak{}solicitante}, \texttt{id\_\allowbreak{}destinatario}, \texttt{fecha\_\allowbreak{}solicitud}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
@@ -1711,7 +1711,7 @@ Amistades, solicitudes, silencios y bloqueos son las únicas estructuras del sis
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/10a}\par\smallskip
-{\footnotesize\textit{Prototipo 10a: Menú de un jugador}}
+{\footnotesize\textit{\textbf{Prototipo 10a:} Menú de un jugador}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1724,20 +1724,20 @@ Amistades, solicitudes, silencios y bloqueos son las únicas estructuras del sis
   \crudFila{Prototipos}{5c, Solicitudes · entrantes y enviadas.}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \texttt{id\_\allowbreak{}solicitud}.
-    \item Acción: aceptar o rechazar, si es destinatario; cancelar, si es solicitante.
+    \item \textbf{Acción:} aceptar o rechazar, si es destinatario; cancelar, si es solicitante.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Solicitud}: que el usuario sea su destinatario o su solicitante.
-    \item \textit{Amistad}: cuántos amigos tiene cada uno.
-    \item \textit{Bloqueo}: si surgió uno desde que se envió.
+    \item \textbf{\textit{Solicitud}:} que el usuario sea su destinatario o su solicitante.
+    \item \textbf{\textit{Amistad}:} cuántos amigos tiene cada uno.
+    \item \textbf{\textit{Bloqueo}:} si surgió uno desde que se envió.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Amistad}: \texttt{id\_\allowbreak{}usuario\_\allowbreak{}a} con el identificador menor, \texttt{id\_\allowbreak{}usuario\_\allowbreak{}b} con el mayor y \texttt{fecha\_\allowbreak{}amistad}, solo si acepta.
+    \item \textbf{\textit{Amistad}:} \texttt{id\_\allowbreak{}usuario\_\allowbreak{}a} con el identificador menor, \texttt{id\_\allowbreak{}usuario\_\allowbreak{}b} con el mayor y \texttt{fecha\_\allowbreak{}amistad}, solo si acepta.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{\begin{crudlista}
-    \item \textit{Solicitud}: se elimina al aceptar, rechazar o cancelar. Borrado físico.
+    \item \textbf{\textit{Solicitud}:} se elimina al aceptar, rechazar o cancelar. Borrado físico.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item Solo el destinatario acepta o rechaza, y solo el solicitante cancela (\mbox{CU-31} \mbox{RN-01}).
@@ -1752,7 +1752,7 @@ Amistades, solicitudes, silencios y bloqueos son las únicas estructuras del sis
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/5c}\par\smallskip
-{\footnotesize\textit{Prototipo 5c: Solicitudes · entrantes y enviadas}}
+{\footnotesize\textit{\textbf{Prototipo 5c:} Solicitudes · entrantes y enviadas}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1767,11 +1767,11 @@ Amistades, solicitudes, silencios y bloqueos son las únicas estructuras del sis
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Amistad}: las del usuario, en cualquiera de las dos columnas.
-    \item \textit{Usuario}: \texttt{nickname}, \texttt{id\_\allowbreak{}icono}, \texttt{estado\_\allowbreak{}cuenta} de cada amigo.
-    \item \textit{Sesion}: si el amigo tiene alguna abierta, para su estado de conexión.
-    \item \textit{Participacion} y \textit{Partida}: si el amigo está jugando y si la partida admite espectadores.
-    \item \textit{Solicitud}: entrantes y enviadas.
+    \item \textbf{\textit{Amistad}:} las del usuario, en cualquiera de las dos columnas.
+    \item \textbf{\textit{Usuario}:} \texttt{nickname}, \texttt{id\_\allowbreak{}icono}, \texttt{estado\_\allowbreak{}cuenta} de cada amigo.
+    \item \textbf{\textit{Sesion}:} si el amigo tiene alguna abierta, para su estado de conexión.
+    \item \textbf{\textit{Participacion} y \textit{Partida}:} si el amigo está jugando y si la partida admite espectadores.
+    \item \textbf{\textit{Solicitud}:} entrantes y enviadas.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{Ninguno.}
@@ -1786,11 +1786,11 @@ Amistades, solicitudes, silencios y bloqueos son las únicas estructuras del sis
 \begin{center}
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/2b}\par\smallskip
-{\footnotesize\textit{Prototipo 2b: Amigos · pantalla completa con pestañas}}
+{\footnotesize\textit{\textbf{Prototipo 2b:} Amigos · pantalla completa con pestañas}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/13a}\par\smallskip
-{\footnotesize\textit{Prototipo 13a: Desde amigos · quién está jugando}}
+{\footnotesize\textit{\textbf{Prototipo 13a:} Desde amigos · quién está jugando}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1807,12 +1807,12 @@ Amistades, solicitudes, silencios y bloqueos son las únicas estructuras del sis
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Amistad}: la del par ordenado.
+    \item \textbf{\textit{Amistad}:} la del par ordenado.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{\begin{crudlista}
-    \item \textit{Amistad}: la fila del par. Borrado físico.
+    \item \textbf{\textit{Amistad}:} la fila del par. Borrado físico.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item La eliminación es recíproca (\mbox{CU-49} \mbox{RN-01}).
@@ -1831,24 +1831,24 @@ Amistades, solicitudes, silencios y bloqueos son las únicas estructuras del sis
   \crudFila{Prototipos}{10c, Silenciados y bloqueados. También 10a, las opciones ``silenciar'' y ``bloquear'' (\mbox{F-39}).}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \texttt{id\_\allowbreak{}usuario} del otro jugador.
-    \item Acción: silenciar, dejar de silenciar, bloquear o desbloquear.
+    \item \textbf{Acción:} silenciar, dejar de silenciar, bloquear o desbloquear.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Silencio} y \textit{Bloqueo}: si ya existen.
-    \item \textit{Amistad}, \textit{Solicitud} e \textit{Invitacion}: entre ambos.
-    \item \textit{ColaEmparejamiento} y \textit{SalaParticipante}: si coinciden.
+    \item \textbf{\textit{Silencio} y \textit{Bloqueo}:} si ya existen.
+    \item \textbf{\textit{Amistad}, \textit{Solicitud} e \textit{Invitacion}:} entre ambos.
+    \item \textbf{\textit{ColaEmparejamiento} y \textit{SalaParticipante}:} si coinciden.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Silencio}: \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}silenciado}, \texttt{fecha\_\allowbreak{}silencio}.
-    \item \textit{Bloqueo}: \texttt{id\_\allowbreak{}bloqueador}, \texttt{id\_\allowbreak{}bloqueado}, \texttt{fecha\_\allowbreak{}bloqueo}.
+    \item \textbf{\textit{Silencio}:} \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}silenciado}, \texttt{fecha\_\allowbreak{}silencio}.
+    \item \textbf{\textit{Bloqueo}:} \texttt{id\_\allowbreak{}bloqueador}, \texttt{id\_\allowbreak{}bloqueado}, \texttt{fecha\_\allowbreak{}bloqueo}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Invitacion}: las pendientes entre ambos pasan a \texttt{EXPIRADA}, al bloquear.
+    \item \textbf{\textit{Invitacion}:} las pendientes entre ambos pasan a \texttt{EXPIRADA}, al bloquear.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{\begin{crudlista}
-    \item Al bloquear: la \textit{Amistad}, las \textit{Solicitud} pendientes entre ambos y, si comparten sala, la \textit{SalaParticipante} del que debe salir. Borrado físico.
-    \item Al dejar de silenciar o desbloquear: la fila de \textit{Silencio} o de \textit{Bloqueo}. Borrado físico.
+    \item \textbf{Al bloquear:} la \textit{Amistad}, las \textit{Solicitud} pendientes entre ambos y, si comparten sala, la \textit{SalaParticipante} del que debe salir. Borrado físico.
+    \item \textbf{Al dejar de silenciar o desbloquear:} la fila de \textit{Silencio} o de \textit{Bloqueo}. Borrado físico.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item Silenciar oculta mensajes y emotes, es reversible y no pide confirmación (\mbox{CU-33} \mbox{RN-01}).
@@ -1864,7 +1864,7 @@ Amistades, solicitudes, silencios y bloqueos son las únicas estructuras del sis
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/10c}\par\smallskip
-{\footnotesize\textit{Prototipo 10c: Silenciados y bloqueados}}
+{\footnotesize\textit{\textbf{Prototipo 10c:} Silenciados y bloqueados}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1876,19 +1876,19 @@ Amistades, solicitudes, silencios y bloqueos son las únicas estructuras del sis
   \crudFila{Actor}{Jugador o espectador con sesión}
   \crudFila{Prototipos}{20c, Chat desplegado desde el icono.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item \texttt{canal}: \texttt{PARTIDA}, \texttt{GLOBAL}, \texttt{AMIGOS}, \texttt{SALA} o \texttt{ESPECTADORES}.
-    \item \texttt{texto}: hasta el largo máximo, no vacío.
+    \item \textbf{\texttt{canal}:} \texttt{PARTIDA}, \texttt{GLOBAL}, \texttt{AMIGOS}, \texttt{SALA} o \texttt{ESPECTADORES}.
+    \item \textbf{\texttt{texto}:} hasta el largo máximo, no vacío.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Sancion}: activas con \texttt{ambito} = \texttt{CHAT}.
-    \item \textit{Participacion}, \textit{Amistad} o \textit{SalaParticipante}: acceso al canal.
-    \item \textit{PalabraProhibida}: con \texttt{ambito} de chat.
-    \item \textit{Mensaje}: los recientes del autor, para el ritmo de envío.
-    \item \textit{Bloqueo} y \textit{Silencio}: para decidir a quién se entrega.
+    \item \textbf{\textit{Sancion}:} activas con \texttt{ambito} = \texttt{CHAT}.
+    \item \textbf{\textit{Participacion}, \textit{Amistad} o \textit{SalaParticipante}:} acceso al canal.
+    \item \textbf{\textit{PalabraProhibida}:} con \texttt{ambito} de chat.
+    \item \textbf{\textit{Mensaje}:} los recientes del autor, para el ritmo de envío.
+    \item \textbf{\textit{Bloqueo} y \textit{Silencio}:} para decidir a quién se entrega.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Mensaje}: \texttt{canal}, \texttt{id\_\allowbreak{}autor}, \texttt{texto}, \texttt{fecha\_\allowbreak{}envio}, e \texttt{id\_\allowbreak{}partida} o \texttt{id\_\allowbreak{}sala} según el canal.
+    \item \textbf{\textit{Mensaje}:} \texttt{canal}, \texttt{id\_\allowbreak{}autor}, \texttt{texto}, \texttt{fecha\_\allowbreak{}envio}, e \texttt{id\_\allowbreak{}partida} o \texttt{id\_\allowbreak{}sala} según el canal.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
@@ -1906,7 +1906,7 @@ Amistades, solicitudes, silencios y bloqueos son las únicas estructuras del sis
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/20c}\par\smallskip
-{\footnotesize\textit{Prototipo 20c: Chat desplegado desde el icono}}
+{\footnotesize\textit{\textbf{Prototipo 20c:} Chat desplegado desde el icono}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1923,9 +1923,9 @@ Amistades, solicitudes, silencios y bloqueos son las únicas estructuras del sis
     \item Token de sesión, si lo hay.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Mensaje}: los del canal posteriores al último leído.
-    \item \textit{Usuario}: \texttt{nickname} de cada autor.
-    \item \textit{Bloqueo} y \textit{Silencio}: para ocultar a quien corresponda.
+    \item \textbf{\textit{Mensaje}:} los del canal posteriores al último leído.
+    \item \textbf{\textit{Usuario}:} \texttt{nickname} de cada autor.
+    \item \textbf{\textit{Bloqueo} y \textit{Silencio}:} para ocultar a quien corresponda.
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{Ninguno.}
@@ -1941,7 +1941,7 @@ Amistades, solicitudes, silencios y bloqueos son las únicas estructuras del sis
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/5f}\par\smallskip
-{\footnotesize\textit{Prototipo 5f: Chat global expandido}}
+{\footnotesize\textit{\textbf{Prototipo 5f:} Chat global expandido}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -1959,18 +1959,18 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
   \crudFila{Prototipos}{10b, Reportar · motivo y pruebas.}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \texttt{id\_\allowbreak{}reportado}.
-    \item \texttt{id\_\allowbreak{}motivo}: uno de los cinco del catálogo.
-    \item \texttt{descripcion}: texto opcional hasta el largo máximo.
+    \item \textbf{\texttt{id\_\allowbreak{}motivo}:} uno de los cinco del catálogo.
+    \item \textbf{\texttt{descripcion}:} texto opcional hasta el largo máximo.
     \item \texttt{id\_\allowbreak{}partida}, si se reporta desde una partida.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: el reportado y su \texttt{estado\_\allowbreak{}cuenta}.
-    \item \textit{MotivoReporte}: el catálogo.
-    \item \textit{Reporte}: duplicados y número de reportes recientes del denunciante.
+    \item \textbf{\textit{Usuario}:} el reportado y su \texttt{estado\_\allowbreak{}cuenta}.
+    \item \textbf{\textit{MotivoReporte}:} el catálogo.
+    \item \textbf{\textit{Reporte}:} duplicados y número de reportes recientes del denunciante.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Reporte}: \texttt{id\_\allowbreak{}denunciante}, \texttt{id\_\allowbreak{}reportado}, \texttt{id\_\allowbreak{}motivo}, \texttt{descripcion}, \texttt{id\_\allowbreak{}partida}, \texttt{fecha\_\allowbreak{}reporte}, \texttt{estado} = \texttt{PENDIENTE}.
+    \item \textbf{\textit{Reporte}:} \texttt{id\_\allowbreak{}denunciante}, \texttt{id\_\allowbreak{}reportado}, \texttt{id\_\allowbreak{}motivo}, \texttt{descripcion}, \texttt{id\_\allowbreak{}partida}, \texttt{fecha\_\allowbreak{}reporte}, \texttt{estado} = \texttt{PENDIENTE}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
@@ -1987,7 +1987,7 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/10b}\par\smallskip
-{\footnotesize\textit{Prototipo 10b: Reportar · motivo y pruebas}}
+{\footnotesize\textit{\textbf{Prototipo 10b:} Reportar · motivo y pruebas}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -2000,22 +2000,22 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
   \crudFila{Prototipos}{Sin prototipo: no hay pantallas de moderación.}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \texttt{id\_\allowbreak{}reporte}.
-    \item Acción: tomar, liberar o resolver.
-    \item Resolución: sin sanción o con sanción.
-    \item \texttt{nota\_\allowbreak{}resolucion}: obligatoria.
+    \item \textbf{Acción:} tomar, liberar o resolver.
+    \item \textbf{Resolución:} sin sanción o con sanción.
+    \item \textbf{\texttt{nota\_\allowbreak{}resolucion}:} obligatoria.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{rol} del moderador.
-    \item \textit{Reporte}: los pendientes con su \textit{MotivoReporte}; los que llevan más de treinta minutos en revisión.
-    \item \textit{Partida}, \textit{Jugada} y \textit{Mensaje}: las pruebas.
-    \item \textit{Sancion}: el historial del reportado.
+    \item \textbf{\textit{Usuario}:} \texttt{rol} del moderador.
+    \item \textbf{\textit{Reporte}:} los pendientes con su \textit{MotivoReporte}; los que llevan más de treinta minutos en revisión.
+    \item \textbf{\textit{Partida}, \textit{Jugada} y \textit{Mensaje}:} las pruebas.
+    \item \textbf{\textit{Sancion}:} el historial del reportado.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{BitacoraModeracion}: la toma, la liberación y la resolución.
+    \item \textbf{\textit{BitacoraModeracion}:} la toma, la liberación y la resolución.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Reporte}: \texttt{estado} (\texttt{EN\_\allowbreak{}REVISION}, \texttt{PENDIENTE}, \texttt{RESUELTO\_\allowbreak{}SIN\_\allowbreak{}SANCION}), \texttt{id\_\allowbreak{}moderador}, \texttt{fecha\_\allowbreak{}asignacion}, \texttt{nota\_\allowbreak{}resolucion}, \texttt{fecha\_\allowbreak{}resolucion}.
+    \item \textbf{\textit{Reporte}:} \texttt{estado} (\texttt{EN\_\allowbreak{}REVISION}, \texttt{PENDIENTE}, \texttt{RESUELTO\_\allowbreak{}SIN\_\allowbreak{}SANCION}), \texttt{id\_\allowbreak{}moderador}, \texttt{fecha\_\allowbreak{}asignacion}, \texttt{nota\_\allowbreak{}resolucion}, \texttt{fecha\_\allowbreak{}resolucion}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -2037,28 +2037,28 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
   \crudFila{Prototipos}{10d, Te sancionan · chat restringido. Muestra el efecto sobre el jugador; la pantalla del moderador no está prototipada.}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \texttt{id\_\allowbreak{}usuario} sancionado.
-    \item \texttt{ambito}: \texttt{CUENTA} o \texttt{CHAT}.
-    \item \texttt{tipo}: \texttt{TEMPORAL} o \texttt{PERMANENTE}.
+    \item \textbf{\texttt{ambito}:} \texttt{CUENTA} o \texttt{CHAT}.
+    \item \textbf{\texttt{tipo}:} \texttt{TEMPORAL} o \texttt{PERMANENTE}.
     \item Duración, si es temporal.
-    \item \texttt{motivo}: texto obligatorio.
+    \item \textbf{\texttt{motivo}:} texto obligatorio.
     \item \texttt{id\_\allowbreak{}reporte}, opcional.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{rol} del moderador y del sancionado, \texttt{estado\_\allowbreak{}cuenta}.
-    \item \textit{Sancion}: activas del mismo ámbito.
+    \item \textbf{\textit{Usuario}:} \texttt{rol} del moderador y del sancionado, \texttt{estado\_\allowbreak{}cuenta}.
+    \item \textbf{\textit{Sancion}:} activas del mismo ámbito.
     \item \textit{Sesion} y \textit{Participacion} del sancionado.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Sancion}: \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}moderador}, \texttt{ambito}, \texttt{tipo}, \texttt{motivo}, \texttt{fecha\_\allowbreak{}inicio}, \texttt{fecha\_\allowbreak{}fin}, \texttt{activa} = 1, \texttt{id\_\allowbreak{}reporte}.
+    \item \textbf{\textit{Sancion}:} \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}moderador}, \texttt{ambito}, \texttt{tipo}, \texttt{motivo}, \texttt{fecha\_\allowbreak{}inicio}, \texttt{fecha\_\allowbreak{}fin}, \texttt{activa} = 1, \texttt{id\_\allowbreak{}reporte}.
     \item \textit{BitacoraModeracion}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{estado\_\allowbreak{}cuenta} = \texttt{SUSPENDIDA} o \texttt{BANEADA}, solo con ámbito de cuenta.
-    \item \textit{Sesion}: \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{SANCION}, solo con ámbito de cuenta.
-    \item \textit{Participacion} sin terminar: se cierra por \texttt{ABANDONO}, solo con ámbito de cuenta.
-    \item \textit{Reporte}: \texttt{estado} = \texttt{RESUELTO\_\allowbreak{}CON\_\allowbreak{}SANCION}.
-    \item \textit{Sancion} anterior del mismo ámbito, si se sustituye: \texttt{activa} = 0, \texttt{fecha\_\allowbreak{}retiro}, \texttt{id\_\allowbreak{}sancion\_\allowbreak{}sustituta}.
+    \item \textbf{\textit{Usuario}:} \texttt{estado\_\allowbreak{}cuenta} = \texttt{SUSPENDIDA} o \texttt{BANEADA}, solo con ámbito de cuenta.
+    \item \textbf{\textit{Sesion}:} \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{SANCION}, solo con ámbito de cuenta.
+    \item \textbf{\textit{Participacion} sin terminar:} se cierra por \texttt{ABANDONO}, solo con ámbito de cuenta.
+    \item \textbf{\textit{Reporte}:} \texttt{estado} = \texttt{RESUELTO\_\allowbreak{}CON\_\allowbreak{}SANCION}.
+    \item \textbf{\textit{Sancion} anterior del mismo ámbito, si se sustituye:} \texttt{activa} = 0, \texttt{fecha\_\allowbreak{}retiro}, \texttt{id\_\allowbreak{}sancion\_\allowbreak{}sustituta}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -2074,7 +2074,7 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/10d}\par\smallskip
-{\footnotesize\textit{Prototipo 10d: Te sancionan · chat restringido}}
+{\footnotesize\textit{\textbf{Prototipo 10d:} Te sancionan · chat restringido}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -2091,12 +2091,12 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
     \item Token de sesión, o el token de apelación emitido por el inicio de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Sancion}: que sea propia y esté activa.
-    \item \textit{Apelacion}: si ya existe una para esa sanción.
-    \item \textit{PalabraProhibida}: para marcar el texto.
+    \item \textbf{\textit{Sancion}:} que sea propia y esté activa.
+    \item \textbf{\textit{Apelacion}:} si ya existe una para esa sanción.
+    \item \textbf{\textit{PalabraProhibida}:} para marcar el texto.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{Apelacion}: \texttt{id\_\allowbreak{}sancion}, \texttt{texto}, \texttt{marca\_\allowbreak{}lenguaje}, \texttt{fecha\_\allowbreak{}apelacion}, \texttt{estado} = \texttt{PENDIENTE}.
+    \item \textbf{\textit{Apelacion}:} \texttt{id\_\allowbreak{}sancion}, \texttt{texto}, \texttt{marca\_\allowbreak{}lenguaje}, \texttt{fecha\_\allowbreak{}apelacion}, \texttt{estado} = \texttt{PENDIENTE}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
@@ -2112,7 +2112,7 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
 \begin{center}
 \begin{minipage}[t]{0.50\textwidth}\centering
 \includegraphics[width=\linewidth]{Prototipos/10e}\par\smallskip
-{\footnotesize\textit{Prototipo 10e: Aviso de sanción · detalle y apelación}}
+{\footnotesize\textit{\textbf{Prototipo 10e:} Aviso de sanción · detalle y apelación}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -2125,22 +2125,22 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
   \crudFila{Prototipos}{Sin prototipo: no hay pantallas de moderación.}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \texttt{id\_\allowbreak{}apelacion}.
-    \item Decisión: mantener o retirar la sanción.
-    \item \texttt{nota\_\allowbreak{}resolucion}: obligatoria.
+    \item \textbf{Decisión:} mantener o retirar la sanción.
+    \item \textbf{\texttt{nota\_\allowbreak{}resolucion}:} obligatoria.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
     \item \textit{Apelacion} pendiente, con su \textit{Sancion}.
     \item \textit{Reporte} que originó la sanción y sus pruebas.
-    \item \textit{Usuario}: \texttt{rol} del moderador.
+    \item \textbf{\textit{Usuario}:} \texttt{rol} del moderador.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{BitacoraModeracion}: la resolución.
+    \item \textbf{\textit{BitacoraModeracion}:} la resolución.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Apelacion}: \texttt{estado} = \texttt{EN\_\allowbreak{}REVISION} al tomarla; \texttt{ACEPTADA} o \texttt{RECHAZADA}, \texttt{id\_\allowbreak{}moderador}, \texttt{nota\_\allowbreak{}resolucion} y \texttt{fecha\_\allowbreak{}resolucion} al resolver.
-    \item \textit{Sancion}: \texttt{activa} = 0 y \texttt{fecha\_\allowbreak{}retiro}, si se acepta.
-    \item \textit{Usuario}: \texttt{estado\_\allowbreak{}cuenta} vuelve a \texttt{ACTIVA}, si se retira una sanción de cuenta.
+    \item \textbf{\textit{Apelacion}:} \texttt{estado} = \texttt{EN\_\allowbreak{}REVISION} al tomarla; \texttt{ACEPTADA} o \texttt{RECHAZADA}, \texttt{id\_\allowbreak{}moderador}, \texttt{nota\_\allowbreak{}resolucion} y \texttt{fecha\_\allowbreak{}resolucion} al resolver.
+    \item \textbf{\textit{Sancion}:} \texttt{activa} = 0 y \texttt{fecha\_\allowbreak{}retiro}, si se acepta.
+    \item \textbf{\textit{Usuario}:} \texttt{estado\_\allowbreak{}cuenta} vuelve a \texttt{ACTIVA}, si se retira una sanción de cuenta.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -2164,14 +2164,14 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{rol} del administrador; \texttt{rol}, \texttt{tipo\_\allowbreak{}cuenta}, \texttt{estado\_\allowbreak{}cuenta} del candidato.
-    \item \textit{Sancion} y \textit{Reporte}: historial del candidato.
+    \item \textbf{\textit{Usuario}:} \texttt{rol} del administrador; \texttt{rol}, \texttt{tipo\_\allowbreak{}cuenta}, \texttt{estado\_\allowbreak{}cuenta} del candidato.
+    \item \textbf{\textit{Sancion} y \textit{Reporte}:} historial del candidato.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{BitacoraModeracion}: \texttt{accion} = \texttt{ROL\_\allowbreak{}OTORGADO}, con autor, afectado y motivo.
+    \item \textbf{\textit{BitacoraModeracion}:} \texttt{accion} = \texttt{ROL\_\allowbreak{}OTORGADO}, con autor, afectado y motivo.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{rol} = \texttt{MODERADOR}.
+    \item \textbf{\textit{Usuario}:} \texttt{rol} = \texttt{MODERADOR}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -2195,15 +2195,15 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{rol} del administrador y del afectado.
-    \item \textit{Reporte} y \textit{Apelacion}: los que tenga en revisión.
+    \item \textbf{\textit{Usuario}:} \texttt{rol} del administrador y del afectado.
+    \item \textbf{\textit{Reporte} y \textit{Apelacion}:} los que tenga en revisión.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{BitacoraModeracion}: \texttt{accion} = \texttt{ROL\_\allowbreak{}RETIRADO}, con autor, afectado, motivo y elementos liberados.
+    \item \textbf{\textit{BitacoraModeracion}:} \texttt{accion} = \texttt{ROL\_\allowbreak{}RETIRADO}, con autor, afectado, motivo y elementos liberados.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{rol} = \texttt{JUGADOR}.
-    \item \textit{Reporte} y \textit{Apelacion}: los que tenía \texttt{EN\_\allowbreak{}REVISION} vuelven a \texttt{PENDIENTE} sin moderador asignado.
+    \item \textbf{\textit{Usuario}:} \texttt{rol} = \texttt{JUGADOR}.
+    \item \textbf{\textit{Reporte} y \textit{Apelacion}:} los que tenía \texttt{EN\_\allowbreak{}REVISION} vuelven a \texttt{PENDIENTE} sin moderador asignado.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguna fila.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -2221,18 +2221,18 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
   \crudFila{Actor}{Administrador}
   \crudFila{Prototipos}{Sin prototipo: no hay pantallas de administración.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item Bitácora: de acceso o de moderación.
+    \item \textbf{Bitácora:} de acceso o de moderación.
     \item Rango de fechas de hasta noventa días.
     \item Filtros opcionales por usuario, dirección de red, resultado o acción.
     \item Página solicitada.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textit{BitacoraAcceso}: \texttt{id\_\allowbreak{}usuario}, \texttt{identificador\_\allowbreak{}capturado}, \texttt{resultado}, \texttt{fecha\_\allowbreak{}hora}, \texttt{direccion\_\allowbreak{}ip}.
-    \item \textit{BitacoraModeracion}: \texttt{id\_\allowbreak{}moderador}, \texttt{accion}, \texttt{id\_\allowbreak{}usuario\_\allowbreak{}afectado}, \texttt{detalle}, \texttt{fecha\_\allowbreak{}hora}.
-    \item \textit{Usuario}: \texttt{rol} del administrador y \texttt{nickname} de los usuarios de cada registro.
+    \item \textbf{\textit{BitacoraAcceso}:} \texttt{id\_\allowbreak{}usuario}, \texttt{identificador\_\allowbreak{}capturado}, \texttt{resultado}, \texttt{fecha\_\allowbreak{}hora}, \texttt{direccion\_\allowbreak{}ip}.
+    \item \textbf{\textit{BitacoraModeracion}:} \texttt{id\_\allowbreak{}moderador}, \texttt{accion}, \texttt{id\_\allowbreak{}usuario\_\allowbreak{}afectado}, \texttt{detalle}, \texttt{fecha\_\allowbreak{}hora}.
+    \item \textbf{\textit{Usuario}:} \texttt{rol} del administrador y \texttt{nickname} de los usuarios de cada registro.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{BitacoraModeracion}: \texttt{accion} = \texttt{CONSULTA\_\allowbreak{}BITACORA}, con la bitácora y los filtros usados.
+    \item \textbf{\textit{BitacoraModeracion}:} \texttt{accion} = \texttt{CONSULTA\_\allowbreak{}BITACORA}, con la bitácora y los filtros usados.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
@@ -2424,341 +2424,341 @@ A continuación se muestran las pantallas descartadas, en el mismo orden de la t
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/1a}\par\smallskip
-{\footnotesize\RaggedRight \textbf{1a: Partida · tablero centrado, HUD flotante en esquinas}\par Motivo: Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+{\footnotesize\RaggedRight \textbf{1a: Partida · tablero centrado, HUD flotante en esquinas}\par \textbf{Motivo:} Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par \textbf{Sustituida por:} 20a, Partida · peón seleccionado.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/1b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{1b: Partida · panel lateral fijo con chat e historial}\par Motivo: Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+{\footnotesize\RaggedRight \textbf{1b: Partida · panel lateral fijo con chat e historial}\par \textbf{Motivo:} Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par \textbf{Sustituida por:} 20a, Partida · peón seleccionado.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/1c}\par\smallskip
-{\footnotesize\RaggedRight \textbf{1c: Partida · barras de rival arriba y abajo}\par Motivo: Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+{\footnotesize\RaggedRight \textbf{1c: Partida · barras de rival arriba y abajo}\par \textbf{Motivo:} Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par \textbf{Sustituida por:} 20a, Partida · peón seleccionado.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/1d}\par\smallskip
-{\footnotesize\RaggedRight \textbf{1d: Partida · 4 jugadores, 9×9, 5 muros cada uno}\par Motivo: Variante de modo del HUD anterior. El modo cambia el tablero y el número de jugadores, no los datos que se escriben.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+{\footnotesize\RaggedRight \textbf{1d: Partida · 4 jugadores, 9×9, 5 muros cada uno}\par \textbf{Motivo:} Variante de modo del HUD anterior. El modo cambia el tablero y el número de jugadores, no los datos que se escriben.\par \textbf{Sustituida por:} 20a, Partida · peón seleccionado.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/1e}\par\smallskip
-{\footnotesize\RaggedRight \textbf{1e: Partida rápida · 7×7, HUD mínimo}\par Motivo: Variante de modo del HUD anterior. El modo cambia el tablero y el número de jugadores, no los datos que se escriben.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+{\footnotesize\RaggedRight \textbf{1e: Partida rápida · 7×7, HUD mínimo}\par \textbf{Motivo:} Variante de modo del HUD anterior. El modo cambia el tablero y el número de jugadores, no los datos que se escriben.\par \textbf{Sustituida por:} 20a, Partida · peón seleccionado.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/2a}\par\smallskip
-{\footnotesize\RaggedRight \textbf{2a: Amigos · panel lateral}\par Motivo: Variante de disposición de una pantalla ya seleccionada. 2b incluye además la pestaña de solicitudes.\par Sustituida por: 2b, Amigos · pantalla completa con pestañas.\par}
+{\footnotesize\RaggedRight \textbf{2a: Amigos · panel lateral}\par \textbf{Motivo:} Variante de disposición de una pantalla ya seleccionada. 2b incluye además la pestaña de solicitudes.\par \textbf{Sustituida por:} 2b, Amigos · pantalla completa con pestañas.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/2e}\par\smallskip
-{\footnotesize\RaggedRight \textbf{2e: Historial · lista con cambio de elo}\par Motivo: Versión anterior del historial, sin filtros por modo ni por forma de término.\par Sustituida por: 17f, Historial · filtros por modo y final.\par}
+{\footnotesize\RaggedRight \textbf{2e: Historial · lista con cambio de elo}\par \textbf{Motivo:} Versión anterior del historial, sin filtros por modo ni por forma de término.\par \textbf{Sustituida por:} 17f, Historial · filtros por modo y final.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/2h}\par\smallskip
-{\footnotesize\RaggedRight \textbf{2h: Fin de partida · pantalla completa a dos columnas}\par Motivo: Variante de disposición de una pantalla ya seleccionada. El \mbox{CU-25} adopta la tarjeta sobre el tablero.\par Sustituida por: 2g, Fin de partida · tarjeta sobre el tablero.\par}
+{\footnotesize\RaggedRight \textbf{2h: Fin de partida · pantalla completa a dos columnas}\par \textbf{Motivo:} Variante de disposición de una pantalla ya seleccionada. El \mbox{CU-25} adopta la tarjeta sobre el tablero.\par \textbf{Sustituida por:} 2g, Fin de partida · tarjeta sobre el tablero.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/2i}\par\smallskip
-{\footnotesize\RaggedRight \textbf{2i: Ajustes · secciones y opciones}\par Motivo: Configuración local del cliente: no llega a la base de datos.\par}
+{\footnotesize\RaggedRight \textbf{2i: Ajustes · secciones y opciones}\par \textbf{Motivo:} Configuración local del cliente: no llega a la base de datos.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/3a}\par\smallskip
-{\footnotesize\RaggedRight \textbf{3a: Menú · boceto con chat a la derecha}\par Motivo: Variante de disposición de una pantalla ya seleccionada. Se prefiere 3b por ser más limpia: menos elementos simultáneos y el tablero 3D de fondo como identidad del juego.\par Sustituida por: 3b, Menú principal · tablero 3D de fondo.\par}
+{\footnotesize\RaggedRight \textbf{3a: Menú · boceto con chat a la derecha}\par \textbf{Motivo:} Variante de disposición de una pantalla ya seleccionada. Se prefiere 3b por ser más limpia: menos elementos simultáneos y el tablero 3D de fondo como identidad del juego.\par \textbf{Sustituida por:} 3b, Menú principal · tablero 3D de fondo.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/3c}\par\smallskip
-{\footnotesize\RaggedRight \textbf{3c: Menú · barra lateral de navegación}\par Motivo: Variante de disposición de una pantalla ya seleccionada.\par Sustituida por: 3b, Menú principal · tablero 3D de fondo.\par}
+{\footnotesize\RaggedRight \textbf{3c: Menú · barra lateral de navegación}\par \textbf{Motivo:} Variante de disposición de una pantalla ya seleccionada.\par \textbf{Sustituida por:} 3b, Menú principal · tablero 3D de fondo.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/3d}\par\smallskip
-{\footnotesize\RaggedRight \textbf{3d: Menú · una sola columna centrada}\par Motivo: Variante de disposición de una pantalla ya seleccionada.\par Sustituida por: 3b, Menú principal · tablero 3D de fondo.\par}
+{\footnotesize\RaggedRight \textbf{3d: Menú · una sola columna centrada}\par \textbf{Motivo:} Variante de disposición de una pantalla ya seleccionada.\par \textbf{Sustituida por:} 3b, Menú principal · tablero 3D de fondo.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/4b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{4b: Personalizar · pestañas y carrusel}\par Motivo: Variante de disposición de una pantalla ya seleccionada.\par Sustituida por: 4a, Personalizar · vista previa 3D y rejilla.\par}
+{\footnotesize\RaggedRight \textbf{4b: Personalizar · pestañas y carrusel}\par \textbf{Motivo:} Variante de disposición de una pantalla ya seleccionada.\par \textbf{Sustituida por:} 4a, Personalizar · vista previa 3D y rejilla.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/4e}\par\smallskip
-{\footnotesize\RaggedRight \textbf{4e: Tienda · lista con vista previa}\par Motivo: Variante de disposición de una pantalla ya seleccionada.\par Sustituida por: 4d, Tienda · destacado y rejilla.\par}
+{\footnotesize\RaggedRight \textbf{4e: Tienda · lista con vista previa}\par \textbf{Motivo:} Variante de disposición de una pantalla ya seleccionada.\par \textbf{Sustituida por:} 4d, Tienda · destacado y rejilla.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/6g}\par\smallskip
-{\footnotesize\RaggedRight \textbf{6g: Pausa en partida}\par Motivo: Estado visual de la partida sin operación de datos propia. El reloj no se detiene y no se guarda nada.\par}
+{\footnotesize\RaggedRight \textbf{6g: Pausa en partida}\par \textbf{Motivo:} Estado visual de la partida sin operación de datos propia. El reloj no se detiene y no se guarda nada.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/6h}\par\smallskip
-{\footnotesize\RaggedRight \textbf{6h: Notificaciones}\par Motivo: Transversal: cada funcionalidad que notifica lo resuelve en su propio caso de uso.\par}
+{\footnotesize\RaggedRight \textbf{6h: Notificaciones}\par \textbf{Motivo:} Transversal: cada funcionalidad que notifica lo resuelve en su propio caso de uso.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/7a}\par\smallskip
-{\footnotesize\RaggedRight \textbf{7a: Errores · jugada inválida}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{7a: Errores · jugada inválida}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/7b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{7b: Errores · muro que encerraría al rival}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{7b: Errores · muro que encerraría al rival}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/7c}\par\smallskip
-{\footnotesize\RaggedRight \textbf{7c: Errores · conexión y servidor}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{7c: Errores · conexión y servidor}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/7d}\par\smallskip
-{\footnotesize\RaggedRight \textbf{7d: Errores · salas y emparejamiento}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{7d: Errores · salas y emparejamiento}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/7e}\par\smallskip
-{\footnotesize\RaggedRight \textbf{7e: Errores · cuenta, tienda y amigos}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{7e: Errores · cuenta, tienda y amigos}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/7f}\par\smallskip
-{\footnotesize\RaggedRight \textbf{7f: Avisos informativos y confirmaciones}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{7f: Avisos informativos y confirmaciones}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/7g}\par\smallskip
-{\footnotesize\RaggedRight \textbf{7g: Confirmaciones que frenan}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{7g: Confirmaciones que frenan}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/7h}\par\smallskip
-{\footnotesize\RaggedRight \textbf{7h: Pantallas de fallo grave}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{7h: Pantallas de fallo grave}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/8a}\par\smallskip
-{\footnotesize\RaggedRight \textbf{8a: Turno del rival}\par Motivo: Estado visual de la partida sin operación de datos propia.\par}
+{\footnotesize\RaggedRight \textbf{8a: Turno del rival}\par \textbf{Motivo:} Estado visual de la partida sin operación de datos propia.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/8b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{8b: Tu turno · últimos 10 segundos}\par Motivo: Estado visual de la partida sin operación de datos propia.\par}
+{\footnotesize\RaggedRight \textbf{8b: Tu turno · últimos 10 segundos}\par \textbf{Motivo:} Estado visual de la partida sin operación de datos propia.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/8c}\par\smallskip
-{\footnotesize\RaggedRight \textbf{8c: Salto recto}\par Motivo: Regla visual del salto; registra la misma Jugada que un movimiento.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+{\footnotesize\RaggedRight \textbf{8c: Salto recto}\par \textbf{Motivo:} Regla visual del salto; registra la misma Jugada que un movimiento.\par \textbf{Sustituida por:} 20a, Partida · peón seleccionado.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/8d}\par\smallskip
-{\footnotesize\RaggedRight \textbf{8d: Salto en diagonal}\par Motivo: Regla visual del salto; registra la misma Jugada que un movimiento.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+{\footnotesize\RaggedRight \textbf{8d: Salto en diagonal}\par \textbf{Motivo:} Regla visual del salto; registra la misma Jugada que un movimiento.\par \textbf{Sustituida por:} 20a, Partida · peón seleccionado.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/10f}\par\smallskip
-{\footnotesize\RaggedRight \textbf{10f: Espectador · cámara libre}\par Motivo: Variante de disposición de una pantalla ya seleccionada. 10g añade el chat de espectadores, que escribe en la base de datos.\par Sustituida por: 10g, Espectador · con chat de espectadores.\par}
+{\footnotesize\RaggedRight \textbf{10f: Espectador · cámara libre}\par \textbf{Motivo:} Variante de disposición de una pantalla ya seleccionada. 10g añade el chat de espectadores, que escribe en la base de datos.\par \textbf{Sustituida por:} 10g, Espectador · con chat de espectadores.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/11c}\par\smallskip
-{\footnotesize\RaggedRight \textbf{11c: Estados vacíos}\par Motivo: Estado vacío genérico; no muestra datos.\par}
+{\footnotesize\RaggedRight \textbf{11c: Estados vacíos}\par \textbf{Motivo:} Estado vacío genérico; no muestra datos.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/11d}\par\smallskip
-{\footnotesize\RaggedRight \textbf{11d: Estado vacío en contexto}\par Motivo: Estado vacío genérico; no muestra datos.\par}
+{\footnotesize\RaggedRight \textbf{11d: Estado vacío en contexto}\par \textbf{Motivo:} Estado vacío genérico; no muestra datos.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/11e}\par\smallskip
-{\footnotesize\RaggedRight \textbf{11e: Carga inicial}\par Motivo: Pantalla de carga; no muestra datos.\par}
+{\footnotesize\RaggedRight \textbf{11e: Carga inicial}\par \textbf{Motivo:} Pantalla de carga; no muestra datos.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/11f}\par\smallskip
-{\footnotesize\RaggedRight \textbf{11f: Carga · esqueleto del menú}\par Motivo: Pantalla de carga; no muestra datos.\par}
+{\footnotesize\RaggedRight \textbf{11f: Carga · esqueleto del menú}\par \textbf{Motivo:} Pantalla de carga; no muestra datos.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/11g}\par\smallskip
-{\footnotesize\RaggedRight \textbf{11g: Créditos y avisos legales}\par Motivo: Contenido estático.\par}
+{\footnotesize\RaggedRight \textbf{11g: Créditos y avisos legales}\par \textbf{Motivo:} Contenido estático.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/12b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{12b: Ajustes · audio}\par Motivo: Configuración local del cliente: no llega a la base de datos.\par}
+{\footnotesize\RaggedRight \textbf{12b: Ajustes · audio}\par \textbf{Motivo:} Configuración local del cliente: no llega a la base de datos.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/12d}\par\smallskip
-{\footnotesize\RaggedRight \textbf{12d: Ajustes · accesibilidad}\par Motivo: Configuración local del cliente: no llega a la base de datos.\par}
+{\footnotesize\RaggedRight \textbf{12d: Ajustes · accesibilidad}\par \textbf{Motivo:} Configuración local del cliente: no llega a la base de datos.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/12e}\par\smallskip
-{\footnotesize\RaggedRight \textbf{12e: Emotes en partida}\par Motivo: Enviar un emote no lee ni escribe en la base de datos (\mbox{D-10}).\par}
+{\footnotesize\RaggedRight \textbf{12e: Emotes en partida}\par \textbf{Motivo:} Enviar un emote no lee ni escribe en la base de datos (\mbox{D-10}).\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/12g}\par\smallskip
-{\footnotesize\RaggedRight \textbf{12g: Fin de partida contra la IA}\par Motivo: Resultado de la partida contra la IA; el repaso se calcula al terminar y no se almacena.\par Sustituida por: 12f, Contra la IA · deshacer y sugerencia.\par}
+{\footnotesize\RaggedRight \textbf{12g: Fin de partida contra la IA}\par \textbf{Motivo:} Resultado de la partida contra la IA; el repaso se calcula al terminar y no se almacena.\par \textbf{Sustituida por:} 12f, Contra la IA · deshacer y sugerencia.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/13b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{13b: Desde el ranking · buscar jugador}\par Motivo: Búsqueda sobre la tabla de ranking; mismos datos.\par Sustituida por: 2c, Ranking · tabla con tu fila fijada.\par}
+{\footnotesize\RaggedRight \textbf{13b: Desde el ranking · buscar jugador}\par \textbf{Motivo:} Búsqueda sobre la tabla de ranking; mismos datos.\par \textbf{Sustituida por:} 2c, Ranking · tabla con tu fila fijada.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/13c}\par\smallskip
-{\footnotesize\RaggedRight \textbf{13c: Búsqueda sin resultados}\par Motivo: Estado vacío de la búsqueda.\par Sustituida por: 2c, Ranking · tabla con tu fila fijada.\par}
+{\footnotesize\RaggedRight \textbf{13c: Búsqueda sin resultados}\par \textbf{Motivo:} Estado vacío de la búsqueda.\par \textbf{Sustituida por:} 2c, Ranking · tabla con tu fila fijada.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/13d}\par\smallskip
-{\footnotesize\RaggedRight \textbf{13d: Desde un enlace compartido}\par Motivo: Entrada por enlace a la misma vista de espectador; el enlace se crea en 13e.\par Sustituida por: 10g, Espectador · con chat de espectadores.\par}
+{\footnotesize\RaggedRight \textbf{13d: Desde un enlace compartido}\par \textbf{Motivo:} Entrada por enlace a la misma vista de espectador; el enlace se crea en 13e.\par \textbf{Sustituida por:} 10g, Espectador · con chat de espectadores.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/14a}\par\smallskip
-{\footnotesize\RaggedRight \textbf{14a: Cajas en la tienda}\par Motivo: Lista de tipos de caja; sus datos aparecen completos en 14d.\par Sustituida por: 14d, Contenido y probabilidades.\par}
+{\footnotesize\RaggedRight \textbf{14a: Cajas en la tienda}\par \textbf{Motivo:} Lista de tipos de caja; sus datos aparecen completos en 14d.\par \textbf{Sustituida por:} 14d, Contenido y probabilidades.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/14b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{14b: Apertura de caja}\par Motivo: Animación de apertura; el sorteo ya está hecho en el servidor.\par Sustituida por: 14c, Resultado de la caja.\par}
+{\footnotesize\RaggedRight \textbf{14b: Apertura de caja}\par \textbf{Motivo:} Animación de apertura; el sorteo ya está hecho en el servidor.\par \textbf{Sustituida por:} 14c, Resultado de la caja.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/15a}\par\smallskip
-{\footnotesize\RaggedRight \textbf{15a: Colocar muro · arrastrar}\par Motivo: Iteración anterior del gesto de colocar muro, sustituida por el cartel flotante con atajos.\par Sustituida por: 21a, Partida · muro cogido con cartel flotante.\par}
+{\footnotesize\RaggedRight \textbf{15a: Colocar muro · arrastrar}\par \textbf{Motivo:} Iteración anterior del gesto de colocar muro, sustituida por el cartel flotante con atajos.\par \textbf{Sustituida por:} 21a, Partida · muro cogido con cartel flotante.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/15b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{15b: Colocar muro · modo muro}\par Motivo: Iteración anterior del gesto de colocar muro, sustituida por el cartel flotante con atajos.\par Sustituida por: 21a, Partida · muro cogido con cartel flotante.\par}
+{\footnotesize\RaggedRight \textbf{15b: Colocar muro · modo muro}\par \textbf{Motivo:} Iteración anterior del gesto de colocar muro, sustituida por el cartel flotante con atajos.\par \textbf{Sustituida por:} 21a, Partida · muro cogido con cartel flotante.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/15c}\par\smallskip
-{\footnotesize\RaggedRight \textbf{15c: Fin por tiempo · pierdes}\par Motivo: Variante del fin de partida para una forma de término; solo cambia el valor de forma\_termino.\par Sustituida por: 2g, Fin de partida · tarjeta sobre el tablero.\par}
+{\footnotesize\RaggedRight \textbf{15c: Fin por tiempo · pierdes}\par \textbf{Motivo:} Variante del fin de partida para una forma de término; solo cambia el valor de forma\_termino.\par \textbf{Sustituida por:} 2g, Fin de partida · tarjeta sobre el tablero.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/15d}\par\smallskip
-{\footnotesize\RaggedRight \textbf{15d: Fin por tiempo · ganas}\par Motivo: Variante del fin de partida para una forma de término; solo cambia el valor de forma\_termino.\par Sustituida por: 2g, Fin de partida · tarjeta sobre el tablero.\par}
+{\footnotesize\RaggedRight \textbf{15d: Fin por tiempo · ganas}\par \textbf{Motivo:} Variante del fin de partida para una forma de término; solo cambia el valor de forma\_termino.\par \textbf{Sustituida por:} 2g, Fin de partida · tarjeta sobre el tablero.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/15e}\par\smallskip
-{\footnotesize\RaggedRight \textbf{15e: Historial de jugadas desplegado}\par Motivo: Notación de la partida en curso; lee las mismas jugadas que la repetición.\par Sustituida por: 2f, Repetición · tablero con línea de tiempo.\par}
+{\footnotesize\RaggedRight \textbf{15e: Historial de jugadas desplegado}\par \textbf{Motivo:} Notación de la partida en curso; lee las mismas jugadas que la repetición.\par \textbf{Sustituida por:} 2f, Repetición · tablero con línea de tiempo.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/16b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{16b: Elegir modo · hoja rápida}\par Motivo: Variante de disposición de una pantalla ya seleccionada. Muestra los mismos modos y relojes en una hoja compacta.\par Sustituida por: 16a, Elegir modo · pantalla propia.\par}
+{\footnotesize\RaggedRight \textbf{16b: Elegir modo · hoja rápida}\par \textbf{Motivo:} Variante de disposición de una pantalla ya seleccionada. Muestra los mismos modos y relojes en una hoja compacta.\par \textbf{Sustituida por:} 16a, Elegir modo · pantalla propia.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/16d}\par\smallskip
-{\footnotesize\RaggedRight \textbf{16d: Evolución del elo por modo}\par Motivo: Amplía la gráfica de 16c comparando modos; lee los mismos datos.\par Sustituida por: 16c, Evolución del elo.\par}
+{\footnotesize\RaggedRight \textbf{16d: Evolución del elo por modo}\par \textbf{Motivo:} Amplía la gráfica de 16c comparando modos; lee los mismos datos.\par \textbf{Sustituida por:} 16c, Evolución del elo.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/17a}\par\smallskip
-{\footnotesize\RaggedRight \textbf{17a: Cámara en partida}\par Motivo: Configuración local del cliente: no llega a la base de datos.\par}
+{\footnotesize\RaggedRight \textbf{17a: Cámara en partida}\par \textbf{Motivo:} Configuración local del cliente: no llega a la base de datos.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/17b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{17b: Ajustes · ángulo de cámara}\par Motivo: Configuración local del cliente: no llega a la base de datos.\par}
+{\footnotesize\RaggedRight \textbf{17b: Ajustes · ángulo de cámara}\par \textbf{Motivo:} Configuración local del cliente: no llega a la base de datos.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/17c}\par\smallskip
-{\footnotesize\RaggedRight \textbf{17c: Mover el peón · modo mover}\par Motivo: Iteración anterior del movimiento del peón, con modos explícitos que el HUD final eliminó.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+{\footnotesize\RaggedRight \textbf{17c: Mover el peón · modo mover}\par \textbf{Motivo:} Iteración anterior del movimiento del peón, con modos explícitos que el HUD final eliminó.\par \textbf{Sustituida por:} 20a, Partida · peón seleccionado.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/17d}\par\smallskip
-{\footnotesize\RaggedRight \textbf{17d: Llegada a meta}\par Motivo: Estado visual de la partida sin operación de datos propia. Es el instante previo al resultado.\par Sustituida por: 2g, Fin de partida · tarjeta sobre el tablero.\par}
+{\footnotesize\RaggedRight \textbf{17d: Llegada a meta}\par \textbf{Motivo:} Estado visual de la partida sin operación de datos propia. Es el instante previo al resultado.\par \textbf{Sustituida por:} 2g, Fin de partida · tarjeta sobre el tablero.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/17e}\par\smallskip
-{\footnotesize\RaggedRight \textbf{17e: Temas de tablero · vista previa}\par Motivo: Caso particular de 4a para la ranura de tablero; mismo flujo y mismos datos.\par Sustituida por: 4a, Personalizar · vista previa 3D y rejilla.\par}
+{\footnotesize\RaggedRight \textbf{17e: Temas de tablero · vista previa}\par \textbf{Motivo:} Caso particular de 4a para la ranura de tablero; mismo flujo y mismos datos.\par \textbf{Sustituida por:} 4a, Personalizar · vista previa 3D y rejilla.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/18a}\par\smallskip
-{\footnotesize\RaggedRight \textbf{18a: Errores · tablero 3D no arranca}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{18a: Errores · tablero 3D no arranca}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/18b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{18b: Errores · cámara, jugadas y confirmación}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{18b: Errores · cámara, jugadas y confirmación}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/18c}\par\smallskip
-{\footnotesize\RaggedRight \textbf{18c: Errores · cajas}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{18c: Errores · cajas}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/18d}\par\smallskip
-{\footnotesize\RaggedRight \textbf{18d: Errores · perfil}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{18d: Errores · perfil}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/18e}\par\smallskip
-{\footnotesize\RaggedRight \textbf{18e: Errores · espectador, enlaces y moderación}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{18e: Errores · espectador, enlaces y moderación}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/18f}\par\smallskip
-{\footnotesize\RaggedRight \textbf{18f: Errores · modos, IA y búsqueda}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{18f: Errores · modos, IA y búsqueda}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/18g}\par\smallskip
-{\footnotesize\RaggedRight \textbf{18g: Nuevos avisos informativos}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+{\footnotesize\RaggedRight \textbf{18g: Nuevos avisos informativos}\par \textbf{Motivo:} Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/19a}\par\smallskip
-{\footnotesize\RaggedRight \textbf{19a: Partida · panel desplegado}\par Motivo: Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+{\footnotesize\RaggedRight \textbf{19a: Partida · panel desplegado}\par \textbf{Motivo:} Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par \textbf{Sustituida por:} 20a, Partida · peón seleccionado.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/19b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{19b: Partida · 4 jugadores, muro preparado}\par Motivo: Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par Sustituida por: 21a, Partida · muro cogido con cartel flotante.\par}
+{\footnotesize\RaggedRight \textbf{19b: Partida · 4 jugadores, muro preparado}\par \textbf{Motivo:} Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par \textbf{Sustituida por:} 21a, Partida · muro cogido con cartel flotante.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/19c}\par\smallskip
-{\footnotesize\RaggedRight \textbf{19c: Partida · panel plegado}\par Motivo: Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+{\footnotesize\RaggedRight \textbf{19c: Partida · panel plegado}\par \textbf{Motivo:} Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par \textbf{Sustituida por:} 20a, Partida · peón seleccionado.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/20b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{20b: Partida · 4 jugadores, muro cogido}\par Motivo: Mismo gesto que 21a en una partida de cuatro jugadores; registra la misma Jugada.\par Sustituida por: 21a, Partida · muro cogido con cartel flotante.\par}
+{\footnotesize\RaggedRight \textbf{20b: Partida · 4 jugadores, muro cogido}\par \textbf{Motivo:} Mismo gesto que 21a en una partida de cuatro jugadores; registra la misma Jugada.\par \textbf{Sustituida por:} 21a, Partida · muro cogido con cartel flotante.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/21b}\par\smallskip
-{\footnotesize\RaggedRight \textbf{21b: Panel de jugadas desde su icono}\par Motivo: Panel de jugadas dentro de la partida; lee las mismas jugadas que la repetición.\par Sustituida por: 2f, Repetición · tablero con línea de tiempo.\par}
+{\footnotesize\RaggedRight \textbf{21b: Panel de jugadas desde su icono}\par \textbf{Motivo:} Panel de jugadas dentro de la partida; lee las mismas jugadas que la repetición.\par \textbf{Sustituida por:} 2f, Repetición · tablero con línea de tiempo.\par}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/21c}\par\smallskip
-{\footnotesize\RaggedRight \textbf{21c: Los dos iconos en reposo}\par Motivo: Explica la ubicación de los iconos; no muestra datos.\par}
+{\footnotesize\RaggedRight \textbf{21c: Los dos iconos en reposo}\par \textbf{Motivo:} Explica la ubicación de los iconos; no muestra datos.\par}
 \end{minipage}
 \par
 

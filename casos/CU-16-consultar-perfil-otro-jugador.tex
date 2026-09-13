@@ -116,12 +116,12 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué el marcador no se almacena.}\par
     Guardar un marcador por cada par de jugadores obligaría a actualizar una fila en cada partida y a decidir qué hacer con los pares que nunca vuelven a jugar. El marcador es el recuento de las \textit{Participacion} que dos jugadores comparten, y esa consulta es barata: nadie tiene miles de partidas contra la misma persona. Se calcula al abrir la tarjeta y no deja rastro.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 3)}
-      \item \textit{Usuario}: lee el consultado y su \texttt{estado\_\allowbreak{}cuenta} \textit{(paso 5)}
-      \item \textit{Bloqueo}: lee en ambos sentidos \textit{(paso 6)}
-      \item \textit{Avatar}, \textit{EnlaceRed}, \textit{Equipamiento}, \textit{EstadisticaModo}, \textit{Division}: lee los datos públicos \textit{(paso 7)}
-      \item \textit{Participacion}, \textit{Partida}, \textit{Modo}: lee las partidas en común y calcula el marcador \textit{(pasos 8, 9)}
-      \item \textit{Amistad}, \textit{Solicitud}, \textit{Silencio}: lee la relación entre ambos \textit{(paso 10)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 3)}
+      \item \textbf{\textit{Usuario}:} lee el consultado y su \texttt{estado\_\allowbreak{}cuenta} \textit{(paso 5)}
+      \item \textbf{\textit{Bloqueo}:} lee en ambos sentidos \textit{(paso 6)}
+      \item \textbf{\textit{Avatar}, \textit{EnlaceRed}, \textit{Equipamiento}, \textit{EstadisticaModo}, \textit{Division}:} lee los datos públicos \textit{(paso 7)}
+      \item \textbf{\textit{Participacion}, \textit{Partida}, \textit{Modo}:} lee las partidas en común y calcula el marcador \textit{(pasos 8, 9)}
+      \item \textbf{\textit{Amistad}, \textit{Solicitud}, \textit{Silencio}:} lee la relación entre ambos \textit{(paso 10)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

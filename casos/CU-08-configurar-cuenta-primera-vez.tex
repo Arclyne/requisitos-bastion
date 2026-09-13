@@ -126,11 +126,11 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué esta pantalla no pide el nombre.}\par
     \texttt{descripcion.md} dice que la primera vez se eligen nombre, peón e icono. El nombre, sin embargo, ya se pide en el registro, porque sirve como identificador de acceso y debe ser único antes de que exista la cuenta. Pedirlo aquí obligaría a crear cuentas sin \texttt{nickname}, lo que rompería la unicidad y el inicio de sesión por nombre. Se conservó la intención del diseño —que el primer contacto sea elegir cómo te ven— reduciendo la pantalla a lo que todavía no se ha decidido: el peón y el icono.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 7)}
-      \item \textit{Usuario}: lee \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial}, \texttt{nickname} \textit{(pasos 1, 8)}
-      \item \textit{Usuario}: escribe \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} \textit{(pasos 13, \mbox{FA-01})}
-      \item \textit{UsuarioObjeto}, \textit{ObjetoCosmetico}: lee los peones iniciales poseídos \textit{(pasos 1, 9)}
-      \item \textit{Equipamiento}: actualiza la fila de la ranura de peón \textit{(paso 12)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 7)}
+      \item \textbf{\textit{Usuario}:} lee \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial}, \texttt{nickname} \textit{(pasos 1, 8)}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} \textit{(pasos 13, \mbox{FA-01})}
+      \item \textbf{\textit{UsuarioObjeto}, \textit{ObjetoCosmetico}:} lee los peones iniciales poseídos \textit{(pasos 1, 9)}
+      \item \textbf{\textit{Equipamiento}:} actualiza la fila de la ranura de peón \textit{(paso 12)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

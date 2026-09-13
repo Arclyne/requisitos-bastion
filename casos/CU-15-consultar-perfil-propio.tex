@@ -115,13 +115,13 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre de dónde sale la gráfica de elo.}\par
     No existe una tabla de historial de elo. Cada punto de la gráfica es el \texttt{elo\_\allowbreak{}final} de una \textit{Participacion} clasificatoria, fechado con la \texttt{fecha\_\allowbreak{}fin} de su \textit{Partida}, y esos datos ya existen porque el \mbox{CU-25} los escribe al cerrar cada partida. Una tabla de historial aparte duplicaría esa información con el riesgo de que ambas diverjan. La única excepción son los cambios de división, que no se deducen de una sola partida porque dependen de las partidas de margen, y por eso se guardan en \textit{HistorialDivision}.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 3)}
-      \item \textit{Usuario}: lee \texttt{nickname}, \texttt{nivel}, \texttt{experiencia}, \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}registro}, \texttt{tipo\_\allowbreak{}cuenta} \textit{(paso 4)}
-      \item \textit{Avatar}, \textit{EnlaceRed}, \textit{Equipamiento}: lee \textit{(paso 5)}
-      \item \textit{EstadisticaModo}: lee todas las del usuario \textit{(paso 6)}
-      \item \textit{Division}: lee los umbrales \textit{(paso 7)}
-      \item \textit{Participacion}, \textit{Partida}: lee \texttt{elo\_\allowbreak{}final} y \texttt{fecha\_\allowbreak{}fin} de las clasificatorias \textit{(paso 8)}
-      \item \textit{HistorialDivision}: lee los cambios de división \textit{(paso 8)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 3)}
+      \item \textbf{\textit{Usuario}:} lee \texttt{nickname}, \texttt{nivel}, \texttt{experiencia}, \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}registro}, \texttt{tipo\_\allowbreak{}cuenta} \textit{(paso 4)}
+      \item \textbf{\textit{Avatar}, \textit{EnlaceRed}, \textit{Equipamiento}:} lee \textit{(paso 5)}
+      \item \textbf{\textit{EstadisticaModo}:} lee todas las del usuario \textit{(paso 6)}
+      \item \textbf{\textit{Division}:} lee los umbrales \textit{(paso 7)}
+      \item \textbf{\textit{Participacion}, \textit{Partida}:} lee \texttt{elo\_\allowbreak{}final} y \texttt{fecha\_\allowbreak{}fin} de las clasificatorias \textit{(paso 8)}
+      \item \textbf{\textit{HistorialDivision}:} lee los cambios de división \textit{(paso 8)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

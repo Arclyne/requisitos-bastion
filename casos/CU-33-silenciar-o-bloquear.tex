@@ -129,12 +129,12 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué el silencio se guarda en el servidor.}\par
     \texttt{descripcion.md} llama local al silencio, en el sentido de que solo afecta a quien silencia. Podría haberse guardado solo en el cliente, pero entonces se perdería al cambiar de dispositivo —cosa frecuente con las sesiones simultáneas de \mbox{D-01}— y el servidor tendría que entregar mensajes que el cliente va a descartar. Guardarlo en \textit{Silencio} conserva su carácter local, porque solo lo consulta quien silenció, y lo hace sobrevivir al dispositivo.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}, \textit{Usuario}: lee \textit{(paso 5)}
-      \item \textit{Bloqueo}: lee; crea; elimina \textit{(pasos 6, 7, \mbox{FA-07})}
-      \item \textit{Silencio}: crea; elimina \textit{(pasos \mbox{FA-02}, \mbox{FA-07})}
-      \item \textit{Amistad}, \textit{Solicitud}: elimina las del par \textit{(paso 8)}
-      \item \textit{Invitacion}: marca como \texttt{EXPIRADA} las pendientes del par \textit{(paso 8)}
-      \item \textit{ColaEmparejamiento}, \textit{SalaParticipante}: lee; elimina la del retirado de la sala \textit{(paso 9)}
+      \item \textbf{\textit{Sesion}, \textit{Usuario}:} lee \textit{(paso 5)}
+      \item \textbf{\textit{Bloqueo}:} lee; crea; elimina \textit{(pasos 6, 7, \mbox{FA-07})}
+      \item \textbf{\textit{Silencio}:} crea; elimina \textit{(pasos \mbox{FA-02}, \mbox{FA-07})}
+      \item \textbf{\textit{Amistad}, \textit{Solicitud}:} elimina las del par \textit{(paso 8)}
+      \item \textbf{\textit{Invitacion}:} marca como \texttt{EXPIRADA} las pendientes del par \textit{(paso 8)}
+      \item \textbf{\textit{ColaEmparejamiento}, \textit{SalaParticipante}:} lee; elimina la del retirado de la sala \textit{(paso 9)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage
