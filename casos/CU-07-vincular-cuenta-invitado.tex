@@ -21,7 +21,7 @@
       \item El SJM valida que la contraseña cumpla la política de \mbox{RN-03} y que coincida con su confirmación. \textit{(Ver \mbox{FA-03})}
       \item El SJM valida que la casilla de los términos esté marcada. \textit{(Ver \mbox{FA-04})}
       \item El SJM calcula la edad a partir de la \texttt{fecha\_\allowbreak{}nacimiento} y verifica que sea de ocho años o más. \textit{(Ver \mbox{FA-05})}
-      \item El SJM envía el mensaje \texttt{LINK\_\allowbreak{}ACCOUNT\_\allowbreak{}REQUEST} con los datos capturados, la contraseña, la versión de los términos aceptada y el token de la sesión de invitado. \textit{(Ver \mbox{EX-05}, \mbox{EX-06})}
+      \item El SJM envía el mensaje \texttt{LINK\_\allowbreak{}ACCOUNT\_\allowbreak{}REQUEST} con los datos capturados, la contraseña, la versión de los términos aceptada y el token de la sesión de invitado. \textit{(Ver \mbox{EX-05}, \mbox{EX-06}, \mbox{EX-02})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta de un \textit{Usuario} con \texttt{tipo\_\allowbreak{}cuenta} en \texttt{INVITADO}. \textit{(Ver \mbox{FA-06})}
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=9]
@@ -32,7 +32,7 @@
       \item El Servidor de partidas verifica que la versión de los términos recibida sea la vigente. \textit{(Ver \mbox{FA-11})}
       \item El Servidor de partidas inicia una transacción sobre la Base de datos.
       \item El Servidor de partidas genera la \texttt{contrasena\_\allowbreak{}sal} y deriva la \texttt{contrasena\_\allowbreak{}hash} de la contraseña recibida (\mbox{RN-02}). \textit{(Ver \mbox{EX-03})}
-      \item El Servidor de partidas actualiza el \textit{Usuario} existente: cambia \texttt{tipo\_\allowbreak{}cuenta} a \texttt{REGISTRADA}, \texttt{estado\_\allowbreak{}cuenta} a \texttt{PENDIENTE}, y escribe el \texttt{nickname} definitivo, el \texttt{correo}, la \texttt{contrasena\_\allowbreak{}hash}, la \texttt{contrasena\_\allowbreak{}sal} y la \texttt{fecha\_\allowbreak{}nacimiento} (\mbox{RN-01}). \textit{(Ver \mbox{EX-03})}
+      \item El Servidor de partidas actualiza el \textit{Usuario} existente: cambia \texttt{tipo\_\allowbreak{}cuenta} a \texttt{REGISTRADA}, \texttt{estado\_\allowbreak{}cuenta} a \texttt{PENDIENTE}, y escribe el \texttt{nickname} definitivo, el \texttt{correo}, la \texttt{contrasena\_\allowbreak{}hash}, la \texttt{contrasena\_\allowbreak{}sal}, la \texttt{fecha\_\allowbreak{}nacimiento} y un \texttt{codigo\_\allowbreak{}amigo} único, que la cuenta de invitado no tenía porque no podía tener amigos (\mbox{RN-01}). \textit{(Ver \mbox{EX-03})}
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=17]
       \item El Servidor de partidas registra la \textit{AceptacionTerminos} con la versión aceptada, la fecha y la dirección de red de origen. \textit{(Ver \mbox{EX-03})}

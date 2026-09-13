@@ -15,7 +15,7 @@
     \end{cureglas}} \\ \hline
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
       \item El Jugador intenta salir de la \texttt{GUI\_\allowbreak{}Match}.
-      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} de nivel más alto, que explica que abandonar cuenta como derrota con su pérdida de elo, que el peón se retira pero los muros se quedan, y pide escribir la palabra de confirmación indicada, con las opciones ``Abandonar'' y ``Volver a la partida'' (\mbox{RN-02}). \textit{(Ver \mbox{FA-01}, \mbox{FA-02})}
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} de nivel más alto, que explica que abandonar cuenta como derrota con su pérdida de elo, que el peón se retira pero los muros se quedan, y pide escribir la palabra de confirmación indicada, con las opciones ``Abandonar'' y ``Volver a la partida'' (\mbox{RN-02}). \textit{(Ver \mbox{FA-01}, \mbox{FA-02}, \mbox{FA-08})}
       \item El Jugador escribe la palabra y selecciona ``Abandonar''.
       \item El SJM verifica que la palabra coincida y envía el mensaje \texttt{LEAVE\_\allowbreak{}MATCH\_\allowbreak{}REQUEST} con el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y a una \textit{Participacion} sin terminar de esa partida. \textit{(Ver \mbox{FA-03})}

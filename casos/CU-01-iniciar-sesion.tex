@@ -29,7 +29,7 @@
    & \cuCelda{\begin{cuenum}[start=9]
       \item El Servidor de partidas deriva el resumen criptográfico de la contraseña recibida utilizando la \texttt{contrasena\_\allowbreak{}sal} almacenada del \textit{Usuario} y lo compara contra \texttt{contrasena\_\allowbreak{}hash}. \textit{(Ver \mbox{FA-08})}
       \item El Servidor de partidas restablece \texttt{intentos\_\allowbreak{}fallidos} a cero y deja \texttt{bloqueada\_\allowbreak{}hasta} en nulo.
-      \item El Servidor de partidas verifica que el \texttt{estado\_\allowbreak{}cuenta} del \textit{Usuario} sea \texttt{ACTIVA}. \textit{(Ver \mbox{FA-09}, \mbox{FA-10}, \mbox{FA-17})}
+      \item El Servidor de partidas verifica que el \texttt{estado\_\allowbreak{}cuenta} del \textit{Usuario} sea \texttt{ACTIVA}. \textit{(Ver \mbox{FA-09}, \mbox{FA-10}, \mbox{FA-17}, \mbox{FA-20})}
       \item El Servidor de partidas consulta si existe una \textit{Sancion} del \textit{Usuario} con \texttt{ambito} igual a \texttt{CUENTA}, \texttt{activa} verdadero y \texttt{fecha\_\allowbreak{}fin} nula o posterior a la fecha actual. \textit{(Ver \mbox{FA-10})}
       \item El Servidor de partidas consulta el valor de \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} del \textit{Usuario} y confirma que está desactivado. \textit{(Ver \mbox{FA-11})}
       \item El Servidor de partidas genera un token de sesión y registra una nueva \textit{Sesion} asociada al \textit{Usuario}, con su \texttt{fecha\_\allowbreak{}inicio}, su \texttt{fecha\_\allowbreak{}expiracion}, la \texttt{direccion\_\allowbreak{}ip} de origen, la \texttt{huella\_\allowbreak{}dispositivo}, el \texttt{nombre\_\allowbreak{}dispositivo} y la \texttt{version\_\allowbreak{}cliente}. \textit{(Ver \mbox{EX-05})}
@@ -182,6 +182,12 @@
       \item El SJM detecta en el mensaje \texttt{LOGIN\_\allowbreak{}OK} una \textit{Participacion} sin terminar en una partida en línea.
       \item El flujo continúa en el \mbox{CU-26} Reconectar a una partida en curso.
       \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-20}: La suspensión temporal de la cuenta ya venció}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra el \texttt{estado\_\allowbreak{}cuenta} en \texttt{SUSPENDIDA} y ninguna \textit{Sancion} de ámbito \texttt{CUENTA} con \texttt{activa} verdadero y \texttt{fecha\_\allowbreak{}fin} posterior a la fecha actual.
+      \item El Servidor de partidas devuelve el \texttt{estado\_\allowbreak{}cuenta} a \texttt{ACTIVA} y registra el cambio en la \textit{BitacoraAcceso} con el resultado \texttt{SUSPENSION\_\allowbreak{}VENCIDA} (\mbox{RN-17}). \textit{(Ver \mbox{EX-04})}
+      \item El flujo continúa en el paso 13 del FN. Si la sanción sigue vigente, el flujo es el del \mbox{FA-10}.
     \end{cuenum}} \\ \hline
   \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: No se puede establecer la conexión con el servidor}\par
     \begin{cuenum}[start=1]
@@ -272,6 +278,7 @@
    & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-15}} Una cuenta eliminada puede recuperarse iniciando sesión dentro de los catorce días siguientes a su \texttt{fecha\_\allowbreak{}baja}. Pasado ese plazo, la eliminación es definitiva (\mbox{D-07}).
       \item \textbf{\mbox{RN-16}} Las cuentas de invitado no inician sesión por este caso: no tienen \texttt{correo} ni contraseña y se recuperan con el token guardado en el dispositivo (\mbox{CU-06}).
+          \item \textbf{\mbox{RN-17}} Una sanción temporal de cuenta no necesita un proceso que la levante: el \texttt{estado\_\allowbreak{}cuenta} vuelve a \texttt{ACTIVA} en el primer inicio de sesión posterior a su \texttt{fecha\_\allowbreak{}fin} (\mbox{FA-20}). El valor \texttt{SUSPENDIDA} indica que hubo una suspensión, pero la vigencia la decide siempre la \textit{Sancion}.
     \end{cureglas}} \\ \hline
   \textbf{Trazabilidad} & \cuCelda{Restricciones \mbox{CON-01} (C\#), \mbox{CON-02} y \mbox{CON-03} (TCP sin WebSockets), \mbox{CON-04} (SQL Server), \mbox{CON-05} (Unicode), \mbox{CON-07} (respuesta menor a un segundo), \mbox{CON-08} (segundo factor), \mbox{CON-11} (cambio de idioma) y \mbox{CON-12} (comprensible a los ocho años). Concerns \mbox{CRN-05}, \mbox{CRN-21}, \mbox{CRN-22} y \mbox{CRN-26}. Características de calidad \mbox{QA-01}, \mbox{QA-02}, \mbox{QA-03}, \mbox{QA-04}, \mbox{QA-05}, \mbox{QA-06} y \mbox{QA-08}. Preguntas abiertas \mbox{Q-03} y \mbox{Q-04}, resueltas para este caso como se indica en las observaciones.} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre el segundo factor opcional por cuenta (\mbox{Q-03}).}\par

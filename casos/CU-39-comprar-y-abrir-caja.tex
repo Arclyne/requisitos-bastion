@@ -38,7 +38,7 @@
       \item El SJM envía el mensaje \texttt{OPEN\_\allowbreak{}BOX\_\allowbreak{}REQUEST} con el identificador de la caja.
       \item El Servidor de partidas verifica que la \textit{Caja} pertenezca al \textit{Usuario} y esté \texttt{SIN\_\allowbreak{}ABRIR}. \textit{(Ver \mbox{FA-07})}
       \item El Servidor de partidas verifica que la caja no haya caducado, si su origen es de recompensa (\mbox{RN-06}). \textit{(Ver \mbox{FA-08})}
-      \item El Servidor de partidas sortea tres objetos del \textit{TipoCaja} conforme a su tabla de probabilidades, descartando los que el \textit{Usuario} ya posea por duplicado y aplicando la garantía de rareza si procede (\mbox{RN-03}, \mbox{RN-04}, \mbox{RN-05}). \textit{(Ver \mbox{EX-05})}
+      \item El Servidor de partidas sortea tres objetos del \textit{TipoCaja} conforme a su tabla de probabilidades, descartando los que el \textit{Usuario} ya posea por duplicado y aplicando la garantía de rareza si procede (\mbox{RN-03}, \mbox{RN-04}, \mbox{RN-05}). \textit{(Ver \mbox{EX-05}, \mbox{FA-10})}
       \item El Servidor de partidas inicia una transacción sobre la Base de datos.
       \item El Servidor de partidas crea un \textit{UsuarioObjeto} por cada objeto sorteado que el \textit{Usuario} no poseía, con el origen \texttt{CAJA}. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas convierte en monedas cada objeto sorteado que el \textit{Usuario} ya poseía, creando un \textit{MovimientoMoneda} de tipo \texttt{CONVERSION} con el importe en positivo y sumándolo al saldo (\mbox{RN-03}).

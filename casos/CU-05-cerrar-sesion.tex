@@ -14,12 +14,12 @@
       \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
     \end{cureglas}} \\ \hline
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
-      \item El Jugador selecciona ``Cerrar sesión'' en la \texttt{GUI\_\allowbreak{}AccountSettings}.
+      \item El Jugador selecciona ``Cerrar sesión'' en la \texttt{GUI\_\allowbreak{}AccountSettings}. \textit{(Ver \mbox{FA-05})}
       \item El SJM comprueba si el Jugador participa en una partida sin terminar. \textit{(Ver \mbox{FA-01})}
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} preguntando si desea cerrar la sesión, con las opciones ``Cerrar sesión'' y ``Cancelar''. \textit{(Ver \mbox{FA-02})}
       \item El Jugador selecciona ``Cerrar sesión''.
       \item El SJM envía el mensaje \texttt{LOGOUT\_\allowbreak{}REQUEST} con el token de la sesión en uso. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
-      \item El Servidor de partidas recupera de la Base de datos la \textit{Sesion} asociada al token. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas recupera de la Base de datos la \textit{Sesion} asociada al token. \textit{(Ver \mbox{EX-01}, \mbox{FA-04})}
       \item El Servidor de partidas verifica que la \textit{Sesion} siga abierta, es decir, que su \texttt{fecha\_\allowbreak{}fin} sea nula. \textit{(Ver \mbox{FA-03})}
       \item El Servidor de partidas registra en la \textit{Sesion} la \texttt{fecha\_\allowbreak{}fin} actual y el \texttt{motivo\_\allowbreak{}cierre} \texttt{CIERRE\_\allowbreak{}VOLUNTARIO}. \textit{(Ver \mbox{EX-01})}
     \end{cuenum}} \\

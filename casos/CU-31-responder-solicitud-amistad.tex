@@ -16,7 +16,7 @@
       \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
     \end{cureglas}} \\ \hline
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
-      \item El Jugador abre la pestaña de solicitudes.
+      \item El Jugador abre la pestaña de solicitudes. \textit{(Ver \mbox{FA-06})}
       \item El SJM envía el mensaje \texttt{LIST\_\allowbreak{}FRIEND\_\allowbreak{}REQUESTS} con el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
       \item El Servidor de partidas recupera las \textit{Solicitud} en las que el \textit{Usuario} es destinatario y las que envió, descartando las caducadas (\mbox{RN-05}). \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas responde con las solicitudes entrantes y enviadas, con el \texttt{nickname}, el icono y el elo del modo clásico de cada jugador.

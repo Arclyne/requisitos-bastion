@@ -15,8 +15,8 @@
       \item \textbf{\mbox{PRE-03}} El \textit{Usuario} posee al menos un \textit{ObjetoCosmetico} de la \textit{Ranura} de título, aunque sea el inicial.
     \end{cureglas}} \\ \hline
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
-      \item El SJM despliega la \texttt{GUI\_\allowbreak{}EditProfile} con el avatar actual, el selector de los treinta y dos iconos predefinidos, el título equipado, hasta cuatro campos de enlace a redes y el selector de \texttt{idioma\_\allowbreak{}preferido}. El \texttt{nickname} se muestra pero no se edita aquí (\mbox{RN-01}). \textit{(Ver \mbox{FA-01})}
-      \item El Jugador modifica los campos que desee y da click en ``Guardar''.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}EditProfile} con el avatar actual, el selector de los treinta y dos iconos predefinidos, el título equipado, hasta cuatro campos de enlace a redes, el selector de \texttt{idioma\_\allowbreak{}preferido} y el interruptor \texttt{permite\_\allowbreak{}espectadores}. El \texttt{nickname} se muestra pero no se edita aquí (\mbox{RN-01}). \textit{(Ver \mbox{FA-01})}
+      \item El Jugador modifica los campos que desee y da click en ``Guardar''. \textit{(Ver \mbox{FA-09})}
       \item El SJM valida que los enlaces capturados tengan formato de dirección web y que ninguno pertenezca a un acortador (\mbox{RN-04}). \textit{(Ver \mbox{FA-02})}
       \item El SJM valida que no haya más de cuatro enlaces (\mbox{RN-03}). \textit{(Ver \mbox{FA-03})}
       \item El SJM envía el mensaje \texttt{UPDATE\_\allowbreak{}PROFILE\_\allowbreak{}REQUEST} con los campos modificados y el token de sesión. \textit{(Ver \mbox{EX-04}, \mbox{EX-05})}
@@ -27,7 +27,7 @@
    & \cuCelda{\begin{cuenum}[start=9]
       \item El Servidor de partidas verifica que el \texttt{idioma\_\allowbreak{}preferido} recibido pertenezca al catálogo de idiomas admitidos. \textit{(Ver \mbox{FA-07})}
       \item El Servidor de partidas inicia una transacción sobre la Base de datos.
-      \item El Servidor de partidas actualiza en el \textit{Usuario} el \texttt{id\_\allowbreak{}icono}, el \texttt{idioma\_\allowbreak{}preferido} y, si el avatar cambió, la referencia a la imagen. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas actualiza en el \textit{Usuario} el \texttt{id\_\allowbreak{}icono}, el \texttt{idioma\_\allowbreak{}preferido}, \texttt{permite\_\allowbreak{}espectadores} y, si el avatar cambió, la referencia a la imagen. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas actualiza la fila de \textit{Equipamiento} de la \textit{Ranura} de título, apuntando al objeto elegido (\mbox{RN-02}).
       \item El Servidor de partidas reemplaza los \textit{EnlaceRed} del \textit{Usuario} por los recibidos, borrando los que ya no están y creando los nuevos (\mbox{RN-03}).
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
@@ -126,7 +126,7 @@
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
-      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene el \texttt{id\_\allowbreak{}icono} y el \texttt{idioma\_\allowbreak{}preferido} elegidos.
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene el \texttt{id\_\allowbreak{}icono}, el \texttt{idioma\_\allowbreak{}preferido} y el valor de \texttt{permite\_\allowbreak{}espectadores} elegidos.
       \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, la fila de \textit{Equipamiento} de la \textit{Ranura} de título apunta al objeto elegido, y solo esa fila cambió.
       \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, los \textit{EnlaceRed} del \textit{Usuario} son exactamente los capturados, a lo sumo cuatro.
       \item \textbf{\mbox{POST-04}} Si el caso termina por el \mbox{FA-01}, existe un \textit{Avatar} nuevo asociado al \textit{Usuario} y el anterior quedó invalidado.
@@ -144,6 +144,7 @@
     \end{cureglas}} \\
    & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-08}} El \texttt{idioma\_\allowbreak{}preferido} se guarda en la cuenta y viaja con el Jugador a cualquier dispositivo. El idioma que se elige en la \texttt{GUI\_\allowbreak{}Login}, en cambio, es configuración local, porque en ese momento todavía no se sabe quién es.
+          \item \textbf{\mbox{RN-09}} \texttt{permite\_\allowbreak{}espectadores} es la única preferencia de juego que vive en la cuenta y no en el cliente, porque la consulta el servidor al admitir espectadores (\mbox{RN-02} del \mbox{CU-34}). Nace en verdadero.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre la revisión de contenido.}\par
     el documento de diseño del juego describe el avatar como sujeto a revisión y los enlaces como revisados antes de publicarse. La decisión \mbox{D-08} retira esa revisión del alcance: se publican directos. El motivo es que revisar imágenes y enlaces a mano exige un flujo de moderación completo y una carga de trabajo continua que no está prevista, mientras que el riesgo mayor —el nombre visible y el chat— ya está cubierto por el filtro de \textit{PalabraProhibida}. Si más adelante se decide reponerla, el modelo lo admite sin cambios: basta añadir un estado de revisión a \textit{Avatar} y a \textit{EnlaceRed} y el caso de moderación que lo mueva.} \\ \hline

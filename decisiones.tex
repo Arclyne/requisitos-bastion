@@ -21,7 +21,7 @@ Consecuencias, por caso de uso:
 \hline
 \textbf{Caso} & \textbf{Qué cambia} \\ \hline
 \endhead
-\mbox{CU-01} & Desaparece la \mbox{RN-06}. Desaparece el paso del FN que comprueba si ya hay sesión activa y, con él, el \mbox{FA-12} completo \\ \hline
+\mbox{CU-01} & Reescrito: la \mbox{RN-06} pasa a permitir varias sesiones por cuenta y desaparece el flujo alterno de sesión ya abierta \\ \hline
 \mbox{CU-10} & Deja de ser imposible: ya hay varias sesiones que listar y cerrar \\ \hline
 \mbox{CU-17}, \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-27} & Nueva precondición: el jugador no participa en ninguna partida sin terminar. Nuevo flujo alterno con el aviso \\ \hline
 \mbox{CU-31} & Igual, al aceptar una invitación a jugar \\ \hline
@@ -82,26 +82,6 @@ Resuelven los pendientes 1 a 9. Están tomadas con el criterio que ya se discuti
 \end{longtable}
 \end{center}
 
-\subsection*{Prototipos que no generan caso de uso}
-\addcontentsline{toc}{subsection}{Prototipos que no generan caso de uso}
-Estos prototipos \textbf{no} generan caso de uso. Conviene decirlo por escrito en el documento para que no parezca un olvido.
-
-\begin{center}\small
-\begin{longtable}{|L{0.139\textwidth}|L{0.289\textwidth}|L{0.451\textwidth}|}
-\hline
-\textbf{Prototipos} & \textbf{Qué son} & \textbf{Por qué no son caso de uso} \\ \hline
-\endfirsthead
-\hline
-\textbf{Prototipos} & \textbf{Qué son} & \textbf{Por qué no son caso de uso} \\ \hline
-\endhead
-1a, 1b, 1c, 3a–3d, 4a–4c, 19a–19d, 20a–20c, 21a–21c & Variantes de disposición de la misma pantalla & Son exploración de interfaz, no comportamiento distinto \\ \hline
-7a–7h, 18a–18g & Catálogo de errores y avisos & Son los flujos de excepción de los casos que ya existen \\ \hline
-11c–11f & Estados vacíos y pantallas de carga & No cambian estado ni tienen actor con objetivo \\ \hline
-11g & Créditos y avisos legales & Contenido estático \\ \hline
-12b, 12d, 17a, 17b & Ajustes de audio, accesibilidad y cámara & Configuración local del cliente, no llega a la base \\ \hline
-12c & Ajustes de idioma & Absorbido por \mbox{CU-12}: es un atributo del perfil \\ \hline
-6g & Pausa en partida & Panel sobre la partida; el reloj no se detiene, no hay estado nuevo \\ \hline
-6h & Notificaciones & Transversal: se resuelve en cada caso que las emite \\ \hline
-8a, 8b, 1d, 1e & Turno del rival, reloj, variantes de modo & Estados de la partida, ya cubiertos por \mbox{CU-20} a \mbox{CU-25} \\ \hline
-\end{longtable}
-\end{center}
+\subsection*{Prototipos y casos de uso}
+\addcontentsline{toc}{subsection}{Prototipos y casos de uso}
+De las 125 pantallas del prototipo de interfaz, 57 ilustran una funcionalidad y 68 se descartaron. La lista completa, con el motivo de cada descarte y la pantalla que la sustituye, está en la sección \textit{Trazabilidad de prototipos} del análisis de funcionalidades CRUD. En resumen: las variantes de disposición de una misma pantalla, las iteraciones anteriores del HUD de partida, los catálogos de mensajes de error, los estados vacíos y de carga, y los ajustes que se guardan solo en el cliente no generan caso de uso ni funcionalidad.

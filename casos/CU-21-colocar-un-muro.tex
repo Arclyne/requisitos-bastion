@@ -18,7 +18,7 @@
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
       \item El SJM indica que es el turno del Jugador y muestra el inventario de muros con su contador.
       \item El Jugador coge un muro del inventario, pulsándolo o arrastrándolo.
-      \item El SJM entra en modo muro y resalta los surcos válidos del tablero (\mbox{RN-03}, \mbox{RN-04}, \mbox{RN-05}).
+      \item El SJM entra en modo muro y resalta los surcos válidos del tablero (\mbox{RN-03}, \mbox{RN-04}, \mbox{RN-05}). \textit{(Ver \mbox{EX-05})}
       \item El Jugador lleva el muro a un surco resaltado. \textit{(Ver \mbox{FA-02})}
       \item El SJM muestra sobre el muro un cartel flotante con la casilla, cómo cambia el camino más corto de cada jugador y las acciones rotar, cancelar y confirmar, con sus atajos (\mbox{RN-09}). \textit{(Ver \mbox{FA-03}, \mbox{FA-04})}
       \item El Jugador confirma la colocación.
@@ -37,7 +37,7 @@
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=17]
       \item El Servidor de partidas descuenta uno a los muros restantes de la \textit{Participacion} y actualiza su reloj.
-      \item El Servidor de partidas pasa el turno al siguiente jugador activo.
+      \item El Servidor de partidas pasa el turno al siguiente jugador activo y marca como \texttt{CADUCADA} la \textit{OfertaTablas} pendiente del rival, si la hay (\mbox{RN-05} del \mbox{CU-22}).
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-04})}
       \item El Servidor de partidas notifica a todos los participantes, y a los espectadores con el retraso previsto, con \texttt{PLACE\_\allowbreak{}WALL\_\allowbreak{}OK} y el estado actualizado.
       \item El SJM dibuja el muro, actualiza el contador del inventario, añade la jugada al historial en notación y atenúa el tablero. \textit{(Ver \mbox{FA-12})}
@@ -175,13 +175,14 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre dónde se guardan los muros.}\par
     Los muros no tienen tabla propia: son \textit{Jugada} de tipo \texttt{MURO}. Se consideró una tabla \textit{Muro} aparte, con su surco y su dueño, que haría más directa la consulta del tablero actual. Se descartó porque obligaría a mantener dos fuentes de verdad —la jugada que lo colocó y el muro resultante— que pueden contradecirse, y porque la repetición del \mbox{CU-37} necesita de todos modos la secuencia completa de jugadas en orden. El tablero actual se reconstruye leyendo las jugadas de la partida, que en el caso más largo son unas pocas decenas de filas.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 8)}
-      \item \textbf{\textit{Partida}:} lee estado y turno; escribe el turno siguiente \textit{(pasos 9, 18)}
-      \item \textbf{\textit{Participacion}:} lee muros restantes y reloj \textit{(paso 11)}
-      \item \textbf{\textit{Participacion}:} escribe muros restantes y reloj \textit{(paso 17)}
-      \item \textbf{\textit{Jugada}:} lee todas las de la partida, para reconstruir el tablero \textit{(paso 12)}
-      \item \textbf{\textit{Jugada}:} crea una de tipo \texttt{MURO} \textit{(paso 16)}
-      \item \textbf{\textit{Modo}:} lee el número de muros por jugador \textit{(paso \mbox{PRE-03})}
+      \item \textit{Sesion}: lee por token \textit{(paso 8)}
+      \item \textit{Partida}: lee estado y turno; escribe el turno siguiente \textit{(pasos 9, 18)}
+      \item \textit{Participacion}: lee muros restantes y reloj \textit{(paso 11)}
+      \item \textit{Participacion}: escribe muros restantes y reloj \textit{(paso 17)}
+      \item \textit{Jugada}: lee todas las de la partida, para reconstruir el tablero \textit{(paso 12)}
+      \item \textit{Jugada}: crea una de tipo \texttt{MURO} \textit{(paso 16)}
+      \item \textit{OfertaTablas}: marca como \texttt{CADUCADA} la pendiente \textit{(paso 18)}
+      \item \textit{Modo}: lee el número de muros por jugador \textit{(paso \mbox{PRE-03})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

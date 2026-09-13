@@ -20,7 +20,7 @@
       \item El SJM envía el mensaje \texttt{REVOKE\_\allowbreak{}MODERATOR\_\allowbreak{}REQUEST} con el \texttt{id\_\allowbreak{}usuario}, el motivo y el token. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y que el \texttt{rol} del solicitante sea \texttt{ADMINISTRADOR}. \textit{(Ver \mbox{FA-02})}
       \item El Servidor de partidas verifica que el \texttt{rol} del afectado sea \texttt{MODERADOR}. \textit{(Ver \mbox{FA-03})}
-      \item El Servidor de partidas inicia una transacción y cambia el \texttt{rol} del afectado a \texttt{JUGADOR}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas inicia una transacción y cambia el \texttt{rol} del afectado a \texttt{JUGADOR}. \textit{(Ver \mbox{EX-01}, \mbox{FA-05})}
       \item El Servidor de partidas devuelve a \texttt{PENDIENTE}, sin moderador asignado, los \textit{Reporte} y las \textit{Apelacion} que el afectado tenía \texttt{EN\_\allowbreak{}REVISION} (\mbox{RN-02}).
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=9]

@@ -15,22 +15,22 @@
       \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
     \end{cureglas}} \\ \hline
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
-      \item El Jugador abre el chat desde su icono y selecciona el canal: partida, global o amigos.
+      \item El Jugador abre el chat desde su icono y selecciona el canal: partida, global o amigos. \textit{(Ver \mbox{FA-10})}
       \item El SJM despliega el panel de chat con los mensajes recientes del canal y el indicador de mensajes nuevos por canal.
       \item El Jugador escribe el mensaje y pulsa enviar.
       \item El SJM valida que el mensaje no esté vacío y no exceda el largo máximo (\mbox{RN-03}). \textit{(Ver \mbox{FA-01})}
       \item El SJM envía el mensaje \texttt{CHAT\_\allowbreak{}SEND\_\allowbreak{}REQUEST} con el canal, el texto y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-02})}
       \item El Servidor de partidas verifica que el \textit{Usuario} no tenga una \textit{Sancion} activa de ámbito de chat (\mbox{RN-05}). \textit{(Ver \mbox{FA-03})}
-      \item El Servidor de partidas verifica que el \textit{Usuario} tenga acceso al canal indicado. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas verifica que el \textit{Usuario} tenga acceso al canal indicado. \textit{(Ver \mbox{FA-04}, \mbox{FA-08})}
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=9]
       \item El Servidor de partidas vuelve a validar el largo del mensaje (\mbox{RN-08}). \textit{(Ver \mbox{FA-05})}
       \item El Servidor de partidas comprueba el ritmo de envío del \textit{Usuario} en ese canal (\mbox{RN-04}). \textit{(Ver \mbox{FA-06})}
-      \item El Servidor de partidas contrasta el texto contra el catálogo de \textit{PalabraProhibida} con ámbito de chat o de ambos, en el idioma del canal y en los que apliquen a todos (\mbox{RN-01}). \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas contrasta el texto contra el catálogo de \textit{PalabraProhibida} con ámbito de chat o de ambos, en el idioma del canal y en los que apliquen a todos (\mbox{RN-01}). \textit{(Ver \mbox{FA-07}, \mbox{EX-04})}
       \item El Servidor de partidas crea el \textit{Mensaje} con su canal, su autor, el texto, la fecha y, si el canal es de partida, la \textit{Partida} a la que pertenece. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas determina los destinatarios del canal y descarta a los que tengan un \textit{Bloqueo} con el autor (\mbox{RN-06}).
-      \item El Servidor de partidas entrega el mensaje a los destinatarios con \texttt{CHAT\_\allowbreak{}MESSAGE}, omitiendo a quienes hayan silenciado al autor (\mbox{RN-07}).
+      \item El Servidor de partidas entrega el mensaje a los destinatarios con \texttt{CHAT\_\allowbreak{}MESSAGE}, omitiendo a quienes hayan silenciado al autor (\mbox{RN-07}). \textit{(Ver \mbox{FA-09})}
       \item El SJM del autor muestra el mensaje como enviado en su panel.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
