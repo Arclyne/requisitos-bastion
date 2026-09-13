@@ -30,14 +30,14 @@
       \item El Servidor de partidas crea una \textit{EstadisticaModo} por cada \textit{Modo} del catálogo, con todos sus contadores en cero y el elo inicial (\mbox{RN-05}). \textit{(Ver \mbox{EX-03})}
       \item El Servidor de partidas otorga al \textit{Usuario} los \textit{ObjetoCosmetico} marcados como iniciales, creando las filas de \textit{UsuarioObjeto} con su \texttt{fecha\_\allowbreak{}obtencion}. \textit{(Ver \mbox{EX-03})}
       \item El Servidor de partidas crea las filas de \textit{Equipamiento}, una por \textit{Ranura}, apuntando al objeto predeterminado de cada una (\mbox{RN-06}).
-      \item El Servidor de partidas crea la \textit{Sesion}, con su token, la \texttt{fecha\_\allowbreak{}inicio}, la dirección de red de origen, la huella del dispositivo y la versión del cliente.
+      \item El Servidor de partidas crea la \textit{Sesion}, con su token, la \texttt{fecha\_\allowbreak{}inicio}, la \texttt{fecha\_\allowbreak{}expiracion}, la dirección de red de origen, la huella y el nombre del dispositivo y la versión del cliente.
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-04})}
       \item El Servidor de partidas registra el alta en la \textit{BitacoraAcceso} con el resultado \texttt{ALTA\_\allowbreak{}INVITADO}.
       \item El Servidor de partidas responde con \texttt{GUEST\_\allowbreak{}SESSION\_\allowbreak{}OK}, que contiene el token de sesión, el \texttt{nickname} provisional, el equipamiento y las \textit{EstadisticaModo} en cero.
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=17]
       \item El SJM guarda el token en el dispositivo, de modo que al volver a abrir el juego se recupere la misma cuenta de invitado y no se cree otra (\mbox{RN-04}).
-      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MainMenu} con el aviso permanente de cuenta no vinculada y la opción ``Crear cuenta'' siempre visible (\mbox{RN-01}).
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MainMenu} con el aviso permanente de cuenta no vinculada y la opción ``Crear cuenta'' siempre visible (\mbox{RN-01}). \textit{(Ver \mbox{FA-06})}
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El dispositivo ya tiene una cuenta de invitado}\par

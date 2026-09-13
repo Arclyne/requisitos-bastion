@@ -165,7 +165,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item \textit{BitacoraAcceso}: \texttt{resultado} = \texttt{VINCULACION\_\allowbreak{}EXITOSA}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{tipo\_\allowbreak{}cuenta} pasa a \texttt{REGISTRADA} y \texttt{estado\_\allowbreak{}cuenta} a \texttt{PENDIENTE}; se escriben \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}nacimiento} y \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}.
+    \item \textit{Usuario}: \texttt{tipo\_\allowbreak{}cuenta} pasa a \texttt{REGISTRADA} y \texttt{estado\_\allowbreak{}cuenta} a \texttt{PENDIENTE}; se escriben \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}nacimiento}, \texttt{codigo\_\allowbreak{}amigo} y \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}.
     \item \textit{Sesion} de invitado: \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
@@ -315,6 +315,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item \texttt{id\_\allowbreak{}objeto} del título a equipar.
     \item Hasta cuatro direcciones web de redes sociales.
     \item \texttt{idioma\_\allowbreak{}preferido}.
+    \item \texttt{permite\_\allowbreak{}espectadores}: sí o no.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
@@ -326,7 +327,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item \textit{Avatar}: \texttt{ruta\_\allowbreak{}imagen}, \texttt{formato}, \texttt{tamano\_\allowbreak{}bytes}, \texttt{fecha\_\allowbreak{}subida}, \texttt{vigente} = 1, si se subió imagen.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{id\_\allowbreak{}icono}, \texttt{idioma\_\allowbreak{}preferido}.
+    \item \textit{Usuario}: \texttt{id\_\allowbreak{}icono}, \texttt{idioma\_\allowbreak{}preferido}, \texttt{permite\_\allowbreak{}espectadores}.
     \item \textit{Equipamiento}: la fila de la ranura de título.
     \item \textit{Avatar} anterior: \texttt{vigente} = 0.
   \end{crudlista}}
@@ -339,8 +340,9 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item Un solo avatar vigente por usuario (\mbox{CU-12} \mbox{RN-06}).
     \item El título debe poseerse (\mbox{CU-14} \mbox{RN-02}).
     \item Avatar y enlaces se publican sin revisión (\mbox{D-08}).
+    \item \texttt{permite\_\allowbreak{}espectadores} es la única preferencia de juego que vive en la cuenta, porque la consulta el servidor (\mbox{CU-12} \mbox{RN-09}).
   \end{crudlista}}
-  \crudFila{Resultado esperado}{El perfil muestra el icono o avatar, el título, los enlaces y el idioma elegidos. La identidad de acceso no cambió.}
+  \crudFila{Resultado esperado}{El perfil muestra el icono o avatar, el título, los enlaces, el idioma y la preferencia de espectadores elegidos. La identidad de acceso no cambió.}
 \end{prototipocrud}
 \par\nopagebreak\smallskip
 \begin{center}
@@ -441,8 +443,8 @@ La cuenta es el objeto de información central: casi todas las demás estructura
 \par\medskip
 \end{center}
 
-%--- F-10 Cambiar contraseña
-\begin{prototipocrud}{F-10}{Cambiar contraseña}
+%--- F-10 Cambiar contraseña o segundo factor
+\begin{prototipocrud}{F-10}{Cambiar contraseña o segundo factor}
   \crudFila{Operación}{Actualización (U)}
   \crudFila{Caso de uso}{\mbox{CU-09}}
   \crudFila{Actor}{Jugador con cuenta registrada}
@@ -450,16 +452,18 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item Contraseña actual.
     \item Contraseña nueva y su confirmación: al menos 8 caracteres.
+    \item O bien: el valor deseado de \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} y, al activar, un código de prueba.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
     \item \textit{Usuario}: \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{correo}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{BitacoraAcceso}: \texttt{CAMBIO\_\allowbreak{}CONTRASENA}, o \texttt{CONTRASENA\_\allowbreak{}INCORRECTA} si la actual no coincide.
+    \item \textit{BitacoraAcceso}: \texttt{CAMBIO\_\allowbreak{}CONTRASENA}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}ACTIVADO}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}DESACTIVADO}, o \texttt{CONTRASENA\_\allowbreak{}INCORRECTA} si la actual no coincide.
+    \item \textit{CodigoSegundoFactor}: el código de prueba, al activar el segundo factor.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal}; si la actual es incorrecta, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido} y \texttt{bloqueada\_\allowbreak{}hasta}.
+    \item \textit{Usuario}: \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal}, o \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}; si la actual es incorrecta, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido} y \texttt{bloqueada\_\allowbreak{}hasta}.
     \item \textit{Sesion}: todas las abiertas salvo la que hace el cambio reciben \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}.
     \item \textit{TokenRecuperacion}: los pendientes quedan invalidados.
   \end{crudlista}}
@@ -469,8 +473,9 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item Cierra las demás sesiones pero conserva la actual (\mbox{CU-09} \mbox{RN-04}).
     \item Una contraseña actual incorrecta cuenta para el bloqueo escalonado (\mbox{CU-09} \mbox{RN-09}).
     \item El cambio se avisa al correo de la cuenta, fuera de la transacción (\mbox{CU-09} \mbox{RN-05}).
+    \item El segundo factor se activa solo tras comprobar un código de prueba (\mbox{CU-09} \mbox{RN-11}).
   \end{crudlista}}
-  \crudFila{Resultado esperado}{La cuenta tiene una contraseña nueva y solo sigue abierta la sesión desde la que se cambió.}
+  \crudFila{Resultado esperado}{La cuenta tiene una contraseña nueva y solo sigue abierta la sesión desde la que se cambió; o bien el segundo factor quedó activado o desactivado.}
 \end{prototipocrud}
 \par\nopagebreak\smallskip
 \begin{center}
@@ -541,7 +546,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{\begin{crudlista}
     \item Al darse de baja: su fila de \textit{ColaEmparejamiento} y de \textit{SalaParticipante}, y sus \textit{Solicitud} pendientes.
-    \item Al anonimizar: sus \textit{EnlaceRed}, \textit{Amistad}, \textit{Silencio} y \textit{Bloqueo}.
+    \item Al anonimizar: sus \textit{EnlaceRed}, \textit{HistorialNickname}, \textit{Amistad}, \textit{Silencio} y \textit{Bloqueo}.
     \item La fila de \textit{Usuario} nunca se elimina (\mbox{D-07}).
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -610,7 +615,7 @@ Una cuenta puede tener varias sesiones abiertas, una por dispositivo (\mbox{D-01
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
     \item \textit{Usuario}: \texttt{nickname}, \texttt{correo}, \texttt{tipo\_\allowbreak{}cuenta}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}baja}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}, \texttt{idioma\_\allowbreak{}preferido}, \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial}.
-    \item \textit{Sancion}: activas con \texttt{ambito} = \texttt{CUENTA}.
+    \item \textit{Sancion}: activas con \texttt{ambito} = \texttt{CUENTA}, también para detectar una suspensión ya vencida.
     \item \textit{EstadisticaModo}, \textit{Equipamiento} y la \textit{Participacion} sin terminar, para cargar el menú.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
@@ -620,7 +625,7 @@ Una cuenta puede tener varias sesiones abiertas, una por dispositivo (\mbox{D-01
     \item \textit{BitacoraAcceso}: con el resultado del intento, sea exitoso o no.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textit{Usuario}: \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}acceso} y, en el reenvío, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}.
+    \item \textit{Usuario}: \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}acceso} y, en el reenvío, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}; \texttt{estado\_\allowbreak{}cuenta} vuelve a \texttt{ACTIVA} si la suspensión temporal ya venció (\mbox{CU-01} \mbox{FA-20}).
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -1210,7 +1215,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \crudFila{Datos que se modifican}{\begin{crudlista}
     \item \textit{Partida}: \texttt{estado} = \texttt{FINALIZADA}, \texttt{fecha\_\allowbreak{}fin}, \texttt{forma\_\allowbreak{}termino}, \texttt{id\_\allowbreak{}ganador}.
     \item \textit{Participacion}: \texttt{resultado}, \texttt{posicion}, \texttt{elo\_\allowbreak{}final}, \texttt{diferencia\_\allowbreak{}elo}, \texttt{reloj\_\allowbreak{}restante}, \texttt{terminada} = 1.
-    \item \textit{EstadisticaModo}: \texttt{partidas\_\allowbreak{}jugadas}, \texttt{partidas\_\allowbreak{}ganadas} o \texttt{partidas\_\allowbreak{}perdidas}, \texttt{puntos\_\allowbreak{}elo}, \texttt{elo\_\allowbreak{}maximo}, \texttt{racha\_\allowbreak{}actual}, \texttt{mejor\_\allowbreak{}racha}, \texttt{tiempo\_\allowbreak{}total\_\allowbreak{}jugado}, \texttt{barreras\_\allowbreak{}colocadas}, \texttt{division}.
+    \item \textit{EstadisticaModo}: \texttt{partidas\_\allowbreak{}jugadas}, \texttt{partidas\_\allowbreak{}ganadas} o \texttt{partidas\_\allowbreak{}perdidas}, \texttt{puntos\_\allowbreak{}elo}, \texttt{elo\_\allowbreak{}maximo}, \texttt{racha\_\allowbreak{}actual}, \texttt{mejor\_\allowbreak{}racha}, \texttt{tiempo\_\allowbreak{}total\_\allowbreak{}jugado}, \texttt{barreras\_\allowbreak{}colocadas}, \texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}partida}, \texttt{division}. Solo en partidas clasificatorias.
     \item \textit{Usuario}: \texttt{experiencia}, \texttt{nivel}, \texttt{saldo\_\allowbreak{}monedas}.
     \item \textit{EnlaceEspectador}: \texttt{activo} = 0.
     \item \textit{Sala} de origen: \texttt{estado} = \texttt{CERRADA}.
@@ -1219,7 +1224,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
     \item \textit{SalaParticipante}: los miembros de la sala de origen.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Solo las partidas clasificatorias otorgan elo y monedas (\mbox{CU-25} \mbox{RN-03}).
+    \item Solo las partidas clasificatorias otorgan elo y monedas, y solo ellas mueven la \textit{EstadisticaModo} (\mbox{CU-25} \mbox{RN-03}, \mbox{FA-01}).
     \item El elo se calcula desde \texttt{elo\_\allowbreak{}inicial} (\mbox{CU-25} \mbox{RN-04}).
     \item Una victoria por reloj no cuenta para la racha limpia (\mbox{CU-25} \mbox{RN-11}).
     \item Los cambios de división respetan unas partidas de margen (\mbox{CU-25} \mbox{RN-07}).
@@ -1293,7 +1298,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
     \item \textit{Partida} y \textit{Modo}: \texttt{estado}, tamaño del tablero.
-    \item \textit{Participacion} y \textit{Usuario}: \texttt{orden\_\allowbreak{}turno}, \texttt{simbolo\_\allowbreak{}peon}, \texttt{nickname}, y si el jugador participó.
+    \item \textit{Participacion} y \textit{Usuario}: \texttt{orden\_\allowbreak{}turno}, \texttt{simbolo\_\allowbreak{}peon}, \texttt{nickname}, si el jugador participó y \texttt{permite\_\allowbreak{}espectadores} de cada uno.
     \item \textit{Reporte}: para el acceso de un moderador.
     \item \textit{ParticipacionObjeto}: el aspecto de cada jugador en esa partida.
     \item \textit{Jugada}: todas, ordenadas por \texttt{numero\_\allowbreak{}jugada}, con \texttt{deshecha}.
@@ -1302,7 +1307,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Solo la ven sus participantes, y los moderadores si la partida está en un reporte (\mbox{CU-37} \mbox{RN-01}).
+    \item La ven sus participantes, cualquier jugador si la partida admitió espectadores, y los moderadores si está en un reporte (\mbox{CU-37} \mbox{RN-01}).
     \item El tablero se reconstruye aplicando las jugadas en orden (\mbox{CU-37} \mbox{RN-02}).
     \item La notación exportable se genera en el cliente y no se almacena (\mbox{CU-37} \mbox{RN-04}).
   \end{crudlista}}
@@ -1388,7 +1393,8 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Hacen falta cinco partidas en un modo para clasificar (\mbox{CU-35} \mbox{RN-01}).
+    \item Hacen falta cinco partidas clasificatorias en un modo para clasificar (\mbox{CU-35} \mbox{RN-01}).
+    \item A igualdad de elo ordena primero la \texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}partida} más antigua (\mbox{CU-35} \mbox{RN-06}).
     \item Solo aparecen cuentas \texttt{ACTIVA} (\mbox{CU-35} \mbox{RN-02}).
     \item La búsqueda no devuelve a jugadores con bloqueo (\mbox{CU-35} \mbox{RN-04}).
     \item No hay temporadas (\mbox{CU-35} \mbox{RN-07}).
@@ -1966,6 +1972,7 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
     \item \textit{Usuario}: el reportado y su \texttt{estado\_\allowbreak{}cuenta}.
+    \item \textit{Participacion}: que denunciante y reportado jugaron la partida adjunta.
     \item \textit{MotivoReporte}: el catálogo.
     \item \textit{Reporte}: duplicados y número de reportes recientes del denunciante.
   \end{crudlista}}
@@ -1980,6 +1987,7 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
     \item Reportar no sanciona (\mbox{CU-42} \mbox{RN-04}).
     \item El número de reportes por periodo está acotado (\mbox{CU-42} \mbox{RN-06}).
     \item Los invitados no reportan (\mbox{CU-42} \mbox{RN-07}).
+    \item Solo se adjunta una partida en la que participaron ambos (\mbox{CU-42} \mbox{RN-09}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Existe un reporte pendiente de revisión con acceso a la repetición y al chat de la partida.}
 \end{prototipocrud}
@@ -2259,6 +2267,53 @@ El análisis deja siete puntos que el modelo relacional deberá resolver de form
   \item \textbf{Las jugadas de la IA tienen \texttt{id\_\allowbreak{}usuario} nulo.} La clave foránea de \textit{Jugada} hacia \textit{Usuario} debe admitir nulos. La condición de que solo las partidas de tipo \texttt{IA} tengan jugadas sin usuario no puede expresarse con un \texttt{CHECK} de la tabla, porque el tipo está en \textit{Partida}; debe garantizarla la aplicación o un disparador (\mbox{F-27}).
   \item \textbf{Los dominios cerrados se declaran en la base de datos.} \texttt{estado\_\allowbreak{}cuenta}, \texttt{tipo\_\allowbreak{}cuenta}, \texttt{rol}, \texttt{motivo\_\allowbreak{}cierre}, \texttt{canal}, \texttt{forma\_\allowbreak{}termino} y los estados de \textit{Partida}, \textit{Sala}, \textit{Invitacion}, \textit{OfertaTablas}, \textit{Caja}, \textit{Reporte} y \textit{Apelacion} los escriben muchas funcionalidades distintas. Un \texttt{CHECK} con sus valores evita que una de ellas introduzca uno que las demás no reconocen.
 \end{flujo}
+\subsection*{Dominios de valores}
+\addcontentsline{toc}{subsection}{Dominios de valores}
+
+Valores que los casos de uso escriben en cada atributo de dominio cerrado, reunidos aquí para que el modelo los declare con una restricción \texttt{CHECK} o con una tabla de catálogo. Un valor que no aparece en esta lista no lo escribe ningún caso.
+
+\begin{center}\small
+\begin{longtable}{|L{0.20\textwidth}|L{0.16\textwidth}|L{0.54\textwidth}|}
+\hline
+\textbf{Estructura} & \textbf{Atributo} & \textbf{Valores} \\ \hline
+\endfirsthead
+\hline
+\textbf{Estructura} & \textbf{Atributo} & \textbf{Valores} \\ \hline
+\endhead
+\textit{Usuario} & \texttt{tipo\_\allowbreak{}cuenta} & \texttt{INVITADO}, \texttt{REGISTRADA} \\ \hline
+\textit{Usuario} & \texttt{estado\_\allowbreak{}cuenta} & \texttt{PENDIENTE}, \texttt{ACTIVA}, \texttt{SUSPENDIDA}, \texttt{BANEADA}, \texttt{ELIMINADA} \\ \hline
+\textit{Usuario} & \texttt{rol} & \texttt{JUGADOR}, \texttt{MODERADOR}, \texttt{ADMINISTRADOR} \\ \hline
+\textit{Sesion} & \texttt{motivo\_\allowbreak{}cierre} & \texttt{CIERRE\_\allowbreak{}VOLUNTARIO}, \texttt{CIERRE\_\allowbreak{}REMOTO}, \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}, \texttt{SANCION}, \texttt{BAJA\_\allowbreak{}CUENTA}; nulo mientras está abierta \\ \hline
+\textit{TokenVerificacionCorreo} & \texttt{proposito} & \texttt{ALTA}, \texttt{CAMBIO\_\allowbreak{}CORREO} \\ \hline
+\textit{BitacoraAcceso} & \texttt{resultado} & \texttt{EXITO}, \texttt{USUARIO\_\allowbreak{}INEXISTENTE}, \texttt{BLOQUEO\_\allowbreak{}VIGENTE}, \texttt{CONTRASENA\_\allowbreak{}INCORRECTA}, \texttt{CUENTA\_\allowbreak{}PENDIENTE}, \texttt{CUENTA\_\allowbreak{}SANCIONADA}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}FALLIDO}, \texttt{ABANDONADO}, \texttt{CUENTA\_\allowbreak{}RECUPERADA}, \texttt{SUSPENSION\_\allowbreak{}VENCIDA}, \texttt{REGISTRO\_\allowbreak{}EXITOSO}, \texttt{REGISTRO\_\allowbreak{}RECHAZADO}, \texttt{REGISTRO\_\allowbreak{}SIN\_\allowbreak{}CORREO}, \texttt{ALTA\_\allowbreak{}INVITADO}, \texttt{VINCULACION\_\allowbreak{}EXITOSA}, \texttt{CUENTA\_\allowbreak{}VERIFICADA}, \texttt{RECUPERACION\_\allowbreak{}SOLICITADA}, \texttt{RECUPERACION\_\allowbreak{}CORREO\_\allowbreak{}INEXISTENTE}, \texttt{RECUPERACION\_\allowbreak{}EXITOSA}, \texttt{CIERRE\_\allowbreak{}VOLUNTARIO}, \texttt{CIERRE\_\allowbreak{}REMOTO}, \texttt{CAMBIO\_\allowbreak{}CONTRASENA}, \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}SOLICITADO}, \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}CONFIRMADO}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}ACTIVADO}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}DESACTIVADO}, \texttt{CUENTA\_\allowbreak{}ELIMINADA}, \texttt{CUENTA\_\allowbreak{}ANONIMIZADA} \\ \hline
+\textit{BitacoraModeracion} & \texttt{accion} & \texttt{REPORTE\_\allowbreak{}TOMADO}, \texttt{REPORTE\_\allowbreak{}LIBERADO}, \texttt{REPORTE\_\allowbreak{}RESUELTO}, \texttt{SANCION\_\allowbreak{}APLICADA}, \texttt{APELACION\_\allowbreak{}RESUELTA}, \texttt{ROL\_\allowbreak{}OTORGADO}, \texttt{ROL\_\allowbreak{}RETIRADO}, \texttt{CONSULTA\_\allowbreak{}BITACORA}, \texttt{INTENTO\_\allowbreak{}SIN\_\allowbreak{}PERMISO} \\ \hline
+\textit{Partida} & \texttt{tipo} & \texttt{CLASIFICATORIA}, \texttt{PRIVADA}, \texttt{IA} \\ \hline
+\textit{Partida} & \texttt{estado} & \texttt{EN\_\allowbreak{}CURSO}, \texttt{FINALIZADA}, \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} \\ \hline
+\textit{Partida} & \texttt{forma\_\allowbreak{}termino} & \texttt{META}, \texttt{TIEMPO\_\allowbreak{}AGOTADO}, \texttt{RENDICION}, \texttt{TABLAS}, \texttt{ABANDONO}; nulo mientras está en curso \\ \hline
+\textit{Participacion} & \texttt{resultado} & \texttt{GANADA}, \texttt{PERDIDA}, \texttt{TABLAS}; nulo mientras no termina \\ \hline
+\textit{Jugada} & \texttt{tipo} & \texttt{MOVIMIENTO}, \texttt{MURO} \\ \hline
+\textit{Jugada} & \texttt{orientacion} & \texttt{HORIZONTAL}, \texttt{VERTICAL}; nulo en un movimiento \\ \hline
+\textit{OfertaTablas} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{ACEPTADA}, \texttt{RECHAZADA}, \texttt{CADUCADA} \\ \hline
+\textit{Sala} & \texttt{estado} & \texttt{ABIERTA}, \texttt{EN\_\allowbreak{}PARTIDA}, \texttt{CERRADA} \\ \hline
+\textit{Invitacion} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{ACEPTADA}, \texttt{RECHAZADA}, \texttt{EXPIRADA} \\ \hline
+\textit{Mensaje} & \texttt{canal} & \texttt{PARTIDA}, \texttt{GLOBAL}, \texttt{AMIGOS}, \texttt{SALA}, \texttt{ESPECTADORES} \\ \hline
+\textit{UsuarioObjeto} & \texttt{origen} & \texttt{INICIAL}, \texttt{COMPRA}, \texttt{CAJA}, \texttt{NIVEL} \\ \hline
+\textit{Caja} & \texttt{origen} & \texttt{COMPRA}, \texttt{PARTIDA} \\ \hline
+\textit{Caja} & \texttt{estado} & \texttt{SIN\_\allowbreak{}ABRIR}, \texttt{ABIERTA}, \texttt{CADUCADA} \\ \hline
+\textit{MovimientoMoneda} & \texttt{tipo} & \texttt{PARTIDA}, \texttt{NIVEL}, \texttt{COMPRA}, \texttt{COMPRA\_\allowbreak{}CAJA}, \texttt{CONVERSION}, \texttt{DEVOLUCION} \\ \hline
+\textit{Sancion} & \texttt{ambito} & \texttt{CUENTA}, \texttt{CHAT} \\ \hline
+\textit{Sancion} & \texttt{tipo} & \texttt{TEMPORAL}, \texttt{PERMANENTE} \\ \hline
+\textit{Reporte} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{EN\_\allowbreak{}REVISION}, \texttt{RESUELTO\_\allowbreak{}SIN\_\allowbreak{}SANCION}, \texttt{RESUELTO\_\allowbreak{}CON\_\allowbreak{}SANCION} \\ \hline
+\textit{Apelacion} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{EN\_\allowbreak{}REVISION}, \texttt{ACEPTADA}, \texttt{RECHAZADA} \\ \hline
+\textit{PalabraProhibida} & \texttt{ambito} & \texttt{NICKNAME}, \texttt{CHAT}, \texttt{AMBOS} \\ \hline
+\textit{Ranura} & catálogo & peón, muros, tablero, marco, emotes, título \\ \hline
+\textit{Modo} & catálogo & clásico 9×9, cuatro jugadores 9×9, rápida 7×7 \\ \hline
+\textit{Division} & catálogo & bronce, plata, oro, muro de piedra \\ \hline
+\textit{NivelIA} & catálogo & aprendiz, constructor, arquitecto, bastión \\ \hline
+\textit{Leccion} & catálogo & las siete lecciones del tutorial \\ \hline
+\end{longtable}
+\end{center}
+
 \subsection*{Trazabilidad de prototipos}
 \addcontentsline{toc}{subsection}{Trazabilidad de prototipos}
 
@@ -2306,7 +2361,7 @@ De las 125 pantallas del prototipo de interfaz se seleccionaron 57 y se descarta
 9c & Editar perfil · foto, nombre y título & \mbox{F-07} Editar perfil \\ \hline
 9d & Cambio de nombre · confirmación & \mbox{F-08} Cambiar nickname \\ \hline
 9e & Invitado · vincular cuenta & \mbox{F-03} Vincular cuenta de invitado \\ \hline
-9f & Ajustes de cuenta · sesión y baja & \mbox{F-10} Cambiar contraseña \\ \hline
+9f & Ajustes de cuenta · sesión y baja & \mbox{F-10} Cambiar contraseña o segundo factor \\ \hline
 9g & Borrar cuenta · confirmación en dos pasos & \mbox{F-12} Eliminar cuenta \\ \hline
 10a & Menú de un jugador & \mbox{F-39} Enviar solicitud de amistad \\ \hline
 10b & Reportar · motivo y pruebas & \mbox{F-46} Reportar a un jugador \\ \hline

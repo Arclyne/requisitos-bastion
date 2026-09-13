@@ -28,7 +28,7 @@
    & \cuCelda{\begin{cuenum}[start=9]
       \item El Jugador selecciona un resultado y da click en ``Añadir''. \textit{(Ver \mbox{FA-06})}
       \item El SJM envía el mensaje \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}SEND} con el identificador del destinatario.
-      \item El Servidor de partidas verifica que el destinatario exista y no sea el propio solicitante. \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas verifica que el destinatario exista y no sea el propio solicitante. \textit{(Ver \mbox{FA-07}, \mbox{EX-04})}
       \item El Servidor de partidas verifica que no exista ya una \textit{Amistad} entre ambos (\mbox{RN-03}). \textit{(Ver \mbox{FA-08})}
       \item El Servidor de partidas verifica que no exista una \textit{Solicitud} pendiente en ninguno de los dos sentidos. \textit{(Ver \mbox{FA-09})}
       \item El Servidor de partidas verifica que ninguno de los dos haya alcanzado el límite de cien amigos. \textit{(Ver \mbox{FA-02})}
@@ -141,7 +141,7 @@
     \end{cureglas}} \\
    & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-08}} Las cuentas de invitado no participan en el sistema de amistades.
-      \item \textbf{\mbox{RN-09}} Una solicitud sin responder caduca pasado un plazo, para que las pestañas no acumulen solicitudes muertas.
+      \item \textbf{\mbox{RN-09}} Una solicitud sin responder caduca a los treinta días (\mbox{RN-05} del \mbox{CU-31}), para que las pestañas no acumulen solicitudes muertas.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué Solicitud y Amistad son tablas distintas.}\par
     Se consideró una sola tabla de relación con un estado que pasara de pendiente a aceptada. Se descartó porque la \textit{Amistad} es simétrica y la \textit{Solicitud} no: la solicitud tiene un emisor y un receptor, y esa dirección importa para pintar las dos pestañas y para el \mbox{RN-04}. Fundirlas obligaría a llevar la dirección en una fila que después deja de tenerla, y a distinguir en cada consulta si la fila significa ``quiere'' o ``son''. Con dos tablas, aceptar es borrar de una y escribir en la otra, y consultar la lista de amigos no tiene que filtrar por estado.} \\ \hline

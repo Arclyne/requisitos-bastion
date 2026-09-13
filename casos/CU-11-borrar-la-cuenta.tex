@@ -15,7 +15,7 @@
       \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
     \end{cureglas}} \\ \hline
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
-      \item El Jugador selecciona ``borrar cuenta'' en la \texttt{GUI\_\allowbreak{}AccountSettings}.
+      \item El Jugador selecciona ``borrar cuenta'' en la \texttt{GUI\_\allowbreak{}AccountSettings}. \textit{(Ver \mbox{FA-07})}
       \item El SJM despliega el primer paso de la \texttt{GUI\_\allowbreak{}DeleteAccount}: una lista de lo que se pierde —elo, monedas, objetos, amigos y posición en el ranking—, el aviso de que la cuenta se puede recuperar durante catorce días y un campo para la contraseña actual, con las opciones ``Continuar'' y ``Cancelar''. \textit{(Ver \mbox{FA-01})}
       \item El Jugador captura su contraseña y da click en ``Continuar''.
       \item El SJM despliega el segundo paso, que pide escribir la palabra de confirmación indicada en pantalla, con las opciones ``Borrar mi cuenta'' y ``Cancelar'' (\mbox{RN-01}).
@@ -90,7 +90,7 @@
    & \cuCelda{\textbf{\mbox{FA-08}: Transcurren los catorce días sin recuperar la cuenta}\par
     \begin{cuenum}[start=1]
       \item El proceso programado del Servidor de partidas encuentra el \textit{Usuario} con \texttt{estado\_\allowbreak{}cuenta} en \texttt{ELIMINADA} y \texttt{fecha\_\allowbreak{}baja} anterior a catorce días.
-      \item El Servidor de partidas sustituye \texttt{nickname} y \texttt{correo} por valores anónimos únicos, deja \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal} en nulo, elimina sus \textit{EnlaceRed}, invalida su \textit{Avatar} y elimina sus \textit{Amistad}, \textit{Silencio} y \textit{Bloqueo} (\mbox{RN-03}).
+      \item El Servidor de partidas sustituye \texttt{nickname} y \texttt{correo} por valores anónimos únicos, deja \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal} en nulo, elimina sus \textit{EnlaceRed} y su \textit{HistorialNickname}, invalida su \textit{Avatar} y elimina sus \textit{Amistad}, \textit{Silencio} y \textit{Bloqueo} (\mbox{RN-03}).
       \item El Servidor de partidas conserva el \textit{Usuario} anonimizado y todo lo que otros jugadores comparten con él: \textit{Participacion}, \textit{Jugada}, \textit{Mensaje}, \textit{Reporte} y \textit{Sancion}.
       \item El Servidor de partidas registra la anonimización en la \textit{BitacoraAcceso} con el resultado \texttt{CUENTA\_\allowbreak{}ANONIMIZADA}.
       \item Fin del caso de uso.
@@ -164,7 +164,7 @@
       \item \textit{Reporte}: devuelve a \texttt{PENDIENTE} los que tenía en revisión \textit{(paso 16)}
     \end{cudatos}} \\
    & \cuCelda{\begin{cudatos}
-      \item \textit{EnlaceRed}, \textit{Amistad}, \textit{Silencio}, \textit{Bloqueo}: elimina, en el \mbox{FA-08} \textit{(paso \mbox{FA-08})}
+      \item \textit{EnlaceRed}, \textit{HistorialNickname}, \textit{Amistad}, \textit{Silencio}, \textit{Bloqueo}: elimina, en el \mbox{FA-08} \textit{(paso \mbox{FA-08})}
       \item \textit{Avatar}: invalida, en el \mbox{FA-08} \textit{(paso \mbox{FA-08})}
       \item \textit{BitacoraAcceso}: inserta \textit{(pasos 19, \mbox{FA-08})}
     \end{cudatos}} \\ \hline

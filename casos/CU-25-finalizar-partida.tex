@@ -16,23 +16,23 @@
       \item \textbf{\mbox{PRE-03}} El Servidor de partidas tiene conexión disponible con la Base de datos.
     \end{cureglas}} \\ \hline
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
-      \item El Servidor de partidas detecta la condición de término y determina la forma de término: \texttt{META}, \texttt{TIEMPO\_\allowbreak{}AGOTADO}, \texttt{RENDICION}, \texttt{ABANDONO} o \texttt{TABLAS} (\mbox{RN-01}).
+      \item El Servidor de partidas detecta la condición de término y determina la forma de término: \texttt{META}, \texttt{TIEMPO\_\allowbreak{}AGOTADO}, \texttt{RENDICION}, \texttt{ABANDONO} o \texttt{TABLAS} (\mbox{RN-01}). \textit{(Ver \mbox{FA-04}, \mbox{FA-05}, \mbox{FA-06})}
       \item El Servidor de partidas determina el resultado de cada \textit{Participacion}: ganada, perdida o tablas, y la posición en el modo de cuatro jugadores (\mbox{RN-02}).
       \item El Servidor de partidas comprueba si la partida es clasificatoria, es decir, si nació del \mbox{CU-17} y no de una sala privada ni de la IA (\mbox{RN-03}). \textit{(Ver \mbox{FA-01})}
       \item El Servidor de partidas inicia una transacción sobre la Base de datos.
-      \item El Servidor de partidas actualiza la \textit{Partida}: estado \texttt{FINALIZADA}, \texttt{fecha\_\allowbreak{}fin}, forma de término y el ganador, si lo hay. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas actualiza la \textit{Partida}: estado \texttt{FINALIZADA}, \texttt{fecha\_\allowbreak{}fin}, forma de término y el ganador, si lo hay. \textit{(Ver \mbox{EX-01}, \mbox{FA-08})}
       \item El Servidor de partidas escribe en cada \textit{Participacion} su resultado, su posición y el tiempo de reloj que le quedaba.
-      \item El Servidor de partidas calcula el elo nuevo de cada participante a partir del elo con el que entró, guardado en su \textit{Participacion}, y del resultado (\mbox{RN-04}).
+      \item El Servidor de partidas calcula el elo nuevo de cada participante a partir del elo con el que entró, guardado en su \textit{Participacion}, y del resultado (\mbox{RN-04}). \textit{(Ver \mbox{EX-04})}
       \item El Servidor de partidas escribe en cada \textit{Participacion} el elo resultante y la diferencia, para que la pantalla de fin y el historial puedan mostrarla sin recalcularla (\mbox{RN-05}).
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=9]
-      \item El Servidor de partidas actualiza la \textit{EstadisticaModo} de cada participante en el \textit{Modo} de la partida: incrementa \texttt{partidas\_\allowbreak{}jugadas}, incrementa \texttt{partidas\_\allowbreak{}ganadas} o \texttt{partidas\_\allowbreak{}perdidas}, escribe \texttt{puntos\_\allowbreak{}elo}, actualiza \texttt{elo\_\allowbreak{}maximo} si procede, recalcula \texttt{racha\_\allowbreak{}actual} y \texttt{mejor\_\allowbreak{}racha}, suma el \texttt{tiempo\_\allowbreak{}total\_\allowbreak{}jugado} y suma las \texttt{barreras\_\allowbreak{}colocadas} contando las \textit{Jugada} de tipo \texttt{MURO} de ese jugador (\mbox{RN-06}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas actualiza la \textit{EstadisticaModo} de cada participante en el \textit{Modo} de la partida: incrementa \texttt{partidas\_\allowbreak{}jugadas}, incrementa \texttt{partidas\_\allowbreak{}ganadas} o \texttt{partidas\_\allowbreak{}perdidas}, escribe \texttt{puntos\_\allowbreak{}elo}, actualiza \texttt{elo\_\allowbreak{}maximo} si procede, recalcula \texttt{racha\_\allowbreak{}actual} y \texttt{mejor\_\allowbreak{}racha}, suma el \texttt{tiempo\_\allowbreak{}total\_\allowbreak{}jugado} suma las \texttt{barreras\_\allowbreak{}colocadas} contando las \textit{Jugada} de tipo \texttt{MURO} de ese jugador, y escribe \texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}partida} con la \texttt{fecha\_\allowbreak{}fin} (\mbox{RN-06}). \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas comprueba si el elo nuevo cruza un umbral de división, hacia arriba o hacia abajo, respetando las partidas de margen (\mbox{RN-07}). \textit{(Ver \mbox{FA-02})}
       \item El Servidor de partidas calcula la experiencia obtenida por cada participante y la suma a su \textit{Usuario}. \textit{(Ver \mbox{FA-03})}
       \item El Servidor de partidas calcula las monedas obtenidas y crea un \textit{MovimientoMoneda} de tipo \texttt{PARTIDA} por cada participante, actualizando su saldo (\mbox{RN-08}). \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas cierra las \textit{Participacion}, dejándolas sin terminar en ningún caso, de modo que sus jugadores vuelvan a poder buscar partida (\mbox{RN-09}).
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
-      \item El Servidor de partidas notifica a cada cliente con \texttt{MATCH\_\allowbreak{}ENDED}, incluyendo el resultado, la forma de término, el cambio de elo, la experiencia y las monedas obtenidas.
+      \item El Servidor de partidas notifica a cada cliente con \texttt{MATCH\_\allowbreak{}ENDED}, incluyendo el resultado, la forma de término, el cambio de elo, la experiencia y las monedas obtenidas. \textit{(Ver \mbox{FA-07}, \mbox{EX-03})}
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}MatchEnd} con el resumen sobre el tablero, que sigue visible detrás.
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=17]
@@ -43,7 +43,7 @@
   \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La partida no es clasificatoria}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas omite los pasos 7, 8, 10 y 12 del FN: no hay elo, ni división, ni monedas (\mbox{RN-03}).
-      \item El Servidor de partidas actualiza de todos modos la \textit{EstadisticaModo} solo en lo que no depende del elo, si el \textit{Modo} lo contempla, y otorga la experiencia del paso 11.
+      \item El Servidor de partidas no modifica la \textit{EstadisticaModo}: sus contadores describen solo partidas clasificatorias, para que cinco partidas privadas no basten para entrar en el ranking (\mbox{RN-14}). Otorga la experiencia del paso 11.
       \item Si la partida era contra la IA, el Servidor de partidas prepara además el repaso de tres puntos con los errores del jugador, calculado sobre las \textit{Jugada} registradas.
       \item El flujo continúa en el paso 13 del FN.
     \end{cuenum}} \\
@@ -155,7 +155,7 @@
       \item \textit{Partida}: escribe estado, \texttt{fecha\_\allowbreak{}fin}, forma de término, ganador \textit{(paso 5)}
       \item \textit{Participacion}: escribe resultado, posición, elo final, diferencia, reloj restante \textit{(pasos 6, 8, 13)}
       \item \textit{Jugada}: lee, para contar muros colocados y para el repaso de la IA \textit{(pasos 9, \mbox{FA-01})}
-      \item \textit{EstadisticaModo}: escribe todos los contadores y la división \textit{(pasos 9, \mbox{FA-02})}
+      \item \textit{EstadisticaModo}: escribe todos los contadores, \texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}partida} y la división \textit{(pasos 9, \mbox{FA-02})}
       \item \textit{HistorialDivision}: crea uno por cambio de división \textit{(paso FA-02)}
       \item \textit{Usuario}: escribe experiencia, nivel y saldo de monedas \textit{(pasos 11, 12, \mbox{FA-03})}
       \item \textit{MovimientoMoneda}: crea uno por participante \textit{(pasos 12, \mbox{FA-03})}

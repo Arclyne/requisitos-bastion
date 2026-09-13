@@ -16,7 +16,7 @@
       \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
     \end{cureglas}} \\ \hline
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
-      \item El SJM despliega la \texttt{GUI\_\allowbreak{}ApplySanction} con el jugador, el \textit{Reporte} que la origina, el historial de sanciones previas de ese jugador y los campos de ámbito, tipo y duración (\mbox{RN-06}).
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}ApplySanction} con el jugador, el \textit{Reporte} que la origina, el historial de sanciones previas de ese jugador y los campos de ámbito, tipo y duración (\mbox{RN-06}). \textit{(Ver \mbox{FA-09})}
       \item El Moderador elige el ámbito —cuenta o chat—, el tipo —temporal o permanente— y, si es temporal, la duración, y escribe el motivo. \textit{(Ver \mbox{FA-01})}
       \item El SJM valida que el ámbito, el tipo y el motivo estén completos, y que haya duración si el tipo es temporal. \textit{(Ver \mbox{FA-02})}
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} resumiendo la sanción en una frase, con las opciones ``Aplicar'' y ``Cancelar'' (\mbox{RN-08}). \textit{(Ver \mbox{FA-03})}
@@ -40,7 +40,7 @@
       \item El Servidor de partidas marca el \textit{Reporte} de origen como \texttt{RESUELTO\_\allowbreak{}CON\_\allowbreak{}SANCION}.
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-04})}
       \item El Servidor de partidas registra la aplicación en la bitácora de moderación, con el moderador, el sancionado y la sanción (\mbox{RN-07}).
-      \item El Servidor de partidas notifica al sancionado, si tiene sesión abierta, con \texttt{SANCTION\_\allowbreak{}APPLIED}, el motivo, el ámbito y la fecha de término.
+      \item El Servidor de partidas notifica al sancionado, si tiene sesión abierta, con \texttt{SANCTION\_\allowbreak{}APPLIED}, el motivo, el ámbito y la fecha de término. \textit{(Ver \mbox{EX-05})}
       \item El SJM del sancionado despliega la pantalla informativa de sanción, con acceso a la apelación del \mbox{CU-45}.
       \item El SJM del Moderador muestra la \texttt{GUI\_\allowbreak{}MessageSuccess} y vuelve a la cola de reportes.
       \item Fin del caso de uso.
@@ -160,7 +160,7 @@
       \item \textbf{\mbox{RN-11}} Una sanción no elimina contenido del sancionado. Retirar contenido, si hace falta, es una acción distinta.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué la sanción caduca sola y no hay caso que la levante.}\par
-    Una sanción temporal no necesita un caso de uso que la retire: deja de aplicarse en cuanto su \texttt{fecha\_\allowbreak{}fin} queda atrás, y todos los flujos que la consultan —el inicio de sesión, el emparejamiento y el chat— comparan esa fecha con la actual. Escribir un proceso que recorriera las sanciones vencidas para desactivarlas añadiría un trabajo periódico cuyo único efecto sería cambiar una bandera que nadie lee sin mirar también la fecha. \texttt{activa} existe para el \mbox{RN-09}, es decir, para distinguir una sanción retirada a mano de una que simplemente venció, no para saber si está surtiendo efecto ahora.} \\ \hline
+    Una sanción temporal no necesita un caso de uso que la retire: deja de aplicarse en cuanto su \texttt{fecha\_\allowbreak{}fin} queda atrás, y todos los flujos que la consultan —el inicio de sesión, el emparejamiento y el chat— comparan esa fecha con la actual. El único rastro que deja en la cuenta, el \texttt{estado\_\allowbreak{}cuenta} en \texttt{SUSPENDIDA}, lo devuelve a \texttt{ACTIVA} el propio inicio de sesión cuando la fecha ya pasó (\mbox{FA-20} del \mbox{CU-01}). Escribir un proceso que recorriera las sanciones vencidas para desactivarlas añadiría un trabajo periódico cuyo único efecto sería cambiar una bandera que nadie lee sin mirar también la fecha. \texttt{activa} existe para el \mbox{RN-09}, es decir, para distinguir una sanción retirada a mano de una que simplemente venció, no para saber si está surtiendo efecto ahora.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textit{Sesion}: lee por token; cierra las del sancionado \textit{(pasos 7, 15)}
       \item \textit{Usuario}: lee el rol del moderador y del sancionado \textit{(pasos 7, 9)}

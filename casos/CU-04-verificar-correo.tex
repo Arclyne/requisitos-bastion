@@ -15,8 +15,8 @@
       \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
     \end{cureglas}} \\ \hline
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
-      \item El Jugador abre el enlace de verificación desde su cliente de correo.
-      \item El Servidor de partidas recibe la solicitud con el token incluido en el enlace.
+      \item El Jugador abre el enlace de verificación desde su cliente de correo. \textit{(Ver \mbox{FA-06})}
+      \item El Servidor de partidas recibe la solicitud con el token incluido en el enlace. \textit{(Ver \mbox{EX-03})}
       \item El Servidor de partidas deriva el resumen criptográfico del token recibido y recupera de la Base de datos el \textit{TokenVerificacionCorreo} cuyo \texttt{token\_\allowbreak{}hash} coincida. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas verifica que el token exista. \textit{(Ver \mbox{FA-01})}
       \item El Servidor de partidas verifica que el token no esté marcado como usado. \textit{(Ver \mbox{FA-02})}

@@ -23,7 +23,7 @@
       \item El SJM valida que haya un motivo elegido y que la descripción no exceda el largo máximo. \textit{(Ver \mbox{FA-04})}
       \item El SJM envía el mensaje \texttt{REPORT\_\allowbreak{}PLAYER\_\allowbreak{}REQUEST} con el reportado, el motivo, la descripción, la partida desde la que se reporta si la hay, y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-05})}
-      \item El Servidor de partidas verifica que el reportado exista, no sea el denunciante y no tenga \texttt{estado\_\allowbreak{}cuenta} en \texttt{ELIMINADA}. \textit{(Ver \mbox{FA-06})}
+      \item El Servidor de partidas verifica que el reportado exista, no sea el denunciante y no tenga \texttt{estado\_\allowbreak{}cuenta} en \texttt{ELIMINADA}; y, si se adjunta una partida, que denunciante y reportado tengan \textit{Participacion} en ella (\mbox{RN-09}). \textit{(Ver \mbox{FA-06})}
       \item El Servidor de partidas verifica que el \textit{MotivoReporte} pertenezca al catálogo. \textit{(Ver \mbox{FA-07})}
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=9]
@@ -134,7 +134,7 @@
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} El reporte adjunta la repetición y el chat de la partida de forma automática, por referencia a la \textit{Partida}. No se copian los mensajes ni las jugadas: se apunta a ellos, de modo que el reporte no duplique información que ya existe y no pueda contradecirla.
       \item \textbf{\mbox{RN-02}} El Jugador ve, antes de enviar, qué pruebas se adjuntarán. Adjuntar su chat sin decírselo sería recoger datos a su espalda.
-      \item \textbf{\mbox{RN-03}} Un denunciante no puede reportar dos veces al mismo jugador por la misma partida. Sí puede hacerlo por partidas distintas.
+      \item \textbf{\mbox{RN-03}} Un denunciante no puede reportar dos veces al mismo jugador por la misma partida. Sí puede hacerlo por partidas distintas. Un reporte sin partida se trata como duplicado si ya existe otro sin partida del mismo denunciante al mismo jugador en las últimas veinticuatro horas.
       \item \textbf{\mbox{RN-04}} Un reporte no sanciona por sí solo y no dispara ninguna consecuencia automática sobre el reportado. La sanción la aplica un moderador en el \mbox{CU-44}, y esa revisión humana es la condición bajo la que existe el actor MODERADOR.
       \item \textbf{\mbox{RN-05}} Al denunciante no se le informa del resultado del reporte ni de si el reportado fue sancionado.
       \item \textbf{\mbox{RN-06}} El número de reportes que un jugador puede emitir en un periodo está acotado, para que reportar no sirva como forma de hostigamiento.
@@ -142,12 +142,14 @@
     \end{cureglas}} \\
    & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-08}} El catálogo de \textit{MotivoReporte} tiene cinco entradas y se mantiene por SQL, no desde la aplicación (\mbox{D-09}).
+          \item \textbf{\mbox{RN-09}} Solo puede adjuntarse una partida en la que participaron el denunciante y el reportado. De otro modo el reporte adjuntaría pruebas ajenas a los hechos.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué las pruebas van por referencia.}\par
     Se consideró copiar en el reporte los mensajes y las jugadas relevantes, para que la prueba quedara congelada en el momento de reportar. Se descartó por dos motivos. El primero es que duplicar el chat en el reporte crea dos copias del mismo texto que pueden divergir, y el borrado lógico de una cuenta (\mbox{D-07}) tendría que alcanzar a las dos. El segundo es que recortar qué mensajes son relevantes obliga a decidirlo en el momento del envío, cuando ni el denunciante ni el sistema saben todavía qué va a mirar el moderador. Referenciar la partida entrega el contexto completo y deja la selección a quien revisa.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textit{Sesion}: lee por token \textit{(paso 6)}
       \item \textit{Usuario}: lee el reportado y su estado \textit{(paso 7)}
+      \item \textit{Participacion}: lee, para comprobar que ambos jugaron la partida adjunta \textit{(paso 7)}
       \item \textit{MotivoReporte}: lee el catálogo \textit{(pasos 2, 8)}
       \item \textit{Reporte}: lee, para comprobar duplicados y el límite \textit{(pasos 9, 10)}
       \item \textit{Reporte}: crea \textit{(pasos 12, 13)}
