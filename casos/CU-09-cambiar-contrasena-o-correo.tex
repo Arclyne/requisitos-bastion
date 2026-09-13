@@ -7,7 +7,7 @@
   \crudFila{Actor principal}{Jugador}
   \crudFila{Actores de sistema}{Servidor de partidas, Servicio de correo, Base de datos}
   \crudFila{Prototipos}{9f}
-  \crudFila{Objetivo}{Permitir al Jugador con sesión abierta cambiar su contraseña o su correo, exigiendo la contraseña actual como prueba de identidad, cerrando las demás sesiones cuando cambia la contraseña y sin dejar la cuenta sin un correo verificado mientras se confirma el nuevo.}
+  \crudFila{Objetivo}{Permitir al Jugador con sesión abierta cambiar su contraseña, su correo o el estado del segundo factor, exigiendo la contraseña actual como prueba de identidad, cerrando las demás sesiones cuando cambia la contraseña y sin dejar la cuenta sin un correo verificado mientras se confirma el nuevo.}
   \crudFila{Disparador}{El Jugador selecciona ``cambiar'' junto a la contraseña o junto al correo en la \texttt{GUI\_\allowbreak{}AccountSettings}.}
   \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
@@ -104,6 +104,16 @@
       \item El Servidor de partidas invalida el \textit{TokenVerificacionCorreo} con propósito \texttt{CAMBIO\_\allowbreak{}CORREO} y responde con \texttt{CANCEL\_\allowbreak{}EMAIL\_\allowbreak{}CHANGE\_\allowbreak{}OK}.
       \item El SJM retira el correo pendiente de la \texttt{GUI\_\allowbreak{}AccountSettings}.
       \item Fin del caso de uso. El correo vigente nunca dejó de serlo.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-10}: El Jugador activa o desactiva el segundo factor}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``cambiar'' junto al segundo factor en la \texttt{GUI\_\allowbreak{}AccountSettings}, que muestra si está activado.
+      \item El SJM solicita la contraseña actual y, al activar, un código de prueba entregado por el Proveedor del segundo factor, para comprobar que el canal funciona antes de exigirlo (\mbox{RN-11}).
+      \item El SJM envía el mensaje \texttt{TOGGLE\_\allowbreak{}SECOND\_\allowbreak{}FACTOR\_\allowbreak{}REQUEST} con la contraseña actual, el valor deseado y el código de prueba.
+      \item El Servidor de partidas verifica la contraseña actual como en el paso 7 del FN. \textit{(Ver \mbox{FA-05})}
+      \item Al activar, el Servidor de partidas genera un \textit{CodigoSegundoFactor}, lo entrega y comprueba el código de prueba; si no coincide, responde con \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}INVALID} sin cambiar nada.
+      \item El Servidor de partidas escribe \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} en el \textit{Usuario}, registra el cambio en la \textit{BitacoraAcceso} con el resultado \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}ACTIVADO} o \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}DESACTIVADO}, y avisa al correo de la cuenta fuera de la transacción.
+      \item Fin del caso de uso. Las sesiones abiertas no se cierran: activar el segundo factor protege los accesos futuros, no los presentes.
     \end{cuenum}} \\ \hline
   \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
     \begin{cuenum}[start=1]
@@ -167,14 +177,16 @@
       \item \textbf{\mbox{RN-08}} La contraseña nueva debe ser distinta de la actual.
       \item \textbf{\mbox{RN-09}} Una contraseña actual incorrecta cuenta como intento fallido para el bloqueo escalonado, igual que en el inicio de sesión. De otro modo, este caso sería una forma de probar contraseñas sin límite desde una sesión robada.
       \item \textbf{\mbox{RN-10}} Los invitados no usan este caso: no tienen contraseña ni correo hasta vincular la cuenta con el \mbox{CU-07}.
+          \item \textbf{\mbox{RN-11}} El segundo factor se activa solo tras comprobar un código de prueba. Activarlo sin esa comprobación podría dejar al Jugador fuera de su cuenta si el canal no funciona.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre dónde vive el correo pendiente.}\par
     Se consideró guardar el correo nuevo en una columna \texttt{correo\_\allowbreak{}pendiente} de \textit{Usuario}. Se descartó porque el correo pendiente no tiene sentido sin el token que lo confirma: caduca con él, se invalida con él y se sustituye con él. Guardarlo en el \textit{TokenVerificacionCorreo}, junto con un \texttt{proposito} que distinga el alta del cambio, mantiene en una sola fila todo lo que tiene la misma vigencia, y evita una columna de \textit{Usuario} que estaría nula en casi todas las cuentas.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textit{Sesion}: lee por token; cierra las demás \textit{(pasos 6, 11)}
       \item \textit{Usuario}: lee \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{correo}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} \textit{(pasos 7, \mbox{FA-01})}
-      \item \textit{Usuario}: escribe \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta} \textit{(pasos 10, \mbox{FA-01}, \mbox{FA-05})}
+      \item \textit{Usuario}: escribe \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta} \textit{(pasos 10, \mbox{FA-01}, \mbox{FA-05})}
       \item \textit{TokenRecuperacion}: invalida los pendientes \textit{(paso 12)}
+      \item \textit{CodigoSegundoFactor}: crea el código de prueba al activar \textit{(paso \mbox{FA-10})}
       \item \textit{TokenVerificacionCorreo}: invalida los pendientes y crea uno con \texttt{proposito} y \texttt{correo\_\allowbreak{}destino} \textit{(pasos \mbox{FA-01}, \mbox{FA-09})}
       \item \textit{BitacoraAcceso}: inserta \textit{(pasos 14, \mbox{FA-01}, \mbox{FA-05})}
     \end{cudatos}} \\ \hline

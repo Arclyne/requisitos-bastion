@@ -20,7 +20,7 @@
       \item El jugador elige los ajustes y da click en ``Jugar''.
       \item El SJM envía el mensaje \texttt{START\_\allowbreak{}AI\_\allowbreak{}MATCH\_\allowbreak{}REQUEST} con el nivel, el \textit{Modo}, el reloj y las opciones. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y que no se cumplan las exclusiones de \mbox{PRE-02}. \textit{(Ver \mbox{FA-02})}
-      \item El Servidor de partidas cierra, con la forma de término \texttt{ABANDONO} y sin consecuencias, cualquier \textit{Partida} de \texttt{tipo} \texttt{IA} que el jugador tenga sin terminar (\mbox{RN-07}). \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas cierra, con la forma de término \texttt{ABANDONO} y sin consecuencias, cualquier \textit{Partida} de \texttt{tipo} \texttt{IA} que el jugador tenga sin terminar (\mbox{RN-07}). \textit{(Ver \mbox{FA-03}, \mbox{FA-07})}
       \item El Servidor de partidas inicia una transacción y crea la \textit{Partida} con \texttt{tipo} igual a \texttt{IA}, el \texttt{id\_\allowbreak{}modo}, el \texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}, los \texttt{minutos\_\allowbreak{}reloj} —nulo si es sin reloj—, \texttt{permite\_\allowbreak{}deshacer}, \texttt{permite\_\allowbreak{}sugerencias}, \texttt{estado} igual a \texttt{EN\_\allowbreak{}CURSO} y la \texttt{fecha\_\allowbreak{}inicio}. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas crea la \textit{Participacion} del jugador con su orden de turno, su casilla inicial, sus muros y su reloj, y su \textit{ParticipacionObjeto}. La IA no tiene \textit{Participacion}: no es un \textit{Usuario} (\mbox{RN-03}). Confirma la transacción. \textit{(Ver \mbox{EX-02})}
       \item El Servidor de partidas responde con \texttt{AI\_\allowbreak{}MATCH\_\allowbreak{}STARTED} y el estado inicial.
@@ -28,7 +28,7 @@
    & \cuCelda{\begin{cuenum}[start=9]
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}Match} con la IA como rival, su nivel en lugar del elo y, si están activados, los botones de deshacer y sugerencia.
       \item En el turno del jugador, el flujo continúa en el \mbox{CU-20} o en el \mbox{CU-21}. \textit{(Ver \mbox{FA-04}, \mbox{FA-05})}
-      \item En el turno de la IA, el Servidor de partidas calcula su jugada conforme al \textit{NivelIA}, la valida con las mismas reglas que las del jugador y la registra como \textit{Jugada} con \texttt{id\_\allowbreak{}usuario} nulo (\mbox{RN-04}).
+      \item En el turno de la IA, el Servidor de partidas calcula su jugada conforme al \textit{NivelIA}, la valida con las mismas reglas que las del jugador y la registra como \textit{Jugada} con \texttt{id\_\allowbreak{}usuario} nulo (\mbox{RN-04}). \textit{(Ver \mbox{EX-05})}
       \item El Servidor de partidas notifica la jugada y el SJM la anima sobre el tablero.
       \item Los pasos 10 a 12 se repiten hasta una condición de término.
       \item El flujo continúa en el \mbox{CU-25}, que por su \mbox{FA-01} otorga la experiencia sin elo ni monedas y calcula el repaso de tres puntos sobre las \textit{Jugada} registradas.

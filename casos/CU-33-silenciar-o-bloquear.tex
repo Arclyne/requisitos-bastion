@@ -21,7 +21,7 @@
       \item El SJM envía el mensaje \texttt{BLOCK\_\allowbreak{}PLAYER\_\allowbreak{}REQUEST} con el \texttt{id\_\allowbreak{}usuario} del otro jugador y el token. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y que el otro jugador exista y no sea el propio Jugador. \textit{(Ver \mbox{FA-04})}
       \item El Servidor de partidas verifica que no exista ya un \textit{Bloqueo} del Jugador hacia ese jugador. \textit{(Ver \mbox{FA-05})}
-      \item El Servidor de partidas inicia una transacción y crea el \textit{Bloqueo} con el \texttt{id\_\allowbreak{}bloqueador}, el \texttt{id\_\allowbreak{}bloqueado} y la \texttt{fecha\_\allowbreak{}bloqueo}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas inicia una transacción y crea el \textit{Bloqueo} con el \texttt{id\_\allowbreak{}bloqueador}, el \texttt{id\_\allowbreak{}bloqueado} y la \texttt{fecha\_\allowbreak{}bloqueo}. \textit{(Ver \mbox{EX-01}, \mbox{FA-08})}
       \item En la misma transacción, el Servidor de partidas elimina la \textit{Amistad} entre ambos si existe, elimina las \textit{Solicitud} pendientes en cualquier sentido y marca como \texttt{EXPIRADA} cualquier \textit{Invitacion} pendiente entre ellos (\mbox{RN-03}).
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=9]

@@ -19,7 +19,7 @@
       \item El SJM envía el mensaje \texttt{REPLAY\_\allowbreak{}REQUEST} con el \texttt{id\_\allowbreak{}partida} y el token. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-01})}
       \item El Servidor de partidas recupera la \textit{Partida} y verifica que esté \texttt{FINALIZADA}. \textit{(Ver \mbox{FA-02})}
-      \item El Servidor de partidas verifica que el jugador tenga acceso a la repetición: que haya participado en la partida, o que tenga rol de moderación y la partida esté asociada a un \textit{Reporte} (\mbox{RN-01}). \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas verifica que el jugador tenga acceso a la repetición: que haya participado en la partida, que la partida haya admitido espectadores, o que tenga rol de moderación y la partida esté asociada a un \textit{Reporte} (\mbox{RN-01}). \textit{(Ver \mbox{FA-03})}
       \item El Servidor de partidas recupera las \textit{Participacion} con su \texttt{orden\_\allowbreak{}turno} y su \texttt{simbolo\_\allowbreak{}peon}, el \texttt{nickname} de cada jugador, la \textit{ParticipacionObjeto} de cada uno y el \textit{Modo} de la partida. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas recupera todas las \textit{Jugada} ordenadas por \texttt{numero\_\allowbreak{}jugada}, con su tipo, origen, destino o surco y orientación, tiempo consumido y la marca \texttt{deshecha}.
       \item El Servidor de partidas responde con \texttt{REPLAY\_\allowbreak{}OK} y todos los datos.
@@ -102,19 +102,20 @@
       \item \textbf{\mbox{POST-03}} El tablero mostrado en cada punto es exactamente el que resulta de aplicar las jugadas registradas hasta ese punto.
     \end{cureglas}} \\ \hline
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
-      \item \textbf{\mbox{RN-01}} Pueden ver la repetición de una partida sus participantes y, cuando la partida está asociada a un reporte, los moderadores que lo revisan.
+      \item \textbf{\mbox{RN-01}} Pueden ver la repetición de una partida sus participantes, cualquier jugador si la partida admitió espectadores —lo que ya era público en directo lo sigue siendo después— y, cuando la partida está asociada a un reporte, los moderadores que lo revisan.
       \item \textbf{\mbox{RN-02}} El tablero de cada instante se reconstruye aplicando las jugadas en orden desde el inicio. No se almacenan fotografías del tablero (observación del \mbox{CU-21}).
       \item \textbf{\mbox{RN-03}} Cada jugador aparece con el aspecto que tenía en esa partida, tomado de \textit{ParticipacionObjeto}, no con el que tiene equipado hoy.
       \item \textbf{\mbox{RN-04}} La notación exportable se genera en el cliente a partir de las jugadas y no se guarda.
       \item \textbf{\mbox{RN-05}} Solo se reproducen partidas finalizadas.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué el acceso se limita a los participantes.}\par
-    \texttt{descripcion.md} permite abrir repeticiones desde el perfil de otro jugador, pero solo de las partidas jugadas juntos. Abrir cualquier repetición a cualquier jugador permitiría estudiar a fondo a un rival antes de enfrentarlo, cosa que el retraso de ocho segundos de los espectadores intenta evitar en directo. Limitar el acceso a quienes jugaron la partida mantiene esa coherencia, y la excepción de los moderadores existe porque la repetición es la prueba principal de un reporte.} \\ \hline
+    \texttt{descripcion.md} permite abrir repeticiones desde el perfil de otro jugador, pero solo de las partidas jugadas juntos. Abrir cualquier repetición a cualquier jugador permitiría estudiar a fondo a un rival antes de enfrentarlo, cosa que el retraso de ocho segundos de los espectadores intenta evitar en directo. Limitar el acceso a quienes jugaron la partida, o a todos cuando la partida ya fue pública para los espectadores, mantiene esa coherencia, y la excepción de los moderadores existe porque la repetición es la prueba principal de un reporte.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textit{Sesion}: lee por token \textit{(paso 3)}
       \item \textit{Partida}, \textit{Modo}: lee \textit{(pasos 4, 6)}
       \item \textit{Participacion}, \textit{Usuario}: lee, para el acceso y para los jugadores \textit{(pasos 5, 6)}
       \item \textit{Reporte}: lee, para el acceso de moderación \textit{(paso 5)}
+      \item \textit{Participacion}: lee \texttt{permite\_\allowbreak{}espectadores} de cada jugador, para el acceso público \textit{(paso 5)}
       \item \textit{ParticipacionObjeto}: lee el aspecto de cada jugador \textit{(paso 6)}
       \item \textit{Jugada}: lee todas en orden \textit{(paso 7)}
     \end{cudatos}} \\ \hline

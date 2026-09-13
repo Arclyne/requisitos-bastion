@@ -18,8 +18,8 @@
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
       \item El SJM indica en la \texttt{GUI\_\allowbreak{}Match} que es el turno del Jugador y activa las casillas del tablero.
       \item El Jugador pulsa su peón.
-      \item El SJM calcula las casillas alcanzables y las resalta: las ortogonales adyacentes libres de muro, y las de salto si hay un rival adyacente (\mbox{RN-02}, \mbox{RN-03}).
-      \item El Jugador pulsa una casilla resaltada. \textit{(Ver \mbox{FA-01}, \mbox{FA-02})}
+      \item El SJM calcula las casillas alcanzables y las resalta: las ortogonales adyacentes libres de muro, y las de salto si hay un rival adyacente (\mbox{RN-02}, \mbox{RN-03}). \textit{(Ver \mbox{EX-05})}
+      \item El Jugador pulsa una casilla resaltada. \textit{(Ver \mbox{FA-01}, \mbox{FA-02}, \mbox{FA-09})}
       \item El SJM envía el mensaje \texttt{MOVE\_\allowbreak{}PAWN\_\allowbreak{}REQUEST} con la casilla de destino, el número de jugada y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y a una \textit{Participacion} de esa \textit{Partida}. \textit{(Ver \mbox{FA-03})}
       \item El Servidor de partidas verifica que la \textit{Partida} siga \texttt{EN\_\allowbreak{}CURSO}. \textit{(Ver \mbox{FA-04})}
@@ -33,7 +33,7 @@
       \item El Servidor de partidas crea la \textit{Jugada} con su número de orden, el tipo \texttt{MOVIMIENTO}, la casilla de origen, la de destino, el tiempo consumido y la fecha. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas actualiza en la \textit{Participacion} la casilla actual del peón y el tiempo de reloj restante.
       \item El Servidor de partidas comprueba si la casilla de destino pertenece a la fila de meta del jugador. \textit{(Ver \mbox{FA-08})}
-      \item El Servidor de partidas pasa el turno al siguiente jugador en orden, saltando a los que ya estén clasificados o hayan abandonado (\mbox{RN-08}).
+      \item El Servidor de partidas pasa el turno al siguiente jugador en orden, saltando a los que ya estén clasificados o hayan abandonado (\mbox{RN-08}), y marca como \texttt{CADUCADA} la \textit{OfertaTablas} pendiente del rival, si la hay (\mbox{RN-05} del \mbox{CU-22}).
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=17]
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-04})}
@@ -163,6 +163,7 @@
       \item \textit{Participacion}: escribe casilla actual, reloj restante y, en el \mbox{FA-08}, la clasificación \textit{(pasos 14, \mbox{FA-08})}
       \item \textit{Jugada}: lee todas las de la partida, para reconstruir el tablero \textit{(paso 10)}
       \item \textit{Jugada}: crea \textit{(paso 13)}
+      \item \textit{OfertaTablas}: marca como \texttt{CADUCADA} la pendiente \textit{(paso 16)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage
