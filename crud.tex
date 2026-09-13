@@ -601,7 +601,7 @@ Una cuenta puede tener varias sesiones abiertas, una por dispositivo (\mbox{D-01
   \crudFila{Operación}{Creación (C)}
   \crudFila{Caso de uso}{\mbox{CU-01}}
   \crudFila{Actor}{Jugador}
-  \crudFila{Prototipos}{6c, Inicio de sesión; 3a, Menú principal · boceto propio.}
+  \crudFila{Prototipos}{6c, Inicio de sesión; 3b, Menú principal · tablero 3D de fondo.}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item Identificador: \texttt{nickname} o \texttt{correo}.
     \item Contraseña.
@@ -640,8 +640,8 @@ Una cuenta puede tener varias sesiones abiertas, una por dispositivo (\mbox{D-01
 {\footnotesize\textit{Prototipo 6c: Inicio de sesión}}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}\centering
-\includegraphics[width=\linewidth]{Prototipos/3a}\par\smallskip
-{\footnotesize\textit{Prototipo 3a: Menú principal · boceto propio}}
+\includegraphics[width=\linewidth]{Prototipos/3b}\par\smallskip
+{\footnotesize\textit{Prototipo 3b: Menú principal · tablero 3D de fondo}}
 \end{minipage}
 \par\medskip
 \end{center}
@@ -2265,6 +2265,7 @@ El análisis deja siete puntos que el modelo relacional deberá resolver de form
 De las 125 pantallas del prototipo de interfaz se seleccionaron 57 y se descartaron 68. El criterio fue elegir, para cada funcionalidad, las pantallas que muestran los datos que lee o escribe; entre variantes de una misma pantalla, la más reciente; y no repetir una imagen en dos funcionalidades, citándola en la segunda.
 
 \subsubsection*{Prototipos seleccionados}
+\addcontentsline{toc}{subsubsection}{Prototipos seleccionados}
 \begin{center}\small
 \begin{longtable}{|L{0.115\textwidth}|L{0.40\textwidth}|L{0.385\textwidth}|}
 \hline
@@ -2281,7 +2282,7 @@ De las 125 pantallas del prototipo de interfaz se seleccionaron 57 y se descarta
 2d & Ranking · divisiones con top 3 & \mbox{F-32} Consultar ranking \\ \hline
 2f & Repetición · tablero con línea de tiempo & \mbox{F-30} Consultar repetición de una partida \\ \hline
 2g & Fin de partida · tarjeta sobre el tablero & \mbox{F-28} Finalizar partida \\ \hline
-3a & Menú principal · boceto propio & \mbox{F-14} Iniciar sesión \\ \hline
+3b & Menú principal · tablero 3D de fondo & \mbox{F-14} Iniciar sesión \\ \hline
 4a & Personalizar · vista previa 3D y rejilla & \mbox{F-36} Equipar un objeto \\ \hline
 4c & Personalizar · lista de ranuras equipadas & \mbox{F-37} Consultar inventario y tienda \\ \hline
 4d & Tienda · destacado y rejilla & \mbox{F-34} Comprar un objeto \\ \hline
@@ -2334,6 +2335,7 @@ De las 125 pantallas del prototipo de interfaz se seleccionaron 57 y se descarta
 \end{center}
 
 \subsubsection*{Prototipos descartados}
+\addcontentsline{toc}{subsubsection}{Prototipos descartados}
 Cada pantalla descartada indica el motivo y, cuando existe, la pantalla seleccionada que la sustituye o que ya contiene sus datos. Un guion significa que no hay sustituta, porque la pantalla no corresponde a ninguna operación sobre datos.
 
 \begin{center}\small
@@ -2353,9 +2355,9 @@ Cada pantalla descartada indica el motivo y, cuando existe, la pantalla seleccio
 2e & Historial · lista con cambio de elo & Versión anterior del historial, sin filtros por modo ni por forma de término. & 17f \\ \hline
 2h & Fin de partida · pantalla completa a dos columnas & Variante de disposición de una pantalla ya seleccionada. El \mbox{CU-25} adopta la tarjeta sobre el tablero. & 2g \\ \hline
 2i & Ajustes · secciones y opciones & Configuración local del cliente: no llega a la base de datos. & — \\ \hline
-3b & Menú · tablero 3D de fondo & Variante de disposición de una pantalla ya seleccionada. & 3a \\ \hline
-3c & Menú · barra lateral de navegación & Variante de disposición de una pantalla ya seleccionada. & 3a \\ \hline
-3d & Menú · una sola columna centrada & Variante de disposición de una pantalla ya seleccionada. Se prefiere 3a por ser el boceto propio del equipo. & 3a \\ \hline
+3a & Menú · boceto con chat a la derecha & Variante de disposición de una pantalla ya seleccionada. Se prefiere 3b por ser más limpia: menos elementos simultáneos y el tablero 3D de fondo como identidad del juego. & 3b \\ \hline
+3c & Menú · barra lateral de navegación & Variante de disposición de una pantalla ya seleccionada. & 3b \\ \hline
+3d & Menú · una sola columna centrada & Variante de disposición de una pantalla ya seleccionada. & 3b \\ \hline
 4b & Personalizar · pestañas y carrusel & Variante de disposición de una pantalla ya seleccionada. & 4a \\ \hline
 4e & Tienda · lista con vista previa & Variante de disposición de una pantalla ya seleccionada. & 4d \\ \hline
 6g & Pausa en partida & Estado visual de la partida sin operación de datos propia. El reloj no se detiene y no se guarda nada. & — \\ \hline
@@ -2415,7 +2417,353 @@ Cada pantalla descartada indica el motivo y, cuando existe, la pantalla seleccio
 \end{longtable}
 \end{center}
 
+\subsubsection*{Pantallas descartadas}
+\addcontentsline{toc}{subsubsection}{Pantallas descartadas}
+A continuación se muestran las pantallas descartadas, en el mismo orden de la tabla, para que pueda verse exactamente qué contenía cada una.
+
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/1a}\par\smallskip
+{\footnotesize\RaggedRight \textbf{1a: Partida · tablero centrado, HUD flotante en esquinas}\par Motivo: Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/1b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{1b: Partida · panel lateral fijo con chat e historial}\par Motivo: Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/1c}\par\smallskip
+{\footnotesize\RaggedRight \textbf{1c: Partida · barras de rival arriba y abajo}\par Motivo: Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/1d}\par\smallskip
+{\footnotesize\RaggedRight \textbf{1d: Partida · 4 jugadores, 9×9, 5 muros cada uno}\par Motivo: Variante de modo del HUD anterior. El modo cambia el tablero y el número de jugadores, no los datos que se escriben.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/1e}\par\smallskip
+{\footnotesize\RaggedRight \textbf{1e: Partida rápida · 7×7, HUD mínimo}\par Motivo: Variante de modo del HUD anterior. El modo cambia el tablero y el número de jugadores, no los datos que se escriben.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/2a}\par\smallskip
+{\footnotesize\RaggedRight \textbf{2a: Amigos · panel lateral}\par Motivo: Variante de disposición de una pantalla ya seleccionada. 2b incluye además la pestaña de solicitudes.\par Sustituida por: 2b, Amigos · pantalla completa con pestañas.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/2e}\par\smallskip
+{\footnotesize\RaggedRight \textbf{2e: Historial · lista con cambio de elo}\par Motivo: Versión anterior del historial, sin filtros por modo ni por forma de término.\par Sustituida por: 17f, Historial · filtros por modo y final.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/2h}\par\smallskip
+{\footnotesize\RaggedRight \textbf{2h: Fin de partida · pantalla completa a dos columnas}\par Motivo: Variante de disposición de una pantalla ya seleccionada. El \mbox{CU-25} adopta la tarjeta sobre el tablero.\par Sustituida por: 2g, Fin de partida · tarjeta sobre el tablero.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/2i}\par\smallskip
+{\footnotesize\RaggedRight \textbf{2i: Ajustes · secciones y opciones}\par Motivo: Configuración local del cliente: no llega a la base de datos.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/3a}\par\smallskip
+{\footnotesize\RaggedRight \textbf{3a: Menú · boceto con chat a la derecha}\par Motivo: Variante de disposición de una pantalla ya seleccionada. Se prefiere 3b por ser más limpia: menos elementos simultáneos y el tablero 3D de fondo como identidad del juego.\par Sustituida por: 3b, Menú principal · tablero 3D de fondo.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/3c}\par\smallskip
+{\footnotesize\RaggedRight \textbf{3c: Menú · barra lateral de navegación}\par Motivo: Variante de disposición de una pantalla ya seleccionada.\par Sustituida por: 3b, Menú principal · tablero 3D de fondo.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/3d}\par\smallskip
+{\footnotesize\RaggedRight \textbf{3d: Menú · una sola columna centrada}\par Motivo: Variante de disposición de una pantalla ya seleccionada.\par Sustituida por: 3b, Menú principal · tablero 3D de fondo.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/4b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{4b: Personalizar · pestañas y carrusel}\par Motivo: Variante de disposición de una pantalla ya seleccionada.\par Sustituida por: 4a, Personalizar · vista previa 3D y rejilla.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/4e}\par\smallskip
+{\footnotesize\RaggedRight \textbf{4e: Tienda · lista con vista previa}\par Motivo: Variante de disposición de una pantalla ya seleccionada.\par Sustituida por: 4d, Tienda · destacado y rejilla.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/6g}\par\smallskip
+{\footnotesize\RaggedRight \textbf{6g: Pausa en partida}\par Motivo: Estado visual de la partida sin operación de datos propia. El reloj no se detiene y no se guarda nada.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/6h}\par\smallskip
+{\footnotesize\RaggedRight \textbf{6h: Notificaciones}\par Motivo: Transversal: cada funcionalidad que notifica lo resuelve en su propio caso de uso.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/7a}\par\smallskip
+{\footnotesize\RaggedRight \textbf{7a: Errores · jugada inválida}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/7b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{7b: Errores · muro que encerraría al rival}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/7c}\par\smallskip
+{\footnotesize\RaggedRight \textbf{7c: Errores · conexión y servidor}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/7d}\par\smallskip
+{\footnotesize\RaggedRight \textbf{7d: Errores · salas y emparejamiento}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/7e}\par\smallskip
+{\footnotesize\RaggedRight \textbf{7e: Errores · cuenta, tienda y amigos}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/7f}\par\smallskip
+{\footnotesize\RaggedRight \textbf{7f: Avisos informativos y confirmaciones}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/7g}\par\smallskip
+{\footnotesize\RaggedRight \textbf{7g: Confirmaciones que frenan}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/7h}\par\smallskip
+{\footnotesize\RaggedRight \textbf{7h: Pantallas de fallo grave}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/8a}\par\smallskip
+{\footnotesize\RaggedRight \textbf{8a: Turno del rival}\par Motivo: Estado visual de la partida sin operación de datos propia.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/8b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{8b: Tu turno · últimos 10 segundos}\par Motivo: Estado visual de la partida sin operación de datos propia.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/8c}\par\smallskip
+{\footnotesize\RaggedRight \textbf{8c: Salto recto}\par Motivo: Regla visual del salto; registra la misma Jugada que un movimiento.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/8d}\par\smallskip
+{\footnotesize\RaggedRight \textbf{8d: Salto en diagonal}\par Motivo: Regla visual del salto; registra la misma Jugada que un movimiento.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/10f}\par\smallskip
+{\footnotesize\RaggedRight \textbf{10f: Espectador · cámara libre}\par Motivo: Variante de disposición de una pantalla ya seleccionada. 10g añade el chat de espectadores, que escribe en la base de datos.\par Sustituida por: 10g, Espectador · con chat de espectadores.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/11c}\par\smallskip
+{\footnotesize\RaggedRight \textbf{11c: Estados vacíos}\par Motivo: Estado vacío genérico; no muestra datos.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/11d}\par\smallskip
+{\footnotesize\RaggedRight \textbf{11d: Estado vacío en contexto}\par Motivo: Estado vacío genérico; no muestra datos.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/11e}\par\smallskip
+{\footnotesize\RaggedRight \textbf{11e: Carga inicial}\par Motivo: Pantalla de carga; no muestra datos.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/11f}\par\smallskip
+{\footnotesize\RaggedRight \textbf{11f: Carga · esqueleto del menú}\par Motivo: Pantalla de carga; no muestra datos.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/11g}\par\smallskip
+{\footnotesize\RaggedRight \textbf{11g: Créditos y avisos legales}\par Motivo: Contenido estático.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/12b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{12b: Ajustes · audio}\par Motivo: Configuración local del cliente: no llega a la base de datos.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/12d}\par\smallskip
+{\footnotesize\RaggedRight \textbf{12d: Ajustes · accesibilidad}\par Motivo: Configuración local del cliente: no llega a la base de datos.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/12e}\par\smallskip
+{\footnotesize\RaggedRight \textbf{12e: Emotes en partida}\par Motivo: Enviar un emote no lee ni escribe en la base de datos (\mbox{D-10}).\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/12g}\par\smallskip
+{\footnotesize\RaggedRight \textbf{12g: Fin de partida contra la IA}\par Motivo: Resultado de la partida contra la IA; el repaso se calcula al terminar y no se almacena.\par Sustituida por: 12f, Contra la IA · deshacer y sugerencia.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/13b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{13b: Desde el ranking · buscar jugador}\par Motivo: Búsqueda sobre la tabla de ranking; mismos datos.\par Sustituida por: 2c, Ranking · tabla con tu fila fijada.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/13c}\par\smallskip
+{\footnotesize\RaggedRight \textbf{13c: Búsqueda sin resultados}\par Motivo: Estado vacío de la búsqueda.\par Sustituida por: 2c, Ranking · tabla con tu fila fijada.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/13d}\par\smallskip
+{\footnotesize\RaggedRight \textbf{13d: Desde un enlace compartido}\par Motivo: Entrada por enlace a la misma vista de espectador; el enlace se crea en 13e.\par Sustituida por: 10g, Espectador · con chat de espectadores.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/14a}\par\smallskip
+{\footnotesize\RaggedRight \textbf{14a: Cajas en la tienda}\par Motivo: Lista de tipos de caja; sus datos aparecen completos en 14d.\par Sustituida por: 14d, Contenido y probabilidades.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/14b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{14b: Apertura de caja}\par Motivo: Animación de apertura; el sorteo ya está hecho en el servidor.\par Sustituida por: 14c, Resultado de la caja.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/15a}\par\smallskip
+{\footnotesize\RaggedRight \textbf{15a: Colocar muro · arrastrar}\par Motivo: Iteración anterior del gesto de colocar muro, sustituida por el cartel flotante con atajos.\par Sustituida por: 21a, Partida · muro cogido con cartel flotante.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/15b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{15b: Colocar muro · modo muro}\par Motivo: Iteración anterior del gesto de colocar muro, sustituida por el cartel flotante con atajos.\par Sustituida por: 21a, Partida · muro cogido con cartel flotante.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/15c}\par\smallskip
+{\footnotesize\RaggedRight \textbf{15c: Fin por tiempo · pierdes}\par Motivo: Variante del fin de partida para una forma de término; solo cambia el valor de forma\_termino.\par Sustituida por: 2g, Fin de partida · tarjeta sobre el tablero.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/15d}\par\smallskip
+{\footnotesize\RaggedRight \textbf{15d: Fin por tiempo · ganas}\par Motivo: Variante del fin de partida para una forma de término; solo cambia el valor de forma\_termino.\par Sustituida por: 2g, Fin de partida · tarjeta sobre el tablero.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/15e}\par\smallskip
+{\footnotesize\RaggedRight \textbf{15e: Historial de jugadas desplegado}\par Motivo: Notación de la partida en curso; lee las mismas jugadas que la repetición.\par Sustituida por: 2f, Repetición · tablero con línea de tiempo.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/16b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{16b: Elegir modo · hoja rápida}\par Motivo: Variante de disposición de una pantalla ya seleccionada. Muestra los mismos modos y relojes en una hoja compacta.\par Sustituida por: 16a, Elegir modo · pantalla propia.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/16d}\par\smallskip
+{\footnotesize\RaggedRight \textbf{16d: Evolución del elo por modo}\par Motivo: Amplía la gráfica de 16c comparando modos; lee los mismos datos.\par Sustituida por: 16c, Evolución del elo.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/17a}\par\smallskip
+{\footnotesize\RaggedRight \textbf{17a: Cámara en partida}\par Motivo: Configuración local del cliente: no llega a la base de datos.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/17b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{17b: Ajustes · ángulo de cámara}\par Motivo: Configuración local del cliente: no llega a la base de datos.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/17c}\par\smallskip
+{\footnotesize\RaggedRight \textbf{17c: Mover el peón · modo mover}\par Motivo: Iteración anterior del movimiento del peón, con modos explícitos que el HUD final eliminó.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/17d}\par\smallskip
+{\footnotesize\RaggedRight \textbf{17d: Llegada a meta}\par Motivo: Estado visual de la partida sin operación de datos propia. Es el instante previo al resultado.\par Sustituida por: 2g, Fin de partida · tarjeta sobre el tablero.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/17e}\par\smallskip
+{\footnotesize\RaggedRight \textbf{17e: Temas de tablero · vista previa}\par Motivo: Caso particular de 4a para la ranura de tablero; mismo flujo y mismos datos.\par Sustituida por: 4a, Personalizar · vista previa 3D y rejilla.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/18a}\par\smallskip
+{\footnotesize\RaggedRight \textbf{18a: Errores · tablero 3D no arranca}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/18b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{18b: Errores · cámara, jugadas y confirmación}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/18c}\par\smallskip
+{\footnotesize\RaggedRight \textbf{18c: Errores · cajas}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/18d}\par\smallskip
+{\footnotesize\RaggedRight \textbf{18d: Errores · perfil}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/18e}\par\smallskip
+{\footnotesize\RaggedRight \textbf{18e: Errores · espectador, enlaces y moderación}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/18f}\par\smallskip
+{\footnotesize\RaggedRight \textbf{18f: Errores · modos, IA y búsqueda}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/18g}\par\smallskip
+{\footnotesize\RaggedRight \textbf{18g: Nuevos avisos informativos}\par Motivo: Catálogo de mensajes de error y aviso. Documenta los flujos alternos y las excepciones de los casos de uso, no una operación sobre datos.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/19a}\par\smallskip
+{\footnotesize\RaggedRight \textbf{19a: Partida · panel desplegado}\par Motivo: Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/19b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{19b: Partida · 4 jugadores, muro preparado}\par Motivo: Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par Sustituida por: 21a, Partida · muro cogido con cartel flotante.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/19c}\par\smallskip
+{\footnotesize\RaggedRight \textbf{19c: Partida · panel plegado}\par Motivo: Iteración anterior del HUD de partida, sustituida por las pantallas 20 y 21, que son las que describe el documento de diseño.\par Sustituida por: 20a, Partida · peón seleccionado.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/20b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{20b: Partida · 4 jugadores, muro cogido}\par Motivo: Mismo gesto que 21a en una partida de cuatro jugadores; registra la misma Jugada.\par Sustituida por: 21a, Partida · muro cogido con cartel flotante.\par}
+\end{minipage}
+\par
+\par\medskip\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/21b}\par\smallskip
+{\footnotesize\RaggedRight \textbf{21b: Panel de jugadas desde su icono}\par Motivo: Panel de jugadas dentro de la partida; lee las mismas jugadas que la repetición.\par Sustituida por: 2f, Repetición · tablero con línea de tiempo.\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{Prototipos/21c}\par\smallskip
+{\footnotesize\RaggedRight \textbf{21c: Los dos iconos en reposo}\par Motivo: Explica la ubicación de los iconos; no muestra datos.\par}
+\end{minipage}
+\par
+
 \subsubsection*{Diferencias entre prototipos y casos de uso}
+\addcontentsline{toc}{subsubsection}{Diferencias entre prototipos y casos de uso}
 Al revisar las pantallas se encontraron diferencias con lo especificado en los casos de uso. Mandan los casos de uso; las pantallas deben corregirse en la siguiente versión del prototipo.
 
 \begin{center}\small
