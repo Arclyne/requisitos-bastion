@@ -155,17 +155,17 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué los muros de la sala se copian a la participación.}\par
     El anfitrión puede elegir un número de muros distinto del que fija el \textit{Modo}. Ese valor se guarda en la \textit{Sala}, pero la partida no lo lee de allí: cada \textit{Participacion} nace con sus \texttt{muros\_\allowbreak{}restantes}, igual que en una partida clasificatoria. Así, la partida no depende de la sala una vez creada, y el \mbox{CU-21} descuenta muros sin saber si la partida vino del emparejamiento o de una sala.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 6)}
-      \item \textit{Participacion}, \textit{ColaEmparejamiento}, \textit{SalaParticipante}, \textit{Sancion}: lee, para las precondiciones \textit{(paso 6)}
-      \item \textit{Modo}: lee \textit{(paso 7)}
-      \item \textit{Sala}: lee códigos en uso; crea; actualiza ajustes y \texttt{estado} \textit{(pasos 8, 9, 18, \mbox{FA-05}, \mbox{FA-06})}
-      \item \textit{SalaParticipante}: crea, actualiza \texttt{listo}, elimina \textit{(pasos 10, 13, \mbox{FA-05} a \mbox{FA-07})}
-      \item \textit{Partida}: crea con \texttt{tipo} \texttt{PRIVADA} \textit{(paso 17)}
-      \item \textit{Participacion}, \textit{ParticipacionObjeto}: crea una por miembro \textit{(paso 17)}
-      \item \textit{EstadisticaModo}, \textit{Equipamiento}: lee el elo de entrada y el aspecto de cada miembro \textit{(paso 17)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 6)}
+      \item \textbf{\textit{Participacion}, \textit{ColaEmparejamiento}, \textit{SalaParticipante}, \textit{Sancion}:} lee, para las precondiciones \textit{(paso 6)}
+      \item \textbf{\textit{Modo}:} lee \textit{(paso 7)}
+      \item \textbf{\textit{Sala}:} lee códigos en uso; crea; actualiza ajustes y \texttt{estado} \textit{(pasos 8, 9, 18, \mbox{FA-05}, \mbox{FA-06})}
+      \item \textbf{\textit{SalaParticipante}:} crea, actualiza \texttt{listo}, elimina \textit{(pasos 10, 13, \mbox{FA-05} a \mbox{FA-07})}
+      \item \textbf{\textit{Partida}:} crea con \texttt{tipo} \texttt{PRIVADA} \textit{(paso 17)}
+      \item \textbf{\textit{Participacion}, \textit{ParticipacionObjeto}:} crea una por miembro \textit{(paso 17)}
+      \item \textbf{\textit{EstadisticaModo}, \textit{Equipamiento}:} lee el elo de entrada y el aspecto de cada miembro \textit{(paso 17)}
     \end{cudatos}} \\
    & \cuCelda{\begin{cudatos}
-      \item \textit{Mensaje}: crea los del chat de sala, con canal \texttt{SALA} \textit{(paso 12)}
+      \item \textbf{\textit{Mensaje}:} crea los del chat de sala, con canal \texttt{SALA} \textit{(paso 12)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

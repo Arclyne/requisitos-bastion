@@ -237,19 +237,19 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre la activación y la edad.}\par
     Este caso no activa la cuenta: lo hace el \mbox{CU-04} cuando el jugador abre el enlace del correo, fuera de la aplicación. La edad tampoco se almacena: se calcula a partir de \texttt{fecha\_\allowbreak{}nacimiento} cada vez que se necesita, porque guardarla obligaría a recalcularla en cada cumpleaños de cada cuenta.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Usuario}: lee \texttt{nickname} y \texttt{correo} de las demás cuentas \textit{(pasos 11, 12)}
-      \item \textit{Usuario}: crea con \texttt{tipo\_\allowbreak{}cuenta}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}nacimiento}, \texttt{idioma\_\allowbreak{}preferido}, \texttt{codigo\_\allowbreak{}amigo}, \texttt{rol}, \texttt{nivel}, \texttt{experiencia}, \texttt{saldo\_\allowbreak{}monedas}, \texttt{fecha\_\allowbreak{}registro}; escribe \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} \textit{(pasos 16, 23)}
-      \item \textit{PalabraProhibida}: lee el catálogo con ámbito de nickname \textit{(paso 10)}
-      \item \textit{Modo}: lee los activos \textit{(paso 17)}
-      \item \textit{EstadisticaModo}: crea una por modo \textit{(paso 17)}
-      \item \textit{Ranura}, \textit{ObjetoCosmetico}: lee los iniciales y el predeterminado de cada ranura \textit{(paso 18)}
-      \item \textit{UsuarioObjeto}: crea uno por objeto inicial \textit{(paso 18)}
-      \item \textit{Equipamiento}: crea una fila por ranura \textit{(paso 18)}
+      \item \textbf{\textit{Usuario}:} lee \texttt{nickname} y \texttt{correo} de las demás cuentas \textit{(pasos 11, 12)}
+      \item \textbf{\textit{Usuario}:} crea con \texttt{tipo\_\allowbreak{}cuenta}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}nacimiento}, \texttt{idioma\_\allowbreak{}preferido}, \texttt{codigo\_\allowbreak{}amigo}, \texttt{rol}, \texttt{nivel}, \texttt{experiencia}, \texttt{saldo\_\allowbreak{}monedas}, \texttt{fecha\_\allowbreak{}registro}; escribe \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} \textit{(pasos 16, 23)}
+      \item \textbf{\textit{PalabraProhibida}:} lee el catálogo con ámbito de nickname \textit{(paso 10)}
+      \item \textbf{\textit{Modo}:} lee los activos \textit{(paso 17)}
+      \item \textbf{\textit{EstadisticaModo}:} crea una por modo \textit{(paso 17)}
+      \item \textbf{\textit{Ranura}, \textit{ObjetoCosmetico}:} lee los iniciales y el predeterminado de cada ranura \textit{(paso 18)}
+      \item \textbf{\textit{UsuarioObjeto}:} crea uno por objeto inicial \textit{(paso 18)}
+      \item \textbf{\textit{Equipamiento}:} crea una fila por ranura \textit{(paso 18)}
     \end{cudatos}} \\
    & \cuCelda{\begin{cudatos}
-      \item \textit{AceptacionTerminos}: crea \textit{(paso 19)}
-      \item \textit{TokenVerificacionCorreo}: crea con propósito \texttt{ALTA} \textit{(paso 20)}
-      \item \textit{BitacoraAcceso}: inserta \textit{(pasos 24, \mbox{FA-07} a \mbox{FA-11}, \mbox{EX-06})}
+      \item \textbf{\textit{AceptacionTerminos}:} crea \textit{(paso 19)}
+      \item \textbf{\textit{TokenVerificacionCorreo}:} crea con propósito \texttt{ALTA} \textit{(paso 20)}
+      \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(pasos 24, \mbox{FA-07} a \mbox{FA-11}, \mbox{EX-06})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

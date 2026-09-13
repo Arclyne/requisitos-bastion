@@ -182,13 +182,12 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre dónde vive el correo pendiente.}\par
     Se consideró guardar el correo nuevo en una columna \texttt{correo\_\allowbreak{}pendiente} de \textit{Usuario}. Se descartó porque el correo pendiente no tiene sentido sin el token que lo confirma: caduca con él, se invalida con él y se sustituye con él. Guardarlo en el \textit{TokenVerificacionCorreo}, junto con un \texttt{proposito} que distinga el alta del cambio, mantiene en una sola fila todo lo que tiene la misma vigencia, y evita una columna de \textit{Usuario} que estaría nula en casi todas las cuentas.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token; cierra las demás \textit{(pasos 6, 11)}
-      \item \textit{Usuario}: lee \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{correo}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} \textit{(pasos 7, \mbox{FA-01})}
-      \item \textit{Usuario}: escribe \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta} \textit{(pasos 10, \mbox{FA-01}, \mbox{FA-05})}
-      \item \textit{TokenRecuperacion}: invalida los pendientes \textit{(paso 12)}
-      \item \textit{CodigoSegundoFactor}: crea el código de prueba al activar \textit{(paso \mbox{FA-10})}
-      \item \textit{TokenVerificacionCorreo}: invalida los pendientes y crea uno con \texttt{proposito} y \texttt{correo\_\allowbreak{}destino} \textit{(pasos \mbox{FA-01}, \mbox{FA-09})}
-      \item \textit{BitacoraAcceso}: inserta \textit{(pasos 14, \mbox{FA-01}, \mbox{FA-05})}
+      \item \textbf{\textit{Sesion}:} lee por token; cierra las demás \textit{(pasos 6, 11)}
+      \item \textbf{\textit{Usuario}:} lee \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{correo}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} \textit{(pasos 7, \mbox{FA-01})}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta} \textit{(pasos 10, \mbox{FA-01}, \mbox{FA-05})}
+      \item \textbf{\textit{TokenRecuperacion}:} invalida los pendientes \textit{(paso 12)}
+      \item \textbf{\textit{TokenVerificacionCorreo}:} invalida los pendientes y crea uno con \texttt{proposito} y \texttt{correo\_\allowbreak{}destino} \textit{(pasos \mbox{FA-01}, \mbox{FA-09})}
+      \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(pasos 14, \mbox{FA-01}, \mbox{FA-05})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

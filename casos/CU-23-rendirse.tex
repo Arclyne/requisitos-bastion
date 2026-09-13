@@ -104,10 +104,10 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre la vista previa del elo.}\par
     Calcular el elo en la confirmación obliga a un intercambio adicional con el servidor antes de rendirse, que se podría evitar calculándolo en el cliente. No se hace así porque el cliente no conoce con certeza el elo de entrada de los rivales ni los parámetros del modo, y un aviso que dice ``perderás 12'' y después resta 15 es peor que no avisar. La consulta no escribe nada, así que cancelar la rendición no deja rastro.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}, \textit{Participacion}: lee por token y \texttt{elo\_\allowbreak{}inicial} de todos \textit{(pasos 3, 8)}
-      \item \textit{Partida}, \textit{Modo}: lee \texttt{estado}, \texttt{tipo} y número de jugadores \textit{(pasos 9, 11)}
-      \item \textit{OfertaTablas}: marca las pendientes como \texttt{CADUCADA} \textit{(paso 10)}
-      \item \textit{Participacion}: escribe resultado, posición y forma de término, en el \mbox{FA-05} \textit{(paso \mbox{FA-05})}
+      \item \textbf{\textit{Sesion}, \textit{Participacion}:} lee por token y \texttt{elo\_\allowbreak{}inicial} de todos \textit{(pasos 3, 8)}
+      \item \textbf{\textit{Partida}, \textit{Modo}:} lee \texttt{estado}, \texttt{tipo} y número de jugadores \textit{(pasos 9, 11)}
+      \item \textbf{\textit{OfertaTablas}:} marca las pendientes como \texttt{CADUCADA} \textit{(paso 10)}
+      \item \textbf{\textit{Participacion}:} escribe resultado, posición y forma de término, en el \mbox{FA-05} \textit{(paso \mbox{FA-05})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

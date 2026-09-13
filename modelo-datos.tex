@@ -1,0 +1,390 @@
+%=====================================================================
+% Modelo de datos
+%   Las tablas que se incluyen desde bd/tex se generan a partir de
+%   bd/bastion.sql con bd/generar_tablas.ps1. Si cambia el esquema,
+%   se edita el script y se vuelven a generar; no se editan aquí.
+%=====================================================================
+\section*{Modelo de datos}
+\addcontentsline{toc}{section}{Modelo de datos}
+
+Esta sección define el esquema de la base de datos de \sistema{} en SQL Server (\mbox{CON-04}). Parte del diagrama entidad-relación inicial y lo lleva hasta las estructuras que exigen los casos de uso, el análisis CRUD y las decisiones de diseño: identifica las entidades, sus atributos, sus llaves primarias y foráneas, las relaciones entre ellas con su cardinalidad, y justifica que el resultado está en tercera forma normal. Termina con el usuario con el que el Servidor de partidas se conecta a la base.
+
+El esquema tiene \bdNumTablas{} entidades, \bdNumColumnas{} atributos y \bdNumForaneas{} llaves foráneas. Todas las tablas cumplen la tercera forma normal y \bdNumFNBC{} cumplen además la forma normal de Boyce-Codd; las dos que no, se explican en la sección de normalización.
+
+El script \at{bd/bastion.sql} crea la base completa: tablas, restricciones, índices, los procedimientos almacenados de las eliminaciones físicas y el usuario de conexión. Las tablas de atributos, de llaves y de relaciones de esta sección no se escribieron a mano: se generan a partir de ese script con \at{bd/generar\_tablas.ps1}, de modo que el documento y la base no pueden contradecirse. Si el esquema cambia, se edita el script y se vuelven a generar.
+
+Se siguen las convenciones del análisis CRUD: las entidades se escriben en cursiva y los atributos en tipografía de código, sin acentos ni eñes porque son identificadores de la base de datos. Además:
+
+\begin{reglas}
+  \item \textbf{Nombres.} Tablas en singular, con la misma forma que en los casos de uso (\textit{Usuario}, \textit{EstadisticaModo}); atributos en minúsculas separados por guion bajo.
+  \item \textbf{Fechas.} Todas en UTC, con \at{DATETIME2}. El servidor las convierte a la hora local solo para mostrarlas.
+  \item \textbf{Texto.} Todo lo que escribe o lee una persona es \at{NVARCHAR}, en Unicode (\mbox{CON-05}). Los códigos de estado y de dominio son \at{VARCHAR}, porque solo los lee la aplicación.
+  \item \textbf{Secretos.} Contraseñas, tokens y códigos se guardan como resumen criptográfico en \at{VARBINARY}; ninguna columna los contiene en claro (\mbox{CU-01} \mbox{RN-02}).
+  \item \textbf{Dominios.} Los valores permitidos de cada estado, tipo o ámbito que se listan en las descripciones están declarados en la base con restricciones \at{CHECK}.
+\end{reglas}
+
+%---------------------------------------------------------------------
+\subsection*{Del diagrama entidad-relación al modelo}
+\addcontentsline{toc}{subsection}{Del diagrama entidad-relación al modelo}
+
+El diagrama entidad-relación de partida tiene seis entidades —\textit{Usuario}, \textit{Skin}, \textit{Estadísticas}, \textit{Partida}, \textit{Reporte} y \textit{Baneo}— y nueve relaciones. Es anterior a los casos de uso, y varias decisiones de diseño lo cambiaron después (\mbox{D-02} a \mbox{D-06}). La tabla indica qué fue de cada elemento del diagrama. Todo lo que el diagrama no tenía —sesiones, tokens, bitácoras, relaciones entre jugadores, salas, economía y tutorial— lo exigen los casos de uso, y la Matriz 1 de trazabilidad indica cuál.
+
+\begin{center}\small
+\begin{longtable}{|L{0.21\textwidth}|L{0.30\textwidth}|L{0.39\textwidth}|}
+\hline
+\textbf{Elemento del diagrama} & \textbf{En el modelo} & \textbf{Qué cambió y por qué} \\ \hline
+\endfirsthead
+\hline
+\textbf{Elemento del diagrama} & \textbf{En el modelo} & \textbf{Qué cambió y por qué} \\ \hline
+\endhead
+\textit{Usuario} & \textit{Usuario} & Se elimina el atributo compuesto \at{nombre\_completo} y, con él, \at{nombre}, \at{apellido\_paterno} y \at{apellido\_materno}, junto con \at{region}: ningún flujo los usa (\mbox{D-06}). Se elimina \at{edad}, que es derivada. \at{contraseña} pasa a \at{contrasena\_hash} y \at{contrasena\_sal}. Se añaden \at{tipo\_cuenta} para el invitado (\mbox{D-02}), \at{rol}, y los datos del bloqueo, la verificación y la progresión. \\ \hline
+\textit{Skin} & \textit{Ranura}, \textit{ObjetoCosmetico} & Un solo tipo de skin no alcanza para seis ranuras de personalización (\mbox{D-03}). El atributo \at{tipo} del skin se convierte en la entidad \textit{Ranura}; \at{costo} pasa a \at{precio}. \\ \hline
+Posee (N:M) & \textit{UsuarioObjeto} & Se conserva como entidad asociativa con su \at{fecha\_obtencion} y gana \at{origen}. \\ \hline
+Equipa (N:1) & \textit{Equipamiento} & Un skin equipado por usuario pasa a ser un objeto equipado por cada ranura: una fila por usuario y ranura. \\ \hline
+\textit{Estadísticas}, Tiene (1:1) & \textit{Modo}, \textit{EstadisticaModo} & El elo y los contadores son por modo (\mbox{D-04}), así que la relación deja de ser 1:1: hay una fila por usuario y modo. Se elimina \at{porcentaje\_victorias}, que es derivado. \\ \hline
+\textit{Partida} & \textit{Partida} & \at{num\_jugadores} pasa a \textit{Modo}, del que depende. \at{duracion} se elimina porque se calcula. Se añaden \at{tipo}, \at{forma\_termino}, el reloj y los datos de las partidas contra la IA (\mbox{D-12}). \\ \hline
+Participa (N:M, 2 a 4) & \textit{Participacion} & \at{color\_ficha} pasa a \at{simbolo\_peon} y \at{barreras\_restantes} a \at{muros\_restantes}. Se añaden el elo de entrada y de salida, el reloj y el estado de conexión. La cardinalidad baja a 1 a 4, porque en una partida contra la IA solo participa el jugador. \\ \hline
+\textit{Reporte}, Emite (1:N), Señala (N:1), Sobre (N:1) & \textit{Reporte}, \textit{MotivoReporte} & Las tres relaciones quedan como las llaves foráneas \at{id\_denunciante}, \at{id\_reportado} e \at{id\_partida}. El \at{motivo} en texto pasa a un catálogo; \at{estado\_reporte} pasa a \at{estado} con el moderador que lo revisa. \\ \hline
+\textit{Baneo}, Recibe (1:N), Origina (N:1) & \textit{Sancion}, \textit{Apelacion} & La sanción gana ámbito de cuenta o de chat (\mbox{D-05}). \at{num\_reportes} y \at{activo} se eliminan: el primero es un conteo y el segundo se deducía de las fechas. La relación Origina queda como \at{id\_reporte}. \\ \hline
+\end{longtable}
+\end{center}
+
+%---------------------------------------------------------------------
+\subsection*{Identificación de entidades}
+\addcontentsline{toc}{subsection}{Identificación de entidades}
+
+Una estructura es entidad del modelo si algún caso de uso la escribe, o si es un catálogo que los casos de uso leen y que se carga por SQL (\mbox{D-09}). Es el mismo criterio de la Matriz 1: ninguna tabla queda sin un caso que la justifique. Tampoco al revés: los datos que se calculan al consultarse —el historial de elo, el marcador entre dos jugadores, la duración de una partida— y los que viven solo en la memoria del servidor —los espectadores y los emotes (\mbox{D-10}, \mbox{D-19})— no son entidades.
+
+Cada entidad se clasifica según cómo se identifica:
+
+\begin{reglas}
+  \item \textbf{Fuerte.} Tiene identidad propia, con una llave sustituta, aunque dependa de otra entidad por una llave foránea obligatoria.
+  \item \textbf{Débil.} Se identifica por la llave de la entidad de la que depende más un discriminador propio, como el número de jugada dentro de la partida.
+  \item \textbf{Dependiente (1:0..1).} Su llave es la misma llave foránea: existe a lo sumo una por cada fila de la entidad de la que depende.
+  \item \textbf{Asociativa (N:M).} Resuelve una relación de muchos a muchos; su llave está formada por las llaves de las entidades que relaciona.
+  \item \textbf{Catálogo.} Datos de referencia que se cargan por SQL y que ningún caso de uso modifica.
+\end{reglas}
+
+\input{bd/tex/entidades}
+
+%---------------------------------------------------------------------
+\subsection*{Atributos de cada entidad}
+\addcontentsline{toc}{subsection}{Atributos de cada entidad}
+
+Cada tabla lista los atributos de una entidad con su tipo en SQL Server, si admiten nulo y si forman parte de una llave: \textbf{PK} para la llave primaria, \textbf{FK} para una llave foránea y \textbf{UQ} para un atributo único por sí solo. Las llaves compuestas y las restricciones de unicidad con condición se detallan en las secciones siguientes.
+
+Un atributo sin tipo de almacenamiento, marcado como \emph{calculada}, es una columna calculada no persistida: la base la obtiene de otras columnas de la misma fila cada vez que se lee y no la guarda. Se usa para los cuatro atributos que los casos de uso nombran pero que dependen de otros atributos de la fila; así la aplicación los lee con el nombre de siempre y la tabla sigue en tercera forma normal.
+
+\input{bd/tex/atributos}
+
+%---------------------------------------------------------------------
+\subsection*{Llaves primarias}
+\addcontentsline{toc}{subsection}{Llaves primarias}
+
+La llave primaria de cada entidad se eligió con cuatro criterios:
+
+\begin{reglas}
+  \item \textbf{Sustituta.} Un entero \at{IDENTITY} para las entidades con identidad propia, que se crean desde la aplicación y a las que otras tablas apuntan. Donde además existe un dato natural único —el \at{nickname}, el resumen de un token, la versión de términos de un usuario— se declara como llave candidata con \at{UNIQUE}.
+  \item \textbf{Compuesta.} Las entidades asociativas y las débiles se identifican por las llaves que relacionan. La llave compuesta hace cumplir una regla sin código adicional: (\at{id\_usuario}, \at{id\_ranura}) en \textit{Equipamiento} garantiza un solo objeto por ranura (\mbox{CU-14} \mbox{RN-01}), y (\at{id\_usuario}, \at{id\_objeto}) en \textit{UsuarioObjeto} impide poseer dos veces el mismo objeto (\mbox{CU-38} \mbox{RN-02}).
+  \item \textbf{Igual a la llave foránea.} Cuando solo puede haber una fila por usuario, la llave es el propio \at{id\_usuario}: un solo cambio de nombre (\mbox{CU-13} \mbox{RN-01}), un solo lugar en la cola y una sola sala a la vez (\mbox{CU-18} \mbox{RN-02}).
+  \item \textbf{Asignada en la carga.} Los catálogos usan identificadores fijos, porque se cargan por SQL y la aplicación puede referirse a ellos por su valor.
+\end{reglas}
+
+\input{bd/tex/llaves-primarias}
+
+\subsubsection*{Restricciones de unicidad}
+\addcontentsline{toc}{subsubsection}{Restricciones de unicidad}
+
+Varias reglas de negocio dicen ``a lo sumo uno'' solo para las filas en cierto estado: un token vigente por cuenta, un avatar vigente, una participación sin terminar. No son llaves candidatas, porque las filas antiguas se conservan, así que se declaran como índices únicos filtrados: la unicidad se exige únicamente entre las filas que cumplen la condición. La tabla reúne todas las restricciones de unicidad del esquema, con la regla que cada una hace cumplir.
+
+\input{bd/tex/unicidad}
+
+%---------------------------------------------------------------------
+\subsection*{Llaves foráneas}
+\addcontentsline{toc}{subsection}{Llaves foráneas}
+
+La columna \emph{Obligatoria} indica si la llave foránea admite nulo. Ninguna llave foránea borra ni actualiza en cascada: la fila de \textit{Usuario} nunca se elimina (\mbox{D-07}), y las pocas filas que se eliminan físicamente no tienen filas que dependan de ellas.
+
+Algunas llaves foráneas son compuestas porque, además de exigir que la fila referida exista, hacen cumplir una regla de negocio:
+
+\begin{reglas}
+  \item \textbf{Solo se equipa lo que se posee.} \textit{Equipamiento} apunta a \textit{UsuarioObjeto} con (\at{id\_usuario}, \at{id\_objeto}), no a \textit{ObjetoCosmetico} (\mbox{CU-14} \mbox{RN-02}).
+  \item \textbf{El objeto es de su ranura.} \textit{Equipamiento} y \textit{ParticipacionObjeto} apuntan a \textit{ObjetoCosmetico} con (\at{id\_objeto}, \at{id\_ranura}), así que no puede equiparse un marco en la ranura del peón.
+  \item \textbf{Solo los participantes actúan en la partida.} \textit{Jugada}, \textit{OfertaTablas} y \textit{EnlaceEspectador} apuntan a \textit{Participacion} con (\at{id\_partida}, \at{id\_usuario}): solo quien juega la partida mueve, ofrece tablas o comparte el enlace. En \textit{Jugada}, un \at{id\_usuario} nulo, que es la IA, no se comprueba.
+  \item \textbf{El ganador jugó la partida.} \at{id\_ganador} de \textit{Partida} apunta a \textit{Participacion} de la misma partida. Como \textit{Participacion} apunta a su vez a \textit{Partida}, esta llave se crea con \at{ALTER TABLE} después de las dos tablas.
+  \item \textbf{El historial de división pertenece a unas estadísticas.} \textit{HistorialDivision} apunta a \textit{EstadisticaModo} con (\at{id\_usuario}, \at{id\_modo}), no por separado a \textit{Usuario} y a \textit{Modo}.
+\end{reglas}
+
+\input{bd/tex/llaves-foraneas}
+
+%---------------------------------------------------------------------
+\subsection*{Relaciones y cardinalidades}
+\addcontentsline{toc}{subsection}{Relaciones y cardinalidades}
+
+\subsubsection*{Relaciones de muchos a muchos}
+\addcontentsline{toc}{subsubsection}{Relaciones de muchos a muchos}
+
+El modelo relacional no admite relaciones de muchos a muchos directas: cada una se resuelve con una entidad asociativa que tiene una llave foránea hacia cada lado, y que guarda los atributos que pertenecen a la relación y no a ninguna de las dos entidades.
+
+\begin{center}\small
+\begin{longtable}{|L{0.19\textwidth}|L{0.25\textwidth}|L{0.46\textwidth}|}
+\hline
+\textbf{Entidad asociativa} & \textbf{Relaciona} & \textbf{Qué guarda y cardinalidad de cada lado} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad asociativa} & \textbf{Relaciona} & \textbf{Qué guarda y cardinalidad de cada lado} \\ \hline
+\endhead
+\textit{UsuarioObjeto} & \textit{Usuario} y \textit{ObjetoCosmetico} & Relación Posee del diagrama: fecha y origen de la posesión. Un usuario posee de 6 a N objetos, porque el alta otorga uno por ranura; un objeto lo poseen de 0 a N usuarios. \\ \hline
+\textit{Equipamiento} & \textit{Usuario} y \textit{Ranura} & El objeto equipado en cada ranura. Cada usuario tiene exactamente 6 filas, una por ranura; cada ranura, una fila por usuario. \\ \hline
+\textit{Participacion} & \textit{Usuario} y \textit{Partida} & Relación Participa del diagrama: turno, posición del peón, muros, reloj, elo y resultado. Una partida tiene de 1 a 4 participantes; un usuario, de 0 a N partidas, con a lo sumo una sin terminar (\mbox{D-11}). \\ \hline
+\textit{ParticipacionObjeto} & \textit{Participacion} y \textit{Ranura} & El aspecto fijado al empezar la partida. Cada participación tiene exactamente 6 filas. \\ \hline
+\textit{EstadisticaModo} & \textit{Usuario} y \textit{Modo} & Relación Tiene del diagrama, ahora por modo: contadores, elo y división. Cada usuario tiene una fila por cada modo activo desde el alta (\mbox{CU-02} \mbox{RN-06}). \\ \hline
+\textit{TipoCajaObjeto} & \textit{TipoCaja} y \textit{ObjetoCosmetico} & La probabilidad de cada objeto en cada tipo de caja. Un tipo de caja tiene de 1 a N objetos posibles. \\ \hline
+\textit{ProgresoTutorial} & \textit{Usuario} y \textit{Leccion} & El paso alcanzado en cada lección. Un usuario tiene de 0 a 7 filas, que se crean al completar el primer paso de cada lección. \\ \hline
+\textit{Amistad} & \textit{Usuario} y \textit{Usuario} & Relación reflexiva y simétrica: se guarda una sola vez por par ordenado. Un usuario tiene de 0 a 100 amigos (\mbox{CU-30} \mbox{RN-02}). \\ \hline
+\textit{Silencio}, \textit{Bloqueo} & \textit{Usuario} y \textit{Usuario} & Relaciones reflexivas con dirección: quién silencia o bloquea a quién. De 0 a N en cada sentido. \\ \hline
+\end{longtable}
+\end{center}
+
+\textit{Solicitud} también relaciona a dos usuarios, pero tiene llave sustituta porque la acción de responder la identifica por su número (\mbox{F-40}); su par (\at{id\_solicitante}, \at{id\_destinatario}) es llave candidata. \textit{SalaParticipante} relaciona usuarios con salas, pero en un momento dado cada usuario está en una sola sala: la relación es 1:N y su llave es \at{id\_usuario}.
+
+\subsubsection*{Relaciones de uno a muchos y de uno a uno}
+\addcontentsline{toc}{subsubsection}{Relaciones de uno a muchos y de uno a uno}
+
+Cada llave foránea es una relación. La tabla da la cardinalidad en la forma \emph{padre:hija}: \textbf{1:N} significa que cada fila hija tiene exactamente un padre y cada padre puede tener muchas hijas; \textbf{0..1:N}, que la llave foránea admite nulo y la hija puede no tener padre; \textbf{1:0..1}, que cada padre tiene a lo sumo una hija. Las relaciones con roles —denunciante y reportado, emisor y destinatario— aparecen una vez por rol.
+
+Las cardinalidades mínimas mayores que cero del lado de la hija —las seis filas de \textit{Equipamiento} de cada usuario, la estadística de cada modo, al menos una \textit{Participacion} por partida— no pueden declararse con una llave foránea. Las garantiza la transacción que crea la fila padre, que crea también las hijas: el alta de la cuenta (\mbox{CU-02} \mbox{RN-06}, \mbox{CU-06} \mbox{RN-09}) y la creación de la partida (\mbox{CU-17} \mbox{RN-10}).
+
+\input{bd/tex/relaciones}
+
+%---------------------------------------------------------------------
+\subsection*{Normalización}
+\addcontentsline{toc}{subsection}{Normalización}
+
+\subsubsection*{Criterio}
+\addcontentsline{toc}{subsubsection}{Criterio}
+
+Se usan las definiciones habituales, en términos de dependencias funcionales. Una dependencia $X \rightarrow A$ significa que dos filas con el mismo valor en $X$ tienen siempre el mismo valor en $A$. Un atributo es \emph{primo} si forma parte de alguna llave candidata.
+
+\begin{reglas}
+  \item \textbf{Primera forma normal (1FN).} Todos los atributos son atómicos, no hay grupos repetidos y cada fila se identifica por una llave.
+  \item \textbf{Segunda forma normal (2FN).} Está en 1FN y ningún atributo no primo depende de solo una parte de una llave candidata. Solo puede fallar en tablas con llave compuesta.
+  \item \textbf{Tercera forma normal (3FN).} Está en 2FN y, para toda dependencia no trivial $X \rightarrow A$, $X$ es superllave o $A$ es primo. Dicho de otro modo: ningún atributo no primo depende de otro atributo no primo.
+  \item \textbf{Forma normal de Boyce-Codd (FNBC).} Para toda dependencia no trivial $X \rightarrow A$, $X$ es superllave.
+\end{reglas}
+
+Dos precisiones sobre cómo se aplican. La primera: las dependencias se definen entre valores, y un nulo no es un valor. Un atributo que solo aplica a un subtipo —el correo, que no tiene el invitado; la fecha de fin, que no tiene una sanción permanente— queda nulo en las filas del otro subtipo, y la columna que discrimina el subtipo no depende de él: es al revés, el discriminador decide si el atributo aplica, y una restricción \at{CHECK} mantiene los dos coherentes. La segunda: la 3FN se refiere a las dependencias dentro de una misma tabla. Un dato que puede calcularse a partir de otras tablas, como un saldo que es la suma de unos movimientos, no viola la 3FN, pero sí es una redundancia, y el modelo solo la admite si está justificada y controlada.
+
+\subsubsection*{Tablas de partida}
+\addcontentsline{toc}{subsubsection}{Tablas de partida}
+
+La transformación parte de las tablas que resultan de traducir el diagrama entidad-relación tal como se dibujó: una tabla por entidad, una por cada relación de muchos a muchos, y las relaciones de uno a muchos como llaves foráneas. La llave primaria va subrayada.
+
+{\raggedright\setlength{\parskip}{3pt}
+\noindent\hangindent=1.5em\hangafter=1 \textit{Usuario}(\underline{\at{id\_usuario}}, \at{nickname}, \at{correo}, \at{contraseña}, \at{estado\_cuenta}, \at{fecha\_registro}, \at{idioma\_preferido}, \at{region}, \at{nombre\_completo}\{\at{nombre}, \at{apellido\_paterno}, \at{apellido\_materno}\}, \at{fecha\_nacimiento}, \at{edad}, \at{id\_skin\_equipada})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Skin}(\underline{\at{id\_skin}}, \at{nombre\_skin}, \at{tipo}, \at{rareza}, \at{costo})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Posee}(\underline{\at{id\_usuario}, \at{id\_skin}}, \at{fecha\_obtencion})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Estadisticas}(\underline{\at{id\_usuario}}, \at{partidas\_jugadas}, \at{partidas\_ganadas}, \at{partidas\_perdidas}, \at{porcentaje\_victorias}, \at{barreras\_colocadas}, \at{tiempo\_total\_jugado}, \at{puntos\_elo}, \at{racha\_actual})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Partida}(\underline{\at{id\_partida}}, \at{estado\_partida}, \at{fecha\_hora\_inicio}, \at{fecha\_hora\_fin}, \at{duracion}, \at{num\_jugadores})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Participa}(\underline{\at{id\_usuario}, \at{id\_partida}}, \at{resultado}, \at{color\_ficha}, \at{orden\_turno}, \at{barreras\_restantes})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Reporte}(\underline{\at{id\_reporte}}, \at{id\_reportante}, \at{id\_reportado}, \at{id\_partida}, \at{motivo}, \at{descripcion}, \at{fecha\_reporte}, \at{estado\_reporte})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Baneo}(\underline{\at{id\_baneo}}, \at{id\_usuario}, \at{id\_reporte}, \at{tipo\_baneo}, \at{fecha\_inicio}, \at{fecha\_fin}, \at{activo}, \at{num\_reportes})\par
+}
+
+\subsubsection*{Paso a primera forma normal}
+\addcontentsline{toc}{subsubsection}{Paso a primera forma normal}
+
+\begin{center}\small
+\begin{longtable}{|L{0.25\textwidth}|L{0.30\textwidth}|L{0.35\textwidth}|}
+\hline
+\textbf{Problema} & \textbf{Dónde} & \textbf{Transformación} \\ \hline
+\endfirsthead
+\hline
+\textbf{Problema} & \textbf{Dónde} & \textbf{Transformación} \\ \hline
+\endhead
+Atributo compuesto & \at{nombre\_completo} de \textit{Usuario}, formado por nombre y dos apellidos & Se descompone en atributos atómicos. Después, la \mbox{D-06} elimina los tres, porque ningún flujo los usa. \\ \hline
+Grupo repetido de ranuras & \at{id\_skin\_equipada} de \textit{Usuario} solo guarda un objeto; con seis ranuras harían falta seis columnas (\at{id\_peon}, \at{id\_muro}, \dots) del mismo tipo & Se separa en \textit{Equipamiento}(\underline{\at{id\_usuario}, \at{id\_ranura}}, \at{id\_objeto}), una fila por ranura. Añadir una ranura es insertar una fila en el catálogo, no alterar \textit{Usuario} (\mbox{CU-14}). \\ \hline
+Grupo repetido de modos & \textit{Estadisticas} tiene una sola fila por usuario; con elo por modo harían falta \at{puntos\_elo\_clasico}, \at{puntos\_elo\_rapida}, \dots\ para cada contador & Se separa en \textit{EstadisticaModo}(\underline{\at{id\_usuario}, \at{id\_modo}}, \dots) y el catálogo \textit{Modo} (\mbox{D-04}). \\ \hline
+Lista dentro de un atributo & Guardar las jugadas de una partida, o sus muros, como un texto con la secuencia & Cada jugada es una fila de \textit{Jugada}(\underline{\at{id\_partida}, \at{numero\_jugada}}, \dots). Los muros son jugadas de tipo \at{MURO} y no tienen tabla propia (\mbox{CU-21}). \\ \hline
+Credencial no atómica & \at{contraseña} guardaría a la vez el algoritmo, la sal y el resumen & Se separa en \at{contrasena\_hash} y \at{contrasena\_sal}. \\ \hline
+\end{longtable}
+\end{center}
+
+\subsubsection*{Paso a segunda forma normal}
+\addcontentsline{toc}{subsubsection}{Paso a segunda forma normal}
+
+Las tablas del diagrama con llave compuesta, \textit{Posee} y \textit{Participa}, ya cumplen la 2FN: \at{fecha\_obtencion} depende del par usuario–skin, y resultado, color, turno y muros dependen del par usuario–partida. El riesgo aparece en las tablas compuestas que añade el modelo, donde es tentador copiar datos de uno de los dos lados. La tabla muestra los atributos que habrían violado la 2FN y en qué tabla quedaron.
+
+\begin{center}\small
+\begin{longtable}{|L{0.22\textwidth}|L{0.33\textwidth}|L{0.35\textwidth}|}
+\hline
+\textbf{Tabla} & \textbf{Dependencia parcial evitada} & \textbf{Dónde vive el dato} \\ \hline
+\endfirsthead
+\hline
+\textbf{Tabla} & \textbf{Dependencia parcial evitada} & \textbf{Dónde vive el dato} \\ \hline
+\endhead
+\textit{EstadisticaModo} & \at{id\_modo} $\rightarrow$ \at{tamano\_tablero}, \at{num\_jugadores}; \at{id\_usuario} $\rightarrow$ \at{nickname} & En \textit{Modo} y en \textit{Usuario}. El ranking los obtiene por las llaves foráneas. \\ \hline
+\textit{Participacion} & \at{id\_partida} $\rightarrow$ \at{id\_modo}, \at{minutos\_reloj}; \at{id\_usuario} $\rightarrow$ \at{permite\_espectadores} & En \textit{Partida} y en \textit{Usuario}. \\ \hline
+\textit{Jugada} & \at{id\_partida} $\rightarrow$ \at{estado}, \at{turno\_actual} & En \textit{Partida}. La jugada solo guarda lo que ocurrió en ella. \\ \hline
+\textit{UsuarioObjeto} & \at{id\_objeto} $\rightarrow$ \at{nombre}, \at{rareza}, \at{precio} & En \textit{ObjetoCosmetico}. El precio pagado queda en \textit{MovimientoMoneda}, que registra el hecho. \\ \hline
+\textit{TipoCajaObjeto} & \at{id\_tipo\_caja} $\rightarrow$ \at{precio} & En \textit{TipoCaja}. \\ \hline
+\textit{ProgresoTutorial} & \at{id\_leccion} $\rightarrow$ \at{num\_pasos} & En \textit{Leccion}. \\ \hline
+\textit{CajaContenido} & \at{id\_caja} $\rightarrow$ \at{id\_usuario}, \at{id\_tipo\_caja} & En \textit{Caja}. \\ \hline
+\end{longtable}
+\end{center}
+
+\subsubsection*{Paso a tercera forma normal}
+\addcontentsline{toc}{subsubsection}{Paso a tercera forma normal}
+
+La tabla recoge las dependencias transitivas encontradas —un atributo no primo que depende de otro atributo no primo— y los datos derivados que las acompañaban, y cómo se resolvió cada uno. Los del diagrama se eliminan; los que aparecen en el análisis CRUD se convierten en columnas calculadas, para no cambiar el vocabulario de los casos de uso.
+
+\begin{center}\small
+\begin{longtable}{|L{0.18\textwidth}|L{0.34\textwidth}|L{0.38\textwidth}|}
+\hline
+\textbf{Tabla} & \textbf{Dependencia o dato derivado} & \textbf{Transformación} \\ \hline
+\endfirsthead
+\hline
+\textbf{Tabla} & \textbf{Dependencia o dato derivado} & \textbf{Transformación} \\ \hline
+\endhead
+\textit{Partida} & \at{id\_partida} $\rightarrow$ \at{id\_modo} $\rightarrow$ \at{num\_jugadores} & \at{num\_jugadores}, \at{tamano\_tablero} y \at{muros\_por\_jugador} pasan a \textit{Modo}. \\ \hline
+\textit{Partida} & (\at{fecha\_inicio}, \at{fecha\_fin}) $\rightarrow$ \at{duracion} & Se elimina \at{duracion}; se calcula al consultar (\mbox{CU-36} \mbox{RN-02}). \\ \hline
+\textit{Usuario} & \at{fecha\_nacimiento} $\rightarrow$ \at{edad} & Se elimina \at{edad}; guardarla obligaría a actualizarla en cada cumpleaños (\mbox{CU-02}). \\ \hline
+\textit{Estadisticas} & (\at{partidas\_ganadas}, \at{partidas\_jugadas}) $\rightarrow$ \at{porcentaje\_victorias} & Se elimina; se calcula al mostrar el perfil (\mbox{CU-15} \mbox{RN-01}). \\ \hline
+\textit{Skin} & \at{id\_skin} $\rightarrow$ \at{tipo} $\rightarrow$ datos del tipo & El tipo pasa a ser la entidad \textit{Ranura}; \textit{ObjetoCosmetico} guarda solo \at{id\_ranura}. \\ \hline
+\textit{Reporte} & \at{id\_reporte} $\rightarrow$ motivo elegido $\rightarrow$ descripción del motivo & El motivo pasa al catálogo \textit{MotivoReporte}; el reporte guarda \at{id\_motivo}. La descripción libre del denunciante sigue en \at{descripcion}. \\ \hline
+\textit{Baneo} & \at{num\_reportes} es un conteo de los \textit{Reporte} del usuario; \at{activo} se deduce de \at{fecha\_fin} y la fecha actual & Se eliminan los dos. En \textit{Sancion}, el retiro manual se registra en \at{fecha\_retiro}. \\ \hline
+\textit{Participacion} & (\at{elo\_inicial}, \at{elo\_final}) $\rightarrow$ \at{diferencia\_elo} & \at{diferencia\_elo} pasa a columna calculada. \\ \hline
+\textit{Sancion} & \at{fecha\_retiro} $\rightarrow$ \at{activa} & \at{activa} pasa a columna calculada: vale verdadero cuando \at{fecha\_retiro} es nula. \\ \hline
+\textit{ProgresoTutorial} & \at{fecha\_completada} $\rightarrow$ \at{completada} & \at{completada} pasa a columna calculada. \\ \hline
+\textit{CajaContenido} & \at{monedas\_conversion} $\rightarrow$ \at{convertido} & \at{convertido} pasa a columna calculada. \\ \hline
+\textit{CodigoSegundo\-Factor} & Dos indicadores, consumido e invalidado, que nunca pueden ser verdaderos a la vez & Se sustituyen por un solo \at{estado}. Lo mismo en \textit{TokenVerificacionCorreo} y \textit{TokenRecuperacion}, cuyo indicador \at{usado} no distinguía un token usado de uno invalidado. \\ \hline
+\textit{TokenVerificacion\-Correo} & En los tokens de alta, \at{id\_usuario} $\rightarrow$ \at{correo} de \textit{Usuario} $=$ \at{correo\_destino} & \at{correo\_destino} solo se guarda en los cambios de correo; en el alta es nulo. \\ \hline
+\end{longtable}
+\end{center}
+
+\subsubsection*{Atributos que parecen derivados y no lo son}
+\addcontentsline{toc}{subsubsection}{Atributos que parecen derivados y no lo son}
+
+Hay atributos que a primera vista se calculan a partir de otros de la misma fila, pero no forman una dependencia funcional, porque dos filas con los mismos valores de origen pueden tener valores distintos. Se conservan:
+
+\begin{reglas}
+  \item \textbf{\at{nivel} y \at{experiencia} en \textit{Usuario}.} El nivel se sube al cruzar un umbral de experiencia, pero al subir se otorgan recompensas, y se otorgan una sola vez (\mbox{CU-25} \mbox{FA-03}). \at{nivel} registra hasta qué nivel se pagaron recompensas, que es un hecho: si los umbrales se ajustan, dos jugadores con la misma experiencia pueden tener niveles distintos, y ninguno debe perder un nivel ya alcanzado.
+  \item \textbf{\at{id\_division} y \at{puntos\_elo} en \textit{EstadisticaModo}.} La división no es función del elo: el umbral de descenso está por debajo del de ascenso y hay partidas de margen (\mbox{CU-25} \mbox{RN-07}), así que dos jugadores con el mismo elo pueden estar en divisiones distintas. Es la misma razón por la que existe \textit{HistorialDivision} (\mbox{CU-15}).
+  \item \textbf{\at{bloqueada\_hasta} en \textit{Usuario}.} Se calcula con la política de bloqueo escalonado vigente en el momento del intento (\mbox{CU-01} \mbox{RN-03}). Si la política cambia, los bloqueos ya impuestos no cambian.
+  \item \textbf{Valores fijados en un momento.} \at{elo} en \textit{ColaEmparejamiento}, \at{elo\_inicial} en \textit{Participacion}, las filas de \textit{ParticipacionObjeto} y \at{fecha\_caducidad} en \textit{Caja} copian un valor en el instante en que ocurre algo. Después de ese instante el origen puede cambiar y la copia no debe seguirlo: son hechos, no duplicados.
+  \item \textbf{Discriminadores.} \at{tipo\_cuenta} en \textit{Usuario}, \at{tipo} en \textit{Partida}, \textit{Sancion}, \textit{Jugada} y \textit{MovimientoMoneda}, \at{canal} en \textit{Mensaje} y \at{proposito} en \textit{TokenVerificacionCorreo} deciden qué atributos opcionales aplican. Como se explicó en el criterio, no dependen de esos atributos; una restricción \at{CHECK} en cada tabla impide las combinaciones incoherentes.
+\end{reglas}
+
+\subsubsection*{Redundancias controladas}
+\addcontentsline{toc}{subsubsection}{Redundancias controladas}
+
+Estos datos pueden obtenerse de otras tablas. No violan la 3FN, porque la dependencia no está dentro de la tabla, pero son redundancias y cada una tiene un motivo y un control. El control común es que un solo caso de uso escribe el dato, en la misma transacción que el dato del que se deriva.
+
+\begin{center}\small
+\begin{longtable}{|L{0.19\textwidth}|L{0.20\textwidth}|L{0.24\textwidth}|L{0.25\textwidth}|}
+\hline
+\textbf{Dato} & \textbf{Se obtiene de} & \textbf{Por qué se guarda} & \textbf{Cómo se controla} \\ \hline
+\endfirsthead
+\hline
+\textbf{Dato} & \textbf{Se obtiene de} & \textbf{Por qué se guarda} & \textbf{Cómo se controla} \\ \hline
+\endhead
+\at{saldo\_monedas} de \textit{Usuario} & La suma de los \textit{MovimientoMoneda} del usuario & Se muestra en la tienda, en la personalización y en cada compra; sumar el historial en cada una es caro & Todo caso que mueve monedas escribe el movimiento y el saldo en la misma transacción, y el \mbox{CU-40} comprueba que coincidan cada vez que se consulta; si discrepan, manda la suma (\mbox{CU-40} \mbox{RN-02}). \\ \hline
+Contadores, \at{puntos\_elo} y \at{elo\_maximo} de \textit{EstadisticaModo} & Las \textit{Participacion} terminadas del usuario en el modo y sus \textit{Jugada} & El ranking ordena a todos los jugadores de un modo por elo; con el dato guardado basta un índice & Solo los escribe el cierre de la partida (\mbox{CU-25}), en la misma transacción que los resultados (\mbox{CU-25} \mbox{RN-12}); \at{abandonos}, el \mbox{CU-24}. \\ \hline
+\at{id\_division} y \at{fecha\_elo} de \textit{EstadisticaModo} & El último \textit{HistorialDivision} y la fecha de fin de la última partida clasificatoria & La vista por divisiones y el desempate del ranking (\mbox{CU-35} \mbox{RN-06}) & Los escribe el \mbox{CU-25} junto con el \textit{HistorialDivision} y el elo. \\ \hline
+\at{id\_ganador} de \textit{Partida} & El \at{resultado} de sus \textit{Participacion} & El resultado de la partida se lee sin recorrer a los participantes & Lo escribe el \mbox{CU-25} con los resultados; la llave foránea compuesta impide que el ganador no sea participante. \\ \hline
+\at{casilla\_actual} y \at{muros\_restantes} de \textit{Participacion}; \at{turno\_actual} de \textit{Partida} & Las \textit{Jugada} de la partida, aplicadas en orden & Son el estado vivo de la partida, que se consulta en cada jugada y en cada reconexión & La jugada, la participación y el turno se escriben en una sola transacción (\mbox{CU-20} \mbox{RN-12}, \mbox{CU-21} \mbox{RN-12}). \\ \hline
+\at{activo} de \textit{EnlaceEspectador} & El \at{estado} de su \textit{Partida} & El enlace se abre desde fuera del juego y se valida sin consultar la partida & Lo desactiva el \mbox{CU-25} al cerrar la partida. \\ \hline
+\end{longtable}
+\end{center}
+
+\subsubsection*{Verificación tabla por tabla}
+\addcontentsline{toc}{subsubsection}{Verificación tabla por tabla}
+
+Con las transformaciones anteriores, cada tabla tiene sus atributos no primos dependiendo de la llave completa y de nada más. La tabla indica, para cada una, sus llaves candidatas, la forma normal más alta que alcanza y lo que la justifica.
+
+\input{bd/tex/normalizacion}
+
+\textbf{Por qué \textit{Equipamiento} y \textit{ParticipacionObjeto} se quedan en 3FN.} En las dos se cumple \at{id\_objeto} $\rightarrow$ \at{id\_ranura}, porque cada objeto pertenece a una sola ranura, e \at{id\_objeto} no es superllave. Como \at{id\_ranura} forma parte de la llave, la dependencia está permitida en 3FN, pero no en FNBC. Llevarlas a FNBC exigiría quitar \at{id\_ranura}, y con él la llave (\at{id\_usuario}, \at{id\_ranura}), que es justo lo que garantiza un solo objeto por ranura (\mbox{CU-14} \mbox{RN-01}): la regla dejaría de poder declararse en la base y pasaría a depender del código. Se prefiere la 3FN, que conserva la regla, y la redundancia que queda está controlada por la llave foránea compuesta hacia \textit{ObjetoCosmetico}, que impide que \at{id\_ranura} contradiga al objeto.
+
+%---------------------------------------------------------------------
+\subsection*{Usuario de conexión del servidor}
+\addcontentsline{toc}{subsection}{Usuario de conexión del servidor}
+
+El Servidor de partidas es el único que se conecta a la base de datos: el cliente de escritorio habla con el servidor y nunca con la base. El servidor se conecta con un usuario propio, \at{BastionServerConnection}, que solo puede hacer lo que los casos de uso necesitan: leer, insertar, modificar y ejecutar procedimientos almacenados, en toda la base de datos.
+
+\begin{lstlisting}[style=sql]
+USE master;
+GO
+IF SUSER_ID(N'BastionServerConnection') IS NULL
+    CREATE LOGIN BastionServerConnection
+        WITH PASSWORD = N'B4sT10nCONnecti0n',
+             DEFAULT_DATABASE = Bastion,
+             CHECK_POLICY = ON,
+             CHECK_EXPIRATION = OFF;
+GO
+
+USE Bastion;
+GO
+IF USER_ID(N'BastionServerConnection') IS NULL
+    CREATE USER BastionServerConnection
+        FOR LOGIN BastionServerConnection
+        WITH DEFAULT_SCHEMA = dbo;
+GO
+
+GRANT SELECT, INSERT, UPDATE, EXECUTE
+    ON DATABASE::Bastion TO BastionServerConnection;
+GO
+\end{lstlisting}
+
+El inicio de sesión se crea en el servidor de SQL Server y el usuario, dentro de la base \at{Bastion}. Los permisos se conceden con alcance de base de datos (\at{ON DATABASE::Bastion}), así que alcanzan a todas las tablas, vistas y procedimientos de todos los esquemas, incluidos los que se creen después, sin tener que concederlos objeto por objeto. No se usan los roles fijos \at{db\_datareader} y \at{db\_datawriter}: el segundo incluye \at{DELETE}, que este usuario no debe tener.
+
+\begin{center}\small
+\begin{longtable}{|L{0.30\textwidth}|L{0.12\textwidth}|L{0.48\textwidth}|}
+\hline
+\textbf{Operación} & \textbf{Permitida} & \textbf{Motivo} \\ \hline
+\endfirsthead
+\hline
+\textbf{Operación} & \textbf{Permitida} & \textbf{Motivo} \\ \hline
+\endhead
+Leer (\at{SELECT}) & Sí & Todas las consultas de los casos de uso. \\ \hline
+Insertar (\at{INSERT}) & Sí & Altas, jugadas, mensajes, movimientos, bitácoras. \\ \hline
+Modificar (\at{UPDATE}) & Sí & Cambios de estado: la baja lógica, los cierres, las resoluciones. \\ \hline
+Ejecutar procedimientos (\at{EXECUTE}) & Sí & Las eliminaciones físicas y las operaciones compuestas que se describen abajo. \\ \hline
+Eliminar (\at{DELETE}) & No & Casi nada se borra en este sistema (\mbox{D-07}); lo poco que se borra pasa por procedimientos. Un error o una inyección en el servidor no puede borrar filas directamente. \\ \hline
+Crear, alterar o eliminar objetos & No & El esquema se cambia con el script, no desde la aplicación. \\ \hline
+Conceder permisos o administrar & No & El usuario no pertenece a \at{db\_owner} ni a ningún rol de administración. \\ \hline
+\end{longtable}
+\end{center}
+
+\textbf{Cómo se borra sin permiso de borrar.} Los casos de uso eliminan físicamente siete tipos de fila: la entrada en la cola, la plaza en una sala, la solicitud respondida, la amistad terminada, el silencio y el bloqueo retirados y el enlace quitado del perfil. Para cada uno, el script crea un procedimiento almacenado —\at{usp\_ColaEmparejamiento\_Salir}, \at{usp\_SalaParticipante\_Salir}, \at{usp\_Solicitud\_Eliminar}, \at{usp\_Amistad\_Eliminar}, \at{usp\_Silencio\_Eliminar}, \at{usp\_Bloqueo\_Eliminar} y \at{usp\_EnlaceRed\_Eliminar}—, y además los que borran como parte de una operación mayor: \at{usp\_Sala\_Cerrar}, \at{usp\_Bloqueo\_Aplicar} (\mbox{CU-33}), \at{usp\_Usuario\_DarDeBaja} (\mbox{CU-11}) y \at{usp\_Usuario\_Anonimizar} (\mbox{D-17}). Los procedimientos y las tablas pertenecen al mismo dueño, \at{dbo}, y en ese caso SQL Server aplica el encadenamiento de propiedad: al ejecutar el procedimiento solo comprueba el permiso \at{EXECUTE} del usuario y no el \at{DELETE} sobre la tabla. El usuario puede borrar lo que un procedimiento borra, en las condiciones que el procedimiento impone, y nada más.
+
+\textbf{Comprobación.} La consulta siguiente, incluida al final del script, lista los permisos del usuario. Debe devolver \at{CONNECT}, que se concede al crear el usuario, y \at{SELECT}, \at{INSERT}, \at{UPDATE} y \at{EXECUTE}, todos con alcance \at{DATABASE} y estado \at{GRANT}.
+
+\begin{lstlisting}[style=sql]
+SELECT pr.name AS usuario, pe.permission_name AS permiso,
+       pe.state_desc AS estado, pe.class_desc AS alcance
+FROM sys.database_permissions AS pe
+JOIN sys.database_principals  AS pr
+     ON pr.principal_id = pe.grantee_principal_id
+WHERE pr.name = N'BastionServerConnection'
+ORDER BY pe.permission_name;
+\end{lstlisting}
+
+La contraseña cumple la política de complejidad de SQL Server: diecisiete caracteres con mayúsculas, minúsculas y dígitos. \at{CHECK\_EXPIRATION} está desactivado porque es la cuenta de un servicio y su caducidad dejaría al servidor sin base de datos. Como la contraseña aparece en este documento y en el script, la cadena de conexión del servidor debe leerla de su configuración y no del código, y conviene cambiarla al desplegar en un entorno que no sea de desarrollo.
+
+%---------------------------------------------------------------------
+\subsection*{Supuestos del modelo}
+\addcontentsline{toc}{subsection}{Supuestos del modelo}
+
+Los casos de uso no fijan algunos datos que el esquema necesita. Se tomaron estos supuestos, que conviene confirmar igual que las decisiones \mbox{D-02} a \mbox{D-20}:
+
+\begin{reglas}
+  \item \textbf{Rarezas.} \at{COMUN}, \at{RARO}, \at{EPICO} y \at{LEGENDARIO}. Los casos solo mencionan el objeto raro de la garantía (\mbox{CU-39} \mbox{RN-05}), que se interpreta como raro o superior.
+  \item \textbf{Resultado de una participación.} \at{VICTORIA}, \at{DERROTA} o \at{EMPATE}; las tablas son empate (\mbox{CU-25} \mbox{FA-05}).
+  \item \textbf{Divisiones.} Un solo catálogo de divisiones para todos los modos. Si cada modo necesitara umbrales propios, \textit{Division} ganaría \at{id\_modo}.
+  \item \textbf{Umbrales y recompensas de nivel.} Ningún caso de uso los escribe ni los consulta como datos, así que se tratan como parámetros del servidor, igual que la fórmula del elo. Si se quisieran editar sin publicar una versión del servidor, harían falta un catálogo de niveles y otro de recompensas.
+  \item \textbf{Invitados caducados.} El \mbox{CU-06} \mbox{RN-10} dice que un invitado inactivo ``se marca como caducado'', pero ningún caso define esa marca. Se propone reutilizar la baja lógica: \at{estado\_cuenta} = \at{ELIMINADA} con su \at{fecha\_baja}, y la anonimización a los catorce días.
+  \item \textbf{Largo máximo del chat.} 500 caracteres (\mbox{CU-28} \mbox{RN-03} habla de un largo máximo sin fijarlo). Descripciones de reporte, motivos de sanción y notas de resolución, entre 500 y 1\,000.
+  \item \textbf{Fecha de clasificación.} \textit{Participacion} guarda \at{fecha\_clasificacion}, que el análisis CRUD no nombra, porque el \mbox{CU-20} \mbox{FA-08} marca al jugador clasificado ``con su posición y la fecha''.
+  \item \textbf{Actividad de la sala.} \textit{Sala} guarda \at{fecha\_ultima\_actividad}, que tampoco nombra el análisis CRUD, porque sin ella no puede aplicarse el cierre por inactividad del \mbox{CU-18} \mbox{RN-08}.
+\end{reglas}

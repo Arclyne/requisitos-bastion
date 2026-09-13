@@ -9,7 +9,7 @@ Se anotan aquí porque cambian casos de uso ya escritos y deben respetarse al re
 \flujoTitulo{\mbox{D-01}. Varias sesiones por cuenta, una sola partida a la vez}
 \textbf{Se elimina la \mbox{RN-06} del \mbox{CU-01}.} Una cuenta puede tener abiertas todas las sesiones que quiera, en dispositivos distintos. Lo que no puede duplicarse es la participación en una partida: si un jugador intenta entrar a una partida mientras tiene otra sin terminar, el sistema \textbf{lo impide y se lo dice}.
 
-Motivo: la restricción existía para que dos clientes no mandaran jugadas en nombre del mismo jugador, pero eso se resuelve en la partida, no en el inicio de sesión. Atarlo al login obligaba además a cerrar la sesión del otro dispositivo para poder entrar, que es fricción sin ganancia.
+\textbf{Motivo:} la restricción existía para que dos clientes no mandaran jugadas en nombre del mismo jugador, pero eso se resuelve en la partida, no en el inicio de sesión. Atarlo al login obligaba además a cerrar la sesión del otro dispositivo para poder entrar, que es fricción sin ganancia.
 
 Consecuencias, por caso de uso:
 

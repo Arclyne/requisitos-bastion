@@ -114,14 +114,14 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre la restricción del par ordenado.}\par
     Guardar la amistad dos veces, una en cada sentido, haría más sencillas algunas consultas, pero duplicaría cada amistad y abriría la puerta a que exista en un sentido y no en el otro. Guardarla una sola vez con el par ordenado exige, a cambio, que las consultas busquen al jugador en cualquiera de las dos columnas. Es un costo pequeño y fijo a cambio de que la base de datos, y no la aplicación, garantice que la amistad es recíproca.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 2)}
-      \item \textit{Solicitud}: lee las entrantes y enviadas \textit{(pasos 3, 8)}
-      \item \textit{Solicitud}: elimina \textit{(pasos 11, \mbox{FA-02}, \mbox{FA-03}, \mbox{FA-04})}
-      \item \textit{Usuario}: lee \texttt{nickname} e \texttt{id\_\allowbreak{}icono} de cada jugador \textit{(paso 4)}
-      \item \textit{EstadisticaModo}: lee el elo del modo clásico \textit{(paso 4)}
-      \item \textit{Amistad}: lee, para contar el límite \textit{(paso 9)}
-      \item \textit{Amistad}: crea \textit{(paso 11)}
-      \item \textit{Bloqueo}: lee \textit{(paso 10)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 2)}
+      \item \textbf{\textit{Solicitud}:} lee las entrantes y enviadas \textit{(pasos 3, 8)}
+      \item \textbf{\textit{Solicitud}:} elimina \textit{(pasos 11, \mbox{FA-02}, \mbox{FA-03}, \mbox{FA-04})}
+      \item \textbf{\textit{Usuario}:} lee \texttt{nickname} e \texttt{id\_\allowbreak{}icono} de cada jugador \textit{(paso 4)}
+      \item \textbf{\textit{EstadisticaModo}:} lee el elo del modo clásico \textit{(paso 4)}
+      \item \textbf{\textit{Amistad}:} lee, para contar el límite \textit{(paso 9)}
+      \item \textbf{\textit{Amistad}:} crea \textit{(paso 11)}
+      \item \textbf{\textit{Bloqueo}:} lee \textit{(paso 10)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

@@ -154,19 +154,19 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué se anonimiza en lugar de eliminar.}\par
     Eliminar físicamente la fila de \textit{Usuario} arrastraría por clave foránea sus participaciones, sus jugadas y sus mensajes, que son también el historial, las repeticiones y las pruebas de reportes de otros jugadores. Poner esas claves en nulo evitaría el arrastre, pero dejaría partidas con un participante inexistente. Anonimizar conserva la integridad referencial y cumple el propósito de la baja: que ya no quede nada que identifique a la persona.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token; cierra todas \textit{(pasos 8, 17)}
-      \item \textit{Usuario}: lee \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{rol} \textit{(pasos 9, 11)}
-      \item \textit{Usuario}: escribe \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}baja}; en el \mbox{FA-08} anonimiza \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal} \textit{(pasos 13, \mbox{FA-08})}
-      \item \textit{Participacion}: lee, para comprobar que no haya partida en curso \textit{(paso 10)}
-      \item \textit{ColaEmparejamiento}, \textit{SalaParticipante}: elimina la del usuario \textit{(paso 14)}
-      \item \textit{Solicitud}: elimina las pendientes \textit{(paso 15)}
-      \item \textit{Invitacion}: marca como expiradas las pendientes \textit{(paso 15)}
-      \item \textit{Reporte}: devuelve a \texttt{PENDIENTE} los que tenía en revisión \textit{(paso 16)}
+      \item \textbf{\textit{Sesion}:} lee por token; cierra todas \textit{(pasos 8, 17)}
+      \item \textbf{\textit{Usuario}:} lee \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{rol} \textit{(pasos 9, 11)}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}baja}; en el \mbox{FA-08} anonimiza \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal} \textit{(pasos 13, \mbox{FA-08})}
+      \item \textbf{\textit{Participacion}:} lee, para comprobar que no haya partida en curso \textit{(paso 10)}
+      \item \textbf{\textit{ColaEmparejamiento}, \textit{SalaParticipante}:} elimina la del usuario \textit{(paso 14)}
+      \item \textbf{\textit{Solicitud}:} elimina las pendientes \textit{(paso 15)}
+      \item \textbf{\textit{Invitacion}:} marca como expiradas las pendientes \textit{(paso 15)}
+      \item \textbf{\textit{Reporte}:} devuelve a \texttt{PENDIENTE} los que tenía en revisión \textit{(paso 16)}
     \end{cudatos}} \\
    & \cuCelda{\begin{cudatos}
-      \item \textit{EnlaceRed}, \textit{HistorialNickname}, \textit{Amistad}, \textit{Silencio}, \textit{Bloqueo}: elimina, en el \mbox{FA-08} \textit{(paso \mbox{FA-08})}
-      \item \textit{Avatar}: invalida, en el \mbox{FA-08} \textit{(paso \mbox{FA-08})}
-      \item \textit{BitacoraAcceso}: inserta \textit{(pasos 19, \mbox{FA-08})}
+      \item \textbf{\textit{EnlaceRed}, \textit{Amistad}, \textit{Silencio}, \textit{Bloqueo}:} elimina, en el \mbox{FA-08} \textit{(paso \mbox{FA-08})}
+      \item \textbf{\textit{Avatar}:} invalida, en el \mbox{FA-08} \textit{(paso \mbox{FA-08})}
+      \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(pasos 19, \mbox{FA-08})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

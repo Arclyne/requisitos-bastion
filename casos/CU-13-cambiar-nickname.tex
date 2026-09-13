@@ -141,12 +141,12 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué el nombre se guarda en el Usuario y el historial aparte.}\par
     La alternativa era no tener \texttt{nickname} en \textit{Usuario} y leer siempre el último \textit{HistorialNickname}. Se descartó porque el nombre se consulta en casi todas las pantallas —ranking, amigos, chat, partida— y obligar a una consulta adicional en cada una encarece lo frecuente para abaratar lo excepcional. El \texttt{nickname} vive en \textit{Usuario}, que es donde se lee, y \textit{HistorialNickname} guarda solo lo que ya no está.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 8)}
-      \item \textit{HistorialNickname}: lee, para comprobar que no se haya gastado \textit{(paso 9)}
-      \item \textit{HistorialNickname}: crea \textit{(paso 14)}
-      \item \textit{Usuario}: lee \texttt{nickname} de otros, para comprobar unicidad \textit{(paso 12)}
-      \item \textit{Usuario}: escribe \texttt{nickname} \textit{(paso 15)}
-      \item \textit{PalabraProhibida}: lee el catálogo con ámbito de nickname \textit{(paso 11)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 8)}
+      \item \textbf{\textit{HistorialNickname}:} lee, para comprobar que no se haya gastado \textit{(paso 9)}
+      \item \textbf{\textit{HistorialNickname}:} crea \textit{(paso 14)}
+      \item \textbf{\textit{Usuario}:} lee \texttt{nickname} de otros, para comprobar unicidad \textit{(paso 12)}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{nickname} \textit{(paso 15)}
+      \item \textbf{\textit{PalabraProhibida}:} lee el catálogo con ámbito de nickname \textit{(paso 11)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

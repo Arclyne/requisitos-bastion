@@ -1,0 +1,58 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/bastion.sql. No editar a mano.
+\begin{center}\small
+\begin{longtable}{|L{0.21\textwidth}|L{0.28\textwidth}|L{0.18\textwidth}|L{0.21\textwidth}|}
+\hline
+\textbf{Entidad} & \textbf{Llave primaria} & \textbf{Clase} & \textbf{Otras llaves candidatas} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad} & \textbf{Llave primaria} & \textbf{Clase} & \textbf{Otras llaves candidatas} \\ \hline
+\endhead
+\textit{Ranura} & (\texttt{id\_\allowbreak{}ranura}) & Simple, asignada en la carga & (\texttt{nombre}) \\ \hline
+\textit{Objeto\-Cosmetico} & (\texttt{id\_\allowbreak{}objeto}) & Simple, asignada en la carga & --- \\ \hline
+\textit{Modo} & (\texttt{id\_\allowbreak{}modo}) & Simple, asignada en la carga & (\texttt{nombre}) \\ \hline
+\textit{Division} & (\texttt{id\_\allowbreak{}division}) & Simple, asignada en la carga & (\texttt{nombre}); (\texttt{orden}) \\ \hline
+\textit{Nivel\-IA} & (\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}) & Simple, asignada en la carga & (\texttt{nombre}) \\ \hline
+\textit{Leccion} & (\texttt{id\_\allowbreak{}leccion}) & Simple, asignada en la carga & (\texttt{orden}) \\ \hline
+\textit{Tipo\-Caja} & (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}) & Simple, asignada en la carga & (\texttt{nombre}) \\ \hline
+\textit{Tipo\-Caja\-Objeto} & (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}, \texttt{id\_\allowbreak{}objeto}) & Compuesta & --- \\ \hline
+\textit{Palabra\-Prohibida} & (\texttt{id\_\allowbreak{}palabra}) & Simple, sustituta & (\texttt{termino}, \texttt{idioma}, \texttt{ambito}) \\ \hline
+\textit{Motivo\-Reporte} & (\texttt{id\_\allowbreak{}motivo}) & Simple, asignada en la carga & (\texttt{nombre}) \\ \hline
+\textit{Usuario} & (\texttt{id\_\allowbreak{}usuario}) & Simple, sustituta & (\texttt{nickname}) \\ \hline
+\textit{Sesion} & (\texttt{id\_\allowbreak{}sesion}) & Simple, sustituta & (\texttt{token\_\allowbreak{}hash}) \\ \hline
+\textit{Codigo\-Segundo\-Factor} & (\texttt{id\_\allowbreak{}codigo}) & Simple, sustituta & --- \\ \hline
+\textit{Token\-Verificacion\-Correo} & (\texttt{id\_\allowbreak{}token}) & Simple, sustituta & (\texttt{token\_\allowbreak{}hash}) \\ \hline
+\textit{Token\-Recuperacion} & (\texttt{id\_\allowbreak{}token}) & Simple, sustituta & --- \\ \hline
+\textit{Aceptacion\-Terminos} & (\texttt{id\_\allowbreak{}aceptacion}) & Simple, sustituta & (\texttt{id\_\allowbreak{}usuario}, \texttt{version\_\allowbreak{}terminos}) \\ \hline
+\textit{Historial\-Nickname} & (\texttt{id\_\allowbreak{}usuario}) & Simple, igual a la llave foránea & --- \\ \hline
+\textit{Avatar} & (\texttt{id\_\allowbreak{}avatar}) & Simple, sustituta & --- \\ \hline
+\textit{Enlace\-Red} & (\texttt{id\_\allowbreak{}enlace}) & Simple, sustituta & (\texttt{id\_\allowbreak{}usuario}, \texttt{orden}) \\ \hline
+\textit{Usuario\-Objeto} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & Compuesta & --- \\ \hline
+\textit{Equipamiento} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}ranura}) & Compuesta & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) \\ \hline
+\textit{Partida} & (\texttt{id\_\allowbreak{}partida}) & Simple, sustituta & --- \\ \hline
+\textit{Participacion} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & Compuesta & (\texttt{id\_\allowbreak{}partida}, \texttt{orden\_\allowbreak{}turno}) \\ \hline
+\textit{Participacion\-Objeto} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}ranura}) & Compuesta & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) \\ \hline
+\textit{Jugada} & (\texttt{id\_\allowbreak{}partida}, \texttt{numero\_\allowbreak{}jugada}) & Compuesta & --- \\ \hline
+\textit{Oferta\-Tablas} & (\texttt{id\_\allowbreak{}oferta}) & Simple, sustituta & --- \\ \hline
+\textit{Enlace\-Espectador} & (\texttt{id\_\allowbreak{}enlace}) & Simple, sustituta & (\texttt{token\_\allowbreak{}hash}) \\ \hline
+\textit{Cola\-Emparejamiento} & (\texttt{id\_\allowbreak{}usuario}) & Simple, igual a la llave foránea & --- \\ \hline
+\textit{Sala} & (\texttt{id\_\allowbreak{}sala}) & Simple, sustituta & --- \\ \hline
+\textit{Sala\-Participante} & (\texttt{id\_\allowbreak{}usuario}) & Simple, igual a la llave foránea & (\texttt{id\_\allowbreak{}sala}, \texttt{plaza}) \\ \hline
+\textit{Invitacion} & (\texttt{id\_\allowbreak{}invitacion}) & Simple, sustituta & --- \\ \hline
+\textit{Mensaje} & (\texttt{id\_\allowbreak{}mensaje}) & Simple, sustituta & --- \\ \hline
+\textit{Estadistica\-Modo} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}modo}) & Compuesta & --- \\ \hline
+\textit{Historial\-Division} & (\texttt{id\_\allowbreak{}historial\_\allowbreak{}division}) & Simple, sustituta & --- \\ \hline
+\textit{Caja} & (\texttt{id\_\allowbreak{}caja}) & Simple, sustituta & --- \\ \hline
+\textit{Caja\-Contenido} & (\texttt{id\_\allowbreak{}caja}, \texttt{numero}) & Compuesta & --- \\ \hline
+\textit{Movimiento\-Moneda} & (\texttt{id\_\allowbreak{}movimiento}) & Simple, sustituta & --- \\ \hline
+\textit{Amistad} & (\texttt{id\_\allowbreak{}usuario\_\allowbreak{}a}, \texttt{id\_\allowbreak{}usuario\_\allowbreak{}b}) & Compuesta & --- \\ \hline
+\textit{Solicitud} & (\texttt{id\_\allowbreak{}solicitud}) & Simple, sustituta & (\texttt{id\_\allowbreak{}solicitante}, \texttt{id\_\allowbreak{}destinatario}) \\ \hline
+\textit{Silencio} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}silenciado}) & Compuesta & --- \\ \hline
+\textit{Bloqueo} & (\texttt{id\_\allowbreak{}bloqueador}, \texttt{id\_\allowbreak{}bloqueado}) & Compuesta & --- \\ \hline
+\textit{Progreso\-Tutorial} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}leccion}) & Compuesta & --- \\ \hline
+\textit{Reporte} & (\texttt{id\_\allowbreak{}reporte}) & Simple, sustituta & --- \\ \hline
+\textit{Sancion} & (\texttt{id\_\allowbreak{}sancion}) & Simple, sustituta & --- \\ \hline
+\textit{Apelacion} & (\texttt{id\_\allowbreak{}apelacion}) & Simple, sustituta & (\texttt{id\_\allowbreak{}sancion}) \\ \hline
+\textit{Bitacora\-Moderacion} & (\texttt{id\_\allowbreak{}bitacora}) & Simple, sustituta & --- \\ \hline
+\textit{Bitacora\-Acceso} & (\texttt{id\_\allowbreak{}bitacora}) & Simple, sustituta & --- \\ \hline
+\end{longtable}
+\end{center}

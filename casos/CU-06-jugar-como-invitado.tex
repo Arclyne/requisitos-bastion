@@ -145,17 +145,17 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué el invitado es un Usuario y no otra cosa.}\par
     La alternativa era guardar el progreso del invitado en el dispositivo y volcarlo al servidor al registrarse. Se descartó porque el elo solo tiene sentido si el servidor lo calcula: un progreso que vive en el cliente lo puede editar cualquiera, y entraría en el ranking al vincular la cuenta. Haciendo del invitado un \textit{Usuario} desde el primer momento, vincular la cuenta no mueve ningún dato, solo cambia \texttt{tipo\_\allowbreak{}cuenta} y añade credenciales. El costo es que hay filas de \textit{Usuario} que nunca llegarán a registrarse, y por eso existe el \mbox{RN-10}.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Usuario}: crea con \texttt{tipo\_\allowbreak{}cuenta} en \texttt{INVITADO} \textit{(paso 9)}
-      \item \textit{Usuario}: lee \texttt{nickname}, para comprobar que el provisional esté libre \textit{(paso 7)}
-      \item \textit{Modo}: lee el catálogo completo \textit{(paso 10)}
-      \item \textit{EstadisticaModo}: crea una por modo \textit{(paso 10)}
-      \item \textit{Ranura}, \textit{ObjetoCosmetico}: lee los objetos iniciales \textit{(paso 11)}
-      \item \textit{UsuarioObjeto}: crea una por ranura \textit{(paso 11)}
-      \item \textit{Equipamiento}: crea una por ranura \textit{(paso 12)}
-      \item \textit{Sesion}: crea \textit{(paso 13)}
+      \item \textbf{\textit{Usuario}:} crea con \texttt{tipo\_\allowbreak{}cuenta} en \texttt{INVITADO} \textit{(paso 9)}
+      \item \textbf{\textit{Usuario}:} lee \texttt{nickname}, para comprobar que el provisional esté libre \textit{(paso 7)}
+      \item \textbf{\textit{Modo}:} lee el catálogo completo \textit{(paso 10)}
+      \item \textbf{\textit{EstadisticaModo}:} crea una por modo \textit{(paso 10)}
+      \item \textbf{\textit{Ranura}, \textit{ObjetoCosmetico}:} lee los objetos iniciales \textit{(paso 11)}
+      \item \textbf{\textit{UsuarioObjeto}:} crea una por ranura \textit{(paso 11)}
+      \item \textbf{\textit{Equipamiento}:} crea una por ranura \textit{(paso 12)}
+      \item \textbf{\textit{Sesion}:} crea \textit{(paso 13)}
     \end{cudatos}} \\
    & \cuCelda{\begin{cudatos}
-      \item \textit{BitacoraAcceso}: inserta, y lee para el límite del \mbox{RN-07} \textit{(pasos 6, 15)}
+      \item \textbf{\textit{BitacoraAcceso}:} inserta, y lee para el límite del \mbox{RN-07} \textit{(pasos 6, 15)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

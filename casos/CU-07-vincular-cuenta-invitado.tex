@@ -195,17 +195,17 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre la cuenta de invitado abandonada.}\par
     Si el Invitado llega hasta el paso 24 y nunca verifica su correo, queda una cuenta en \texttt{PENDIENTE} que ya no puede jugar: perdió la sesión de invitado por el \mbox{RN-08} y no puede iniciar sesión por el \mbox{FA-09} del \mbox{CU-01}. Es el mismo estado en que queda cualquier cuenta creada con el \mbox{CU-02} y sin verificar, así que no introduce un caso nuevo, pero conviene tenerlo presente: vincular es el único momento en que un Invitado puede quedarse sin acceso a un progreso que antes tenía. Por eso el paso 1 advierte de forma visible qué se conserva y qué hace falta para recuperarlo.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token, comprueba que sea de invitado \textit{(paso 8)}
-      \item \textit{Sesion}: cierra con \texttt{motivo\_\allowbreak{}cierre} \textit{(paso 23)}
-      \item \textit{Usuario}: lee \texttt{nickname} y \texttt{correo} de otros, para comprobar unicidad \textit{(pasos 11, 12)}
-      \item \textit{Usuario}: actualiza \texttt{tipo\_\allowbreak{}cuenta}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}nacimiento}, \texttt{codigo\_\allowbreak{}amigo}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} \textit{(pasos 16, 21)}
-      \item \textit{PalabraProhibida}: lee el catálogo con ámbito de nickname \textit{(paso 10)}
-      \item \textit{AceptacionTerminos}: crea \textit{(paso 17)}
-      \item \textit{TokenVerificacionCorreo}: crea \textit{(paso 18)}
-      \item \textit{BitacoraAcceso}: inserta \textit{(paso 22)}
+      \item \textbf{\textit{Sesion}:} lee por token, comprueba que sea de invitado \textit{(paso 8)}
+      \item \textbf{\textit{Sesion}:} cierra con \texttt{motivo\_\allowbreak{}cierre} \textit{(paso 23)}
+      \item \textbf{\textit{Usuario}:} lee \texttt{nickname} y \texttt{correo} de otros, para comprobar unicidad \textit{(pasos 11, 12)}
+      \item \textbf{\textit{Usuario}:} actualiza \texttt{tipo\_\allowbreak{}cuenta}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}nacimiento}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} \textit{(pasos 16, 21)}
+      \item \textbf{\textit{PalabraProhibida}:} lee el catálogo con ámbito de nickname \textit{(paso 10)}
+      \item \textbf{\textit{AceptacionTerminos}:} crea \textit{(paso 17)}
+      \item \textbf{\textit{TokenVerificacionCorreo}:} crea \textit{(paso 18)}
+      \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(paso 22)}
     \end{cudatos}} \\
    & \cuCelda{\begin{cudatos}
-      \item \textit{EstadisticaModo}, \textit{UsuarioObjeto}, \textit{Equipamiento}, \textit{Participacion}: \textbf{no se tocan}: conservarlas intactas es el objetivo del caso
+      \item \textbf{\textit{EstadisticaModo}, \textit{UsuarioObjeto}, \textit{Equipamiento}, \textit{Participacion}:} \textbf{no se tocan}: conservarlas intactas es el objetivo del caso
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

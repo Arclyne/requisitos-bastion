@@ -146,13 +146,13 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué Solicitud y Amistad son tablas distintas.}\par
     Se consideró una sola tabla de relación con un estado que pasara de pendiente a aceptada. Se descartó porque la \textit{Amistad} es simétrica y la \textit{Solicitud} no: la solicitud tiene un emisor y un receptor, y esa dirección importa para pintar las dos pestañas y para el \mbox{RN-04}. Fundirlas obligaría a llevar la dirección en una fila que después deja de tenerla, y a distinguir en cada consulta si la fila significa ``quiere'' o ``son''. Con dos tablas, aceptar es borrar de una y escribir en la otra, y consultar la lista de amigos no tiene que filtrar por estado.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 4)}
-      \item \textit{Usuario}: lee por \texttt{nickname} o \texttt{codigo\_\allowbreak{}amigo} \textit{(paso 5)}
-      \item \textit{Bloqueo}: lee, para descartar resultados y rechazar el envío \textit{(pasos 6, 15)}
-      \item \textit{Amistad}: lee, para comprobar que no exista y contar el límite \textit{(pasos 12, 14)}
-      \item \textit{Solicitud}: lee, para comprobar que no haya pendientes \textit{(paso 13)}
-      \item \textit{Solicitud}: crea \textit{(paso 16)}
-      \item \textit{Participacion}: lee, para armar las sugerencias \textit{(paso 1)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 4)}
+      \item \textbf{\textit{Usuario}:} lee por \texttt{nickname} o \texttt{codigo\_\allowbreak{}amigo} \textit{(paso 5)}
+      \item \textbf{\textit{Bloqueo}:} lee, para descartar resultados y rechazar el envío \textit{(pasos 6, 15)}
+      \item \textbf{\textit{Amistad}:} lee, para comprobar que no exista y contar el límite \textit{(pasos 12, 14)}
+      \item \textbf{\textit{Solicitud}:} lee, para comprobar que no haya pendientes \textit{(paso 13)}
+      \item \textbf{\textit{Solicitud}:} crea \textit{(paso 16)}
+      \item \textbf{\textit{Participacion}:} lee, para armar las sugerencias \textit{(paso 1)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

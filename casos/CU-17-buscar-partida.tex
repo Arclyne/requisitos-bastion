@@ -157,18 +157,18 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué la cola es una tabla.}\par
     Se consideró mantener la cola de emparejamiento solo en memoria del servidor, que es más rápido y evita escribir filas de vida muy corta. Se conserva como \textit{ColaEmparejamiento} en la base por una razón concreta: si el servidor se reinicia con gente esperando, una cola en memoria los deja colgados sin que nadie sepa que estaban ahí, y el cliente seguiría mostrando el panel de búsqueda para siempre. Con la cola persistida, el reinicio puede vaciarla explícitamente y avisar. El costo es un insert y un delete por búsqueda, que es despreciable frente al de la partida que viene después.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 4)}
-      \item \textit{Participacion}: lee, para comprobar que no haya ninguna sin terminar \textit{(paso 5)}
-      \item \textit{Sancion}: lee las activas de ámbito de cuenta \textit{(paso 6)}
-      \item \textit{EstadisticaModo}: lee \texttt{puntos\_\allowbreak{}elo} del modo elegido \textit{(paso 7)}
-      \item \textit{Modo}: lee el catálogo y los parámetros del modo \textit{(pasos 1, 15)}
-      \item \textit{ColaEmparejamiento}: inserta, consulta y borra \textit{(pasos 8, 11, 17)}
-      \item \textit{Bloqueo}: lee, para descartar emparejamientos \textit{(paso 12)}
-      \item \textit{Partida}: crea \textit{(paso 15)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 4)}
+      \item \textbf{\textit{Participacion}:} lee, para comprobar que no haya ninguna sin terminar \textit{(paso 5)}
+      \item \textbf{\textit{Sancion}:} lee las activas de ámbito de cuenta \textit{(paso 6)}
+      \item \textbf{\textit{EstadisticaModo}:} lee \texttt{puntos\_\allowbreak{}elo} del modo elegido \textit{(paso 7)}
+      \item \textbf{\textit{Modo}:} lee el catálogo y los parámetros del modo \textit{(pasos 1, 15)}
+      \item \textbf{\textit{ColaEmparejamiento}:} inserta, consulta y borra \textit{(pasos 8, 11, 17)}
+      \item \textbf{\textit{Bloqueo}:} lee, para descartar emparejamientos \textit{(paso 12)}
+      \item \textbf{\textit{Partida}:} crea \textit{(paso 15)}
     \end{cudatos}} \\
    & \cuCelda{\begin{cudatos}
-      \item \textit{Participacion}: crea una por jugador \textit{(paso 16)}
-      \item \textit{Equipamiento}: lee, para fijar el aspecto de cada participante \textit{(paso 16)}
+      \item \textbf{\textit{Participacion}:} crea una por jugador \textit{(paso 16)}
+      \item \textbf{\textit{Equipamiento}:} lee, para fijar el aspecto de cada participante \textit{(paso 16)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

@@ -1,0 +1,89 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/bastion.sql. No editar a mano.
+\begin{center}\small
+\begin{longtable}{|L{0.21\textwidth}|L{0.26\textwidth}|L{0.29\textwidth}|L{0.12\textwidth}|}
+\hline
+\textbf{Entidad} & \textbf{Llave foránea} & \textbf{Referencia} & \textbf{Obligatoria} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad} & \textbf{Llave foránea} & \textbf{Referencia} & \textbf{Obligatoria} \\ \hline
+\endhead
+\textit{Objeto\-Cosmetico} & (\texttt{id\_\allowbreak{}ranura}) & \textit{Ranura} (\texttt{id\_\allowbreak{}ranura}) & Sí \\ \hline
+\textit{Tipo\-Caja\-Objeto} & (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}) & \textit{Tipo\-Caja} (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}) & Sí \\ \hline
+\textit{Tipo\-Caja\-Objeto} & (\texttt{id\_\allowbreak{}objeto}) & \textit{Objeto\-Cosmetico} (\texttt{id\_\allowbreak{}objeto}) & Sí \\ \hline
+\textit{Sesion} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Codigo\-Segundo\-Factor} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Token\-Verificacion\-Correo} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Token\-Recuperacion} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Aceptacion\-Terminos} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Historial\-Nickname} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Avatar} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Enlace\-Red} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Usuario\-Objeto} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Usuario\-Objeto} & (\texttt{id\_\allowbreak{}objeto}) & \textit{Objeto\-Cosmetico} (\texttt{id\_\allowbreak{}objeto}) & Sí \\ \hline
+\textit{Equipamiento} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & \textit{Usuario\-Objeto} (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & Sí \\ \hline
+\textit{Equipamiento} & (\texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}ranura}) & \textit{Objeto\-Cosmetico} (\texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}ranura}) & Sí \\ \hline
+\textit{Equipamiento} & (\texttt{id\_\allowbreak{}ranura}) & \textit{Ranura} (\texttt{id\_\allowbreak{}ranura}) & Sí \\ \hline
+\textit{Partida} & (\texttt{id\_\allowbreak{}modo}) & \textit{Modo} (\texttt{id\_\allowbreak{}modo}) & Sí \\ \hline
+\textit{Partida} & (\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}) & \textit{Nivel\-IA} (\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}) & No \\ \hline
+\textit{Partida} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}ganador}) & \textit{Participacion} (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & No \\ \hline
+\textit{Participacion} & (\texttt{id\_\allowbreak{}partida}) & \textit{Partida} (\texttt{id\_\allowbreak{}partida}) & Sí \\ \hline
+\textit{Participacion} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Participacion\-Objeto} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & \textit{Participacion} (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Participacion\-Objeto} & (\texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}ranura}) & \textit{Objeto\-Cosmetico} (\texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}ranura}) & Sí \\ \hline
+\textit{Jugada} & (\texttt{id\_\allowbreak{}partida}) & \textit{Partida} (\texttt{id\_\allowbreak{}partida}) & Sí \\ \hline
+\textit{Jugada} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & \textit{Participacion} (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & No \\ \hline
+\textit{Oferta\-Tablas} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}ofertante}) & \textit{Participacion} (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Enlace\-Espectador} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}creador}) & \textit{Participacion} (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Cola\-Emparejamiento} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Cola\-Emparejamiento} & (\texttt{id\_\allowbreak{}modo}) & \textit{Modo} (\texttt{id\_\allowbreak{}modo}) & Sí \\ \hline
+\textit{Sala} & (\texttt{id\_\allowbreak{}anfitrion}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Sala} & (\texttt{id\_\allowbreak{}modo}) & \textit{Modo} (\texttt{id\_\allowbreak{}modo}) & Sí \\ \hline
+\textit{Sala} & (\texttt{id\_\allowbreak{}partida}) & \textit{Partida} (\texttt{id\_\allowbreak{}partida}) & No \\ \hline
+\textit{Sala\-Participante} & (\texttt{id\_\allowbreak{}sala}) & \textit{Sala} (\texttt{id\_\allowbreak{}sala}) & Sí \\ \hline
+\textit{Sala\-Participante} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Invitacion} & (\texttt{id\_\allowbreak{}sala}) & \textit{Sala} (\texttt{id\_\allowbreak{}sala}) & Sí \\ \hline
+\textit{Invitacion} & (\texttt{id\_\allowbreak{}emisor}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Invitacion} & (\texttt{id\_\allowbreak{}destinatario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Mensaje} & (\texttt{id\_\allowbreak{}autor}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Mensaje} & (\texttt{id\_\allowbreak{}partida}) & \textit{Partida} (\texttt{id\_\allowbreak{}partida}) & No \\ \hline
+\textit{Mensaje} & (\texttt{id\_\allowbreak{}sala}) & \textit{Sala} (\texttt{id\_\allowbreak{}sala}) & No \\ \hline
+\textit{Estadistica\-Modo} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Estadistica\-Modo} & (\texttt{id\_\allowbreak{}modo}) & \textit{Modo} (\texttt{id\_\allowbreak{}modo}) & Sí \\ \hline
+\textit{Estadistica\-Modo} & (\texttt{id\_\allowbreak{}division}) & \textit{Division} (\texttt{id\_\allowbreak{}division}) & No \\ \hline
+\textit{Historial\-Division} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}modo}) & \textit{Estadistica\-Modo} (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}modo}) & Sí \\ \hline
+\textit{Historial\-Division} & (\texttt{id\_\allowbreak{}division\_\allowbreak{}anterior}) & \textit{Division} (\texttt{id\_\allowbreak{}division}) & No \\ \hline
+\textit{Historial\-Division} & (\texttt{id\_\allowbreak{}division\_\allowbreak{}nueva}) & \textit{Division} (\texttt{id\_\allowbreak{}division}) & Sí \\ \hline
+\textit{Caja} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Caja} & (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}) & \textit{Tipo\-Caja} (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}) & Sí \\ \hline
+\textit{Caja\-Contenido} & (\texttt{id\_\allowbreak{}caja}) & \textit{Caja} (\texttt{id\_\allowbreak{}caja}) & Sí \\ \hline
+\textit{Caja\-Contenido} & (\texttt{id\_\allowbreak{}objeto}) & \textit{Objeto\-Cosmetico} (\texttt{id\_\allowbreak{}objeto}) & Sí \\ \hline
+\textit{Movimiento\-Moneda} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Movimiento\-Moneda} & (\texttt{id\_\allowbreak{}partida}) & \textit{Partida} (\texttt{id\_\allowbreak{}partida}) & No \\ \hline
+\textit{Movimiento\-Moneda} & (\texttt{id\_\allowbreak{}objeto}) & \textit{Objeto\-Cosmetico} (\texttt{id\_\allowbreak{}objeto}) & No \\ \hline
+\textit{Movimiento\-Moneda} & (\texttt{id\_\allowbreak{}caja}) & \textit{Caja} (\texttt{id\_\allowbreak{}caja}) & No \\ \hline
+\textit{Amistad} & (\texttt{id\_\allowbreak{}usuario\_\allowbreak{}a}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Amistad} & (\texttt{id\_\allowbreak{}usuario\_\allowbreak{}b}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Solicitud} & (\texttt{id\_\allowbreak{}solicitante}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Solicitud} & (\texttt{id\_\allowbreak{}destinatario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Silencio} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Silencio} & (\texttt{id\_\allowbreak{}silenciado}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Bloqueo} & (\texttt{id\_\allowbreak{}bloqueador}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Bloqueo} & (\texttt{id\_\allowbreak{}bloqueado}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Progreso\-Tutorial} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Progreso\-Tutorial} & (\texttt{id\_\allowbreak{}leccion}) & \textit{Leccion} (\texttt{id\_\allowbreak{}leccion}) & Sí \\ \hline
+\textit{Reporte} & (\texttt{id\_\allowbreak{}denunciante}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Reporte} & (\texttt{id\_\allowbreak{}reportado}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Reporte} & (\texttt{id\_\allowbreak{}motivo}) & \textit{Motivo\-Reporte} (\texttt{id\_\allowbreak{}motivo}) & Sí \\ \hline
+\textit{Reporte} & (\texttt{id\_\allowbreak{}partida}) & \textit{Partida} (\texttt{id\_\allowbreak{}partida}) & No \\ \hline
+\textit{Reporte} & (\texttt{id\_\allowbreak{}moderador}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & No \\ \hline
+\textit{Sancion} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Sancion} & (\texttt{id\_\allowbreak{}moderador}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Sancion} & (\texttt{id\_\allowbreak{}reporte}) & \textit{Reporte} (\texttt{id\_\allowbreak{}reporte}) & No \\ \hline
+\textit{Sancion} & (\texttt{id\_\allowbreak{}sancion\_\allowbreak{}sustituta}) & \textit{Sancion} (\texttt{id\_\allowbreak{}sancion}) & No \\ \hline
+\textit{Apelacion} & (\texttt{id\_\allowbreak{}sancion}) & \textit{Sancion} (\texttt{id\_\allowbreak{}sancion}) & Sí \\ \hline
+\textit{Apelacion} & (\texttt{id\_\allowbreak{}moderador}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & No \\ \hline
+\textit{Bitacora\-Moderacion} & (\texttt{id\_\allowbreak{}moderador}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Bitacora\-Moderacion} & (\texttt{id\_\allowbreak{}usuario\_\allowbreak{}afectado}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & No \\ \hline
+\textit{Bitacora\-Acceso} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & No \\ \hline
+\end{longtable}
+\end{center}

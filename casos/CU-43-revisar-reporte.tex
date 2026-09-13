@@ -137,14 +137,14 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué las apelaciones se revisan en este caso.}\par
     Las apelaciones podrían tener su propia pantalla y su propio caso. Se resuelven aquí porque el procedimiento es el mismo —tomar un elemento de una cola, revisar pruebas y decidir con una nota— y porque las pruebas de una apelación son precisamente las del reporte que originó la sanción. Mantener una sola cola además evita que las apelaciones, que suelen ser menos, queden olvidadas en una pantalla aparte.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}, \textit{Usuario}: lee por token y el \texttt{rol} \textit{(paso 3)}
-      \item \textit{Reporte}: lee la cola; escribe \texttt{estado}, \texttt{id\_\allowbreak{}moderador}, \texttt{fecha\_\allowbreak{}asignacion}, \texttt{nota\_\allowbreak{}resolucion}, \texttt{fecha\_\allowbreak{}resolucion} \textit{(pasos 4, 5, 10, 17, \mbox{FA-06})}
-      \item \textit{MotivoReporte}: lee \textit{(paso 5)}
-      \item \textit{Apelacion}: lee la cola; escribe \texttt{estado}, \texttt{id\_\allowbreak{}moderador}, \texttt{nota\_\allowbreak{}resolucion}, \texttt{fecha\_\allowbreak{}resolucion} \textit{(pasos 5, \mbox{FA-08})}
-      \item \textit{Partida}, \textit{Jugada}, \textit{Mensaje}: lee las pruebas \textit{(paso 11)}
-      \item \textit{Sancion}: lee el historial; retira la apelada en el \mbox{FA-08} \textit{(pasos 11, \mbox{FA-08})}
-      \item \textit{Usuario}: escribe \texttt{estado\_\allowbreak{}cuenta}, al retirar una sanción de cuenta \textit{(paso \mbox{FA-08})}
-      \item \textit{BitacoraModeracion}: inserta \textit{(pasos 12, 18, \mbox{FA-06}, \mbox{FA-08})}
+      \item \textbf{\textit{Sesion}, \textit{Usuario}:} lee por token y el \texttt{rol} \textit{(paso 3)}
+      \item \textbf{\textit{Reporte}:} lee la cola; escribe \texttt{estado}, \texttt{id\_\allowbreak{}moderador}, \texttt{fecha\_\allowbreak{}asignacion}, \texttt{nota\_\allowbreak{}resolucion}, \texttt{fecha\_\allowbreak{}resolucion} \textit{(pasos 4, 5, 10, 17, \mbox{FA-06})}
+      \item \textbf{\textit{MotivoReporte}:} lee \textit{(paso 5)}
+      \item \textbf{\textit{Apelacion}:} lee la cola; escribe \texttt{estado}, \texttt{id\_\allowbreak{}moderador}, \texttt{nota\_\allowbreak{}resolucion}, \texttt{fecha\_\allowbreak{}resolucion} \textit{(pasos 5, \mbox{FA-08})}
+      \item \textbf{\textit{Partida}, \textit{Jugada}, \textit{Mensaje}:} lee las pruebas \textit{(paso 11)}
+      \item \textbf{\textit{Sancion}:} lee el historial; retira la apelada en el \mbox{FA-08} \textit{(pasos 11, \mbox{FA-08})}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{estado\_\allowbreak{}cuenta}, al retirar una sanción de cuenta \textit{(paso \mbox{FA-08})}
+      \item \textbf{\textit{BitacoraModeracion}:} inserta \textit{(pasos 12, 18, \mbox{FA-06}, \mbox{FA-08})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

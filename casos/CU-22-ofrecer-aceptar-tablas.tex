@@ -119,10 +119,10 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué la oferta se guarda.}\par
     Una oferta de tablas podría vivir solo en la memoria del servidor, porque dura como mucho una jugada. Se guarda por dos motivos. El primero es el \mbox{CU-26}: si el rival se desconecta y vuelve, la oferta tiene que seguir ahí o haber caducado de forma comprobable. El segundo es el \mbox{CU-42}: ofrecer tablas en bucle es una forma conocida de acoso en juegos por turnos, y un moderador necesita ver cuántas ofertas hizo un jugador para juzgarlo.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}, \textit{Participacion}: lee por token \textit{(paso 3)}
-      \item \textit{Partida}, \textit{Modo}: lee \texttt{estado}, \texttt{tipo} y número de jugadores \textit{(pasos 3, 11, \mbox{PRE-02})}
-      \item \textit{OfertaTablas}: lee las pendientes y las recientes del jugador \textit{(pasos 4, 5)}
-      \item \textit{OfertaTablas}: crea; escribe \texttt{estado} y \texttt{fecha\_\allowbreak{}respuesta} \textit{(pasos 6, 12, \mbox{FA-05}, \mbox{FA-06})}
+      \item \textbf{\textit{Sesion}, \textit{Participacion}:} lee por token \textit{(paso 3)}
+      \item \textbf{\textit{Partida}, \textit{Modo}:} lee \texttt{estado}, \texttt{tipo} y número de jugadores \textit{(pasos 3, 11, \mbox{PRE-02})}
+      \item \textbf{\textit{OfertaTablas}:} lee las pendientes y las recientes del jugador \textit{(pasos 4, 5)}
+      \item \textbf{\textit{OfertaTablas}:} crea; escribe \texttt{estado} y \texttt{fecha\_\allowbreak{}respuesta} \textit{(pasos 6, 12, \mbox{FA-05}, \mbox{FA-06})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

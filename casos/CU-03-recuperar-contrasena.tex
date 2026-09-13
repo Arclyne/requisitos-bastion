@@ -177,11 +177,11 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre una tensión con el \mbox{CU-02}.}\par
     El \mbox{RN-01} oculta si un correo está registrado, pero el \mbox{FA-10} del \mbox{CU-02} lo dice abiertamente cuando alguien intenta darse de alta con un correo ya usado, y esa contradicción está aceptada a propósito en las observaciones de aquel caso. Se mantiene aquí la respuesta indistinguible de todos modos: cuesta lo mismo implementarla, y si más adelante se decide cerrar la fuga del registro, este caso ya no habría que tocarlo.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Usuario}: lee \texttt{correo}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{idioma\_\allowbreak{}preferido} \textit{(pasos 6, 7, 20)}
-      \item \textit{Usuario}: escribe \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion} \textit{(pasos 11, 22, 24)}
-      \item \textit{TokenRecuperacion}: crea, invalida y marca como usado \textit{(pasos 9, 10, 23)}
-      \item \textit{Sesion}: cierra todas las abiertas \textit{(paso 25)}
-      \item \textit{BitacoraAcceso}: inserta \textit{(pasos 13, 27)}
+      \item \textbf{\textit{Usuario}:} lee \texttt{correo}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{idioma\_\allowbreak{}preferido} \textit{(pasos 6, 7, 20)}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion} \textit{(pasos 11, 22, 24)}
+      \item \textbf{\textit{TokenRecuperacion}:} crea, invalida y marca como usado \textit{(pasos 9, 10, 23)}
+      \item \textbf{\textit{Sesion}:} cierra todas las abiertas \textit{(paso 25)}
+      \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(pasos 13, 27)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

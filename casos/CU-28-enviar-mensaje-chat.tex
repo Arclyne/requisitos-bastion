@@ -151,13 +151,13 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué los mensajes se guardan.}\par
     Se consideró que el chat fuera efímero y no dejara filas, que es más barato y más respetuoso con la privacidad. Se descartó por el \mbox{CU-42}: el documento de diseño del juego dice que el reporte adjunta el chat de la partida automáticamente, y eso exige que el chat exista cuando alguien reporta, que es siempre después de haberse escrito. Guardar solo los mensajes del canal de partida y descartar los de global y amigos sería una opción intermedia razonable, pero dejaría el canal global sin ninguna trazabilidad, que es justo donde la moderación hace más falta.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 6)}
-      \item \textit{Sancion}: lee las activas de ámbito de chat \textit{(paso 7)}
-      \item \textit{Participacion}, \textit{Amistad}: lee, para comprobar el acceso al canal \textit{(paso 8)}
-      \item \textit{Mensaje}: lee los recientes del canal \textit{(paso 2)}
-      \item \textit{Mensaje}: crea \textit{(paso 12)}
-      \item \textit{PalabraProhibida}: lee el catálogo con ámbito de chat \textit{(paso 11)}
-      \item \textit{Bloqueo}, \textit{Silencio}: lee, para decidir la entrega \textit{(pasos 13, 14)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 6)}
+      \item \textbf{\textit{Sancion}:} lee las activas de ámbito de chat \textit{(paso 7)}
+      \item \textbf{\textit{Participacion}, \textit{Amistad}:} lee, para comprobar el acceso al canal \textit{(paso 8)}
+      \item \textbf{\textit{Mensaje}:} lee los recientes del canal \textit{(paso 2)}
+      \item \textbf{\textit{Mensaje}:} crea \textit{(paso 12)}
+      \item \textbf{\textit{PalabraProhibida}:} lee el catálogo con ámbito de chat \textit{(paso 11)}
+      \item \textbf{\textit{Bloqueo}, \textit{Silencio}:} lee, para decidir la entrega \textit{(pasos 13, 14)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

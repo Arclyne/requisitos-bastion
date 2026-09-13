@@ -96,11 +96,11 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué hay dos bitácoras y no una.}\par
     Una sola bitácora con un campo de tipo podría registrar accesos y acciones de moderación. Se separan porque describen hechos con estructura distinta: un acceso tiene un identificador capturado, un resultado y una dirección de red, y puede no tener usuario; una acción de moderación tiene siempre un autor, un afectado y un detalle. Fundirlas dejaría la mitad de las columnas nulas en cada fila, y obligaría a filtrar por tipo en cada consulta.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}, \textit{Usuario}: lee el \texttt{rol} del administrador \textit{(paso 6)}
-      \item \textit{BitacoraAcceso}: lee con filtros, agrupa por \texttt{direccion\_\allowbreak{}ip} \textit{(pasos 8, 9, \mbox{FA-05})}
-      \item \textit{BitacoraModeracion}: lee con filtros \textit{(paso \mbox{FA-01})}
-      \item \textit{BitacoraModeracion}: inserta la propia consulta \textit{(pasos 7, \mbox{FA-03})}
-      \item \textit{Usuario}: lee el \texttt{nickname} de los usuarios de cada registro \textit{(pasos 8, \mbox{FA-01})}
+      \item \textbf{\textit{Sesion}, \textit{Usuario}:} lee el \texttt{rol} del administrador \textit{(paso 6)}
+      \item \textbf{\textit{BitacoraAcceso}:} lee con filtros, agrupa por \texttt{direccion\_\allowbreak{}ip} \textit{(pasos 8, 9, \mbox{FA-05})}
+      \item \textbf{\textit{BitacoraModeracion}:} lee con filtros \textit{(paso \mbox{FA-01})}
+      \item \textbf{\textit{BitacoraModeracion}:} inserta la propia consulta \textit{(pasos 7, \mbox{FA-03})}
+      \item \textbf{\textit{Usuario}:} lee el \texttt{nickname} de los usuarios de cada registro \textit{(pasos 8, \mbox{FA-01})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

@@ -290,14 +290,14 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre las sesiones simultáneas (\mbox{D-01}).}\par
     La versión anterior de este caso limitaba cada cuenta a una sola sesión activa y obligaba a cerrar la del otro dispositivo para poder entrar. La restricción existía para que dos clientes no enviaran jugadas en nombre del mismo jugador, pero ese riesgo está en la partida y no en el inicio de sesión. Se trasladó al emparejamiento como regla de una sola participación sin terminar por jugador, y con ella desaparecieron el flujo alterno de sesión ya abierta y el motivo de cierre por desplazamiento.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Usuario}: lee \texttt{nickname}, \texttt{correo}, \texttt{tipo\_\allowbreak{}cuenta}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}baja}, \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}, \texttt{idioma\_\allowbreak{}preferido}, \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} \textit{(pasos 6, 7, 8, 9, 11, 13, 17)}
-      \item \textit{Usuario}: escribe \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}acceso}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}; \texttt{estado\_\allowbreak{}cuenta} y \texttt{fecha\_\allowbreak{}baja} en el \mbox{FA-17}; \texttt{estado\_\allowbreak{}cuenta} en el \mbox{FA-20} \textit{(pasos 10, 15, \mbox{FA-08}, \mbox{FA-09}, \mbox{FA-17})}
-      \item \textit{Sancion}: lee las activas de ámbito \texttt{CUENTA} \textit{(pasos 12, \mbox{FA-10})}
-      \item \textit{Sesion}: crea \textit{(paso 14)}
-      \item \textit{CodigoSegundoFactor}: crea, marca como consumido o invalidado, incrementa \texttt{intentos} \textit{(pasos \mbox{FA-11}, \mbox{FA-13} a \mbox{FA-16})}
-      \item \textit{TokenVerificacionCorreo}: invalida los pendientes y crea uno nuevo \textit{(paso \mbox{FA-09})}
-      \item \textit{EstadisticaModo}, \textit{Equipamiento}, \textit{Participacion}: lee, para el mensaje \texttt{LOGIN\_\allowbreak{}OK} \textit{(paso 17)}
-      \item \textit{BitacoraAcceso}: inserta \textit{(pasos 16, \mbox{FA-06} a \mbox{FA-10}, \mbox{FA-13}, \mbox{FA-16}, \mbox{FA-17})}
+      \item \textbf{\textit{Usuario}:} lee \texttt{nickname}, \texttt{correo}, \texttt{tipo\_\allowbreak{}cuenta}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}baja}, \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}, \texttt{idioma\_\allowbreak{}preferido}, \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} \textit{(pasos 6, 7, 8, 9, 11, 13, 17)}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}acceso}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}; y \texttt{estado\_\allowbreak{}cuenta} y \texttt{fecha\_\allowbreak{}baja} en el \mbox{FA-17} \textit{(pasos 10, 15, \mbox{FA-08}, \mbox{FA-09}, \mbox{FA-17})}
+      \item \textbf{\textit{Sancion}:} lee las activas de ámbito \texttt{CUENTA} \textit{(pasos 12, \mbox{FA-10})}
+      \item \textbf{\textit{Sesion}:} crea \textit{(paso 14)}
+      \item \textbf{\textit{CodigoSegundoFactor}:} crea, marca como consumido o invalidado, incrementa \texttt{intentos} \textit{(pasos \mbox{FA-11}, \mbox{FA-13} a \mbox{FA-16})}
+      \item \textbf{\textit{TokenVerificacionCorreo}:} invalida los pendientes y crea uno nuevo \textit{(paso \mbox{FA-09})}
+      \item \textbf{\textit{EstadisticaModo}, \textit{Equipamiento}, \textit{Participacion}:} lee, para el mensaje \texttt{LOGIN\_\allowbreak{}OK} \textit{(paso 17)}
+      \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(pasos 16, \mbox{FA-06} a \mbox{FA-10}, \mbox{FA-13}, \mbox{FA-16}, \mbox{FA-17})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

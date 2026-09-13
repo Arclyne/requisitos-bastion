@@ -1,0 +1,66 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/bastion.sql. No editar a mano.
+\begin{center}\small
+\begin{longtable}{|L{0.24\textwidth}|L{0.17\textwidth}|L{0.49\textwidth}|}
+\hline
+\textbf{Entidad} & \textbf{Clase} & \textbf{Qué representa} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad} & \textbf{Clase} & \textbf{Qué representa} \\ \hline
+\endhead
+\multicolumn{3}{|l|}{\textbf{Catálogos precargados (\mbox{D-09})}} \\ \hline
+\textit{Ranura} & Catálogo & Catálogo de las seis ranuras de personalización: peón, muro, tablero, título, marco y emotes (\mbox{D-03}). \\ \hline
+\textit{Objeto\-Cosmetico} & Catálogo & Catálogo de objetos cosméticos. Cada objeto pertenece a una sola ranura (\mbox{D-03}). \\ \hline
+\textit{Modo} & Catálogo & Catálogo de modos de juego; cada modo fija tablero, jugadores y muros (\mbox{D-04}). \\ \hline
+\textit{Division} & Catálogo & Catálogo de divisiones del ranking con sus umbrales de ascenso y descenso. \\ \hline
+\textit{Nivel\-IA} & Catálogo & Catálogo de los cuatro niveles de la IA (\mbox{CU-27} \mbox{RN-02}). \\ \hline
+\textit{Leccion} & Catálogo & Catálogo de las siete lecciones del tutorial (\mbox{CU-41} \mbox{RN-01}). \\ \hline
+\textit{Tipo\-Caja} & Catálogo & Catálogo de tipos de caja que se venden o se otorgan (\mbox{CU-39}). \\ \hline
+\textit{Tipo\-Caja\-Objeto} & Catálogo asociativo & Objetos que puede contener cada tipo de caja y su probabilidad; es la relación N:M entre TipoCaja y ObjetoCosmetico. \\ \hline
+\textit{Palabra\-Prohibida} & Catálogo & Catálogo del filtro de palabras que se aplica en el servidor al nickname y al chat (\mbox{CON-09}). \\ \hline
+\textit{Motivo\-Reporte} & Catálogo & Catálogo de los cinco motivos de reporte (\mbox{CU-42} \mbox{RN-08}). \\ \hline
+\multicolumn{3}{|l|}{\textbf{Cuenta y acceso}} \\ \hline
+\textit{Usuario} & Fuerte & Cuenta de un jugador, invitado, moderador o administrador. Es la entidad central: casi todas las demás dependen de ella y su fila nunca se borra (\mbox{D-07}, \mbox{D-17}). \\ \hline
+\textit{Sesion} & Fuerte & Sesión abierta desde un dispositivo. Una cuenta puede tener varias a la vez (\mbox{D-01}); al cerrarse no se borra. \\ \hline
+\textit{Codigo\-Segundo\-Factor} & Fuerte & Código del segundo factor emitido en un inicio de sesión (\mbox{CU-01} \mbox{RN-08}, \mbox{RN-09}). \\ \hline
+\textit{Token\-Verificacion\-Correo} & Fuerte & Token del enlace que verifica el correo del alta o confirma un cambio de correo (\mbox{CU-04}, \mbox{D-20}). \\ \hline
+\textit{Token\-Recuperacion} & Fuerte & Código enviado por correo para recuperar la contraseña (\mbox{CU-03}). \\ \hline
+\textit{Aceptacion\-Terminos} & Fuerte & Registro de la versión de los términos de uso que aceptó cada cuenta (\mbox{CU-02} \mbox{RN-12}). \\ \hline
+\multicolumn{3}{|l|}{\textbf{Perfil y personalización}} \\ \hline
+\textit{Historial\-Nickname} & Dependiente (1:0..1) & Cambio de nombre de una cuenta, para que un jugador reportado no se vuelva irreconocible (\mbox{CU-13} \mbox{RN-03}). \\ \hline
+\textit{Avatar} & Fuerte & Imagen subida por el jugador como foto de perfil (\mbox{CU-12} \mbox{FA-01}). \\ \hline
+\textit{Enlace\-Red} & Fuerte & Enlace a una red social que el jugador muestra en su perfil (\mbox{CU-12}). \\ \hline
+\textit{Usuario\-Objeto} & Asociativa (N:M) & Objetos cosméticos que posee cada cuenta; es la relación N:M entre Usuario y ObjetoCosmetico (relación Posee del diagrama). \\ \hline
+\textit{Equipamiento} & Asociativa (N:M) & Objeto que cada cuenta lleva equipado en cada ranura; siempre hay exactamente uno por ranura (\mbox{CU-14} \mbox{RN-01}). \\ \hline
+\multicolumn{3}{|l|}{\textbf{Partida}} \\ \hline
+\textit{Partida} & Dependiente (1:0..1) & Partida clasificatoria, privada o contra la IA. Se guarda completa porque de ella dependen el historial, la repetición, la reconexión y los reportes. \\ \hline
+\textit{Participacion} & Asociativa (N:M) & Participación de un jugador en una partida; es la relación N:M entre Usuario y Partida (relación Participa del diagrama). La IA no tiene participación (\mbox{D-12}). \\ \hline
+\textit{Participacion\-Objeto} & Asociativa (N:M) & Aspecto con el que cada jugador entró a la partida, una fila por ranura; no cambia aunque el jugador equipe otra cosa (\mbox{CU-14} \mbox{RN-03}, \mbox{CU-37} \mbox{RN-03}). \\ \hline
+\textit{Jugada} & Débil & Movimiento de peón o colocación de muro, en orden. El tablero se reconstruye sumando las jugadas; los muros no tienen tabla propia (\mbox{CU-21}). \\ \hline
+\textit{Oferta\-Tablas} & Fuerte & Oferta de tablas en una partida de dos jugadores (\mbox{CU-22}). Se guarda para la reconexión y como prueba de acoso. \\ \hline
+\textit{Enlace\-Espectador} & Fuerte & Enlace compartido para ver una partida desde fuera del juego. Es lo único que se guarda de los espectadores (\mbox{D-19}). \\ \hline
+\multicolumn{3}{|l|}{\textbf{Emparejamiento, salas y chat}} \\ \hline
+\textit{Cola\-Emparejamiento} & Dependiente (1:0..1) & Jugadores que esperan partida clasificatoria. Se persiste para poder vaciarla y avisar si el servidor se reinicia (\mbox{CU-17}). \\ \hline
+\textit{Sala} & Fuerte & Sala privada con código, con los ajustes que elige el anfitrión (\mbox{CU-18}). \\ \hline
+\textit{Sala\-Participante} & Dependiente (1:0..1) & Plaza que ocupa un jugador en una sala. Describe un estado presente y se borra al salir (\mbox{CU-19}). \\ \hline
+\textit{Invitacion} & Fuerte & Invitación a jugar, que da acceso a una sala sin conocer su código (\mbox{CU-32}). \\ \hline
+\textit{Mensaje} & Fuerte & Mensaje de chat. Se guarda porque el reporte lo adjunta como prueba (\mbox{CU-28}, \mbox{CU-42}). \\ \hline
+\multicolumn{3}{|l|}{\textbf{Clasificación y economía}} \\ \hline
+\textit{Estadistica\-Modo} & Asociativa (N:M) & Estadísticas y elo de cada cuenta en cada modo; es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, \mbox{D-04}). \\ \hline
+\textit{Historial\-Division} & Fuerte & Cambio de división de una cuenta en un modo. No se deduce de una sola partida por las partidas de margen, así que se guarda (\mbox{CU-15}). \\ \hline
+\textit{Caja} & Fuerte & Caja comprada u obtenida al subir de nivel. Existe sin abrir entre la compra y la apertura (\mbox{CU-39} \mbox{RN-09}). \\ \hline
+\textit{Caja\-Contenido} & Débil & Los tres objetos que salieron al abrir una caja, registrados para poder comprobarlos después (\mbox{CU-39} \mbox{RN-07}). \\ \hline
+\textit{Movimiento\-Moneda} & Fuerte & Entrada o salida de monedas. El saldo verdadero es su suma; nunca se modifica ni se elimina (\mbox{CU-40} \mbox{RN-01}). \\ \hline
+\multicolumn{3}{|l|}{\textbf{Relaciones entre jugadores y tutorial}} \\ \hline
+\textit{Amistad} & Asociativa (N:M) & Amistad recíproca entre dos cuentas, guardada una sola vez por par ordenado (\mbox{CU-31} \mbox{RN-03}). \\ \hline
+\textit{Solicitud} & Fuerte & Solicitud de amistad pendiente. Tiene dirección, a diferencia de la amistad, y se borra al responderse (\mbox{CU-30}, \mbox{CU-31}). \\ \hline
+\textit{Silencio} & Asociativa (N:M) & Jugador silenciado por otro; solo lo consulta quien silenció (\mbox{CU-33}). \\ \hline
+\textit{Bloqueo} & Asociativa (N:M) & Bloqueo entre dos jugadores; impide emparejar, invitar, buscar, solicitar y compartir sala (\mbox{CU-33} \mbox{RN-05}). \\ \hline
+\textit{Progreso\-Tutorial} & Asociativa (N:M) & Avance de cada cuenta en cada lección del tutorial; es la relación N:M entre Usuario y Leccion (\mbox{CU-41}). \\ \hline
+\multicolumn{3}{|l|}{\textbf{Moderación y bitácoras}} \\ \hline
+\textit{Reporte} & Fuerte & Denuncia de un jugador contra otro. Las pruebas se adjuntan por referencia a la partida, no por copia (\mbox{CU-42} \mbox{RN-01}). \\ \hline
+\textit{Sancion} & Fuerte & Sanción aplicada por un moderador, de ámbito de cuenta o de chat (\mbox{D-05}). Sustituye al Baneo del diagrama; al retirarse se desactiva, no se borra. \\ \hline
+\textit{Apelacion} & Fuerte & Apelación de una sanción por parte del sancionado; hay a lo sumo una por sanción (\mbox{CU-45} \mbox{RN-01}). \\ \hline
+\textit{Bitacora\-Moderacion} & Fuerte & Registro de cada acción de moderación y administración, incluida la consulta de las bitácoras (\mbox{CU-48} \mbox{RN-04}). Solo admite inserción. \\ \hline
+\textit{Bitacora\-Acceso} & Fuerte & Registro de cada intento de acceso y de cada cambio de credenciales, exitoso o no. Nunca contiene contraseñas ni códigos (\mbox{CU-48} \mbox{RN-05}). \\ \hline
+\end{longtable}
+\end{center}

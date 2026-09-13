@@ -117,12 +117,12 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué este caso no abre sesión.}\par
     Sería cómodo que verificar el correo dejara al Jugador dentro del juego, pero el enlace se abre en un navegador y la sesión vive en el cliente de escritorio: no hay forma de pasar el token de sesión de uno a otro sin inventar un mecanismo que no existe en el resto del sistema. El Jugador verifica, vuelve al juego e inicia sesión con el \mbox{CU-01}, que es el único lugar donde se crea una \textit{Sesion}.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{TokenVerificacionCorreo}: lee \texttt{token\_\allowbreak{}hash}, \texttt{usado}, \texttt{fecha\_\allowbreak{}expiracion} \textit{(pasos 3, 5, 6)}
-      \item \textit{TokenVerificacionCorreo}: marca como usado e invalida los demás \textit{(pasos 10, 11)}
-      \item \textit{Usuario}: lee \texttt{estado\_\allowbreak{}cuenta}, \texttt{idioma\_\allowbreak{}preferido} \textit{(pasos 7, 14)}
-      \item \textit{Usuario}: escribe \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}verificacion} \textit{(paso 9)}
-      \item \textit{Sancion}: lee, para el \mbox{FA-04} \textit{(paso 7)}
-      \item \textit{BitacoraAcceso}: inserta \textit{(paso 13)}
+      \item \textbf{\textit{TokenVerificacionCorreo}:} lee \texttt{token\_\allowbreak{}hash}, \texttt{usado}, \texttt{fecha\_\allowbreak{}expiracion} \textit{(pasos 3, 5, 6)}
+      \item \textbf{\textit{TokenVerificacionCorreo}:} marca como usado e invalida los demás \textit{(pasos 10, 11)}
+      \item \textbf{\textit{Usuario}:} lee \texttt{estado\_\allowbreak{}cuenta}, \texttt{idioma\_\allowbreak{}preferido} \textit{(pasos 7, 14)}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}verificacion} \textit{(paso 9)}
+      \item \textbf{\textit{Sancion}:} lee, para el \mbox{FA-04} \textit{(paso 7)}
+      \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(paso 13)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

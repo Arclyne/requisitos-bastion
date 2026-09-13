@@ -105,10 +105,10 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre el token de apelación.}\par
     Un jugador con sanción de cuenta no puede iniciar sesión, pero es justo quien más necesita apelar. Abrirle una sesión, aunque limitada, obligaría a que todos los casos de uso comprobaran si la sesión es de apelación antes de operar. En su lugar, el inicio de sesión, que ya comprobó la contraseña, emite un token que solo este caso acepta, que solo identifica la sanción y que caduca pronto. El jugador demuestra quién es, apela y no obtiene nada más.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token, cuando hay sesión \textit{(paso 6)}
-      \item \textit{Sancion}: lee la del jugador \textit{(pasos 2, 7)}
-      \item \textit{Apelacion}: lee la existente; crea \textit{(pasos 8, 10, \mbox{FA-01}, \mbox{FA-06})}
-      \item \textit{PalabraProhibida}: lee, para marcar el texto \textit{(paso 9)}
+      \item \textbf{\textit{Sesion}:} lee por token, cuando hay sesión \textit{(paso 6)}
+      \item \textbf{\textit{Sancion}:} lee la del jugador \textit{(pasos 2, 7)}
+      \item \textbf{\textit{Apelacion}:} lee la existente; crea \textit{(pasos 8, 10, \mbox{FA-01}, \mbox{FA-06})}
+      \item \textbf{\textit{PalabraProhibida}:} lee, para marcar el texto \textit{(paso 9)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

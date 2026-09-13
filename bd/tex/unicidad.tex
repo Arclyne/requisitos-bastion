@@ -1,0 +1,46 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/bastion.sql. No editar a mano.
+\begin{center}\small
+\begin{longtable}{|L{0.2\textwidth}|L{0.25\textwidth}|L{0.45\textwidth}|}
+\hline
+\textbf{Entidad} & \textbf{Columnas y condición} & \textbf{Regla que garantiza} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad} & \textbf{Columnas y condición} & \textbf{Regla que garantiza} \\ \hline
+\endhead
+\textit{Ranura} & (\texttt{nombre}) & Dos ranuras no se llaman igual. \\ \hline
+\textit{Objeto\-Cosmetico} & (\texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}ranura}) & Superclave que usan Equipamiento y ParticipacionObjeto para exigir que el objeto sea de la ranura. \\ \hline
+\textit{Objeto\-Cosmetico} & (\texttt{id\_\allowbreak{}ranura}), si \texttt{es\_\allowbreak{}predeterminado = 1} & Un solo objeto predeterminado por ranura (\mbox{CU-02} \mbox{PRE-05}). \\ \hline
+\textit{Modo} & (\texttt{nombre}) & Dos modos no se llaman igual. \\ \hline
+\textit{Division} & (\texttt{nombre}) & Dos divisiones no se llaman igual. \\ \hline
+\textit{Division} & (\texttt{orden}) & Dos divisiones no ocupan la misma posición. \\ \hline
+\textit{Nivel\-IA} & (\texttt{nombre}) & Dos niveles no se llaman igual. \\ \hline
+\textit{Leccion} & (\texttt{orden}) & Dos lecciones no ocupan la misma posición. \\ \hline
+\textit{Tipo\-Caja} & (\texttt{nombre}) & Dos tipos de caja no se llaman igual. \\ \hline
+\textit{Palabra\-Prohibida} & (\texttt{termino}, \texttt{idioma}, \texttt{ambito}) & Un término no se repite en el mismo idioma y ámbito. \\ \hline
+\textit{Motivo\-Reporte} & (\texttt{nombre}) & Dos motivos no se llaman igual. \\ \hline
+\textit{Usuario} & (\texttt{nickname}) & El nickname es identificador de acceso (\mbox{CU-01} \mbox{RN-14}). \\ \hline
+\textit{Usuario} & (\texttt{correo}), si \texttt{correo IS NOT NULL} & El correo es único entre las cuentas que lo tienen (\mbox{CU-02} \mbox{RN-02}). \\ \hline
+\textit{Usuario} & (\texttt{codigo\_\allowbreak{}amigo}), si \texttt{codigo\_\allowbreak{}amigo IS NOT NULL} & El código de amigo es único por cuenta (\mbox{CU-30} \mbox{RN-06}). \\ \hline
+\textit{Sesion} & (\texttt{token\_\allowbreak{}hash}) & Un token identifica una sola sesión. \\ \hline
+\textit{Codigo\-Segundo\-Factor} & (\texttt{id\_\allowbreak{}usuario}), si \texttt{estado = PENDIENTE} & Un solo código vigente por cuenta (\mbox{CU-01} \mbox{RN-09}). \\ \hline
+\textit{Token\-Verificacion\-Correo} & (\texttt{token\_\allowbreak{}hash}) & El enlace identifica un solo token. \\ \hline
+\textit{Token\-Verificacion\-Correo} & (\texttt{id\_\allowbreak{}usuario}), si \texttt{estado = PENDIENTE} & Un solo token de verificación vigente por cuenta (\mbox{CU-04} \mbox{RN-03}). \\ \hline
+\textit{Token\-Recuperacion} & (\texttt{id\_\allowbreak{}usuario}), si \texttt{estado = PENDIENTE} & Un solo código de recuperación vigente por cuenta (\mbox{CU-03} \mbox{RN-05}). \\ \hline
+\textit{Aceptacion\-Terminos} & (\texttt{id\_\allowbreak{}usuario}, \texttt{version\_\allowbreak{}terminos}) & Una cuenta acepta cada versión una sola vez. \\ \hline
+\textit{Avatar} & (\texttt{id\_\allowbreak{}usuario}), si \texttt{vigente = 1} & A lo sumo un avatar vigente por cuenta (\mbox{CU-12} \mbox{RN-06}). \\ \hline
+\textit{Enlace\-Red} & (\texttt{id\_\allowbreak{}usuario}, \texttt{orden}) & Junto con el CHECK del orden, limita a cuatro enlaces por cuenta (\mbox{CU-12} \mbox{RN-03}). \\ \hline
+\textit{Equipamiento} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & Llave candidata: como el objeto determina su ranura, la cuenta y el objeto también identifican la fila. \\ \hline
+\textit{Participacion} & (\texttt{id\_\allowbreak{}partida}, \texttt{orden\_\allowbreak{}turno}) & Dos jugadores no comparten turno en la misma partida. \\ \hline
+\textit{Participacion} & (\texttt{id\_\allowbreak{}usuario}), si \texttt{terminada = 0} & Una sola participación sin terminar por jugador, incluidas las de la IA (\mbox{D-11}). \\ \hline
+\textit{Participacion\-Objeto} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & Llave candidata: como el objeto determina su ranura, también identifica la fila. \\ \hline
+\textit{Oferta\-Tablas} & (\texttt{id\_\allowbreak{}partida}), si \texttt{estado = PENDIENTE} & A lo sumo una oferta pendiente por partida; la segunda es aceptación (\mbox{CU-22} \mbox{RN-04}). \\ \hline
+\textit{Enlace\-Espectador} & (\texttt{token\_\allowbreak{}hash}) & El token identifica un solo enlace. \\ \hline
+\textit{Sala} & (\texttt{codigo}), si \texttt{estado <> CERRADA} & El código es único entre las salas no cerradas y puede reutilizarse después (\mbox{CU-18} \mbox{RN-01}). \\ \hline
+\textit{Sala} & (\texttt{id\_\allowbreak{}partida}), si \texttt{id\_\allowbreak{}partida IS NOT NULL} & Una partida viene de una sola sala. \\ \hline
+\textit{Sala\-Participante} & (\texttt{id\_\allowbreak{}sala}, \texttt{plaza}) & Dos jugadores no ocupan la misma plaza (\mbox{CU-19} \mbox{RN-02}). \\ \hline
+\textit{Invitacion} & (\texttt{id\_\allowbreak{}emisor}, \texttt{id\_\allowbreak{}destinatario}), si \texttt{estado = PENDIENTE} & Una sola invitación pendiente del mismo emisor al mismo destinatario (\mbox{CU-32} \mbox{RN-04}). \\ \hline
+\textit{Solicitud} & (\texttt{id\_\allowbreak{}solicitante}, \texttt{id\_\allowbreak{}destinatario}) & No hay dos solicitudes iguales entre el mismo par (\mbox{CU-30} \mbox{RN-03}). \\ \hline
+\textit{Reporte} & (\texttt{id\_\allowbreak{}denunciante}, \texttt{id\_\allowbreak{}reportado}, \texttt{id\_\allowbreak{}partida}), si \texttt{id\_\allowbreak{}partida IS NOT NULL} & No se reporta dos veces al mismo jugador por la misma partida (\mbox{CU-42} \mbox{RN-03}). \\ \hline
+\textit{Apelacion} & (\texttt{id\_\allowbreak{}sancion}) & Una sola apelación por sanción (\mbox{CU-45} \mbox{RN-01}). \\ \hline
+\end{longtable}
+\end{center}
