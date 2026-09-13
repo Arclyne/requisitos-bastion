@@ -1,0 +1,114 @@
+\subsection*{CU-45: Apelar una sanción}
+\addcontentsline{toc}{subsection}{CU-45: Apelar una sanción}
+\label{cu-45}
+
+\begin{fichacu}{CU-45}{Apelar una sanción}
+  \crudFila{Responsable}{José Eduardo Prior Hernández}
+  \crudFila{Actor principal}{Jugador sancionado}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{10d, 10e}
+  \crudFila{Objetivo}{Permitir al jugador sancionado pedir una revisión de su sanción explicando por qué la considera injusta, incluso cuando la sanción le impide iniciar sesión, y consultar después el resultado.}
+  \crudFila{Disparador}{El jugador selecciona ``Apelar'' en la pantalla informativa de sanción: la \texttt{GUI\_\allowbreak{}BannedAccount} del \mbox{FA-10} del \mbox{CU-01}, o el aviso de chat restringido del \mbox{FA-03} del \mbox{CU-28}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El jugador tiene una sesión abierta o un token de apelación vigente emitido por el \mbox{FA-10} del \mbox{CU-01}.
+      \item \textbf{\mbox{PRE-02}} Existe una \textit{Sancion} del jugador con \texttt{activa} en verdadero.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El jugador selecciona ``Apelar'' en la pantalla informativa de sanción.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Appeal} con el detalle de la sanción —ámbito, tipo, motivo y fecha de término—, un campo de texto para la apelación con su largo máximo y el aviso de que la sanción sigue vigente mientras se revisa. \textit{(Ver \mbox{FA-01})}
+      \item El jugador escribe su apelación y da click en ``Enviar''.
+      \item El SJM valida que el texto no esté vacío y no exceda el largo máximo. \textit{(Ver \mbox{FA-02})}
+      \item El SJM envía el mensaje \texttt{APPEAL\_\allowbreak{}SANCTION\_\allowbreak{}REQUEST} con el \texttt{id\_\allowbreak{}sancion}, el texto y el token de sesión o de apelación. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token sea válido y corresponda al \textit{Usuario} sancionado. \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas verifica que la \textit{Sancion} pertenezca al jugador y siga \texttt{activa}. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas verifica que no exista ya una \textit{Apelacion} para esa sanción (\mbox{RN-01}). \textit{(Ver \mbox{FA-05})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas vuelve a validar el texto y lo contrasta con el catálogo de \textit{PalabraProhibida}, solo para marcarlo, sin rechazarlo (\mbox{RN-04}).
+      \item El Servidor de partidas crea la \textit{Apelacion} con el \texttt{id\_\allowbreak{}sancion}, el \texttt{texto}, la \texttt{fecha\_\allowbreak{}apelacion} y el \texttt{estado} igual a \texttt{PENDIENTE}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas responde con \texttt{APPEAL\_\allowbreak{}OK}.
+      \item El SJM muestra que la apelación se envió, que la sanción sigue vigente mientras tanto y que el resultado aparecerá en esta misma pantalla.
+      \item Fin del caso de uso. La apelación queda en la cola de moderación y se resuelve en el \mbox{FA-08} del \mbox{CU-43}.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El jugador ya apeló esa sanción}\par
+    \begin{cuenum}[start=1]
+      \item El SJM recibe con el detalle de la sanción la \textit{Apelacion} existente.
+      \item El SJM muestra su estado en lugar del formulario: pendiente, rechazada con la nota del moderador, o aceptada.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El texto está vacío o excede el largo}\par
+    \begin{cuenum}[start=1]
+      \item El SJM mantiene deshabilitado ``Enviar'' y muestra el contador de caracteres junto al campo.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El token no es válido}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{APPEAL\_\allowbreak{}TOKEN\_\allowbreak{}INVALID}: la sesión terminó o el token de apelación caducó.
+      \item El SJM indica que debe volver a iniciar sesión para apelar, y conserva el texto escrito en memoria.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La sanción ya no está activa}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra la \textit{Sancion} vencida, retirada o sustituida por otra.
+      \item El Servidor de partidas responde con \texttt{SANCTION\_\allowbreak{}NOT\_\allowbreak{}ACTIVE}.
+      \item El SJM indica que esa sanción ya no está vigente y, si fue sustituida, muestra la nueva con su propia opción de apelar.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: Ya existe una apelación para esa sanción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{APPEAL\_\allowbreak{}ALREADY\_\allowbreak{}EXISTS} y su estado.
+      \item El flujo continúa en el paso 2 del \mbox{FA-01}.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El jugador consulta el resultado de su apelación}\par
+    \begin{cuenum}[start=1]
+      \item El jugador vuelve a abrir la pantalla informativa de sanción, o recibe la notificación del resultado.
+      \item Si la \textit{Apelacion} está \texttt{ACEPTADA}, la sanción ya no existe como activa: la cuenta puede iniciar sesión o el chat vuelve a estar disponible, y el SJM lo indica.
+      \item Si está \texttt{RECHAZADA}, el SJM muestra la nota del moderador y la fecha en que termina la sanción.
+      \item Fin del caso de uso. No se admite una segunda apelación de la misma sanción.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador y conserva el texto escrito.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía la apelación y solicita el detalle de la sanción, que incluirá la apelación si se creó.
+      \item El flujo continúa en el paso 2 del FN o en el \mbox{FA-01}, según la respuesta.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y conserva el texto escrito.
+      \item Al recuperar la conexión, el flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje y muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse, conservando el texto.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe una \textit{Apelacion} \texttt{PENDIENTE} asociada a la sanción, con el texto y la fecha.
+      \item \textbf{\mbox{POST-02}} La \textit{Sancion} sigue activa y surte efecto hasta que un moderador resuelva la apelación.
+      \item \textbf{\mbox{POST-03}} Una sanción tiene a lo sumo una \textit{Apelacion}.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Se admite una sola apelación por sanción.
+      \item \textbf{\mbox{RN-02}} Solo se apelan sanciones activas.
+      \item \textbf{\mbox{RN-03}} Apelar no suspende la sanción mientras se revisa.
+      \item \textbf{\mbox{RN-04}} El texto de la apelación no se filtra ni se rechaza por lenguaje: se marca para el moderador. Rechazar una apelación por las palabras que usa quien se siente injustamente sancionado le quitaría la única vía que tiene.
+      \item \textbf{\mbox{RN-05}} Una sanción de ámbito de cuenta puede apelarse sin iniciar sesión, con el token de apelación que emite el inicio de sesión fallido. Ese token solo sirve para apelar y caduca a los quince minutos.
+      \item \textbf{\mbox{RN-06}} La apelación la resuelve un moderador distinto del que aplicó la sanción (\mbox{RN-04} del \mbox{CU-43}).
+      \item \textbf{\mbox{RN-07}} El resultado de la apelación se comunica al jugador, con la nota del moderador si se rechaza.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre el token de apelación.}\par
+    Un jugador con sanción de cuenta no puede iniciar sesión, pero es justo quien más necesita apelar. Abrirle una sesión, aunque limitada, obligaría a que todos los casos de uso comprobaran si la sesión es de apelación antes de operar. En su lugar, el inicio de sesión, que ya comprobó la contraseña, emite un token que solo este caso acepta, que solo identifica la sanción y que caduca pronto. El jugador demuestra quién es, apela y no obtiene nada más.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token, cuando hay sesión \textit{(paso 6)}
+      \item \textit{Sancion}: lee la del jugador \textit{(pasos 2, 7)}
+      \item \textit{Apelacion}: lee la existente; crea \textit{(pasos 8, 10, \mbox{FA-01}, \mbox{FA-06})}
+      \item \textit{PalabraProhibida}: lee, para marcar el texto \textit{(paso 9)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

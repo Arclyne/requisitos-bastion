@@ -1,0 +1,145 @@
+\subsection*{CU-19: Unirse a una sala con código}
+\addcontentsline{toc}{subsection}{CU-19: Unirse a una sala con código}
+\label{cu-19}
+
+\begin{fichacu}{CU-19}{Unirse a una sala con código}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador o Invitado}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{1h, 5d, 5e, 7d}
+  \crudFila{Objetivo}{Permitir que un jugador entre a la sala privada de otro introduciendo su código de seis caracteres, ocupe una plaza libre y se declare listo para jugar.}
+  \crudFila{Disparador}{El jugador selecciona ``Unirse con código'' en la \texttt{GUI\_\allowbreak{}PrivateMatch}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El jugador no participa en ninguna partida en línea sin terminar, no está en la \textit{ColaEmparejamiento} y no está en otra \textit{Sala} abierta. \textit{(Ver \mbox{FA-06})}
+      \item \textbf{\mbox{PRE-03}} El jugador no tiene una \textit{Sancion} activa de ámbito de cuenta.
+      \item \textbf{\mbox{PRE-04}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El SJM despliega el campo de código de la \texttt{GUI\_\allowbreak{}PrivateMatch}, que acepta seis caracteres, los convierte a mayúsculas mientras se escriben y admite pegar el código copiado.
+      \item El jugador captura el código y da click en ``Entrar''.
+      \item El SJM valida que tenga seis caracteres del alfabeto permitido (\mbox{RN-01} del \mbox{CU-18}). \textit{(Ver \mbox{FA-01})}
+      \item El SJM envía el mensaje \texttt{JOIN\_\allowbreak{}ROOM\_\allowbreak{}REQUEST} con el código y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y comprueba las precondiciones \mbox{PRE-02} y \mbox{PRE-03}. \textit{(Ver \mbox{FA-06})}
+      \item El Servidor de partidas busca la \textit{Sala} con ese \texttt{codigo} y \texttt{estado} igual a \texttt{ABIERTA}. \textit{(Ver \mbox{FA-02}, \mbox{FA-03}, \mbox{EX-01})}
+      \item El Servidor de partidas verifica que no exista un \textit{Bloqueo} entre el jugador y ningún miembro de la sala (\mbox{RN-05}). \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas verifica que queden plazas libres según el \textit{Modo} de la sala. \textit{(Ver \mbox{FA-04})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas crea la \textit{SalaParticipante} del jugador con la primera plaza libre, \texttt{listo} en falso y la \texttt{fecha\_\allowbreak{}union}, dentro de una transacción que vuelve a comprobar las plazas para que dos jugadores no ocupen la última a la vez (\mbox{RN-02}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas notifica a los demás miembros con \texttt{ROOM\_\allowbreak{}UPDATED}.
+      \item El Servidor de partidas responde con \texttt{JOIN\_\allowbreak{}ROOM\_\allowbreak{}OK}, los ajustes de la sala, los miembros con su plaza y su marca de listo, y los mensajes recientes del chat de sala.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}WaitingRoom} con el anfitrión identificado, las plazas ocupadas y libres, los ajustes que eligió el anfitrión, el chat de sala y el botón ``Estoy listo''. \textit{(Ver \mbox{FA-05}, \mbox{FA-07}, \mbox{FA-08})}
+      \item El jugador revisa los ajustes y da click en ``Estoy listo''.
+      \item El SJM envía \texttt{ROOM\_\allowbreak{}READY\_\allowbreak{}REQUEST} y el Servidor de partidas pone \texttt{listo} en verdadero en su \textit{SalaParticipante} y notifica a todos con \texttt{ROOM\_\allowbreak{}UPDATED}.
+      \item El SJM marca al jugador como listo. Cuando el anfitrión inicia la partida, el flujo continúa en el paso 17 del \mbox{CU-18}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El código tiene un formato inválido}\par
+    \begin{cuenum}[start=1]
+      \item El SJM escribe junto al campo que el código tiene seis letras o números, sin enviar nada al Servidor de partidas.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: No existe una sala abierta con ese código, o hay un bloqueo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{JOIN\_\allowbreak{}ROOM\_\allowbreak{}FAILED} y el motivo \texttt{SALA\_\allowbreak{}NO\_\allowbreak{}ENCONTRADA}, idéntico en ambos casos, para no revelar el bloqueo (\mbox{RN-05}).
+      \item El Servidor de partidas registra el intento en la bitácora del servidor con la dirección de red, y cuenta los intentos fallidos de ese jugador (\mbox{RN-04}). \textit{(Ver \mbox{FA-09})}
+      \item El SJM muestra junto al campo que no hay ninguna sala con ese código, sin borrar lo escrito.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: La partida de esa sala ya empezó}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra la \textit{Sala} en \texttt{EN\_\allowbreak{}PARTIDA}.
+      \item Si la sala permite espectadores, el Servidor de partidas responde con \texttt{ROOM\_\allowbreak{}IN\_\allowbreak{}MATCH} y el \texttt{id\_\allowbreak{}partida}; el SJM ofrece ``Ver como espectador'', que continúa en el \mbox{CU-34}.
+      \item En caso contrario, el Servidor de partidas responde con \texttt{SALA\_\allowbreak{}NO\_\allowbreak{}ENCONTRADA}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La sala está llena}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{JOIN\_\allowbreak{}ROOM\_\allowbreak{}FAILED} y el motivo \texttt{SALA\_\allowbreak{}LLENA}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que la sala no tiene plazas libres.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El jugador quita su marca de listo}\par
+    \begin{cuenum}[start=1]
+      \item El jugador da click en ``No estoy listo''.
+      \item El Servidor de partidas pone \texttt{listo} en falso y notifica a todos.
+      \item El flujo continúa en el paso 13 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El jugador ya está en una partida, en la cola o en otra sala}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{JOIN\_\allowbreak{}ROOM\_\allowbreak{}FAILED} y el motivo \texttt{YA\_\allowbreak{}EN\_\allowbreak{}PARTIDA}, \texttt{YA\_\allowbreak{}EN\_\allowbreak{}COLA} o \texttt{YA\_\allowbreak{}EN\_\allowbreak{}SALA}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} con la acción correspondiente, como en el \mbox{FA-01} del \mbox{CU-18}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El anfitrión cambia los ajustes}\par
+    \begin{cuenum}[start=1]
+      \item El SJM recibe \texttt{ROOM\_\allowbreak{}UPDATED} con los ajustes nuevos y la marca de listo retirada (\mbox{RN-06} del \mbox{CU-18}).
+      \item El SJM resalta los ajustes que cambiaron y vuelve a mostrar ``Estoy listo''.
+      \item El flujo continúa en el paso 13 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: El jugador sale de la sala o el anfitrión la cierra}\par
+    \begin{cuenum}[start=1]
+      \item Si el jugador selecciona ``Salir'', el flujo continúa en el \mbox{FA-07} del \mbox{CU-18}.
+      \item Si el anfitrión cierra la sala, el SJM recibe \texttt{ROOM\_\allowbreak{}CLOSED} y vuelve al menú principal con el aviso de que la sala se cerró.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-09}: El jugador prueba demasiados códigos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas detecta que el jugador alcanzó el límite de códigos fallidos en el periodo (\mbox{RN-04}).
+      \item El Servidor de partidas responde con \texttt{JOIN\_\allowbreak{}ROOM\_\allowbreak{}THROTTLED} y los segundos que faltan.
+      \item El SJM deshabilita el campo durante ese tiempo y lo indica.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar o escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no quede un miembro sin plaza o una plaza ocupada dos veces.
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que transcurrió el tiempo límite sin recibir un mensaje completo.
+      \item El SJM no reenvía la solicitud y consulta con \texttt{ROOM\_\allowbreak{}STATE\_\allowbreak{}REQUEST} si el jugador quedó dentro de la sala.
+      \item El SJM muestra la sala si entró, o el campo de código si no.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe en la sala de espera}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas detecta la pérdida de conexión del miembro y espera sesenta segundos.
+      \item Si reconecta, conserva su plaza; si no, elimina su \textit{SalaParticipante} y notifica a los demás.
+      \item Si la conexión se pierde con la partida ya creada, rige el \mbox{CU-26}.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe una \textit{SalaParticipante} del jugador en la \textit{Sala}, con su plaza y \texttt{listo} en verdadero.
+      \item \textbf{\mbox{POST-02}} Todos los miembros de la sala saben que el jugador entró y si está listo.
+      \item \textbf{\mbox{POST-03}} Ninguna plaza de la sala está ocupada por dos jugadores ni la sala tiene más miembros que plazas.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por cualquier flujo alterno distinto del \mbox{FA-05} y el \mbox{FA-07}, el jugador no es miembro de ninguna sala.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Solo se entra a salas en estado \texttt{ABIERTA}. Las que están en partida admiten espectadores si el anfitrión lo permitió; las cerradas no existen para quien las busca.
+      \item \textbf{\mbox{RN-02}} Ocupar una plaza se hace dentro de una transacción que vuelve a contar las plazas libres, para que dos jugadores no ocupen la última al mismo tiempo.
+      \item \textbf{\mbox{RN-03}} Un jugador que entra a una sala no está listo hasta que lo declara, porque debe haber visto los ajustes que eligió el anfitrión.
+      \item \textbf{\mbox{RN-04}} El número de códigos fallidos por jugador en un periodo está acotado, para que no puedan adivinarse salas probando códigos.
+      \item \textbf{\mbox{RN-05}} Dos jugadores con un \textit{Bloqueo} entre ellos no pueden estar en la misma sala, y quien intenta entrar recibe la misma respuesta que ante un código inexistente.
+      \item \textbf{\mbox{RN-06}} Las cuentas de invitado pueden unirse a salas privadas.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué la sala no reserva plaza al entrar al campo del código.}\par
+    Se consideró reservar la plaza desde que el jugador empieza a escribir un código válido, para que la sala no se llenara mientras lo termina. Se descartó porque exigiría que el servidor supiera qué sala se está escribiendo antes de recibir el código completo, y porque una reserva abandonada dejaría plazas bloqueadas que nadie usa. Resolver la carrera en el momento de ocupar, con la comprobación dentro de la transacción, es más simple y basta.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 5)}
+      \item \textit{Participacion}, \textit{ColaEmparejamiento}, \textit{SalaParticipante}, \textit{Sancion}: lee, para las precondiciones \textit{(paso 5)}
+      \item \textit{Sala}: lee por \texttt{codigo} y \texttt{estado} \textit{(paso 6)}
+      \item \textit{Bloqueo}: lee entre el jugador y los miembros \textit{(paso 7)}
+      \item \textit{Modo}: lee el número de plazas \textit{(paso 8)}
+      \item \textit{SalaParticipante}: crea, actualiza \texttt{listo}, elimina \textit{(pasos 9, 14, \mbox{FA-05}, \mbox{EX-03})}
+      \item \textit{Mensaje}: lee los recientes del chat de sala \textit{(paso 11)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

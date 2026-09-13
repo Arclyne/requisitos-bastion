@@ -1,0 +1,111 @@
+\subsection*{CU-36: Consultar el historial de partidas}
+\addcontentsline{toc}{subsection}{CU-36: Consultar el historial de partidas}
+\label{cu-36}
+
+\begin{fichacu}{CU-36}{Consultar el historial de partidas}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador o Invitado}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{2e, 17f}
+  \crudFila{Objetivo}{Mostrar al jugador las partidas que ha jugado, con su resultado, la forma en que terminaron, su duración y el cambio de elo, filtrables por modo y por final, y con acceso a la repetición de cada una.}
+  \crudFila{Disparador}{El jugador selecciona ``historial'' en la \texttt{GUI\_\allowbreak{}MainMenu} o en su perfil.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El jugador selecciona ``historial''.
+      \item El SJM envía el mensaje \texttt{MATCH\_\allowbreak{}HISTORY\_\allowbreak{}REQUEST} sin filtros, con la primera página y el token. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-01})}
+      \item El Servidor de partidas recupera las \textit{Participacion} terminadas del jugador cuya \textit{Partida} tenga \texttt{estado} igual a \texttt{FINALIZADA} o \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE}, ordenadas por \texttt{fecha\_\allowbreak{}fin} descendente, con su \texttt{resultado}, su \texttt{posicion} y su \texttt{diferencia\_\allowbreak{}elo} (\mbox{RN-01}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas recupera de cada \textit{Partida} el \texttt{tipo}, el \texttt{id\_\allowbreak{}modo}, la \texttt{forma\_\allowbreak{}termino}, la \texttt{fecha\_\allowbreak{}inicio} y la \texttt{fecha\_\allowbreak{}fin}, y del \textit{Modo} su nombre.
+      \item El Servidor de partidas recupera los rivales de cada partida a través de sus \textit{Participacion} y el \texttt{nickname} de su \textit{Usuario}, o el \textit{NivelIA} si la partida fue contra la IA.
+      \item El Servidor de partidas calcula la duración de cada partida como la diferencia entre \texttt{fecha\_\allowbreak{}fin} y \texttt{fecha\_\allowbreak{}inicio}, sin almacenarla (\mbox{RN-02}).
+      \item El Servidor de partidas responde con \texttt{MATCH\_\allowbreak{}HISTORY\_\allowbreak{}OK} y la página.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MatchHistory} con una fila por partida: resultado, rivales, modo, forma de término, duración, fecha y cambio de elo en color y con signo. \textit{(Ver \mbox{FA-02}, \mbox{FA-03}, \mbox{FA-04}, \mbox{FA-05}, \mbox{FA-06})}
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El jugador filtra por modo o por final}\par
+    \begin{cuenum}[start=1]
+      \item El jugador elige un \textit{Modo}, una forma de término, o ambos, en los filtros.
+      \item El SJM repite la solicitud con los filtros, y el Servidor de partidas restringe el paso 4 del FN a ellos.
+      \item Si ninguna partida coincide, el SJM muestra un estado vacío con la acción ``quitar filtros''.
+      \item El flujo continúa en el paso 9 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El jugador no tiene partidas}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra un estado vacío con la acción ``buscar partida'', que continúa en el \mbox{CU-17}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El jugador abre la repetición de una partida}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona una fila.
+      \item El flujo continúa en el \mbox{CU-37} Ver la repetición de una partida.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: Una partida está pendiente de cierre}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la fila con ``procesando resultado'' en lugar del resultado y del cambio de elo, y sin acceso a la repetición todavía (\mbox{RN-13} del \mbox{CU-25}).
+      \item El flujo continúa en el paso 9 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El jugador añade a un rival o abre su perfil}\par
+    \begin{cuenum}[start=1]
+      \item El jugador abre el menú de un rival en una fila.
+      \item El flujo continúa en el \mbox{CU-30} o en el \mbox{CU-16}, según la opción.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El jugador pasa de página}\par
+    \begin{cuenum}[start=1]
+      \item El jugador llega al final de la lista.
+      \item El SJM solicita la página siguiente y el flujo continúa en el paso 4 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con la opción ``Reintentar''.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el esqueleto de la lista con la opción ``Reintentar''.
+      \item Si el jugador reintenta, el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y conserva las páginas ya cargadas.
+      \item Al recuperar la conexión, el SJM habilita de nuevo la carga de páginas.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje y muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} El jugador ve sus partidas terminadas con resultado, forma de término, duración y cambio de elo.
+      \item \textbf{\mbox{POST-02}} Ninguna estructura de la base de datos se modificó.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} El historial muestra partidas clasificatorias, privadas y contra la IA. Las dos últimas aparecen marcadas como partidas sin elo.
+      \item \textbf{\mbox{RN-02}} La duración no se almacena: se calcula a partir de \texttt{fecha\_\allowbreak{}inicio} y \texttt{fecha\_\allowbreak{}fin}.
+      \item \textbf{\mbox{RN-03}} El cambio de elo mostrado es la \texttt{diferencia\_\allowbreak{}elo} guardada en la \textit{Participacion}, no una resta entre estados de la cuenta (\mbox{RN-05} del \mbox{CU-25}).
+      \item \textbf{\mbox{RN-04}} Las partidas de rivales cuya cuenta fue eliminada o anonimizada siguen apareciendo, con el nombre anónimo si ya pasó el plazo de recuperación.
+      \item \textbf{\mbox{RN-05}} La victoria por reloj se distingue visualmente de la victoria por llegar a meta.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué el historial no tiene tabla propia.}\par
+    El historial es exactamente el conjunto de \textit{Participacion} terminadas del jugador, unido a sus partidas. Una tabla de historial duplicaría resultado, fecha y elo, que ya escribe el \mbox{CU-25}, con el riesgo de que ambas versiones diverjan. Guardar la diferencia de elo en la participación es lo único que el historial necesitaba y no podía calcular.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 3)}
+      \item \textit{Participacion}: lee las del jugador y las de sus rivales \textit{(pasos 4, 6)}
+      \item \textit{Partida}, \textit{Modo}, \textit{NivelIA}: lee \textit{(pasos 5, 6)}
+      \item \textit{Usuario}: lee el \texttt{nickname} de los rivales \textit{(paso 6)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

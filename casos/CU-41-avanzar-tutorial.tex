@@ -1,0 +1,119 @@
+\subsection*{CU-41: Avanzar en el tutorial}
+\addcontentsline{toc}{subsection}{CU-41: Avanzar en el tutorial}
+\label{cu-41}
+
+\begin{fichacu}{CU-41}{Avanzar en el tutorial}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador o Invitado}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{6a, 6b}
+  \crudFila{Objetivo}{Enseñar las reglas del juego con siete lecciones que se juegan sobre el tablero real, pidiendo al jugador que pruebe cada paso, y guardar su avance en la cuenta para que pueda continuar donde lo dejó desde cualquier dispositivo.}
+  \crudFila{Disparador}{El jugador selecciona ``cómo jugar'' en la \texttt{GUI\_\allowbreak{}MainMenu} o en el menú de partida.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El catálogo contiene las siete \textit{Leccion} con sus pasos.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El jugador selecciona ``cómo jugar''.
+      \item El SJM envía el mensaje \texttt{TUTORIAL\_\allowbreak{}PROGRESS\_\allowbreak{}REQUEST} con el token. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
+      \item El Servidor de partidas recupera las \textit{Leccion} ordenadas y el \textit{ProgresoTutorial} del jugador en cada una, con su \texttt{paso\_\allowbreak{}actual} y si está \texttt{completada}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas responde con \texttt{TUTORIAL\_\allowbreak{}PROGRESS\_\allowbreak{}OK}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}TutorialIndex} con las siete lecciones —mover, colocar muro, saltar al rival, bloquear sin encerrar, el camino más corto, gestionar tus muros y las reglas de cuatro jugadores—, marcando las completadas y la que está a medias, con ``continuar'' destacado sobre la siguiente sin terminar. \textit{(Ver \mbox{FA-01})}
+      \item El jugador selecciona ``continuar''. \textit{(Ver \mbox{FA-02})}
+      \item El SJM carga la \textit{Leccion} y despliega el tablero real en el paso \texttt{paso\_\allowbreak{}actual}, con las casillas o surcos implicados resaltados y la instrucción del paso.
+      \item El jugador realiza la acción que pide el paso sobre el tablero.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El SJM comprueba localmente que la acción sea la esperada por el guion de la lección (\mbox{RN-02}). \textit{(Ver \mbox{FA-03})}
+      \item El SJM muestra la confirmación del paso y envía el mensaje \texttt{TUTORIAL\_\allowbreak{}STEP\_\allowbreak{}DONE} con la lección y el número de paso. \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas actualiza el \texttt{paso\_\allowbreak{}actual} del \textit{ProgresoTutorial} del jugador para esa lección, creándolo si es el primer paso, y escribe \texttt{fecha\_\allowbreak{}actualizacion} (\mbox{RN-03}). \textit{(Ver \mbox{FA-04}, \mbox{EX-01})}
+      \item Los pasos 7 a 11 se repiten hasta el último paso de la lección.
+      \item Al completar el último paso, el Servidor de partidas marca el \textit{ProgresoTutorial} como \texttt{completada} con su \texttt{fecha\_\allowbreak{}completada}.
+      \item El SJM muestra el cierre de la lección con las opciones ``siguiente lección'', ``practicar contra la IA'' y ``volver al índice''. \textit{(Ver \mbox{FA-05})}
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El jugador no ha empezado el tutorial}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no encuentra ningún \textit{ProgresoTutorial} y destaca la primera lección con ``empezar''.
+      \item El flujo continúa en el paso 6 del FN, en el paso 1 de la primera lección.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El jugador repite una lección completada}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona una lección completada.
+      \item El SJM la carga desde el primer paso sin modificar su estado de completada.
+      \item El SJM no envía el avance de los pasos al Servidor de partidas mientras repite, porque la lección ya está completada (\mbox{RN-04}).
+      \item El flujo continúa en el paso 7 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El jugador hace una acción distinta de la esperada}\par
+    \begin{cuenum}[start=1]
+      \item El SJM deshace la acción sobre el tablero y muestra, junto al cursor, una pista de qué se espera, resaltando de nuevo las casillas implicadas.
+      \item Si el jugador falla tres veces el mismo paso, el SJM muestra la acción correcta animada.
+      \item El flujo continúa en el paso 8 del FN. Fallar no retrocede el progreso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El avance recibido va por delante del guardado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas recibe un paso más de uno por encima del \texttt{paso\_\allowbreak{}actual} guardado, por ejemplo si el jugador avanzó sin conexión.
+      \item El Servidor de partidas acepta el paso recibido si no supera el número de pasos de la lección, porque el tutorial no otorga nada que pueda obtenerse con trampas (\mbox{RN-05}).
+      \item El flujo continúa en el paso 12 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El jugador sale a mitad de una lección}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona ``salir'' o cierra el juego.
+      \item El SJM vuelve al índice. El progreso quedó guardado en el último paso confirmado.
+      \item La próxima vez, en este o en otro dispositivo, la lección continúa en ese paso.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El jugador practica contra la IA}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona ``practicar contra la IA'' al cerrar una lección.
+      \item El flujo continúa en el \mbox{CU-27} con el nivel aprendiz y las sugerencias activadas preseleccionados.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar o escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item Si el fallo fue al cargar el progreso, el SJM muestra el índice sin marcas y permite empezar cualquier lección.
+      \item Si el fallo fue al guardar un paso, el SJM conserva el avance en la configuración local y lo reenvía en el siguiente paso confirmado.
+      \item El flujo continúa en el paso 7 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera al cargar el progreso}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el índice con el último progreso conocido en el dispositivo, o sin marcas si no hay ninguno.
+      \item El flujo continúa en el paso 6 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: No hay conexión con el servidor}\par
+    \begin{cuenum}[start=1]
+      \item El SJM permite hacer el tutorial completo sin conexión, porque las lecciones y la comprobación de acciones están en el cliente (\mbox{RN-02}).
+      \item El SJM guarda el avance en la configuración local.
+      \item Al recuperar la conexión, el SJM envía el avance acumulado conforme al \mbox{FA-04}.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El guardado de un paso no llega al servidor}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no detiene la lección: guarda el paso localmente y lo incluye en el siguiente envío.
+      \item El flujo continúa en el paso 12 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{ProgresoTutorial} del jugador en la lección tiene \texttt{completada} en verdadero y su \texttt{fecha\_\allowbreak{}completada}.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el \mbox{FA-05}, el \textit{ProgresoTutorial} tiene el \texttt{paso\_\allowbreak{}actual} del último paso confirmado.
+      \item \textbf{\mbox{POST-03}} El jugador tiene a lo sumo un \textit{ProgresoTutorial} por \textit{Leccion}.
+      \item \textbf{\mbox{POST-04}} El avance es el mismo en todos los dispositivos del jugador una vez sincronizado.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} El tutorial tiene siete lecciones, que se juegan sobre el tablero real y resaltan las casillas implicadas en cada paso.
+      \item \textbf{\mbox{RN-02}} La comprobación de las acciones del tutorial se hace en el cliente, siguiendo el guion de la lección. El tutorial puede completarse sin conexión.
+      \item \textbf{\mbox{RN-03}} El progreso se guarda en la cuenta, paso a paso, para que el jugador continúe donde lo dejó en cualquier dispositivo.
+      \item \textbf{\mbox{RN-04}} Repetir una lección completada no modifica su progreso.
+      \item \textbf{\mbox{RN-05}} Completar el tutorial no otorga experiencia, monedas ni objetos. Por eso el servidor puede aceptar el avance que declara el cliente sin validarlo contra el tablero.
+      \item \textbf{\mbox{RN-06}} Las cuentas de invitado también guardan su progreso, que se conserva al vincular la cuenta.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué el tutorial se valida en el cliente.}\par
+    Es el único caso del sistema en el que el servidor no es la autoridad sobre lo que ocurre en el tablero, y conviene justificarlo. En todos los demás el servidor valida porque hay algo en juego: elo, monedas o el resultado de otro jugador. En el tutorial no hay nada que ganar, así que un cliente modificado solo conseguiría marcar como vistas unas lecciones que no hizo. A cambio, validar en el cliente permite hacer el tutorial sin conexión, que es justo lo que necesita quien acaba de instalar el juego.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 2)}
+      \item \textit{Leccion}: lee el catálogo con su número de pasos \textit{(pasos 3, 7)}
+      \item \textit{ProgresoTutorial}: lee \textit{(paso 3)}
+      \item \textit{ProgresoTutorial}: crea; escribe \texttt{paso\_\allowbreak{}actual}, \texttt{fecha\_\allowbreak{}actualizacion}, \texttt{completada}, \texttt{fecha\_\allowbreak{}completada} \textit{(pasos 11, 13, \mbox{FA-04})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

@@ -1,0 +1,153 @@
+\subsection*{CU-38: Comprar un objeto en la tienda}
+\addcontentsline{toc}{subsection}{CU-38: Comprar un objeto en la tienda}
+\label{cu-38}
+
+\begin{fichacu}{CU-38}{Comprar un objeto en la tienda}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{4d, 4e, 4f, 16e}
+  \crudFila{Objetivo}{Adquirir un objeto cosmético concreto pagando con monedas del juego, dejando constancia del movimiento y sin posibilidad de comprarlo dos veces.}
+  \crudFila{Disparador}{El Jugador selecciona un objeto en la \texttt{GUI\_\allowbreak{}Shop} o pulsa el precio de un objeto que no posee en la \texttt{GUI\_\allowbreak{}Customize}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El \textit{Usuario} tiene \texttt{tipo\_\allowbreak{}cuenta} en \texttt{REGISTRADA} o en \texttt{INVITADO}: ambos pueden comprar, porque ambos ganan monedas jugando.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Shop} con los destacados arriba y la rejilla de artículos abajo, y el saldo de monedas del \textit{Usuario} siempre visible.
+      \item El Jugador selecciona un objeto.
+      \item El SJM muestra la vista previa del objeto sobre un tablero real y su precio (\mbox{RN-06} del \mbox{CU-14}). \textit{(Ver \mbox{FA-01})}
+      \item El Jugador da click en ``Comprar''.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}PurchaseConfirm} con el nombre del objeto, su precio, el saldo actual y el saldo que quedará (\mbox{RN-07}). \textit{(Ver \mbox{FA-02})}
+      \item El Jugador confirma la compra.
+      \item El SJM envía el mensaje \texttt{PURCHASE\_\allowbreak{}ITEM\_\allowbreak{}REQUEST} con el identificador del objeto, el precio que el cliente mostró y el token de sesión. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-03})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas recupera el \textit{ObjetoCosmetico} y verifica que exista, esté activo y esté a la venta. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas verifica que el precio recibido coincida con el del catálogo (\mbox{RN-03}). \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas verifica que el \textit{Usuario} no posea ya el objeto, es decir, que no exista su \textit{UsuarioObjeto} (\mbox{RN-02}). \textit{(Ver \mbox{FA-06})}
+      \item El Servidor de partidas verifica que el objeto no esté bloqueado por nivel o, si lo está, que el \textit{Usuario} alcance el nivel requerido (\mbox{RN-04}). \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas recupera el saldo de monedas del \textit{Usuario} y verifica que alcance el precio. \textit{(Ver \mbox{FA-08})}
+      \item El Servidor de partidas inicia una transacción sobre la Base de datos.
+      \item El Servidor de partidas crea el \textit{UsuarioObjeto} con la \texttt{fecha\_\allowbreak{}obtencion} actual y el origen \texttt{COMPRA}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas crea el \textit{MovimientoMoneda} de tipo \texttt{COMPRA}, con el importe en negativo, el objeto adquirido y la fecha (\mbox{RN-05}).
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item El Servidor de partidas descuenta el importe del saldo del \textit{Usuario}.
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
+      \item El Servidor de partidas responde con \texttt{PURCHASE\_\allowbreak{}ITEM\_\allowbreak{}OK} y el saldo actualizado.
+      \item El SJM actualiza el saldo, marca el objeto como poseído en la rejilla y ofrece equiparlo. \textit{(Ver \mbox{FA-09})}
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El objeto está bloqueado por nivel}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el nivel requerido en lugar del precio y no habilita la compra.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Jugador cancela la confirmación}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Cancelar''.
+      \item El SJM cierra la \texttt{GUI\_\allowbreak{}PurchaseConfirm} sin enviar nada al Servidor de partidas.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que la sesión terminó y despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El objeto ya no está a la venta}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{PURCHASE\_\allowbreak{}FAILED} y el motivo \texttt{OBJETO\_\allowbreak{}NO\_\allowbreak{}DISPONIBLE}.
+      \item El SJM recarga la rejilla de la tienda y muestra la \texttt{GUI\_\allowbreak{}MessageWarning}.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El precio recibido no coincide con el del catálogo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas rechaza la compra y registra la discrepancia en la bitácora del servidor con la \texttt{version\_\allowbreak{}cliente} y la dirección de red de origen, por tratarse de un indicio de cliente modificado o de un catálogo desactualizado (\mbox{RN-03}).
+      \item El Servidor de partidas responde con \texttt{PURCHASE\_\allowbreak{}FAILED} y el motivo \texttt{PRECIO\_\allowbreak{}DESACTUALIZADO}, incluyendo el precio vigente.
+      \item El SJM recarga el catálogo y muestra el precio nuevo.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El Jugador ya posee el objeto}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{PURCHASE\_\allowbreak{}FAILED} y el motivo \texttt{OBJETO\_\allowbreak{}YA\_\allowbreak{}POSEIDO}, sin descontar nada (\mbox{RN-02}).
+      \item El SJM recarga la rejilla y marca el objeto como poseído.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El Jugador no alcanza el nivel requerido}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{PURCHASE\_\allowbreak{}FAILED} y el motivo \texttt{NIVEL\_\allowbreak{}INSUFICIENTE}, con el nivel requerido.
+      \item El SJM lo indica sobre el objeto.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: El saldo no alcanza}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{PURCHASE\_\allowbreak{}FAILED} y el motivo \texttt{SALDO\_\allowbreak{}INSUFICIENTE}, con el saldo vigente y el importe que falta.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando cuánto falta, sin ofrecer ninguna forma de obtener monedas con dinero real: no existe (\mbox{RN-01}).
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-09}: El Jugador equipa el objeto recién comprado}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Equipar'' en el aviso de compra completada.
+      \item El flujo continúa en el \mbox{CU-14} Equipar un objeto cosmético.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no quede el objeto otorgado sin cobrarse ni cobrado sin otorgarse (\mbox{RN-08}).
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador y recarga el saldo.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas trata la transacción como fallida, registra la excepción señalando que el estado de la compra es indeterminado y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que revise su inventario y su saldo antes de volver a comprar.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía la compra: podría cobrarse dos veces (\mbox{RN-09}).
+      \item El SJM solicita el saldo y el inventario actualizados y los muestra.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: La conexión se interrumpe durante la compra}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida.
+      \item Al recuperar la conexión, el SJM recarga el saldo y el inventario, que dirán si la compra se aplicó.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe un \textit{UsuarioObjeto} que acredita la posesión, con su \texttt{fecha\_\allowbreak{}obtencion} y el origen \texttt{COMPRA}.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, existe un \textit{MovimientoMoneda} de tipo \texttt{COMPRA} con el importe en negativo y el objeto adquirido.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, el saldo del \textit{Usuario} disminuyó exactamente en el precio del objeto y sigue coincidiendo con la suma de sus movimientos (\mbox{RN-05}).
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el FN, el objeto no queda equipado: equiparlo es el \mbox{CU-14}.
+      \item \textbf{\mbox{POST-05}} Si el caso termina por cualquier flujo alterno o excepción, el saldo y el inventario conservan su estado anterior.
+      \item \textbf{\mbox{POST-06}} En ningún caso el \textit{Usuario} puede acabar con dos \textit{UsuarioObjeto} del mismo objeto.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} La tienda solo admite monedas del juego. No existe forma de obtener monedas con dinero real en ningún flujo del sistema.
+      \item \textbf{\mbox{RN-02}} Un \textit{Usuario} no puede poseer dos veces el mismo \textit{ObjetoCosmetico}. La clave primaria compuesta de \textit{UsuarioObjeto} lo garantiza.
+      \item \textbf{\mbox{RN-03}} El precio lo fija el catálogo del servidor. El que el cliente envía solo sirve para detectar que estaba mostrando uno distinto.
+      \item \textbf{\mbox{RN-04}} Un objeto bloqueado por nivel no puede comprarse aunque haya saldo.
+      \item \textbf{\mbox{RN-05}} Toda entrada o salida de monedas deja un \textit{MovimientoMoneda}. El saldo es la suma de los movimientos: si no cuadra, el error está en el saldo, no en el historial.
+      \item \textbf{\mbox{RN-06}} Todo el contenido de la tienda es cosmético y no altera las reglas de la partida.
+      \item \textbf{\mbox{RN-07}} Una compra exige confirmación explícita que muestre el precio y el saldo resultante, porque gasta algo que costó jugar.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} El otorgamiento del objeto, el movimiento de monedas y el descuento del saldo ocurren en una sola transacción.
+      \item \textbf{\mbox{RN-09}} El cliente nunca reenvía una compra no confirmada. Consulta el estado.
+    \end{cureglas}} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 8)}
+      \item \textit{ObjetoCosmetico}: lee precio, disponibilidad y nivel requerido \textit{(pasos 9, 10, 12)}
+      \item \textit{UsuarioObjeto}: lee, para comprobar que no lo posea \textit{(paso 11)}
+      \item \textit{UsuarioObjeto}: crea \textit{(paso 15)}
+      \item \textit{Usuario}: lee saldo y nivel; escribe saldo \textit{(pasos 12, 13, 17)}
+      \item \textit{MovimientoMoneda}: crea \textit{(paso 16)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

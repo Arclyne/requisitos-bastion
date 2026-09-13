@@ -1,0 +1,128 @@
+\subsection*{CU-22: Ofrecer y aceptar tablas}
+\addcontentsline{toc}{subsection}{CU-22: Ofrecer y aceptar tablas}
+\label{cu-22}
+
+\begin{fichacu}{CU-22}{Ofrecer y aceptar tablas}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador que ofrece}
+  \crudFila{Actores interesados}{Jugador rival, que acepta o rechaza}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{19d, 7g}
+  \crudFila{Objetivo}{Permitir que los dos jugadores de una partida acuerden terminarla en empate, con una sola pulsación para ofrecer y otra para aceptar, sin interrumpir el juego mientras la oferta está pendiente.}
+  \crudFila{Disparador}{El Jugador selecciona ``ofrecer tablas'' en el menú de partida.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Participacion} sin terminar en una \textit{Partida} con \texttt{estado} igual a \texttt{EN\_\allowbreak{}CURSO}.
+      \item \textbf{\mbox{PRE-02}} El \textit{Modo} de la partida es de dos jugadores (\mbox{RN-01}).
+      \item \textbf{\mbox{PRE-03}} La partida no es contra la IA.
+      \item \textbf{\mbox{PRE-04}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Jugador abre el menú de partida y selecciona ``ofrecer tablas''. \textit{(Ver \mbox{FA-01})}
+      \item El SJM envía el mensaje \texttt{OFFER\_\allowbreak{}DRAW\_\allowbreak{}REQUEST} con el token de sesión, sin pedir confirmación (\mbox{RN-06}). \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y a una \textit{Participacion} sin terminar de esa partida. \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas verifica que no exista ya una \textit{OfertaTablas} pendiente en la partida. \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas verifica que el Jugador no haya hecho otra oferta en sus últimas cinco jugadas (\mbox{RN-03}). \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas crea la \textit{OfertaTablas} con el \texttt{id\_\allowbreak{}partida}, el \texttt{id\_\allowbreak{}ofertante}, el \texttt{numero\_\allowbreak{}jugada} vigente, la \texttt{fecha\_\allowbreak{}oferta} y el \texttt{estado} igual a \texttt{PENDIENTE}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas notifica al rival con \texttt{DRAW\_\allowbreak{}OFFERED}.
+      \item El SJM del Jugador muestra junto a su reloj que la oferta está pendiente, y la partida sigue con normalidad: el reloj no se detiene (\mbox{RN-02}).
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El SJM del rival muestra un aviso no bloqueante sobre el tablero con las opciones ``Aceptar tablas'' y ``Rechazar''.
+      \item El rival selecciona ``Aceptar tablas'' y su SJM envía \texttt{ACCEPT\_\allowbreak{}DRAW\_\allowbreak{}REQUEST}. \textit{(Ver \mbox{FA-05}, \mbox{FA-06})}
+      \item El Servidor de partidas verifica que la \textit{OfertaTablas} siga \texttt{PENDIENTE} y que la partida siga \texttt{EN\_\allowbreak{}CURSO}. \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas marca la \textit{OfertaTablas} como \texttt{ACEPTADA} con la \texttt{fecha\_\allowbreak{}respuesta}. \textit{(Ver \mbox{EX-01})}
+      \item El flujo continúa en el \mbox{CU-25} Finalizar la partida, con la forma de término \texttt{TABLAS}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La opción no está disponible}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no muestra ``ofrecer tablas'' en partidas de cuatro jugadores ni contra la IA, y la muestra deshabilitada con el tiempo restante si el Jugador ofreció hace menos de cinco jugadas.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: La sesión o la participación no son válidas}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID} o \texttt{NOT\_\allowbreak{}A\_\allowbreak{}PARTICIPANT}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login} o el menú principal, según corresponda.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: Ya hay una oferta pendiente}\par
+    \begin{cuenum}[start=1]
+      \item Si la oferta pendiente es del rival, el Servidor de partidas interpreta la solicitud como aceptación: querer tablas en ambos sentidos es exactamente un acuerdo (\mbox{RN-04}), y el flujo continúa en el paso 12 del FN.
+      \item Si la oferta pendiente es del propio Jugador, el Servidor de partidas responde con \texttt{DRAW\_\allowbreak{}ALREADY\_\allowbreak{}OFFERED} y el SJM lo indica.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El Jugador ofreció tablas hace muy poco}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{DRAW\_\allowbreak{}OFFER\_\allowbreak{}THROTTLED} y cuántas jugadas faltan.
+      \item El SJM lo indica junto a la opción.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El rival rechaza las tablas}\par
+    \begin{cuenum}[start=1]
+      \item El rival selecciona ``Rechazar'' y su SJM envía \texttt{DECLINE\_\allowbreak{}DRAW\_\allowbreak{}REQUEST}.
+      \item El Servidor de partidas marca la \textit{OfertaTablas} como \texttt{RECHAZADA} con la \texttt{fecha\_\allowbreak{}respuesta} y notifica al Jugador con \texttt{DRAW\_\allowbreak{}DECLINED}.
+      \item El SJM del Jugador retira el indicador de oferta pendiente y muestra brevemente que fue rechazada.
+      \item Fin del caso de uso. La partida sigue.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El rival juega sin responder}\par
+    \begin{cuenum}[start=1]
+      \item El rival mueve el peón o coloca un muro con la oferta pendiente.
+      \item El Servidor de partidas marca la \textit{OfertaTablas} como \texttt{CADUCADA} al registrar la jugada, y notifica a ambos (\mbox{RN-05}).
+      \item Los SJM retiran el aviso y el indicador.
+      \item Fin del caso de uso. La partida sigue.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: La partida terminó antes de aceptar}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra la partida \texttt{FINALIZADA}, por ejemplo porque un reloj llegó a cero mientras la oferta estaba pendiente.
+      \item El Servidor de partidas marca la oferta como \texttt{CADUCADA}, si seguía pendiente, y responde con \texttt{MATCH\_\allowbreak{}ALREADY\_\allowbreak{}FINISHED} y el resultado.
+      \item El SJM despliega la pantalla de fin de partida del \mbox{CU-25}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra el aviso en la barra de conexión. Si el fallo fue al aceptar, la partida sigue en curso y la oferta sigue pendiente.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Fallo al cerrar la partida tras aceptar}\par
+    \begin{cuenum}[start=1]
+      \item El \mbox{CU-25} no logra cerrar la partida y la deja \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} conforme a su \mbox{EX-01}.
+      \item La \textit{OfertaTablas} conserva el estado \texttt{ACEPTADA}, que es la prueba del acuerdo al reintentar el cierre.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía la oferta ni la aceptación y solicita el estado de la partida con \texttt{MATCH\_\allowbreak{}STATE\_\allowbreak{}REQUEST}.
+      \item El SJM muestra la oferta o el resultado según el estado recibido.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y el flujo continúa en el \mbox{CU-26}.
+      \item Una oferta pendiente no caduca por la desconexión, pero sí al jugar el rival, conforme al \mbox{FA-06}.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, la \textit{OfertaTablas} está \texttt{ACEPTADA} y la partida se cerró con la forma de término \texttt{TABLAS}.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el \mbox{FA-05} o el \mbox{FA-06}, la \textit{OfertaTablas} está \texttt{RECHAZADA} o \texttt{CADUCADA} y la partida sigue en curso.
+      \item \textbf{\mbox{POST-03}} En ningún momento hay más de una \textit{OfertaTablas} pendiente en la misma partida.
+      \item \textbf{\mbox{POST-04}} Ninguna oferta detuvo el reloj de ningún jugador.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Las tablas solo existen en partidas de dos jugadores. En el modo de cuatro jugadores, quien llega a meta queda clasificado y la partida sigue, así que no hay un empate que acordar.
+      \item \textbf{\mbox{RN-02}} Ofrecer tablas no detiene la partida ni el reloj.
+      \item \textbf{\mbox{RN-03}} Un jugador puede ofrecer tablas a lo sumo una vez cada cinco jugadas propias, para que la oferta no sirva para distraer al rival.
+      \item \textbf{\mbox{RN-04}} Si los dos jugadores ofrecen tablas, la segunda oferta se resuelve como aceptación de la primera.
+      \item \textbf{\mbox{RN-05}} Una oferta caduca en cuanto el rival juega sin aceptarla.
+      \item \textbf{\mbox{RN-06}} Ofrecer tablas no pide confirmación: basta con un botón. Es la confirmación más ligera de las tres que frenan una partida, porque no cuesta nada al que la ofrece.
+      \item \textbf{\mbox{RN-07}} Las tablas aceptadas en una partida clasificatoria mueven el elo conforme al \mbox{FA-05} del \mbox{CU-25}.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué la oferta se guarda.}\par
+    Una oferta de tablas podría vivir solo en la memoria del servidor, porque dura como mucho una jugada. Se guarda por dos motivos. El primero es el \mbox{CU-26}: si el rival se desconecta y vuelve, la oferta tiene que seguir ahí o haber caducado de forma comprobable. El segundo es el \mbox{CU-42}: ofrecer tablas en bucle es una forma conocida de acoso en juegos por turnos, y un moderador necesita ver cuántas ofertas hizo un jugador para juzgarlo.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}, \textit{Participacion}: lee por token \textit{(paso 3)}
+      \item \textit{Partida}, \textit{Modo}: lee \texttt{estado}, \texttt{tipo} y número de jugadores \textit{(pasos 3, 11, \mbox{PRE-02})}
+      \item \textit{OfertaTablas}: lee las pendientes y las recientes del jugador \textit{(pasos 4, 5)}
+      \item \textit{OfertaTablas}: crea; escribe \texttt{estado} y \texttt{fecha\_\allowbreak{}respuesta} \textit{(pasos 6, 12, \mbox{FA-05}, \mbox{FA-06})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

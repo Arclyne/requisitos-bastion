@@ -1,0 +1,145 @@
+\subsection*{CU-32: Invitar a un amigo a jugar}
+\addcontentsline{toc}{subsection}{CU-32: Invitar a un amigo a jugar}
+\label{cu-32}
+
+\begin{fichacu}{CU-32}{Invitar a un amigo a jugar}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador que invita}
+  \crudFila{Actores interesados}{Jugador invitado}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{2a, 10a, 13a}
+  \crudFila{Objetivo}{Permitir que el Jugador rete directamente a un amigo, o a cualquier jugador desde su menú, a una partida privada, sin que ninguno de los dos tenga que compartir un código.}
+  \crudFila{Disparador}{El Jugador selecciona ``invitar a jugar'' junto a un amigo en la \texttt{GUI\_\allowbreak{}Friends}, o ``retar'' en el menú de un jugador.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El Jugador no participa en ninguna partida en línea sin terminar y no está en la \textit{ColaEmparejamiento}.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Jugador selecciona ``invitar a jugar'' junto a un amigo.
+      \item El SJM despliega la hoja rápida de invitación con el \textit{Modo} y el reloj de la última partida privada preseleccionados. \textit{(Ver \mbox{FA-01})}
+      \item El Jugador confirma los ajustes y selecciona ``Enviar invitación''.
+      \item El SJM envía el mensaje \texttt{INVITE\_\allowbreak{}TO\_\allowbreak{}MATCH\_\allowbreak{}REQUEST} con el \texttt{id\_\allowbreak{}usuario} del invitado, los ajustes y el token. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y comprueba la precondición \mbox{PRE-02}. \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas verifica que no exista un \textit{Bloqueo} entre ambos y que el invitado no tenga la cuenta \texttt{ELIMINADA} (\mbox{RN-03}). \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas verifica que el invitado tenga una \textit{Sesion} abierta y que no participe en una partida en línea sin terminar. \textit{(Ver \mbox{FA-04}, \mbox{FA-05})}
+      \item El Servidor de partidas verifica que no exista ya una \textit{Invitacion} pendiente del Jugador al mismo invitado (\mbox{RN-04}). \textit{(Ver \mbox{FA-06})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item Si el Jugador no está en una sala abierta, el Servidor de partidas crea la \textit{Sala} con los ajustes, conforme a los pasos 8 a 10 del \mbox{CU-18}; si ya está en una sala propia, usa esa. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas crea la \textit{Invitacion} con la \texttt{id\_\allowbreak{}sala}, el \texttt{id\_\allowbreak{}emisor}, el \texttt{id\_\allowbreak{}destinatario}, la \texttt{fecha\_\allowbreak{}invitacion}, la \texttt{fecha\_\allowbreak{}expiracion} a sesenta segundos y el \texttt{estado} igual a \texttt{PENDIENTE}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas notifica al invitado con \texttt{MATCH\_\allowbreak{}INVITATION}, con el \texttt{nickname} del Jugador y los ajustes.
+      \item El SJM del Jugador despliega la \texttt{GUI\_\allowbreak{}WaitingRoom} de la sala, con la plaza del invitado marcada como ``invitado, esperando respuesta''.
+      \item El SJM del invitado muestra un aviso emergente con los ajustes y las opciones ``Aceptar'' y ``Rechazar'', con la cuenta atrás de los sesenta segundos. \textit{(Ver \mbox{FA-07}, \mbox{FA-08})}
+      \item El invitado selecciona ``Aceptar'' y su SJM envía \texttt{ACCEPT\_\allowbreak{}INVITATION\_\allowbreak{}REQUEST}.
+      \item El Servidor de partidas verifica que la \textit{Invitacion} siga \texttt{PENDIENTE}, no haya expirado y que la sala siga \texttt{ABIERTA} con plaza libre. \textit{(Ver \mbox{FA-09})}
+      \item El Servidor de partidas marca la \textit{Invitacion} como \texttt{ACEPTADA} y agrega al invitado a la sala conforme a los pasos 9 a 11 del \mbox{CU-19}, sin pedir el código (\mbox{RN-05}).
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item El SJM del invitado despliega la \texttt{GUI\_\allowbreak{}WaitingRoom}, y el flujo continúa en el paso 13 del \mbox{CU-19}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador reta a alguien que no es su amigo}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``retar'' en el menú de un jugador desde el chat, el ranking o el fin de partida.
+      \item El flujo continúa en el paso 2 del FN con las mismas comprobaciones; no hace falta amistad, pero sí que no haya bloqueo (\mbox{RN-02}).
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Jugador ya está en una partida o en la cola}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{INVITATION\_\allowbreak{}FAILED} y el motivo \texttt{YA\_\allowbreak{}EN\_\allowbreak{}PARTIDA} o \texttt{YA\_\allowbreak{}EN\_\allowbreak{}COLA}.
+      \item El SJM ofrece volver a la partida o cancelar la búsqueda.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: Hay un bloqueo o la cuenta no está disponible}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{INVITATION\_\allowbreak{}FAILED} y el motivo \texttt{JUGADOR\_\allowbreak{}NO\_\allowbreak{}DISPONIBLE}, sin revelar la causa.
+      \item El SJM muestra que no es posible invitar a ese jugador ahora.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El invitado no está conectado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{INVITATION\_\allowbreak{}FAILED} y el motivo \texttt{JUGADOR\_\allowbreak{}DESCONECTADO}, sin crear la sala ni la invitación.
+      \item El SJM lo indica junto al amigo.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El invitado está jugando una partida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{INVITATION\_\allowbreak{}FAILED} y el motivo \texttt{JUGADOR\_\allowbreak{}EN\_\allowbreak{}PARTIDA}.
+      \item Si la partida admite espectadores, el SJM ofrece ``ver su partida'', que continúa en el \mbox{CU-34}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: Ya hay una invitación pendiente al mismo jugador}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{INVITATION\_\allowbreak{}ALREADY\_\allowbreak{}PENDING} y los segundos que le quedan.
+      \item El SJM lleva al Jugador a la sala donde espera esa invitación.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El invitado rechaza}\par
+    \begin{cuenum}[start=1]
+      \item El invitado selecciona ``Rechazar'' y su SJM envía \texttt{DECLINE\_\allowbreak{}INVITATION\_\allowbreak{}REQUEST}.
+      \item El Servidor de partidas marca la \textit{Invitacion} como \texttt{RECHAZADA} y notifica al Jugador con \texttt{INVITATION\_\allowbreak{}DECLINED}.
+      \item El SJM del Jugador libera la plaza en la sala y lo indica; la sala sigue abierta para invitar a otro o compartir el código.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: La invitación expira sin respuesta}\par
+    \begin{cuenum}[start=1]
+      \item Transcurren los sesenta segundos sin respuesta.
+      \item El Servidor de partidas marca la \textit{Invitacion} como \texttt{EXPIRADA} y notifica a ambos.
+      \item El SJM del invitado retira el aviso; el del Jugador libera la plaza.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-09}: La sala dejó de estar disponible antes de aceptar}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra la sala cerrada, llena o en partida.
+      \item El Servidor de partidas marca la \textit{Invitacion} como \texttt{EXPIRADA} y responde con \texttt{INVITATION\_\allowbreak{}NO\_\allowbreak{}LONGER\_\allowbreak{}VALID}.
+      \item El SJM del invitado muestra que la invitación ya no es válida.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no quede una \textit{Invitacion} hacia una sala que no se creó.
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: El invitado acepta y falla la entrada a la sala}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la marca \texttt{ACEPTADA} junto con la entrada fallida.
+      \item El SJM del invitado muestra el error y conserva el aviso mientras la invitación no expire.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía la invitación y consulta el estado de la sala.
+      \item El SJM muestra la sala con la invitación si se creó, o la lista de amigos si no.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida.
+      \item Si se pierde la conexión del invitado, la invitación expira conforme al \mbox{FA-08}; si se pierde la del Jugador, la sala se rige por el \mbox{EX-04} del \mbox{CU-18}.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, la \textit{Invitacion} está \texttt{ACEPTADA} y ambos jugadores son miembros de la misma \textit{Sala} abierta.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el \mbox{FA-07}, el \mbox{FA-08} o el \mbox{FA-09}, la \textit{Invitacion} está \texttt{RECHAZADA} o \texttt{EXPIRADA} y el invitado no entró a la sala.
+      \item \textbf{\mbox{POST-03}} No hay más de una \textit{Invitacion} pendiente del mismo emisor al mismo destinatario.
+      \item \textbf{\mbox{POST-04}} La sala creada para la invitación se comporta como cualquier sala privada del \mbox{CU-18}, y la partida no otorgará elo ni monedas.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Una invitación a jugar crea o usa una sala privada; no es un emparejamiento clasificatorio.
+      \item \textbf{\mbox{RN-02}} Se puede retar a cualquier jugador, sea o no amigo, siempre que no haya un bloqueo entre ambos.
+      \item \textbf{\mbox{RN-03}} Un \textit{Bloqueo} impide invitar, y la respuesta no revela el bloqueo.
+      \item \textbf{\mbox{RN-04}} Una invitación expira a los sesenta segundos, y solo puede haber una pendiente del mismo emisor al mismo destinatario.
+      \item \textbf{\mbox{RN-05}} Aceptar una invitación da acceso a la sala sin conocer su código.
+      \item \textbf{\mbox{RN-06}} Solo se puede invitar a jugadores con sesión abierta y que no estén en una partida en línea.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué la invitación usa una sala en lugar de crear la partida directamente.}\par
+    Crear la partida en cuanto el invitado acepta sería más rápido, pero dejaría dos formas de empezar una partida privada con reglas distintas. Pasar por la sala hace que la invitación sea solo una forma de entrar sin código: los ajustes, la marca de listo, el chat de espera y el inicio los resuelve el \mbox{CU-18}, y funciona igual para un reto uno contra uno que para completar una partida de cuatro invitando a varios amigos.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee la del emisor y comprueba la del destinatario \textit{(pasos 5, 7)}
+      \item \textit{Participacion}, \textit{ColaEmparejamiento}: lee, para las exclusiones \textit{(pasos 5, 7)}
+      \item \textit{Bloqueo}, \textit{Usuario}: lee \textit{(paso 6)}
+      \item \textit{Invitacion}: lee las pendientes; crea; escribe \texttt{estado} \textit{(pasos 8, 10, 16, \mbox{FA-07}, \mbox{FA-08}, \mbox{FA-09})}
+      \item \textit{Sala}, \textit{SalaParticipante}: crea o usa la sala; agrega al invitado \textit{(pasos 9, 16)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

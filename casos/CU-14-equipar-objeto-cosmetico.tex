@@ -1,0 +1,136 @@
+\subsection*{CU-14: Equipar un objeto cosmético}
+\addcontentsline{toc}{subsection}{CU-14: Equipar un objeto cosmético}
+\label{cu-14}
+
+\begin{fichacu}{CU-14}{Equipar un objeto cosmético}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{4a, 4b, 4c, 17e}
+  \crudFila{Objetivo}{Cambiar el objeto que el Jugador lleva equipado en una de las seis ranuras de personalización, viendo antes cómo queda sobre un tablero real.}
+  \crudFila{Disparador}{El Jugador entra a la \texttt{GUI\_\allowbreak{}Customize} desde el menú principal y selecciona un objeto de una ranura.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El \textit{Usuario} posee, mediante \textit{UsuarioObjeto}, al menos el objeto inicial de cada una de las seis \textit{Ranura}.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Customize} con las seis \textit{Ranura} —peón, muros, tablero, marco, emotes y título—, la vista previa en un tablero real girable y el saldo de monedas del \textit{Usuario}.
+      \item El Jugador selecciona una \textit{Ranura}.
+      \item El SJM muestra la rejilla de los \textit{ObjetoCosmetico} de esa ranura, distinguiendo los que el \textit{Usuario} posee, los que puede comprar con su precio y los que están bloqueados por nivel (\mbox{RN-05}).
+      \item El Jugador selecciona un objeto que posee. \textit{(Ver \mbox{FA-01}, \mbox{FA-02})}
+      \item El SJM aplica el objeto a la vista previa, sobre el tablero a tamaño completo y con los peones y muros puestos, sin haberlo equipado todavía (\mbox{RN-06}).
+      \item El Jugador da click en ``Equipar''. \textit{(Ver \mbox{FA-03})}
+      \item El SJM envía el mensaje \texttt{EQUIP\_\allowbreak{}ITEM\_\allowbreak{}REQUEST} con el identificador del objeto y el token de sesión. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-04})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas recupera el \textit{ObjetoCosmetico} y verifica que exista y esté activo en el catálogo. \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas verifica que exista el \textit{UsuarioObjeto} que acredita la posesión (\mbox{RN-02}). \textit{(Ver \mbox{FA-06})}
+      \item El Servidor de partidas actualiza la fila de \textit{Equipamiento} correspondiente a la \textit{Ranura} del objeto, haciéndola apuntar al objeto elegido (\mbox{RN-01}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas responde con \texttt{EQUIP\_\allowbreak{}ITEM\_\allowbreak{}OK} y el equipamiento completo actualizado.
+      \item El SJM marca el objeto como equipado en la rejilla, retira la marca del anterior y conserva la vista previa.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador selecciona un objeto que no posee}\par
+    \begin{cuenum}[start=1]
+      \item El SJM aplica el objeto a la vista previa de todos modos, para que pueda juzgarlo antes de decidir (\mbox{RN-06}).
+      \item El SJM sustituye el botón ``Equipar'' por el precio en monedas o por el nivel que hace falta, según corresponda.
+      \item Si el Jugador da click en el precio, el flujo continúa en el \mbox{CU-38} Comprar un objeto en la tienda y, si la compra se completa, vuelve al paso 6 del FN.
+      \item En caso contrario, el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Jugador usa la opción aleatoria}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Aleatorio''.
+      \item El SJM elige al azar un objeto que el \textit{Usuario} posea dentro de la ranura activa, distinto del equipado.
+      \item El flujo continúa en el paso 5 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El Jugador cambia de ranura sin equipar}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona otra \textit{Ranura} con un objeto aplicado a la vista previa pero sin equipar.
+      \item El SJM descarta la previsualización y devuelve la vista al equipamiento real, sin preguntar: no se perdió nada que costara capturar.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que la sesión terminó y despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El objeto fue retirado del catálogo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{EQUIP\_\allowbreak{}ITEM\_\allowbreak{}FAILED} y el motivo \texttt{OBJETO\_\allowbreak{}NO\_\allowbreak{}DISPONIBLE}.
+      \item El SJM recarga el catálogo de la ranura y muestra la \texttt{GUI\_\allowbreak{}MessageWarning}.
+      \item El flujo continúa en el paso 3 del FN. Lo que el \textit{Usuario} ya tuviera equipado de ese objeto no se retira: se conserva hasta que decida cambiarlo (\mbox{RN-04}).
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El Jugador no posee el objeto}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{EQUIP\_\allowbreak{}ITEM\_\allowbreak{}FAILED} y el motivo \texttt{OBJETO\_\allowbreak{}NO\_\allowbreak{}POSEIDO}.
+      \item El Servidor de partidas registra el intento en la bitácora del servidor con la \texttt{version\_\allowbreak{}cliente} y la dirección de red de origen: la interfaz solo ofrece equipar lo poseído, así que es indicio de cliente modificado.
+      \item El SJM recarga la rejilla de la ranura y muestra la \texttt{GUI\_\allowbreak{}MessageWarning}.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El Jugador está en una partida en curso}\par
+    \begin{cuenum}[start=1]
+      \item El SJM permite entrar a la \texttt{GUI\_\allowbreak{}Customize} y equipar con normalidad.
+      \item El SJM advierte, junto al botón, que el cambio se verá en la siguiente partida y no en la que está jugando (\mbox{RN-03}).
+      \item El flujo continúa en el paso 6 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador y revierte la marca de equipado en la rejilla.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Fallo al consultar el catálogo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SERVER\_\allowbreak{}ERROR} sin devolver la rejilla.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con las opciones ``Reintentar'' y ``Aceptar''.
+      \item Si el Jugador selecciona ``Reintentar'', el flujo continúa en el paso 3 del FN. Si selecciona ``Aceptar'', el SJM vuelve al menú principal.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM cierra la conexión y descarta el intercambio.
+      \item El SJM revierte la marca de equipado y muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que no fue posible confirmar el cambio.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-05}: El tablero 3D no puede dibujar la vista previa}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que el equipo no puede con la representación tridimensional y pasa a la vista plana.
+      \item El SJM muestra la vista previa en dos dimensiones, con los mismos objetos aplicados, e informa una sola vez mediante la \texttt{GUI\_\allowbreak{}MessageWarning}.
+      \item El flujo continúa en el paso 5 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, la fila de \textit{Equipamiento} del \textit{Usuario} para esa \textit{Ranura} apunta al objeto elegido.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, las otras cinco filas de \textit{Equipamiento} no cambiaron: equipar afecta a una ranura y solo a una.
+      \item \textbf{\mbox{POST-03}} El \textit{Usuario} sigue teniendo exactamente una fila de \textit{Equipamiento} por cada una de las seis \textit{Ranura}, ni más ni menos (\mbox{RN-01}).
+      \item \textbf{\mbox{POST-04}} Ningún \textit{UsuarioObjeto} se creó ni se borró: equipar no otorga ni retira la posesión de nada.
+      \item \textbf{\mbox{POST-05}} Si el caso termina por cualquier flujo alterno o excepción, el equipamiento conserva su estado anterior.
+      \item \textbf{\mbox{POST-06}} Las partidas en curso no cambiaron de aspecto: el cambio se aplica a partir de la siguiente (\mbox{RN-03}).
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Todo \textit{Usuario} tiene exactamente un \textit{ObjetoCosmetico} equipado en cada una de las seis \textit{Ranura}. No existe el estado de ranura vacía: por eso el alta otorga un objeto inicial por ranura y por eso equipar sustituye en lugar de añadir.
+      \item \textbf{\mbox{RN-02}} Solo puede equiparse un objeto que el \textit{Usuario} posee, acreditado por su \textit{UsuarioObjeto}.
+      \item \textbf{\mbox{RN-03}} El cambio de equipamiento no afecta a una partida en curso. El aspecto de los peones y los muros se fija al empezar la partida, para que nadie cambie de apariencia a mitad de una jugada.
+      \item \textbf{\mbox{RN-04}} Retirar un objeto del catálogo impide obtenerlo y equiparlo de nuevo, pero no lo quita a quien ya lo tenía equipado.
+      \item \textbf{\mbox{RN-05}} Todo el contenido de las ranuras es cosmético y no altera las reglas de la partida. Un objeto no puede dar ventaja de ningún tipo.
+      \item \textbf{\mbox{RN-06}} La vista previa muestra el objeto sobre un tablero real a tamaño completo y girable, con peones y muros puestos, se posea o no. Se puede ver lo que no se tiene: es la forma de decidir una compra.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué Equipamiento es una tabla y no seis columnas.}\par
+    Se consideró guardar las seis ranuras como seis claves foráneas en \textit{Usuario}. Se descartó porque cualquier ranura nueva —un fondo de menú, un efecto de victoria— obligaría a alterar la tabla de \textit{Usuario}, que es la más consultada del sistema, y porque las seis columnas no podrían declararse contra un catálogo distinto cada una sin repetir la misma restricción seis veces. Con \textit{Equipamiento} como tabla, la clave primaria compuesta de usuario y ranura garantiza por sí sola el \mbox{RN-01}, y añadir una ranura es insertar una fila en un catálogo.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 8)}
+      \item \textit{Ranura}: lee el catálogo de las seis \textit{(paso 1)}
+      \item \textit{ObjetoCosmetico}: lee la rejilla de la ranura y comprueba que esté activo \textit{(pasos 3, 9)}
+      \item \textit{UsuarioObjeto}: lee, para distinguir lo poseído y acreditar la posesión \textit{(pasos 3, 10)}
+      \item \textit{Equipamiento}: actualiza la fila de esa ranura \textit{(paso 11)}
+      \item \textit{Usuario}: lee el saldo de monedas y el nivel, para pintar la rejilla \textit{(pasos 1, 3)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

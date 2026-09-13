@@ -1,0 +1,159 @@
+\subsection*{CU-12: Editar el perfil y las preferencias}
+\addcontentsline{toc}{subsection}{CU-12: Editar el perfil y las preferencias}
+\label{cu-12}
+
+\begin{fichacu}{CU-12}{Editar el perfil y las preferencias}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{9c, 18d, 12c}
+  \crudFila{Objetivo}{Permitir al Jugador cambiar lo que los demás ven de él —avatar, título equipado y enlaces a sus redes— y sus preferencias de cuenta, sin tocar su identidad de acceso.}
+  \crudFila{Disparador}{El Jugador selecciona ``editar'' en la \texttt{GUI\_\allowbreak{}Profile} o entra a la sección de cuenta de la \texttt{GUI\_\allowbreak{}Settings}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+      \item \textbf{\mbox{PRE-03}} El \textit{Usuario} posee al menos un \textit{ObjetoCosmetico} de la \textit{Ranura} de título, aunque sea el inicial.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}EditProfile} con el avatar actual, el selector de los treinta y dos iconos predefinidos, el título equipado, hasta cuatro campos de enlace a redes y el selector de \texttt{idioma\_\allowbreak{}preferido}. El \texttt{nickname} se muestra pero no se edita aquí (\mbox{RN-01}). \textit{(Ver \mbox{FA-01})}
+      \item El Jugador modifica los campos que desee y da click en ``Guardar''.
+      \item El SJM valida que los enlaces capturados tengan formato de dirección web y que ninguno pertenezca a un acortador (\mbox{RN-04}). \textit{(Ver \mbox{FA-02})}
+      \item El SJM valida que no haya más de cuatro enlaces (\mbox{RN-03}). \textit{(Ver \mbox{FA-03})}
+      \item El SJM envía el mensaje \texttt{UPDATE\_\allowbreak{}PROFILE\_\allowbreak{}REQUEST} con los campos modificados y el token de sesión. \textit{(Ver \mbox{EX-04}, \mbox{EX-05})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas vuelve a aplicar las validaciones de los pasos 3 y 4 (\mbox{RN-07}). \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas verifica que el título recibido corresponda a un \textit{ObjetoCosmetico} de la \textit{Ranura} de título que el \textit{Usuario} posee, es decir, que exista su \textit{UsuarioObjeto}. \textit{(Ver \mbox{FA-06})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas verifica que el \texttt{idioma\_\allowbreak{}preferido} recibido pertenezca al catálogo de idiomas admitidos. \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas inicia una transacción sobre la Base de datos.
+      \item El Servidor de partidas actualiza en el \textit{Usuario} el \texttt{id\_\allowbreak{}icono}, el \texttt{idioma\_\allowbreak{}preferido} y, si el avatar cambió, la referencia a la imagen. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas actualiza la fila de \textit{Equipamiento} de la \textit{Ranura} de título, apuntando al objeto elegido (\mbox{RN-02}).
+      \item El Servidor de partidas reemplaza los \textit{EnlaceRed} del \textit{Usuario} por los recibidos, borrando los que ya no están y creando los nuevos (\mbox{RN-03}).
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
+      \item El Servidor de partidas responde con \texttt{UPDATE\_\allowbreak{}PROFILE\_\allowbreak{}OK} y el perfil actualizado.
+      \item El SJM aplica el \texttt{idioma\_\allowbreak{}preferido} a los textos de la interfaz si cambió, muestra la \texttt{GUI\_\allowbreak{}MessageSuccess} y vuelve a la \texttt{GUI\_\allowbreak{}Profile}.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador sube una imagen como avatar}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Subir imagen'' y elige un archivo de su equipo.
+      \item El SJM verifica que sea jpg o png y que no exceda los dos megabytes (\mbox{RN-05}). \textit{(Ver \mbox{FA-08})}
+      \item El SJM envía el mensaje \texttt{UPLOAD\_\allowbreak{}AVATAR\_\allowbreak{}REQUEST} con la imagen.
+      \item El Servidor de partidas vuelve a verificar el formato y el tamaño, guarda la imagen y crea el registro de \textit{Avatar} asociado al \textit{Usuario}, invalidando el anterior si lo hubiera (\mbox{RN-06}). \textit{(Ver \mbox{EX-01}, \mbox{EX-03})}
+      \item El Servidor de partidas responde con \texttt{UPLOAD\_\allowbreak{}AVATAR\_\allowbreak{}OK} y la referencia de la imagen.
+      \item El SJM muestra el avatar nuevo en el formulario y el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: Un enlace tiene formato inválido o es un acortador}\par
+    \begin{cuenum}[start=1]
+      \item El SJM resalta el campo y escribe junto a él que debe ser una dirección web completa y que no se admiten acortadores.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: Se intenta añadir un quinto enlace}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no habilita el campo adicional y escribe junto a la lista que el máximo son cuatro.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que la sesión terminó y despliega la \texttt{GUI\_\allowbreak{}Login}, conservando los cambios no guardados solo en memoria.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El servidor rechaza datos que el cliente había aceptado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la discrepancia en la bitácora del servidor con la \texttt{version\_\allowbreak{}cliente} y la dirección de red de origen.
+      \item El Servidor de partidas responde con \texttt{UPDATE\_\allowbreak{}PROFILE\_\allowbreak{}FAILED} y el motivo \texttt{DATOS\_\allowbreak{}INVALIDOS}, enumerando los campos rechazados.
+      \item El SJM los muestra y los resalta en el formulario.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El título elegido no lo posee el Jugador}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{UPDATE\_\allowbreak{}PROFILE\_\allowbreak{}FAILED} y el motivo \texttt{OBJETO\_\allowbreak{}NO\_\allowbreak{}POSEIDO}.
+      \item El Servidor de partidas registra el intento en la bitácora del servidor, por tratarse de un indicio de cliente modificado: la interfaz solo ofrece títulos poseídos.
+      \item El SJM recarga la lista de títulos disponibles y muestra la \texttt{GUI\_\allowbreak{}MessageWarning}.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El idioma recibido no está admitido}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas conserva el \texttt{idioma\_\allowbreak{}preferido} anterior y aplica el resto de los cambios.
+      \item El Servidor de partidas responde con \texttt{UPDATE\_\allowbreak{}PROFILE\_\allowbreak{}OK} señalando que el idioma no se aplicó.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} y el flujo continúa en el paso 16 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: La imagen no cumple el formato o el tamaño}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que solo se admiten jpg y png de hasta dos megabytes, sin enviar nada al Servidor de partidas.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-09}: El Jugador descarta los cambios}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Cancelar'' con cambios sin guardar.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} preguntando si desea descartarlos, con las opciones ``Descartar'' y ``Seguir editando''.
+      \item Si selecciona ``Descartar'', el SJM vuelve a la \texttt{GUI\_\allowbreak{}Profile} sin enviar nada. Si selecciona ``Seguir editando'', el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no queden aplicados unos cambios y otros no.
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador y conserva lo capturado.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas trata la transacción como fallida, registra la excepción señalando que el estado es indeterminado y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que recargue el perfil antes de volver a guardar.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: No hay espacio para almacenar la imagen}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no guarda la imagen ni crea el registro de \textit{Avatar}.
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor y responde con \texttt{STORAGE\_\allowbreak{}UNAVAILABLE}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que no fue posible subir la imagen y que puede elegir un icono predefinido mientras tanto.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM cierra la conexión y descarta el intercambio, sin suponer que el servidor no lo procesó.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que recargue el perfil para ver si los cambios se aplicaron.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-05}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene el \texttt{id\_\allowbreak{}icono} y el \texttt{idioma\_\allowbreak{}preferido} elegidos.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, la fila de \textit{Equipamiento} de la \textit{Ranura} de título apunta al objeto elegido, y solo esa fila cambió.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, los \textit{EnlaceRed} del \textit{Usuario} son exactamente los capturados, a lo sumo cuatro.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el \mbox{FA-01}, existe un \textit{Avatar} nuevo asociado al \textit{Usuario} y el anterior quedó invalidado.
+      \item \textbf{\mbox{POST-05}} El \texttt{nickname}, el \texttt{correo} y la contraseña no cambiaron: este caso no toca la identidad de acceso.
+      \item \textbf{\mbox{POST-06}} Si el caso termina por cualquier excepción, el perfil conserva íntegro su estado anterior.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} El \texttt{nickname} no se cambia desde este caso. Tiene el suyo propio, el \mbox{CU-13}, porque solo puede cambiarse una vez.
+      \item \textbf{\mbox{RN-02}} El título es un \textit{ObjetoCosmetico} como cualquier otro y se equipa en su \textit{Ranura}. Se puede cambiar aquí por comodidad, pero la operación es la misma del \mbox{CU-14}.
+      \item \textbf{\mbox{RN-03}} Un \textit{Usuario} puede tener a lo sumo cuatro \textit{EnlaceRed}.
+      \item \textbf{\mbox{RN-04}} No se admiten acortadores de enlaces, porque ocultan el destino final y harían inútil cualquier revisión posterior.
+      \item \textbf{\mbox{RN-05}} El avatar subido es jpg o png y no excede los dos megabytes.
+      \item \textbf{\mbox{RN-06}} Un \textit{Usuario} tiene a lo sumo un \textit{Avatar} vigente. Subir uno nuevo invalida el anterior en lugar de acumularlos.
+      \item \textbf{\mbox{RN-07}} Todas las validaciones del cliente se repiten en el servidor.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} El \texttt{idioma\_\allowbreak{}preferido} se guarda en la cuenta y viaja con el Jugador a cualquier dispositivo. El idioma que se elige en la \texttt{GUI\_\allowbreak{}Login}, en cambio, es configuración local, porque en ese momento todavía no se sabe quién es.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre la revisión de contenido.}\par
+    el documento de diseño del juego describe el avatar como sujeto a revisión y los enlaces como revisados antes de publicarse. La decisión \mbox{D-08} retira esa revisión del alcance: se publican directos. El motivo es que revisar imágenes y enlaces a mano exige un flujo de moderación completo y una carga de trabajo continua que no está prevista, mientras que el riesgo mayor —el nombre visible y el chat— ya está cubierto por el filtro de \textit{PalabraProhibida}. Si más adelante se decide reponerla, el modelo lo admite sin cambios: basta añadir un estado de revisión a \textit{Avatar} y a \textit{EnlaceRed} y el caso de moderación que lo mueva.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 6)}
+      \item \textit{Usuario}: escribe \texttt{id\_\allowbreak{}icono}, \texttt{idioma\_\allowbreak{}preferido} \textit{(paso 11)}
+      \item \textit{UsuarioObjeto}: lee, para comprobar posesión del título \textit{(paso 8)}
+      \item \textit{Equipamiento}: actualiza la fila de la ranura de título \textit{(paso 12)}
+      \item \textit{EnlaceRed}: borra y crea \textit{(paso 13)}
+      \item \textit{Avatar}: crea e invalida el anterior, en el \mbox{FA-01} \textit{(paso \mbox{FA-01})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

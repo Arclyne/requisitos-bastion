@@ -1,0 +1,158 @@
+\subsection*{CU-30: Agregar a un amigo}
+\addcontentsline{toc}{subsection}{CU-30: Agregar a un amigo}
+\label{cu-30}
+
+\begin{fichacu}{CU-30}{Agregar a un amigo}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{2a, 2b, 5c, 13b, 13c, 2g}
+  \crudFila{Objetivo}{Enviar una solicitud de amistad a otro jugador, encontrándolo por su nombre, por su código de amigo o desde el final de una partida.}
+  \crudFila{Disparador}{El Jugador selecciona ``Añadir amigo'' en el panel de amigos, en el perfil de otro jugador o en la pantalla de fin de partida.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El \textit{Usuario} tiene \texttt{tipo\_\allowbreak{}cuenta} en \texttt{REGISTRADA}. Un invitado no puede tener amigos, porque su cuenta no sobrevive al dispositivo (\mbox{RN-08}). \textit{(Ver \mbox{FA-01})}
+      \item \textbf{\mbox{PRE-03}} El \textit{Usuario} no ha alcanzado el límite de cien amigos (\mbox{RN-02}). \textit{(Ver \mbox{FA-02})}
+      \item \textbf{\mbox{PRE-04}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}AddFriend} con un campo de búsqueda por \texttt{nickname} o por código de amigo, y la lista de sugerencias de gente con la que el Jugador ha jugado recientemente (\mbox{RN-07}).
+      \item El Jugador captura el nombre o el código y da click en ``Buscar''. \textit{(Ver \mbox{FA-03})}
+      \item El SJM envía el mensaje \texttt{SEARCH\_\allowbreak{}PLAYER\_\allowbreak{}REQUEST} con el texto capturado y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas busca el \textit{Usuario} por \texttt{codigo\_\allowbreak{}amigo} si el texto tiene ese formato, o por \texttt{nickname} en caso contrario. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas descarta de los resultados a los \textit{Usuario} con \texttt{estado\_\allowbreak{}cuenta} en \texttt{ELIMINADA} y a los que tengan un \textit{Bloqueo} con el solicitante (\mbox{RN-05}). \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas responde con \texttt{SEARCH\_\allowbreak{}PLAYER\_\allowbreak{}OK} y los resultados, con su \texttt{nickname}, su avatar y su elo del modo clásico.
+      \item El SJM muestra los resultados, indicando en cada uno si ya es amigo, si hay una solicitud pendiente o si puede enviarse una.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Jugador selecciona un resultado y da click en ``Añadir''. \textit{(Ver \mbox{FA-06})}
+      \item El SJM envía el mensaje \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}SEND} con el identificador del destinatario.
+      \item El Servidor de partidas verifica que el destinatario exista y no sea el propio solicitante. \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas verifica que no exista ya una \textit{Amistad} entre ambos (\mbox{RN-03}). \textit{(Ver \mbox{FA-08})}
+      \item El Servidor de partidas verifica que no exista una \textit{Solicitud} pendiente en ninguno de los dos sentidos. \textit{(Ver \mbox{FA-09})}
+      \item El Servidor de partidas verifica que ninguno de los dos haya alcanzado el límite de cien amigos. \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas verifica que no exista un \textit{Bloqueo} entre ambos. \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas crea la \textit{Solicitud} con el solicitante, el destinatario, la fecha y el estado \texttt{PENDIENTE}. \textit{(Ver \mbox{EX-01})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item El Servidor de partidas notifica al destinatario, si tiene sesión abierta, con \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}RECEIVED}.
+      \item El Servidor de partidas responde al solicitante con \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}SENT}.
+      \item El SJM marca el resultado como solicitud enviada y lo añade a la pestaña de solicitudes enviadas.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador es un invitado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no habilita el panel de amigos y muestra, en su lugar, el aviso de cuenta no vinculada con acceso al \mbox{CU-07}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: Se alcanzó el límite de amigos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}FAILED} y el motivo \texttt{LIMITE\_\allowbreak{}ALCANZADO}, indicando si el límite lo alcanzó el solicitante o el destinatario.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} con el motivo. Si el límite es del propio Jugador, le propone revisar su lista.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El Jugador añade desde el fin de partida o desde un perfil}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Añadir'' en la \texttt{GUI\_\allowbreak{}MatchEnd} o en la \texttt{GUI\_\allowbreak{}Profile} de otro jugador.
+      \item El SJM omite la búsqueda: ya conoce el identificador del destinatario.
+      \item El flujo continúa en el paso 10 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que la sesión terminó y despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: Existe un bloqueo entre los dos jugadores}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no revela el bloqueo: responde como si el jugador no existiera, tanto en la búsqueda como en el envío (\mbox{RN-05}).
+      \item El flujo continúa en el \mbox{FA-10}.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El resultado ya es amigo o ya tiene solicitud pendiente}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no ofrece el botón ``Añadir'': muestra la etiqueta correspondiente.
+      \item El flujo continúa en el paso 8 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El Jugador intenta agregarse a sí mismo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}FAILED} y el motivo \texttt{DESTINATARIO\_\allowbreak{}INVALIDO}.
+      \item El SJM lo indica junto al resultado.
+      \item El flujo continúa en el paso 8 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: Ya existe la amistad}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}FAILED} y el motivo \texttt{YA\_\allowbreak{}SON\_\allowbreak{}AMIGOS}.
+      \item El SJM recarga el estado del resultado y lo marca como amigo.
+      \item El flujo continúa en el paso 8 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-09}: Ya existe una solicitud en sentido contrario}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas interpreta el envío como la aceptación de la solicitud que el destinatario ya había mandado: querer ser amigos en ambos sentidos es exactamente lo que hace falta (\mbox{RN-04}).
+      \item El flujo continúa en el \mbox{CU-31} Responder una solicitud de amistad, con la respuesta de aceptación.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-10}: La búsqueda no encuentra a nadie}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con la lista vacía.
+      \item El SJM muestra el estado vacío indicando que ese nombre o código no existe, con una acción clara para volver a buscar.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar o escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM cierra la conexión y descarta el intercambio.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que recargue la lista de solicitudes enviadas para comprobar si se envió.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El destinatario deja de existir entre la búsqueda y el envío}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}FAILED} y el motivo \texttt{DESTINATARIO\_\allowbreak{}INVALIDO}.
+      \item El SJM retira el resultado de la lista.
+      \item El flujo continúa en el paso 8 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe una \textit{Solicitud} con estado \texttt{PENDIENTE}, su solicitante, su destinatario y su fecha.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, todavía \textbf{no} existe ninguna \textit{Amistad}: la crea el \mbox{CU-31} al aceptarse.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, el destinatario tiene la solicitud en su pestaña de entrantes y el solicitante en la de enviadas.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el \mbox{FA-09}, existe una \textit{Amistad} y ya no existe ninguna \textit{Solicitud} pendiente entre los dos.
+      \item \textbf{\mbox{POST-05}} No puede existir más de una \textit{Solicitud} pendiente entre el mismo par de jugadores, en ningún sentido.
+      \item \textbf{\mbox{POST-06}} Si el caso termina por cualquier flujo alterno distinto del \mbox{FA-09} o por una excepción, no se creó ninguna \textit{Solicitud}.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Una \textit{Amistad} es recíproca: no existe la amistad en un solo sentido. Por eso hace falta una \textit{Solicitud} que la otra parte acepte.
+      \item \textbf{\mbox{RN-02}} Un \textit{Usuario} puede tener a lo sumo cien amigos. El límite se comprueba en los dos, no solo en quien solicita.
+      \item \textbf{\mbox{RN-03}} No puede haber dos \textit{Amistad} entre el mismo par de jugadores.
+      \item \textbf{\mbox{RN-04}} Si dos jugadores se envían solicitud mutuamente, la segunda se resuelve como aceptación de la primera.
+      \item \textbf{\mbox{RN-05}} Un \textit{Bloqueo} impide la búsqueda, la solicitud y el emparejamiento. El bloqueado no recibe ninguna señal de estarlo: para él, el otro jugador simplemente no aparece.
+      \item \textbf{\mbox{RN-06}} El código de amigo es único por cuenta y permite encontrar a alguien sin conocer su \texttt{nickname}, que además puede haber cambiado con el \mbox{CU-13}.
+      \item \textbf{\mbox{RN-07}} Las sugerencias se arman con jugadores con los que se ha compartido partida recientemente, leyendo las \textit{Participacion}.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} Las cuentas de invitado no participan en el sistema de amistades.
+      \item \textbf{\mbox{RN-09}} Una solicitud sin responder caduca pasado un plazo, para que las pestañas no acumulen solicitudes muertas.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué Solicitud y Amistad son tablas distintas.}\par
+    Se consideró una sola tabla de relación con un estado que pasara de pendiente a aceptada. Se descartó porque la \textit{Amistad} es simétrica y la \textit{Solicitud} no: la solicitud tiene un emisor y un receptor, y esa dirección importa para pintar las dos pestañas y para el \mbox{RN-04}. Fundirlas obligaría a llevar la dirección en una fila que después deja de tenerla, y a distinguir en cada consulta si la fila significa ``quiere'' o ``son''. Con dos tablas, aceptar es borrar de una y escribir en la otra, y consultar la lista de amigos no tiene que filtrar por estado.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 4)}
+      \item \textit{Usuario}: lee por \texttt{nickname} o \texttt{codigo\_\allowbreak{}amigo} \textit{(paso 5)}
+      \item \textit{Bloqueo}: lee, para descartar resultados y rechazar el envío \textit{(pasos 6, 15)}
+      \item \textit{Amistad}: lee, para comprobar que no exista y contar el límite \textit{(pasos 12, 14)}
+      \item \textit{Solicitud}: lee, para comprobar que no haya pendientes \textit{(paso 13)}
+      \item \textit{Solicitud}: crea \textit{(paso 16)}
+      \item \textit{Participacion}: lee, para armar las sugerencias \textit{(paso 1)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

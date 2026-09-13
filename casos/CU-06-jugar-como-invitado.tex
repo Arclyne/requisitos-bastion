@@ -1,0 +1,161 @@
+\subsection*{CU-06: Jugar como invitado}
+\addcontentsline{toc}{subsection}{CU-06: Jugar como invitado}
+\label{cu-06}
+
+\begin{fichacu}{CU-06}{Jugar como invitado}
+  \crudFila{Responsable}{José Eduardo Prior Hernández}
+  \crudFila{Actor principal}{Invitado}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{9e, 6c}
+  \crudFila{Objetivo}{Permitir que una persona empiece a jugar sin dar correo ni contraseña, creando una cuenta de tipo invitado que acumula progreso real y que más adelante puede convertirse en cuenta completa con el \mbox{CU-07}.}
+  \crudFila{Disparador}{El Invitado selecciona ``Jugar como invitado'' en la \texttt{GUI\_\allowbreak{}Login}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El cliente del SJM está instalado y en ejecución.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+      \item \textbf{\mbox{PRE-03}} El catálogo contiene al menos un \textit{ObjetoCosmetico} marcado como inicial para cada \textit{Ranura} (\mbox{RN-06}).
+      \item \textbf{\mbox{PRE-04}} El cliente no conserva una cuenta de invitado anterior en este dispositivo. \textit{(Ver \mbox{FA-01})}
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Invitado selecciona ``Jugar como invitado'' en la \texttt{GUI\_\allowbreak{}Login}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} advirtiendo que el progreso se pierde si no vincula una cuenta, con las opciones ``Continuar'' y ``Cancelar'' (\mbox{RN-01}). \textit{(Ver \mbox{FA-02})}
+      \item El Invitado selecciona ``Continuar''.
+      \item El SJM abre la conexión TCP con el Servidor de partidas y negocia la versión del protocolo. \textit{(Ver \mbox{EX-01}, \mbox{EX-02})}
+      \item El SJM envía el mensaje \texttt{GUEST\_\allowbreak{}SESSION\_\allowbreak{}REQUEST} con la huella del dispositivo y la versión del cliente. \textit{(Ver \mbox{EX-05}, \mbox{EX-06})}
+      \item El Servidor de partidas comprueba cuántas cuentas de invitado se han creado desde esa dirección de red en la última hora (\mbox{RN-07}). \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas genera un \texttt{nickname} provisional único, con el formato de invitado y un sufijo numérico (\mbox{RN-02}). \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas inicia una transacción sobre la Base de datos.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas crea el registro de \textit{Usuario} con \texttt{tipo\_\allowbreak{}cuenta} en \texttt{INVITADO}, \texttt{estado\_\allowbreak{}cuenta} en \texttt{ACTIVA}, el \texttt{nickname} provisional, la \texttt{fecha\_\allowbreak{}registro} actual, y \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal} en nulo (\mbox{RN-03}). \textit{(Ver \mbox{EX-03})}
+      \item El Servidor de partidas crea una \textit{EstadisticaModo} por cada \textit{Modo} del catálogo, con todos sus contadores en cero y el elo inicial (\mbox{RN-05}). \textit{(Ver \mbox{EX-03})}
+      \item El Servidor de partidas otorga al \textit{Usuario} los \textit{ObjetoCosmetico} marcados como iniciales, creando las filas de \textit{UsuarioObjeto} con su \texttt{fecha\_\allowbreak{}obtencion}. \textit{(Ver \mbox{EX-03})}
+      \item El Servidor de partidas crea las filas de \textit{Equipamiento}, una por \textit{Ranura}, apuntando al objeto predeterminado de cada una (\mbox{RN-06}).
+      \item El Servidor de partidas crea la \textit{Sesion}, con su token, la \texttt{fecha\_\allowbreak{}inicio}, la dirección de red de origen, la huella del dispositivo y la versión del cliente.
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas registra el alta en la \textit{BitacoraAcceso} con el resultado \texttt{ALTA\_\allowbreak{}INVITADO}.
+      \item El Servidor de partidas responde con \texttt{GUEST\_\allowbreak{}SESSION\_\allowbreak{}OK}, que contiene el token de sesión, el \texttt{nickname} provisional, el equipamiento y las \textit{EstadisticaModo} en cero.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item El SJM guarda el token en el dispositivo, de modo que al volver a abrir el juego se recupere la misma cuenta de invitado y no se cree otra (\mbox{RN-04}).
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MainMenu} con el aviso permanente de cuenta no vinculada y la opción ``Crear cuenta'' siempre visible (\mbox{RN-01}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El dispositivo ya tiene una cuenta de invitado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM envía \texttt{GUEST\_\allowbreak{}SESSION\_\allowbreak{}RESUME} con el token guardado en lugar de solicitar una cuenta nueva.
+      \item El Servidor de partidas recupera el \textit{Usuario} de tipo \texttt{INVITADO} asociado y verifica que siga en \texttt{ACTIVA}. \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas crea una \textit{Sesion} nueva para ese \textit{Usuario}.
+      \item El flujo continúa en el paso 15 del FN. El Invitado recupera su elo, sus monedas, sus objetos y su historial: es la misma cuenta, no una nueva.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Invitado cancela el aviso}\par
+    \begin{cuenum}[start=1]
+      \item El Invitado selecciona ``Cancelar''.
+      \item El SJM vuelve a la \texttt{GUI\_\allowbreak{}Login} sin enviar nada al Servidor de partidas.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: Se alcanzó el límite de altas de invitado desde esa dirección}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{GUEST\_\allowbreak{}LIMIT\_\allowbreak{}REACHED} y los minutos que faltan.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que se alcanzó el límite y proponiendo crear una cuenta, que no tiene límite.
+      \item Si el Invitado acepta la propuesta, el flujo continúa en el \mbox{CU-02} Registrar cuenta.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El nickname provisional generado ya está en uso}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas genera otro sufijo y vuelve a comprobar.
+      \item Si tras varios intentos no consigue uno libre, responde con \texttt{SERVER\_\allowbreak{}BUSY} y el flujo continúa en el paso 1 del FN.
+      \item En caso contrario, el flujo continúa en el paso 8 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: La cuenta de invitado guardada ya no sirve}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra que el \textit{Usuario} de tipo \texttt{INVITADO} fue eliminado, sancionado en ámbito de cuenta, o ya fue vinculado por el \mbox{CU-07} y dejó de ser invitado.
+      \item El Servidor de partidas responde con \texttt{GUEST\_\allowbreak{}ACCOUNT\_\allowbreak{}UNAVAILABLE} y el motivo.
+      \item El SJM descarta el token guardado y el flujo continúa en el paso 2 del FN, creando una cuenta de invitado nueva. Si el motivo fue una sanción, en cambio, el SJM despliega la pantalla informativa correspondiente y termina el caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El Invitado decide crear una cuenta desde el aviso permanente}\par
+    \begin{cuenum}[start=1]
+      \item El Invitado selecciona ``Crear cuenta'' en el aviso de la \texttt{GUI\_\allowbreak{}MainMenu}.
+      \item El flujo continúa en el \mbox{CU-07} Vincular la cuenta de invitado, que conserva el progreso, y no en el \mbox{CU-02}, que crearía una cuenta vacía (\mbox{RN-08}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: No se puede establecer la conexión con el servidor}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que la conexión TCP no pudo establecerse dentro del tiempo límite y registra el fallo en la bitácora local.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con las opciones ``Reintentar'' y ``Aceptar''.
+      \item Si el Invitado selecciona ``Reintentar'', el flujo continúa en el paso 4 del FN. Si selecciona ``Aceptar'', continúa en el paso 1.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: La versión del protocolo es incompatible}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{PROTOCOL\_\allowbreak{}VERSION\_\allowbreak{}MISMATCH} y cierra la conexión.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que debe actualizarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción completa, de modo que no quede un \textit{Usuario} sin estadísticas, sin objetos iniciales o sin equipamiento (\mbox{RN-09}).
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor con un identificador de incidencia.
+      \item El Servidor de partidas responde con \texttt{SERVER\_\allowbreak{}ERROR} y el identificador, y cierra la conexión.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador.
+      \item El flujo continúa en el paso 1 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no obtiene confirmación de que la transacción se haya escrito y la trata como fallida.
+      \item El Servidor de partidas registra la excepción señalando que el estado del alta es indeterminado y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que vuelva a intentarlo. Si el alta sí se completó, el token no llegó al cliente y esa cuenta de invitado quedará huérfana hasta caducar por el \mbox{RN-10}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-05}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que transcurrió el tiempo límite sin recibir un mensaje completo.
+      \item El SJM cierra la conexión TCP y descarta el intercambio, sin suponer que el servidor no lo procesó.
+      \item El SJM registra el fallo en la bitácora local y lo informa mediante la \texttt{GUI\_\allowbreak{}MessageError}.
+      \item El flujo continúa en el paso 1 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-06}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no logra delimitar o deserializar el mensaje conforme al protocolo acordado.
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe un \textit{Usuario} con \texttt{tipo\_\allowbreak{}cuenta} en \texttt{INVITADO} y \texttt{estado\_\allowbreak{}cuenta} en \texttt{ACTIVA}, sin \texttt{correo} ni contraseña.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, ese \textit{Usuario} tiene una \textit{EstadisticaModo} por cada \textit{Modo}, con los contadores en cero y el elo inicial.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, ese \textit{Usuario} posee el objeto inicial de cada una de las seis \textit{Ranura} y las tiene todas equipadas.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el FN, existe una \textit{Sesion} abierta y el cliente guardó su token en el dispositivo.
+      \item \textbf{\mbox{POST-05}} Si el caso termina por el \mbox{FA-01}, no se creó ningún \textit{Usuario} nuevo: se abrió una \textit{Sesion} sobre la cuenta de invitado que ya existía, con todo su progreso.
+      \item \textbf{\mbox{POST-06}} Si el caso termina por cualquier excepción, no existe ningún \textit{Usuario} a medio crear.
+      \item \textbf{\mbox{POST-07}} El \texttt{nickname} provisional queda ocupado y ningún otro \textit{Usuario} puede tomarlo mientras la cuenta exista.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} La cuenta de invitado muestra un aviso permanente de que el progreso se perderá mientras no se vincule. El aviso no puede descartarse de forma definitiva.
+      \item \textbf{\mbox{RN-02}} El \texttt{nickname} provisional sigue un formato reservado que ningún \textit{Usuario} registrado puede elegir, de modo que una cuenta de invitado se distinga a simple vista.
+      \item \textbf{\mbox{RN-03}} Una cuenta de invitado no tiene \texttt{correo} ni contraseña y, por tanto, no puede iniciar sesión con el \mbox{CU-01} ni recuperarse con el \mbox{CU-03}. Vive atada al token guardado en el dispositivo.
+      \item \textbf{\mbox{RN-04}} El token de invitado persiste en el dispositivo entre ejecuciones. Perderlo equivale a perder la cuenta: es exactamente el riesgo del que advierte el \mbox{RN-01}.
+      \item \textbf{\mbox{RN-05}} Una cuenta de invitado acumula elo, monedas, objetos y partidas igual que una registrada. Si no fuera así, vincularla más adelante no tendría nada que conservar.
+      \item \textbf{\mbox{RN-06}} Todo \textit{Usuario} tiene exactamente un \textit{ObjetoCosmetico} equipado en cada una de las seis \textit{Ranura} desde el momento del alta, por lo que el catálogo debe contener siempre un objeto predeterminado por ranura.
+      \item \textbf{\mbox{RN-07}} El número de cuentas de invitado que pueden crearse desde una misma dirección de red en una hora está acotado, para que el modo invitado no sirva para fabricar cuentas en serie.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} Convertir un invitado en cuenta registrada es el \mbox{CU-07} y conserva el progreso. El \mbox{CU-02} crea una cuenta vacía: no son intercambiables.
+      \item \textbf{\mbox{RN-09}} El alta del \textit{Usuario}, sus \textit{EstadisticaModo}, sus objetos iniciales y su equipamiento ocurren en una sola transacción: o existen todos o no existe ninguno.
+      \item \textbf{\mbox{RN-10}} Una cuenta de invitado sin actividad durante un periodo prolongado se marca como caducada, para que las cuentas huérfanas no crezcan sin límite.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué el invitado es un Usuario y no otra cosa.}\par
+    La alternativa era guardar el progreso del invitado en el dispositivo y volcarlo al servidor al registrarse. Se descartó porque el elo solo tiene sentido si el servidor lo calcula: un progreso que vive en el cliente lo puede editar cualquiera, y entraría en el ranking al vincular la cuenta. Haciendo del invitado un \textit{Usuario} desde el primer momento, vincular la cuenta no mueve ningún dato, solo cambia \texttt{tipo\_\allowbreak{}cuenta} y añade credenciales. El costo es que hay filas de \textit{Usuario} que nunca llegarán a registrarse, y por eso existe el \mbox{RN-10}.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Usuario}: crea con \texttt{tipo\_\allowbreak{}cuenta} en \texttt{INVITADO} \textit{(paso 9)}
+      \item \textit{Usuario}: lee \texttt{nickname}, para comprobar que el provisional esté libre \textit{(paso 7)}
+      \item \textit{Modo}: lee el catálogo completo \textit{(paso 10)}
+      \item \textit{EstadisticaModo}: crea una por modo \textit{(paso 10)}
+      \item \textit{Ranura}, \textit{ObjetoCosmetico}: lee los objetos iniciales \textit{(paso 11)}
+      \item \textit{UsuarioObjeto}: crea una por ranura \textit{(paso 11)}
+      \item \textit{Equipamiento}: crea una por ranura \textit{(paso 12)}
+      \item \textit{Sesion}: crea \textit{(paso 13)}
+    \end{cudatos}} \\
+   & \cuCelda{\begin{cudatos}
+      \item \textit{BitacoraAcceso}: inserta, y lee para el límite del \mbox{RN-07} \textit{(pasos 6, 15)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

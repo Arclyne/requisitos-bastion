@@ -1,0 +1,128 @@
+\subsection*{CU-04: Verificar el correo y activar la cuenta}
+\addcontentsline{toc}{subsection}{CU-04: Verificar el correo y activar la cuenta}
+\label{cu-04}
+
+\begin{fichacu}{CU-04}{Verificar el correo y activar la cuenta}
+  \crudFila{Responsable}{José Eduardo Prior Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{— (ocurre fuera de la aplicación, en el cliente de correo)}
+  \crudFila{Objetivo}{Llevar una cuenta recién creada de \texttt{PENDIENTE} a \texttt{ACTIVA}, comprobando que quien se dio de alta controla la dirección de correo que declaró. Es el único flujo que puede activar una cuenta (\mbox{RN-04} del \mbox{CU-02}).}
+  \crudFila{Disparador}{El Jugador abre el enlace de verificación que recibió por correo tras el \mbox{CU-02}, o tras el reenvío del \mbox{FA-09} del \mbox{CU-01}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} Existe un \textit{Usuario} con \texttt{estado\_\allowbreak{}cuenta} en \texttt{PENDIENTE}.
+      \item \textbf{\mbox{PRE-02}} Existe un \textit{TokenVerificacionCorreo} asociado a ese \textit{Usuario}, sin usar.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Jugador abre el enlace de verificación desde su cliente de correo.
+      \item El Servidor de partidas recibe la solicitud con el token incluido en el enlace.
+      \item El Servidor de partidas deriva el resumen criptográfico del token recibido y recupera de la Base de datos el \textit{TokenVerificacionCorreo} cuyo \texttt{token\_\allowbreak{}hash} coincida. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas verifica que el token exista. \textit{(Ver \mbox{FA-01})}
+      \item El Servidor de partidas verifica que el token no esté marcado como usado. \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas verifica que no haya expirado, comparando \texttt{fecha\_\allowbreak{}expiracion} con la fecha y hora actuales (\mbox{RN-02}). \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas recupera el \textit{Usuario} asociado y verifica que su \texttt{estado\_\allowbreak{}cuenta} siga siendo \texttt{PENDIENTE}. \textit{(Ver \mbox{FA-04}, \mbox{FA-05}, \mbox{FA-07})}
+      \item El Servidor de partidas inicia una transacción sobre la Base de datos.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas cambia el \texttt{estado\_\allowbreak{}cuenta} del \textit{Usuario} a \texttt{ACTIVA} y registra \texttt{fecha\_\allowbreak{}verificacion}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas marca el \textit{TokenVerificacionCorreo} como usado (\mbox{RN-01}).
+      \item El Servidor de partidas invalida los demás \textit{TokenVerificacionCorreo} pendientes del \textit{Usuario}, si los hubiera (\mbox{RN-03}).
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
+      \item El Servidor de partidas registra la activación en la \textit{BitacoraAcceso} con el resultado \texttt{CUENTA\_\allowbreak{}VERIFICADA}.
+      \item El Servidor de partidas muestra la página de confirmación en el \texttt{idioma\_\allowbreak{}preferido} del \textit{Usuario}, indicando que ya puede iniciar sesión.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El token no corresponde a ninguna verificación}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra el intento en la bitácora del servidor con la dirección de red de origen, por tratarse de un posible tanteo de enlaces.
+      \item El Servidor de partidas muestra la página de error indicando que el enlace no es válido, sin precisar si nunca existió o si ya fue consumido (\mbox{RN-04}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El token ya fue usado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas comprueba el \texttt{estado\_\allowbreak{}cuenta} del \textit{Usuario} asociado.
+      \item Si la cuenta ya está \texttt{ACTIVA}, el Servidor de partidas muestra una página indicando que la cuenta ya estaba verificada y que puede iniciar sesión. No es un error: reabrir el mismo enlace es lo que hace cualquiera que dude de si funcionó.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El token expiró}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas marca el \textit{TokenVerificacionCorreo} como invalidado.
+      \item El Servidor de partidas muestra la página indicando que el enlace caducó y que puede pedir uno nuevo desde el inicio de sesión del juego, que es el \mbox{FA-09} del \mbox{CU-01}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La cuenta tiene una sanción de ámbito de cuenta}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no activa la cuenta: verificar el correo no levanta una sanción.
+      \item El Servidor de partidas marca el token como usado de todos modos, para que no quede vigente.
+      \item El Servidor de partidas muestra la página indicando que la cuenta está sancionada, con el motivo y, si la sanción es temporal, la fecha en que termina.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: La cuenta fue eliminada antes de verificarse}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas invalida el token.
+      \item El Servidor de partidas muestra la página de enlace no válido, igual que en el \mbox{FA-01}, sin revelar que la cuenta existió (\mbox{RN-04}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El Jugador abre el enlace con la sesión ya iniciada en otro dispositivo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas ejecuta el FN sin ninguna variación: la verificación no depende de que haya una sesión abierta ni la afecta.
+      \item El SJM del dispositivo con sesión no se entera del cambio hasta su siguiente mensaje al servidor, que ya encontrará la cuenta \texttt{ACTIVA}.
+      \item El flujo continúa en el paso 8 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El token confirma un cambio de correo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra que el \textit{TokenVerificacionCorreo} tiene \texttt{proposito} igual a \texttt{CAMBIO\_\allowbreak{}CORREO} y un \texttt{correo\_\allowbreak{}destino}, y que la cuenta está \texttt{ACTIVA}.
+      \item El Servidor de partidas verifica que el \texttt{correo\_\allowbreak{}destino} siga sin estar registrado por otro \textit{Usuario}; si ya lo está, invalida el token y muestra la página de enlace no válido.
+      \item El Servidor de partidas sustituye el \texttt{correo} del \textit{Usuario} por el \texttt{correo\_\allowbreak{}destino}, marca el token como usado y registra el cambio en la \textit{BitacoraAcceso} con el resultado \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}CONFIRMADO}, en una sola transacción.
+      \item El Servidor de partidas muestra la página de confirmación indicando que el correo de la cuenta cambió.
+      \item Fin del caso de uso. El \texttt{estado\_\allowbreak{}cuenta} no cambia (\mbox{RN-07} del \mbox{CU-09}).
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar o actualizar la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción en curso, si la hubiera, de modo que no quede una cuenta activada con el token sin consumir ni al revés.
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor con un identificador de incidencia.
+      \item El Servidor de partidas muestra la página de error con el identificador, indicando que vuelva a abrir el enlace más tarde. El token sigue vigente, así que el reintento funcionará.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no obtiene confirmación de que la transacción se haya escrito y la trata como fallida.
+      \item El Servidor de partidas registra la excepción señalando que el estado de la activación es indeterminado.
+      \item El Servidor de partidas muestra la página de error indicando que intente iniciar sesión antes de volver a abrir el enlace: si la activación sí se escribió, el acceso funcionará y el enlace ya no hará falta.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La solicitud llega sin token o con un token mal formado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas descarta la solicitud sin consultar la Base de datos.
+      \item El Servidor de partidas muestra la página de enlace no válido, idéntica a la del \mbox{FA-01}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene \texttt{estado\_\allowbreak{}cuenta} en \texttt{ACTIVA} y una \texttt{fecha\_\allowbreak{}verificacion}, y el \mbox{CU-01} ya no lo rechaza por su \mbox{FA-09}.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, el \textit{TokenVerificacionCorreo} queda marcado como usado y ningún otro token del mismo \textit{Usuario} sigue vigente.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-03} o el \mbox{FA-05}, no queda ningún token vigente, pero la cuenta sigue en \texttt{PENDIENTE} y puede pedirse un enlace nuevo.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el \mbox{FA-04}, la cuenta sigue en \texttt{PENDIENTE} y la sanción sigue vigente: ninguna de las dos cosas cambia por haber verificado el correo.
+      \item \textbf{\mbox{POST-05}} Si el caso termina por cualquier excepción, ni el \texttt{estado\_\allowbreak{}cuenta} ni el token cambiaron, y el enlace puede volver a abrirse.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} El \textit{TokenVerificacionCorreo} es de un solo uso.
+      \item \textbf{\mbox{RN-02}} El token tiene una vigencia de veinticuatro horas, la misma que fija el \mbox{RN-11} del \mbox{CU-02}.
+      \item \textbf{\mbox{RN-03}} Solo puede haber un token de verificación vigente por cuenta. Consumir uno invalida el resto.
+      \item \textbf{\mbox{RN-04}} Un enlace inexistente, uno de una cuenta eliminada y uno manipulado producen la misma página de error. El proceso no puede usarse para averiguar qué cuentas existen.
+      \item \textbf{\mbox{RN-05}} Verificar el correo cambia únicamente el \texttt{estado\_\allowbreak{}cuenta}. No levanta sanciones, no abre sesión y no otorga nada.
+      \item \textbf{\mbox{RN-06}} El token se almacena como resumen criptográfico, nunca en claro, por el mismo motivo que la contraseña.
+      \item \textbf{\mbox{RN-07}} Este es el único flujo del sistema que puede llevar una cuenta de \texttt{PENDIENTE} a \texttt{ACTIVA}.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué este caso no abre sesión.}\par
+    Sería cómodo que verificar el correo dejara al Jugador dentro del juego, pero el enlace se abre en un navegador y la sesión vive en el cliente de escritorio: no hay forma de pasar el token de sesión de uno a otro sin inventar un mecanismo que no existe en el resto del sistema. El Jugador verifica, vuelve al juego e inicia sesión con el \mbox{CU-01}, que es el único lugar donde se crea una \textit{Sesion}.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{TokenVerificacionCorreo}: lee \texttt{token\_\allowbreak{}hash}, \texttt{usado}, \texttt{fecha\_\allowbreak{}expiracion} \textit{(pasos 3, 5, 6)}
+      \item \textit{TokenVerificacionCorreo}: marca como usado e invalida los demás \textit{(pasos 10, 11)}
+      \item \textit{Usuario}: lee \texttt{estado\_\allowbreak{}cuenta}, \texttt{idioma\_\allowbreak{}preferido} \textit{(pasos 7, 14)}
+      \item \textit{Usuario}: escribe \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}verificacion} \textit{(paso 9)}
+      \item \textit{Sancion}: lee, para el \mbox{FA-04} \textit{(paso 7)}
+      \item \textit{BitacoraAcceso}: inserta \textit{(paso 13)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

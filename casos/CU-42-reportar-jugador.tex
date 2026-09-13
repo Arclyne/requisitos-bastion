@@ -1,0 +1,157 @@
+\subsection*{CU-42: Reportar a un jugador}
+\addcontentsline{toc}{subsection}{CU-42: Reportar a un jugador}
+\label{cu-42}
+
+\begin{fichacu}{CU-42}{Reportar a un jugador}
+  \crudFila{Responsable}{José Eduardo Prior Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{10a, 10b}
+  \crudFila{Objetivo}{Poner en conocimiento de la moderación la conducta de otro jugador, adjuntando automáticamente las pruebas de la partida para que el reporte pueda revisarse sin depender de lo que el denunciante recuerde.}
+  \crudFila{Disparador}{El Jugador selecciona ``Reportar'' en el menú de un jugador, accesible desde el chat, el ranking, la lista de amigos o el fin de partida.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El \textit{Usuario} tiene \texttt{tipo\_\allowbreak{}cuenta} en \texttt{REGISTRADA} (\mbox{RN-07}). \textit{(Ver \mbox{FA-01})}
+      \item \textbf{\mbox{PRE-03}} El jugador reportado existe y no es el propio denunciante.
+      \item \textbf{\mbox{PRE-04}} El catálogo contiene los cinco \textit{MotivoReporte}.
+      \item \textbf{\mbox{PRE-05}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Jugador abre el menú de un jugador y selecciona ``Reportar''.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Report} con los cinco motivos, un campo de descripción opcional y el aviso de qué pruebas se adjuntarán (\mbox{RN-02}).
+      \item El Jugador elige un motivo, escribe la descripción si quiere y da click en ``Enviar reporte''. \textit{(Ver \mbox{FA-02}, \mbox{FA-03})}
+      \item El SJM valida que haya un motivo elegido y que la descripción no exceda el largo máximo. \textit{(Ver \mbox{FA-04})}
+      \item El SJM envía el mensaje \texttt{REPORT\_\allowbreak{}PLAYER\_\allowbreak{}REQUEST} con el reportado, el motivo, la descripción, la partida desde la que se reporta si la hay, y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas verifica que el reportado exista, no sea el denunciante y no tenga \texttt{estado\_\allowbreak{}cuenta} en \texttt{ELIMINADA}. \textit{(Ver \mbox{FA-06})}
+      \item El Servidor de partidas verifica que el \textit{MotivoReporte} pertenezca al catálogo. \textit{(Ver \mbox{FA-07})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas verifica que el denunciante no haya reportado ya al mismo jugador por la misma partida (\mbox{RN-03}). \textit{(Ver \mbox{FA-08})}
+      \item El Servidor de partidas comprueba cuántos reportes ha emitido el denunciante en el periodo vigente (\mbox{RN-06}). \textit{(Ver \mbox{FA-09})}
+      \item El Servidor de partidas inicia una transacción sobre la Base de datos.
+      \item El Servidor de partidas crea el \textit{Reporte} con el denunciante, el reportado, el motivo, la descripción, la fecha y el estado \texttt{PENDIENTE}. \textit{(Ver \mbox{EX-01})}
+      \item Si el reporte procede de una partida, el Servidor de partidas asocia al \textit{Reporte} la \textit{Partida}, de modo que la repetición y el chat queden adjuntos por referencia y no por copia (\mbox{RN-01}).
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas responde con \texttt{REPORT\_\allowbreak{}OK}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageSuccess} indicando que el reporte se envió y que la moderación lo revisará, sin prometer plazo ni resultado (\mbox{RN-05}).
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item El SJM ofrece además silenciar o bloquear al reportado, que son acciones inmediatas y del propio Jugador. \textit{(Ver \mbox{FA-10})}
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador es un invitado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no ofrece la opción de reportar y, en su lugar, muestra el aviso de cuenta no vinculada con acceso al \mbox{CU-07} (\mbox{RN-07}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Jugador cancela el reporte}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Cancelar''.
+      \item El SJM cierra la \texttt{GUI\_\allowbreak{}Report} sin enviar nada.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El Jugador reporta desde fuera de una partida}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no adjunta ninguna \textit{Partida} al reporte, porque no hay ninguna de la que hablar.
+      \item El SJM indica en el formulario que no se adjuntarán pruebas y que la descripción es, por tanto, lo único que la moderación verá.
+      \item El flujo continúa en el paso 4 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: Falta el motivo o la descripción excede el largo}\par
+    \begin{cuenum}[start=1]
+      \item El SJM resalta el campo correspondiente y escribe junto a él qué se espera.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} y despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El reportado no existe o es el propio denunciante}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{REPORT\_\allowbreak{}FAILED} y el motivo \texttt{DESTINATARIO\_\allowbreak{}INVALIDO}.
+      \item El Servidor de partidas registra el intento en la bitácora del servidor si el reportado es el propio denunciante, por tratarse de un indicio de cliente modificado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El motivo no pertenece al catálogo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{REPORT\_\allowbreak{}FAILED} y el motivo \texttt{MOTIVO\_\allowbreak{}INVALIDO}, y registra la discrepancia en la bitácora del servidor.
+      \item El SJM recarga el catálogo de motivos.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: Ya existe un reporte del mismo denunciante sobre la misma partida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{REPORT\_\allowbreak{}FAILED} y el motivo \texttt{REPORTE\_\allowbreak{}DUPLICADO} (\mbox{RN-03}).
+      \item El SJM indica que ya reportó a ese jugador por esa partida y que la moderación lo tiene pendiente.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-09}: El Jugador excedió el número de reportes permitido}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{REPORT\_\allowbreak{}THROTTLED} y el tiempo que debe esperar.
+      \item El SJM lo indica mediante la \texttt{GUI\_\allowbreak{}MessageWarning}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-10}: El Jugador silencia o bloquea al reportado}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Silenciar'' o ``Bloquear'' en el aviso de reporte enviado.
+      \item El flujo continúa en el \mbox{CU-33} Silenciar o bloquear a un jugador.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no quede un \textit{Reporte} sin su partida asociada.
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador y conserva lo capturado para que pueda reintentarlo.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía el reporte por su cuenta: podría duplicarlo.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que revise sus reportes enviados antes de volver a intentarlo.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y conserva lo capturado.
+      \item Al recuperar la conexión, el flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas trata la transacción como fallida y registra la excepción señalando que el estado del reporte es indeterminado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que el reporte pudo haberse enviado y que lo compruebe antes de repetirlo.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe un \textit{Reporte} con estado \texttt{PENDIENTE}, su denunciante, su reportado, su motivo y su fecha.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN y el reporte procede de una partida, el \textit{Reporte} referencia esa \textit{Partida}, y por tanto sus \textit{Jugada} y sus \textit{Mensaje}.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, la cuenta del reportado \textbf{no} cambió: reportar no sanciona (\mbox{RN-04}).
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el FN, el denunciante ve el reporte entre los que ha enviado y no puede volver a reportar al mismo jugador por la misma partida.
+      \item \textbf{\mbox{POST-05}} No puede existir más de un \textit{Reporte} del mismo denunciante sobre el mismo reportado y la misma partida.
+      \item \textbf{\mbox{POST-06}} Si el caso termina por cualquier flujo alterno o excepción, no se creó ningún \textit{Reporte}.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} El reporte adjunta la repetición y el chat de la partida de forma automática, por referencia a la \textit{Partida}. No se copian los mensajes ni las jugadas: se apunta a ellos, de modo que el reporte no duplique información que ya existe y no pueda contradecirla.
+      \item \textbf{\mbox{RN-02}} El Jugador ve, antes de enviar, qué pruebas se adjuntarán. Adjuntar su chat sin decírselo sería recoger datos a su espalda.
+      \item \textbf{\mbox{RN-03}} Un denunciante no puede reportar dos veces al mismo jugador por la misma partida. Sí puede hacerlo por partidas distintas.
+      \item \textbf{\mbox{RN-04}} Un reporte no sanciona por sí solo y no dispara ninguna consecuencia automática sobre el reportado. La sanción la aplica un moderador en el \mbox{CU-44}, y esa revisión humana es la condición bajo la que existe el actor MODERADOR.
+      \item \textbf{\mbox{RN-05}} Al denunciante no se le informa del resultado del reporte ni de si el reportado fue sancionado.
+      \item \textbf{\mbox{RN-06}} El número de reportes que un jugador puede emitir en un periodo está acotado, para que reportar no sirva como forma de hostigamiento.
+      \item \textbf{\mbox{RN-07}} Las cuentas de invitado no pueden reportar. Un reporte sin cuenta rastreable no puede sostener el \mbox{RN-06} ni responder de un uso abusivo.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} El catálogo de \textit{MotivoReporte} tiene cinco entradas y se mantiene por SQL, no desde la aplicación (\mbox{D-09}).
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué las pruebas van por referencia.}\par
+    Se consideró copiar en el reporte los mensajes y las jugadas relevantes, para que la prueba quedara congelada en el momento de reportar. Se descartó por dos motivos. El primero es que duplicar el chat en el reporte crea dos copias del mismo texto que pueden divergir, y el borrado lógico de una cuenta (\mbox{D-07}) tendría que alcanzar a las dos. El segundo es que recortar qué mensajes son relevantes obliga a decidirlo en el momento del envío, cuando ni el denunciante ni el sistema saben todavía qué va a mirar el moderador. Referenciar la partida entrega el contexto completo y deja la selección a quien revisa.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 6)}
+      \item \textit{Usuario}: lee el reportado y su estado \textit{(paso 7)}
+      \item \textit{MotivoReporte}: lee el catálogo \textit{(pasos 2, 8)}
+      \item \textit{Reporte}: lee, para comprobar duplicados y el límite \textit{(pasos 9, 10)}
+      \item \textit{Reporte}: crea \textit{(pasos 12, 13)}
+      \item \textit{Partida}: referencia, sin copiar nada de ella \textit{(paso 13)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

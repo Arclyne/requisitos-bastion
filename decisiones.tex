@@ -1,0 +1,107 @@
+%=====================================================================
+% Decisiones de diseño
+%=====================================================================
+\section*{Decisiones de diseño}
+\addcontentsline{toc}{section}{Decisiones de diseño}
+
+Se anotan aquí porque cambian casos de uso ya escritos y deben respetarse al redactar los que faltan.
+
+\flujoTitulo{\mbox{D-01}. Varias sesiones por cuenta, una sola partida a la vez}
+\textbf{Se elimina la \mbox{RN-06} del \mbox{CU-01}.} Una cuenta puede tener abiertas todas las sesiones que quiera, en dispositivos distintos. Lo que no puede duplicarse es la participación en una partida: si un jugador intenta entrar a una partida mientras tiene otra sin terminar, el sistema \textbf{lo impide y se lo dice}.
+
+Motivo: la restricción existía para que dos clientes no mandaran jugadas en nombre del mismo jugador, pero eso se resuelve en la partida, no en el inicio de sesión. Atarlo al login obligaba además a cerrar la sesión del otro dispositivo para poder entrar, que es fricción sin ganancia.
+
+Consecuencias, por caso de uso:
+
+\begin{center}\small
+\begin{longtable}{|L{0.117\textwidth}|L{0.783\textwidth}|}
+\hline
+\textbf{Caso} & \textbf{Qué cambia} \\ \hline
+\endfirsthead
+\hline
+\textbf{Caso} & \textbf{Qué cambia} \\ \hline
+\endhead
+\mbox{CU-01} & Desaparece la \mbox{RN-06}. Desaparece el paso del FN que comprueba si ya hay sesión activa y, con él, el \mbox{FA-12} completo \\ \hline
+\mbox{CU-10} & Deja de ser imposible: ya hay varias sesiones que listar y cerrar \\ \hline
+\mbox{CU-17}, \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-27} & Nueva precondición: el jugador no participa en ninguna partida sin terminar. Nuevo flujo alterno con el aviso \\ \hline
+\mbox{CU-31} & Igual, al aceptar una invitación a jugar \\ \hline
+\mbox{CU-26} & Es la salida natural del aviso: si ya estás en una partida, lo que quieres es volver a ella \\ \hline
+\end{longtable}
+\end{center}
+
+Consecuencias en el modelo:
+
+\begin{reglas}
+  \item \texttt{Sesion.motivo\_\allowbreak{}cierre} pierde \texttt{DESPLAZADA\_\allowbreak{}POR\_\allowbreak{}NUEVO\_\allowbreak{}ACCESO} y gana \texttt{CIERRE\_\allowbreak{}REMOTO},
+\end{reglas}
+
+que es lo que escribe el \mbox{CU-10}.
+
+\begin{reglas}
+  \item El índice único filtrado que garantizaba la regla se mueve de \texttt{Sesion} a \texttt{Participacion}:
+\end{reglas}
+
+a lo sumo una participación sin terminar por jugador.
+
+\begin{reglas}
+  \item \texttt{Sesion} necesita \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}uso}, para poder mostrar ``hace tres días'' en la pantalla
+\end{reglas}
+
+del \mbox{CU-10}, y un nombre legible del dispositivo: una huella criptográfica no le dice nada a nadie.
+
+\flujoTitulo{\mbox{D-02} a \mbox{D-20}. Decisiones adoptadas para poder redactar}
+Resuelven los pendientes 1 a 9. Están tomadas con el criterio que ya se discutió y se aplican en los casos redactados; \textbf{confirmar con José Eduardo} antes de dar el documento por cerrado. Las decisiones \mbox{D-12} a \mbox{D-20} se tomaron al detallar los casos que faltaban. Cambiarlas obliga a reescribir flujos, no solo tablas.
+
+\begin{center}\small
+\begin{longtable}{|L{0.082\textwidth}|L{0.818\textwidth}|}
+\hline
+\textbf{ID} & \textbf{Decisión} \\ \hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Decisión} \\ \hline
+\endhead
+\mbox{D-02} & \textbf{Invitado.} El \texttt{Usuario} nace en el \mbox{CU-06} con \texttt{tipo\_\allowbreak{}cuenta = INVITADO}, sin correo ni contraseña. El \mbox{CU-07} lo convierte a \texttt{REGISTRADA} \textbf{conservando el mismo \texttt{id\_\allowbreak{}usuario}}: por eso conserva elo, monedas, objetos y partidas sin copiar nada. El \mbox{CU-02} crea directamente una cuenta registrada \\ \hline
+\mbox{D-03} & \textbf{Seis ranuras.} Se sustituye \texttt{Usuario.id\_\allowbreak{}skin\_\allowbreak{}equipada} y \texttt{Skin.es\_\allowbreak{}inicial} por cuatro estructuras: \texttt{Ranura} (catálogo de las seis), \texttt{ObjetoCosmetico} (pertenece a una ranura), \texttt{UsuarioObjeto} (lo que posee) y \texttt{Equipamiento} (una fila por usuario y ranura) \\ \hline
+\mbox{D-04} & \textbf{Elo por modo.} \texttt{Estadisticas} deja de ser 1:1. Se parte en \texttt{Modo} (catálogo: clásico 9×9, cuatro jugadores, rápida 7×7) y \texttt{EstadisticaModo}, 1:N por usuario y modo. El elo del menú y del ranking global es el de clásico 9×9 \\ \hline
+\mbox{D-05} & \textbf{Sanciones con ámbito.} \texttt{Baneo} se sustituye por \texttt{Sancion}, con \texttt{ambito} (\texttt{CUENTA}, \texttt{CHAT}), \texttt{tipo} (\texttt{TEMPORAL}, \texttt{PERMANENTE}), \texttt{fecha\_\allowbreak{}fin} nulable y motivo. La de ámbito \texttt{CHAT} no impide jugar ni iniciar sesión \\ \hline
+\mbox{D-06} & \textbf{Registro mínimo.} Se conserva \texttt{fecha\_\allowbreak{}nacimiento}, que la exige la edad mínima de ocho años. Se eliminan \texttt{apellido\_\allowbreak{}paterno}, \texttt{apellido\_\allowbreak{}materno} y \texttt{region}: no los pide el documento de diseño del juego ni los usa ningún flujo. Aplicado en el \mbox{CU-02} \\ \hline
+\mbox{D-07} & \textbf{Borrado lógico.} El documento de diseño del juego manda sobre el prototipo 9f: la cuenta pasa a \texttt{ELIMINADA} con \texttt{fecha\_\allowbreak{}baja} y es recuperable catorce días. La fila de \texttt{Usuario} nunca se borra físicamente (ver \mbox{D-17}) \\ \hline
+\mbox{D-08} & \textbf{Sin revisión de avatares ni enlaces.} Se publican directos. El filtro de palabras cubre el riesgo real, que está en el nickname y en el chat \\ \hline
+\mbox{D-09} & \textbf{Catálogos precargados.} \texttt{Ranura}, \texttt{ObjetoCosmetico}, \texttt{Modo}, \texttt{NivelIA}, \texttt{Division}, \texttt{Leccion}, \texttt{TipoCaja}, \texttt{TipoCajaObjeto}, \texttt{PalabraProhibida} y \texttt{MotivoReporte} no los escribe ningún caso de uso: se cargan en \texttt{insertar\_\allowbreak{}datos\_\allowbreak{}prueba.sql} y se mantienen por SQL. Las cuentas de administración se crean del mismo modo \\ \hline
+\mbox{D-10} & \textbf{Los emotes no se persisten.} Viajan por red y se pintan; no dejan fila. El \mbox{CU-29} no escribe en la base de datos \\ \hline
+\mbox{D-11} & \textbf{Una sola participación sin terminar, incluida la IA.} Un jugador tiene como mucho una \textit{Participacion} sin terminar en total. Una partida contra la IA pendiente nunca impide entrar a otra: se cierra sola, sin consecuencias, en la misma transacción que crea la nueva. Así el índice único filtrado sobre \textit{Participacion} no necesita saber el tipo de partida \\ \hline
+\mbox{D-12} & \textbf{Partidas contra la IA en el servidor.} Se guardan como \textit{Partida} con \texttt{tipo} = \texttt{IA} y \texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}. La IA no es un \textit{Usuario}: no tiene \textit{Participacion} y sus \textit{Jugada} llevan \texttt{id\_\allowbreak{}usuario} nulo. Deshacer marca las jugadas como \texttt{deshecha} en lugar de borrarlas \\ \hline
+\mbox{D-13} & \textbf{Primera vez: peón e icono.} El \texttt{nickname} se sigue eligiendo en el registro. El alta otorga todos los objetos iniciales y equipa el predeterminado de cada ranura; el \mbox{CU-08} permite cambiar el peón y el icono una vez, y marca \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} \\ \hline
+\mbox{D-14} & \textbf{Tablas solo entre dos jugadores.} En el modo de cuatro no hay empate que acordar. Las ofertas se guardan en \textit{OfertaTablas} y caducan al jugar el rival \\ \hline
+\mbox{D-15} & \textbf{Abandono y desconexión.} Abandonar cuenta como derrota normal y suma \texttt{abandonos} en \textit{EstadisticaModo}. Perder la conexión no es abandonar: la partida espera con el reloj corriendo, y el rival puede reclamar la victoria a los sesenta segundos \\ \hline
+\mbox{D-16} & \textbf{Salas privadas.} No otorgan elo ni monedas. Si el anfitrión sale, la sala se cierra. Las invitaciones a jugar usan una sala en lugar de crear la partida directamente \\ \hline
+\mbox{D-17} & \textbf{Recuperación y anonimización.} Una cuenta eliminada se recupera iniciando sesión dentro de los catorce días (\mbox{FA-17} del \mbox{CU-01}). Pasado el plazo se anonimiza: se liberan \texttt{nickname} y \texttt{correo} y se borran los datos personales, pero la fila se conserva \\ \hline
+\mbox{D-18} & \textbf{Tutorial en la cuenta, validado en el cliente.} El progreso se guarda en \textit{ProgresoTutorial} para continuar en cualquier dispositivo. Como no otorga nada, el servidor acepta el avance que declara el cliente y el tutorial funciona sin conexión \\ \hline
+\mbox{D-19} & \textbf{Espectadores sin persistencia.} Solo se guarda el \textit{EnlaceEspectador} compartido. El aforo se lleva en memoria. El retraso de ocho segundos se aplica siempre, también entre amigos \\ \hline
+\mbox{D-20} & \textbf{Cambio de correo por token.} El correo nuevo viaja en el \textit{TokenVerificacionCorreo}, con \texttt{proposito} = \texttt{CAMBIO\_\allowbreak{}CORREO} y \texttt{correo\_\allowbreak{}destino}. El correo vigente no se sustituye hasta confirmar el nuevo \\ \hline
+\end{longtable}
+\end{center}
+
+\subsection*{Prototipos que no generan caso de uso}
+\addcontentsline{toc}{subsection}{Prototipos que no generan caso de uso}
+Estos prototipos \textbf{no} generan caso de uso. Conviene decirlo por escrito en el documento para que no parezca un olvido.
+
+\begin{center}\small
+\begin{longtable}{|L{0.139\textwidth}|L{0.289\textwidth}|L{0.451\textwidth}|}
+\hline
+\textbf{Prototipos} & \textbf{Qué son} & \textbf{Por qué no son caso de uso} \\ \hline
+\endfirsthead
+\hline
+\textbf{Prototipos} & \textbf{Qué son} & \textbf{Por qué no son caso de uso} \\ \hline
+\endhead
+1a, 1b, 1c, 3a–3d, 4a–4c, 19a–19d, 20a–20c, 21a–21c & Variantes de disposición de la misma pantalla & Son exploración de interfaz, no comportamiento distinto \\ \hline
+7a–7h, 18a–18g & Catálogo de errores y avisos & Son los flujos de excepción de los casos que ya existen \\ \hline
+11c–11f & Estados vacíos y pantallas de carga & No cambian estado ni tienen actor con objetivo \\ \hline
+11g & Créditos y avisos legales & Contenido estático \\ \hline
+12b, 12d, 17a, 17b & Ajustes de audio, accesibilidad y cámara & Configuración local del cliente, no llega a la base \\ \hline
+12c & Ajustes de idioma & Absorbido por \mbox{CU-12}: es un atributo del perfil \\ \hline
+6g & Pausa en partida & Panel sobre la partida; el reloj no se detiene, no hay estado nuevo \\ \hline
+6h & Notificaciones & Transversal: se resuelve en cada caso que las emite \\ \hline
+8a, 8b, 1d, 1e & Turno del rival, reloj, variantes de modo & Estados de la partida, ya cubiertos por \mbox{CU-20} a \mbox{CU-25} \\ \hline
+\end{longtable}
+\end{center}

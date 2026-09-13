@@ -1,5 +1,5 @@
 %=====================================================================
-%  Casos de Uso - Documento base (solo estructura)
+%  Casos de Uso - Bastion
 %  Compilar con: pdflatex casos-de-uso.tex  (dos veces, por el indice)
 %=====================================================================
 \documentclass[11pt,letterpaper]{article}
@@ -9,7 +9,7 @@
 %---------------------------------------------------------------------
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[spanish,es-tabla]{babel}
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
 \usepackage[letterpaper,margin=2.5cm,includehead,headsep=8mm]{geometry}
 \usepackage{array}
 \usepackage{longtable}
@@ -17,6 +17,8 @@
 \usepackage{fancyhdr}
 \usepackage{lastpage}
 \usepackage{ragged2e}
+\usepackage{needspace}
+\usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
 
 %---------------------------------------------------------------------
@@ -42,7 +44,7 @@
 % Tipos de columna
 %---------------------------------------------------------------------
 \newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
-\newcolumntype{J}[1]{>{\justifying\arraybackslash}p{#1}}
+\newcolumntype{J}[1]{>{\justifying\setlength{\parindent}{0pt}\arraybackslash}p{#1}}
 
 % Anchos de las columnas de la plantilla de caso de uso
 \newlength{\colEtiqueta}\setlength{\colEtiqueta}{0.20\textwidth}
@@ -89,6 +91,77 @@
 {\begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=1pt,parsep=0pt]}
 {\end{enumerate}}
 
+
+% Titulo de seccion dentro de un caso (Precondiciones, Flujo normal, ...)
+\newcommand{\cuSeccion}[1]{\par\needspace{5\baselineskip}\medskip\noindent{\large\bfseries #1}\par\smallskip}
+
+% Titulo de un flujo alterno o excepcion (FA-01, EX-01, ...)
+\newcommand{\flujoTitulo}[1]{\par\needspace{4\baselineskip}\smallskip\noindent\textbf{#1}\par}
+
+% Lista sin viñeta para PRE, POST y RN
+\newenvironment{reglas}
+{\begin{itemize}[label={},leftmargin=1em,topsep=2pt,itemsep=3pt,parsep=0pt]}
+{\end{itemize}}
+
+% Prototipo de analisis CRUD: ficha de dos columnas
+\newcolumntype{E}[1]{>{\RaggedRight\hyphenpenalty=10000\exhyphenpenalty=10000\arraybackslash}p{#1}}
+\newenvironment{prototipocrud}[2]
+{%
+  \par\bigskip
+  \setlength{\extrarowheight}{2pt}%
+  \setlength{\LTpre}{0pt}\setlength{\LTpost}{0pt}%
+  \begin{longtable}{|E{0.22\textwidth}|L{0.69\textwidth}|}
+  \hline
+  \textbf{#1} & \textbf{#2} \\ \hline
+  \endfirsthead
+  \hline
+  \multicolumn{2}{|l|}{\textit{#1 #2 (continuación)}} \\ \hline
+  \endhead
+}
+{%
+  \end{longtable}\par
+}
+\newcommand{\crudFila}[2]{\textbf{#1} & #2 \\ \hline}
+
+% Lista dentro de una celda
+\newenvironment{crudlista}
+{\begin{minipage}[t]{\linewidth}\begin{itemize}[nosep,leftmargin=1.1em,label=\textbullet]}
+{\end{itemize}\vspace{2pt}\end{minipage}}
+
+% Ficha de caso de uso en tabla de dos columnas.
+% Un campo largo ocupa varias filas; la regla inferior al pie de pagina
+% cierra la tabla cuando se parte entre paginas.
+\newenvironment{fichacu}[2]
+{%
+  \par\medskip
+  \setlength{\extrarowheight}{2pt}%
+  \setlength{\LTpre}{0pt}\setlength{\LTpost}{0pt}%
+  \begin{longtable}{|E{0.22\textwidth}|L{0.69\textwidth}|}
+  \hline
+  \textbf{#1} & \textbf{#2} \\ \hline
+  \endfirsthead
+  \hline
+  \multicolumn{2}{|l|}{\textit{#1 #2 (continuación)}} \\ \hline
+  \endhead
+  \hline
+  \endfoot
+  \endlastfoot
+}
+{%
+  \end{longtable}\par
+}
+% \NoHyper evita la linea vacia que hyperref deja al inicio de una lista numerada
+\newcommand{\cuCelda}[1]{\begin{minipage}[t]{\linewidth}\NoHyper#1\endNoHyper\vspace{3pt}\end{minipage}}
+\newenvironment{cuenum}[1][]
+{\begin{enumerate}[nosep,label=\arabic*.,align=right,labelwidth=1.5em,labelsep=0.4em,leftmargin=1.9em,#1]}
+{\end{enumerate}}
+\newenvironment{cureglas}
+{\begin{itemize}[nosep,label={},leftmargin=0pt,itemsep=2pt]}
+{\end{itemize}}
+\newenvironment{cudatos}
+{\begin{itemize}[nosep,label=\textbullet,leftmargin=1.1em]}
+{\end{itemize}}
+
 %=====================================================================
 \begin{document}
 
@@ -103,7 +176,8 @@
   {\Huge\bfseries\sffamily \sistema}\\[2.5em]
   {\large\bfseries\sffamily \versionDoc}\\[2.5em]
   {\large\bfseries\sffamily Preparado por}\\[2.5em]
-  {\large\bfseries\sffamily Autor}\\[2.5em]
+  {\large\bfseries\sffamily Ángel Gabriel Aguilar Hernández}\\[1em]
+  {\large\bfseries\sffamily José Eduardo Prior Hernández}\\[2.5em]
   {\large\bfseries\sffamily \organizacion}\\[2.5em]
   {\large\bfseries\sffamily \fechaDoc}
 \end{flushright}
@@ -128,109 +202,96 @@
 \end{longtable}
 \newpage
 
+\tableofcontents
+\newpage
+
 %---------------------------------------------------------------------
-% SECCIÓN 2: LISTA DE CASOS DE USO
+% SECCIÓN 2: ANÁLISIS DE FUNCIONALIDADES CRUD
+%---------------------------------------------------------------------
+\input{crud}
+\newpage
+
+%---------------------------------------------------------------------
+% SECCIÓN 3: LISTA DE CASOS DE USO
 %---------------------------------------------------------------------
 \section*{Lista de Casos de Uso}
 \addcontentsline{toc}{section}{Lista de Casos de Uso}
 
-\noindent
-\begin{longtable}{|L{0.35\textwidth}|L{0.55\textwidth}|}
-\hline
-\textbf{\textit{Actor primario}} & \textbf{\textit{Caso de uso}} \\ \hline
-\endfirsthead
-\hline
-\textbf{\textit{Actor primario}} & \textbf{\textit{Caso de uso}} \\ \hline
-\endhead
-  & CU-01  \\ \hline
-  & CU-02  \\ \hline
-  & CU-03  \\ \hline
-\end{longtable}
+Un caso de uso forma parte de este documento si cambia el estado persistente del sistema
+o si es el único que justifica una estructura de datos. Todos los casos de la lista se
+desarrollan completos en la sección de casos de uso; la columna de la derecha indica la
+página donde empieza cada uno.
+
+\input{lista-casos}
 \newpage
 
 %---------------------------------------------------------------------
-% SECCIÓN 3: CASOS DE USO
+% SECCIÓN 4: CASOS DE USO
+%   Un archivo por caso en casos/. Para agregar uno, crear
+%   casos/CU-nn-descripcion.tex y añadir su \input en orden.
 %---------------------------------------------------------------------
 \section*{Casos de uso}
 \addcontentsline{toc}{section}{Casos de uso}
 
-%---------------------------- CU-01 ----------------------------------
-\begin{casodeuso}{CU-01. Nombre del caso de uso}
-  \cuDoble{Creado Por:}{}{Fecha de Creación:}{}
-  \cuDoble{Actor Primario:}{}{Actores Secundarios:}{}
-  \cuFila{Disparador:}{}
-  \cuFila{Descripción:}{}
-  \cuFila{Precondiciones:}{PRE-01: }
-  \cuFila{Postcondiciones:}{POS-01: }
-  \cuFila{Flujo Normal:}{%
-    \begin{flujo}
-      \item
-      \item Termina el caso de uso
-    \end{flujo}}
-  \cuFila{Flujos Alternativos:}{FA-01:
-    \begin{flujo}
-      \item
-    \end{flujo}}
-  \cuFila{Excepciones:}{EX-01:
-    \begin{flujo}
-      \item
-    \end{flujo}}
-  \cuFila{Prioridad:}{}
-  \cuFila{Frecuencia de Uso:}{}
-  \cuFila{Reglas de Negocio:}{RN-}
-  \cuFila{Otra Información:}{N/A}
-  \cuFila{Suposiciones:}{N/A}
-\end{casodeuso}
+\input{casos/CU-01-iniciar-sesion}
+\input{casos/CU-02-registrar-cuenta}
+\input{casos/CU-03-recuperar-contrasena}
+\input{casos/CU-04-verificar-correo}
+\input{casos/CU-05-cerrar-sesion}
+\input{casos/CU-06-jugar-como-invitado}
+\input{casos/CU-07-vincular-cuenta-invitado}
+\input{casos/CU-08-configurar-cuenta-primera-vez}
+\input{casos/CU-09-cambiar-contrasena-o-correo}
+\input{casos/CU-10-gestionar-sesiones-activas}
+\input{casos/CU-11-borrar-la-cuenta}
+\input{casos/CU-12-editar-perfil}
+\input{casos/CU-13-cambiar-nickname}
+\input{casos/CU-14-equipar-objeto-cosmetico}
+\input{casos/CU-15-consultar-perfil-propio}
+\input{casos/CU-16-consultar-perfil-otro-jugador}
+\input{casos/CU-17-buscar-partida}
+\input{casos/CU-18-crear-sala-privada}
+\input{casos/CU-19-unirse-sala-con-codigo}
+\input{casos/CU-20-mover-el-peon}
+\input{casos/CU-21-colocar-un-muro}
+\input{casos/CU-22-ofrecer-aceptar-tablas}
+\input{casos/CU-23-rendirse}
+\input{casos/CU-24-abandonar-partida}
+\input{casos/CU-25-finalizar-partida}
+\input{casos/CU-26-reconectar-partida}
+\input{casos/CU-27-jugar-contra-ia}
+\input{casos/CU-28-enviar-mensaje-chat}
+\input{casos/CU-29-enviar-emote}
+\input{casos/CU-30-agregar-amigo}
+\input{casos/CU-31-responder-solicitud-amistad}
+\input{casos/CU-32-invitar-amigo-a-jugar}
+\input{casos/CU-33-silenciar-o-bloquear}
+\input{casos/CU-34-ver-partida-espectador}
+\input{casos/CU-35-consultar-ranking}
+\input{casos/CU-36-consultar-historial-partidas}
+\input{casos/CU-37-ver-repeticion-partida}
+\input{casos/CU-38-comprar-objeto-tienda}
+\input{casos/CU-39-comprar-y-abrir-caja}
+\input{casos/CU-40-consultar-historial-monedas}
+\input{casos/CU-41-avanzar-tutorial}
+\input{casos/CU-42-reportar-jugador}
+\input{casos/CU-43-revisar-reporte}
+\input{casos/CU-44-aplicar-sancion}
+\input{casos/CU-45-apelar-sancion}
+\input{casos/CU-46-agregar-moderador}
+\input{casos/CU-47-retirar-moderador}
+\input{casos/CU-48-consultar-bitacoras}
+\input{casos/CU-49-eliminar-amigo}
 
-%---------------------------- CU-02 ----------------------------------
-\begin{casodeuso}{CU-02. Nombre del caso de uso}
-  \cuDoble{Creado Por:}{}{Fecha de Creación:}{}
-  \cuDoble{Actor Primario:}{}{Actores Secundarios:}{}
-  \cuFila{Disparador:}{}
-  \cuFila{Descripción:}{}
-  \cuFila{Precondiciones:}{PRE-01: }
-  \cuFila{Postcondiciones:}{POS-01: }
-  \cuFila{Flujo Normal:}{%
-    \begin{flujo}
-      \item
-      \item Termina el caso de uso
-    \end{flujo}}
-  \cuFila{Flujos Alternativos:}{FA-01:
-    \begin{flujo}
-      \item
-    \end{flujo}}
-  \cuFila{Excepciones:}{EX-01:
-    \begin{flujo}
-      \item
-    \end{flujo}}
-  \cuFila{Prioridad:}{}
-  \cuFila{Frecuencia de Uso:}{}
-  \cuFila{Reglas de Negocio:}{RN-}
-  \cuFila{Otra Información:}{N/A}
-  \cuFila{Suposiciones:}{N/A}
-\end{casodeuso}
-
-% Copiar el bloque anterior para CU-03, CU-04, ... CU-NN
-
+%---------------------------------------------------------------------
+% SECCIÓN 5: MATRIZ DE TRAZABILIDAD
+%---------------------------------------------------------------------
+\input{trazabilidad}
 \newpage
 
 %---------------------------------------------------------------------
-% SECCIÓN 4: REGLAS DE NEGOCIO
+% SECCIÓN 6: DECISIONES DE DISEÑO
 %---------------------------------------------------------------------
-\section*{Reglas de Negocio}
-\addcontentsline{toc}{section}{Reglas de Negocio}
-
-\noindent
-\begin{longtable}{|L{0.20\textwidth}|J{0.45\textwidth}|L{0.22\textwidth}|}
-\hline
-\textbf{ID Regla} & \textbf{Regla del Negocio} & \textbf{Tipo} \\ \hline
-\endfirsthead
-\hline
-\textbf{ID Regla} & \textbf{Regla del Negocio} & \textbf{Tipo} \\ \hline
-\endhead
-RN-01 &   & Restricción \\ \hline
-RN-02 &   & Restricción \\ \hline
-RN-03 &   & Restricción \\ \hline
-\end{longtable}
+\input{decisiones}
 
 \end{document}

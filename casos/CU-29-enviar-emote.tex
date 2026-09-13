@@ -1,0 +1,100 @@
+\subsection*{CU-29: Enviar un emote}
+\addcontentsline{toc}{subsection}{CU-29: Enviar un emote}
+\label{cu-29}
+
+\begin{fichacu}{CU-29}{Enviar un emote}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas}
+  \crudFila{Prototipos}{12e, 1a, 8a}
+  \crudFila{Objetivo}{Permitir que el Jugador exprese una reacción rápida durante la partida con uno de los seis emotes de su conjunto equipado, sin escribir y sin interrumpir el juego.}
+  \crudFila{Disparador}{El Jugador pulsa uno de los atajos del 1 al 6, o selecciona un emote en el selector de emotes de la \texttt{GUI\_\allowbreak{}Match}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Participacion} sin terminar en una \textit{Partida} en curso que no es contra la IA.
+      \item \textbf{\mbox{PRE-02}} El Jugador tiene un objeto equipado en la \textit{Ranura} de emotes, que contiene seis emotes.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Jugador abre el selector de emotes o pulsa directamente un atajo del 1 al 6. \textit{(Ver \mbox{FA-01})}
+      \item El SJM verifica localmente que hayan pasado al menos diez segundos desde el último emote enviado (\mbox{RN-02}). \textit{(Ver \mbox{FA-02})}
+      \item El SJM muestra el emote sobre el propio avatar de inmediato y envía el mensaje \texttt{EMOTE\_\allowbreak{}REQUEST} con el número de emote. \textit{(Ver \mbox{EX-01}, \mbox{EX-02})}
+      \item El Servidor de partidas verifica que la conexión corresponda a una \textit{Participacion} sin terminar de esa partida. \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas vuelve a verificar el intervalo de diez segundos con su propio registro en memoria (\mbox{RN-02}). \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas toma el conjunto de emotes de la \textit{ParticipacionObjeto} de la ranura de emotes del Jugador, fijado al empezar la partida, y verifica que el número recibido exista en él. \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas reenvía el emote a los demás participantes con \texttt{EMOTE\_\allowbreak{}RECEIVED}, sin escribir nada en la base de datos (\mbox{D-10}).
+      \item El SJM de cada rival muestra el emote junto al avatar del Jugador durante unos segundos, salvo que ese rival haya silenciado los emotes del Jugador. \textit{(Ver \mbox{FA-06})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador abre el selector completo}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona el icono de emotes.
+      \item El SJM despliega el selector con los seis emotes de su conjunto y el atajo de cada uno.
+      \item El Jugador elige uno y el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: No han pasado diez segundos desde el último emote}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no envía nada y muestra sobre el selector el tiempo que falta, sin ventanas.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El Jugador ya no participa en la partida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas descarta el emote sin reenviarlo: la partida terminó o el Jugador abandonó.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El servidor detecta emotes demasiado seguidos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas descarta el emote y responde con \texttt{EMOTE\_\allowbreak{}THROTTLED}.
+      \item Si el Jugador supera el límite de forma repetida, el Servidor de partidas lo anota en la bitácora del servidor como indicio de cliente modificado.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El emote no pertenece al conjunto equipado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas descarta el emote, porque el aspecto del jugador se fijó al empezar y no puede cambiarse a mitad de partida (\mbox{RN-03} del \mbox{CU-14}).
+      \item El Servidor de partidas lo anota en la bitácora del servidor como indicio de cliente modificado.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: Un rival silencia los emotes del Jugador}\par
+    \begin{cuenum}[start=1]
+      \item El rival selecciona ``silenciar emotes'' sobre el avatar del Jugador.
+      \item El SJM del rival deja de mostrar los emotes de ese jugador durante el resto de la partida, sin avisar al Jugador y sin enviar nada al servidor (\mbox{RN-04}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El Jugador es espectador}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no muestra el selector de emotes a los espectadores.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Se agota el tiempo de espera o la conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía el emote: es efímero, y llegar tarde no tiene sentido.
+      \item Si la conexión se perdió, el flujo continúa en el \mbox{CU-26}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: El mensaje está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas descarta el mensaje sin responder.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, los rivales que no silenciaron al Jugador vieron el emote.
+      \item \textbf{\mbox{POST-02}} Ninguna estructura de la base de datos se modificó: el emote no deja rastro persistente.
+      \item \textbf{\mbox{POST-03}} El Jugador no puede enviar otro emote durante los diez segundos siguientes.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} En una partida hay seis emotes disponibles, con atajos del 1 al 6, que son los del conjunto equipado en la \textit{Ranura} de emotes.
+      \item \textbf{\mbox{RN-02}} Un jugador puede enviar a lo sumo un emote cada diez segundos. El cliente lo aplica para responder al instante y el servidor lo repite para decidir.
+      \item \textbf{\mbox{RN-03}} Los emotes no se persisten (\mbox{D-10}). Se reenvían y se pintan.
+      \item \textbf{\mbox{RN-04}} Silenciar los emotes de un rival es local a la partida y al cliente: no se guarda y no se comunica al rival. Es distinto de silenciar a un jugador en el \mbox{CU-33}, que afecta también al chat y se conserva.
+      \item \textbf{\mbox{RN-05}} No hay emotes en partidas contra la IA ni para los espectadores.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué los emotes no se guardan y los mensajes sí.}\par
+    El chat se guarda porque el \mbox{CU-42} lo adjunta como prueba cuando alguien reporta. Los emotes no pueden ofender del mismo modo: son seis imágenes elegidas por el propio sistema, sin texto libre. El único abuso posible es la insistencia, y ese ya lo impiden el intervalo de diez segundos y la opción de silenciarlos. Guardarlos añadiría una escritura cada pocos segundos por jugador sin que ninguna funcionalidad la lea.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Participacion}: consulta en memoria del servidor, sin acceso a la base de datos \textit{(paso 4)}
+      \item \textit{ParticipacionObjeto}: consulta en memoria el conjunto de emotes fijado al empezar \textit{(paso 6)}
+      \item —: ninguna escritura en la base de datos
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

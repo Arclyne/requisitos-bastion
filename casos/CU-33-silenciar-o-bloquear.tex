@@ -1,0 +1,140 @@
+\subsection*{CU-33: Silenciar o bloquear a un jugador}
+\addcontentsline{toc}{subsection}{CU-33: Silenciar o bloquear a un jugador}
+\label{cu-33}
+
+\begin{fichacu}{CU-33}{Silenciar o bloquear a un jugador}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{10a, 10c}
+  \crudFila{Objetivo}{Permitir al Jugador dejar de leer a otro jugador —silenciándolo— o cortar además todo contacto con él —bloqueándolo—, y deshacer cualquiera de las dos cosas desde sus ajustes.}
+  \crudFila{Disparador}{El Jugador selecciona ``silenciar'' o ``bloquear'' en el menú de otro jugador, o abre la lista de silenciados y bloqueados en la \texttt{GUI\_\allowbreak{}Settings}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El \textit{Usuario} tiene \texttt{tipo\_\allowbreak{}cuenta} en \texttt{REGISTRADA}. \textit{(Ver \mbox{FA-01})}
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Jugador abre el menú de otro jugador desde el chat, el ranking, la lista de amigos o la partida, y selecciona ``bloquear''. \textit{(Ver \mbox{FA-02})}
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} explicando qué implica: no podrán emparejarlos, invitarse, buscarse ni escribirse, y la amistad se eliminará si existe; con las opciones ``Bloquear'' y ``Cancelar''. \textit{(Ver \mbox{FA-03})}
+      \item El Jugador selecciona ``Bloquear''.
+      \item El SJM envía el mensaje \texttt{BLOCK\_\allowbreak{}PLAYER\_\allowbreak{}REQUEST} con el \texttt{id\_\allowbreak{}usuario} del otro jugador y el token. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y que el otro jugador exista y no sea el propio Jugador. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas verifica que no exista ya un \textit{Bloqueo} del Jugador hacia ese jugador. \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas inicia una transacción y crea el \textit{Bloqueo} con el \texttt{id\_\allowbreak{}bloqueador}, el \texttt{id\_\allowbreak{}bloqueado} y la \texttt{fecha\_\allowbreak{}bloqueo}. \textit{(Ver \mbox{EX-01})}
+      \item En la misma transacción, el Servidor de partidas elimina la \textit{Amistad} entre ambos si existe, elimina las \textit{Solicitud} pendientes en cualquier sentido y marca como \texttt{EXPIRADA} cualquier \textit{Invitacion} pendiente entre ellos (\mbox{RN-03}).
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item Si ambos están en la \textit{ColaEmparejamiento}, el Servidor de partidas impide que se emparejen a partir de este momento; si ambos están en la misma \textit{Sala} abierta, retira de ella al bloqueado cuando el anfitrión es el Jugador, o retira al Jugador en caso contrario (\mbox{RN-05}).
+      \item El Servidor de partidas confirma la transacción y \textbf{no} notifica nada al bloqueado (\mbox{RN-02}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas responde con \texttt{BLOCK\_\allowbreak{}PLAYER\_\allowbreak{}OK}.
+      \item El SJM oculta los mensajes del bloqueado en todos los canales, lo retira de la lista de amigos si estaba y muestra una confirmación breve. \textit{(Ver \mbox{FA-06})}
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador es un invitado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM ofrece ``silenciar'' pero no ``bloquear'', porque el bloqueo exige una cuenta rastreable, y junto a la opción deshabilitada propone vincular la cuenta.
+      \item Si el Jugador silencia, el flujo continúa en el \mbox{FA-02}.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Jugador silencia en lugar de bloquear}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``silenciar''.
+      \item El SJM envía el mensaje \texttt{MUTE\_\allowbreak{}PLAYER\_\allowbreak{}REQUEST} sin pedir confirmación, porque silenciar es inmediato y reversible (\mbox{RN-01}).
+      \item El Servidor de partidas crea el \textit{Silencio} con el \texttt{id\_\allowbreak{}usuario}, el \texttt{id\_\allowbreak{}silenciado} y la \texttt{fecha\_\allowbreak{}silencio}, si no existía.
+      \item El Servidor de partidas responde con \texttt{MUTE\_\allowbreak{}PLAYER\_\allowbreak{}OK}.
+      \item El SJM deja de mostrar los mensajes y los emotes del silenciado en todos los canales, y muestra la opción ``dejar de silenciar'' en su menú.
+      \item Fin del caso de uso. Pueden seguir coincidiendo en partidas.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El Jugador cancela el bloqueo}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Cancelar''.
+      \item El SJM cierra la confirmación sin enviar nada.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El jugador indicado no existe o es el propio Jugador}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{BLOCK\_\allowbreak{}PLAYER\_\allowbreak{}FAILED} y el motivo \texttt{JUGADOR\_\allowbreak{}INVALIDO}.
+      \item Si el jugador indicado es el propio, el Servidor de partidas lo anota en la bitácora del servidor como indicio de cliente modificado.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El jugador ya estaba bloqueado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{BLOCK\_\allowbreak{}PLAYER\_\allowbreak{}OK} sin modificar nada, porque el estado pedido ya se cumple.
+      \item El flujo continúa en el paso 12 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El Jugador bloquea a su rival durante una partida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas aplica el bloqueo, pero la partida en curso \textbf{sigue} hasta terminar (\mbox{RN-04}).
+      \item El SJM del Jugador oculta desde ese momento el chat y los emotes del rival en esa partida.
+      \item Al terminar, no podrán volver a emparejarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El Jugador deshace un silencio o un bloqueo}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador abre la lista de silenciados y bloqueados en la \texttt{GUI\_\allowbreak{}Settings}.
+      \item El SJM envía \texttt{LIST\_\allowbreak{}MUTES\_\allowbreak{}BLOCKS\_\allowbreak{}REQUEST} y el Servidor de partidas responde con los \textit{Silencio} y \textit{Bloqueo} del Jugador, con el \texttt{nickname} y la fecha de cada uno.
+      \item El Jugador selecciona ``dejar de silenciar'' o ``desbloquear'' en uno de ellos.
+      \item El Servidor de partidas elimina la fila de \textit{Silencio} o de \textit{Bloqueo} correspondiente.
+      \item El SJM lo retira de la lista. La amistad eliminada al bloquear \textbf{no} se restaura: habría que volver a solicitarla (\mbox{RN-06}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: El Jugador bloquea a un moderador o es bloqueado por un reportado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas aplica el bloqueo con normalidad.
+      \item El bloqueo no afecta a las funciones de moderación: un moderador sigue pudiendo revisar reportes y sancionar a quien lo bloqueó, y un reportado no puede impedir que se revise su conducta bloqueando a su denunciante (\mbox{RN-07}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no quede el \textit{Bloqueo} creado con la \textit{Amistad} todavía vigente.
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador. El bloqueo no se aplicó.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía la solicitud y recarga la lista de bloqueados, que dirá si se aplicó.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe durante el intercambio}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y recarga la lista al recuperarla.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe un \textit{Bloqueo} del Jugador hacia el otro jugador, y no existe entre ellos ninguna \textit{Amistad}, \textit{Solicitud} pendiente ni \textit{Invitacion} pendiente.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el \mbox{FA-02}, existe un \textit{Silencio} del Jugador hacia el otro jugador, y ninguna otra relación entre ellos cambió.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-07}, la fila de \textit{Silencio} o de \textit{Bloqueo} ya no existe.
+      \item \textbf{\mbox{POST-04}} El jugador bloqueado o silenciado no recibió ninguna notificación.
+      \item \textbf{\mbox{POST-05}} Ninguna partida en curso se interrumpió.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Silenciar oculta los mensajes y emotes del otro jugador a quien silencia, en todos los canales. Es reversible, no pide confirmación y no impide coincidir en partidas.
+      \item \textbf{\mbox{RN-02}} Ni el silencio ni el bloqueo se notifican al afectado, y las respuestas del sistema a este no lo delatan.
+      \item \textbf{\mbox{RN-03}} Bloquear elimina la amistad, las solicitudes pendientes y las invitaciones pendientes entre ambos.
+      \item \textbf{\mbox{RN-04}} Un bloqueo no interrumpe una partida en curso; impide las siguientes.
+      \item \textbf{\mbox{RN-05}} Un bloqueo impide emparejar, invitarse, buscarse, enviarse solicitud, compartir sala y ver el perfil del otro (\mbox{CU-16}, \mbox{CU-17}, \mbox{CU-19}, \mbox{CU-30}, \mbox{CU-32}).
+      \item \textbf{\mbox{RN-06}} Desbloquear no restaura la amistad eliminada.
+      \item \textbf{\mbox{RN-07}} El bloqueo no afecta a la moderación ni a los reportes.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} Silencio y bloqueo se eliminan físicamente al deshacerse: describen una relación presente, no un hecho histórico.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué el silencio se guarda en el servidor.}\par
+    \texttt{descripcion.md} llama local al silencio, en el sentido de que solo afecta a quien silencia. Podría haberse guardado solo en el cliente, pero entonces se perdería al cambiar de dispositivo —cosa frecuente con las sesiones simultáneas de \mbox{D-01}— y el servidor tendría que entregar mensajes que el cliente va a descartar. Guardarlo en \textit{Silencio} conserva su carácter local, porque solo lo consulta quien silenció, y lo hace sobrevivir al dispositivo.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}, \textit{Usuario}: lee \textit{(paso 5)}
+      \item \textit{Bloqueo}: lee; crea; elimina \textit{(pasos 6, 7, \mbox{FA-07})}
+      \item \textit{Silencio}: crea; elimina \textit{(pasos \mbox{FA-02}, \mbox{FA-07})}
+      \item \textit{Amistad}, \textit{Solicitud}: elimina las del par \textit{(paso 8)}
+      \item \textit{Invitacion}: marca como \texttt{EXPIRADA} las pendientes del par \textit{(paso 8)}
+      \item \textit{ColaEmparejamiento}, \textit{SalaParticipante}: lee; elimina la del retirado de la sala \textit{(paso 9)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

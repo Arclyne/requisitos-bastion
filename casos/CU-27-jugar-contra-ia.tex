@@ -1,0 +1,145 @@
+\subsection*{CU-27: Jugar contra la IA}
+\addcontentsline{toc}{subsection}{CU-27: Jugar contra la IA}
+\label{cu-27}
+
+\begin{fichacu}{CU-27}{Jugar contra la IA}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador o Invitado}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{8f, 12f, 12g}
+  \crudFila{Objetivo}{Permitir al jugador practicar contra un rival controlado por el servidor, eligiendo su nivel y el tablero, con reloj opcional, deshacer y sugerencias que explican la jugada recomendada, y terminar con un repaso de sus errores.}
+  \crudFila{Disparador}{El jugador selecciona ``Contra la IA'' en la \texttt{GUI\_\allowbreak{}MainMenu}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El jugador no está en la \textit{ColaEmparejamiento} ni en una \textit{Sala} abierta.
+      \item \textbf{\mbox{PRE-03}} El catálogo contiene los cuatro \textit{NivelIA}.
+      \item \textbf{\mbox{PRE-04}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}AIDifficulty} con los cuatro niveles —aprendiz, constructor, arquitecto y bastión— y su fuerza aproximada, el tablero de 9×9 o 7×7, el reloj con la opción ``sin reloj'' y los interruptores de deshacer y sugerencias. \textit{(Ver \mbox{FA-01})}
+      \item El jugador elige los ajustes y da click en ``Jugar''.
+      \item El SJM envía el mensaje \texttt{START\_\allowbreak{}AI\_\allowbreak{}MATCH\_\allowbreak{}REQUEST} con el nivel, el \textit{Modo}, el reloj y las opciones. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y que no se cumplan las exclusiones de \mbox{PRE-02}. \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas cierra, con la forma de término \texttt{ABANDONO} y sin consecuencias, cualquier \textit{Partida} de \texttt{tipo} \texttt{IA} que el jugador tenga sin terminar (\mbox{RN-07}). \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas inicia una transacción y crea la \textit{Partida} con \texttt{tipo} igual a \texttt{IA}, el \texttt{id\_\allowbreak{}modo}, el \texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}, los \texttt{minutos\_\allowbreak{}reloj} —nulo si es sin reloj—, \texttt{permite\_\allowbreak{}deshacer}, \texttt{permite\_\allowbreak{}sugerencias}, \texttt{estado} igual a \texttt{EN\_\allowbreak{}CURSO} y la \texttt{fecha\_\allowbreak{}inicio}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas crea la \textit{Participacion} del jugador con su orden de turno, su casilla inicial, sus muros y su reloj, y su \textit{ParticipacionObjeto}. La IA no tiene \textit{Participacion}: no es un \textit{Usuario} (\mbox{RN-03}). Confirma la transacción. \textit{(Ver \mbox{EX-02})}
+      \item El Servidor de partidas responde con \texttt{AI\_\allowbreak{}MATCH\_\allowbreak{}STARTED} y el estado inicial.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Match} con la IA como rival, su nivel en lugar del elo y, si están activados, los botones de deshacer y sugerencia.
+      \item En el turno del jugador, el flujo continúa en el \mbox{CU-20} o en el \mbox{CU-21}. \textit{(Ver \mbox{FA-04}, \mbox{FA-05})}
+      \item En el turno de la IA, el Servidor de partidas calcula su jugada conforme al \textit{NivelIA}, la valida con las mismas reglas que las del jugador y la registra como \textit{Jugada} con \texttt{id\_\allowbreak{}usuario} nulo (\mbox{RN-04}).
+      \item El Servidor de partidas notifica la jugada y el SJM la anima sobre el tablero.
+      \item Los pasos 10 a 12 se repiten hasta una condición de término.
+      \item El flujo continúa en el \mbox{CU-25}, que por su \mbox{FA-01} otorga la experiencia sin elo ni monedas y calcula el repaso de tres puntos sobre las \textit{Jugada} registradas.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}AIMatchEnd} con el resultado, la experiencia y el repaso de tres errores, cada uno con acceso a su posición en el tablero.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El jugador vuelve al menú sin jugar}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona ``Volver''.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MainMenu} sin enviar nada.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El jugador está en la cola o en una sala}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{START\_\allowbreak{}AI\_\allowbreak{}MATCH\_\allowbreak{}FAILED} y el motivo \texttt{YA\_\allowbreak{}EN\_\allowbreak{}COLA} o \texttt{YA\_\allowbreak{}EN\_\allowbreak{}SALA}.
+      \item El SJM ofrece salir de la cola o de la sala antes de empezar.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El jugador tiene una partida en línea sin terminar}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra una \textit{Participacion} sin terminar en una partida \texttt{CLASIFICATORIA} o \texttt{PRIVADA}.
+      \item El Servidor de partidas responde con \texttt{START\_\allowbreak{}AI\_\allowbreak{}MATCH\_\allowbreak{}FAILED} y el motivo \texttt{YA\_\allowbreak{}EN\_\allowbreak{}PARTIDA}.
+      \item El SJM ofrece volver a la partida, que continúa en el \mbox{CU-26}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El jugador deshace una jugada}\par
+    \begin{cuenum}[start=1]
+      \item Con deshacer activado, el jugador selecciona ``deshacer'' en su turno.
+      \item El Servidor de partidas marca como \texttt{deshecha} su última \textit{Jugada} y la respuesta de la IA que la siguió, sin eliminarlas, y restablece la \textit{Participacion} al estado anterior (\mbox{RN-05}).
+      \item El Servidor de partidas incrementa \texttt{deshacer\_\allowbreak{}usados} en la \textit{Partida} y responde con el estado.
+      \item El SJM retrocede el tablero y marca las jugadas deshechas en el historial.
+      \item El flujo continúa en el paso 10 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El jugador pide una sugerencia}\par
+    \begin{cuenum}[start=1]
+      \item Con sugerencias activadas, el jugador selecciona ``sugerencia'' en su turno.
+      \item El Servidor de partidas calcula la mejor jugada para el jugador y una explicación breve de por qué, e incrementa \texttt{sugerencias\_\allowbreak{}usadas} en la \textit{Partida}.
+      \item El SJM resalta la casilla o el surco recomendado en el tablero y muestra la explicación, sin jugar por el jugador.
+      \item El flujo continúa en el paso 10 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El jugador sale de una partida contra la IA sin terminarla}\par
+    \begin{cuenum}[start=1]
+      \item El jugador vuelve al menú o cierra el juego.
+      \item La \textit{Partida} queda \texttt{EN\_\allowbreak{}CURSO} en el servidor. Si es sin reloj, nada la cierra por tiempo.
+      \item La próxima vez que el jugador elija ``Contra la IA'', el SJM ofrece continuarla o empezar otra; empezar otra la cierra conforme al paso 5 del FN.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El jugador entra a una partida en línea con una partida contra la IA sin terminar}\par
+    \begin{cuenum}[start=1]
+      \item El \mbox{CU-17}, el \mbox{CU-18} o el \mbox{CU-19} crean la partida en línea.
+      \item En la misma transacción, el Servidor de partidas cierra la partida contra la IA con la forma de término \texttt{ABANDONO}, sin experiencia ni penalización (\mbox{RN-07}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no quede una \textit{Partida} sin la \textit{Participacion} del jugador.
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas trata la transacción como fallida y no responde \texttt{AI\_\allowbreak{}MATCH\_\allowbreak{}STARTED}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError}; si la partida sí se creó, aparecerá como partida por continuar según el \mbox{FA-06}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía la solicitud y consulta si existe una partida contra la IA en curso.
+      \item El SJM la muestra si existe, o vuelve a la \texttt{GUI\_\allowbreak{}AIDifficulty} si no.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: La conexión se interrumpe durante la partida}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida.
+      \item Si la partida tiene reloj, el reloj del jugador sigue corriendo en su turno, como en cualquier partida.
+      \item Al reconectar, el flujo continúa en el paso 5 del \mbox{CU-26}.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-05}: El motor de la IA no calcula una jugada a tiempo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas detecta que el cálculo de la IA superó su tiempo límite.
+      \item El Servidor de partidas juega la mejor jugada encontrada hasta ese momento, que siempre existe porque el cálculo empieza por una jugada legal.
+      \item El flujo continúa en el paso 12 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe una \textit{Partida} de \texttt{tipo} \texttt{IA} finalizada, con su \textit{NivelIA}, sus opciones, sus \textit{Jugada} —las de la IA con \texttt{id\_\allowbreak{}usuario} nulo— y la \textit{Participacion} del jugador con su resultado.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, el jugador ganó experiencia, y su elo y sus monedas no cambiaron.
+      \item \textbf{\mbox{POST-03}} Ninguna jugada deshecha se eliminó: está marcada como \texttt{deshecha} y la repetición puede mostrarla o no.
+      \item \textbf{\mbox{POST-04}} Un jugador tiene como mucho una \textit{Participacion} sin terminar en total, contando las partidas contra la IA.
+      \item \textbf{\mbox{POST-05}} La partida aparece en el historial del jugador marcada como partida contra la IA.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Las partidas contra la IA no otorgan elo ni monedas, pero sí experiencia (\mbox{RN-03} del \mbox{CU-25}).
+      \item \textbf{\mbox{RN-02}} Los cuatro niveles tienen una fuerza aproximada fija: aprendiz, unos 1000; constructor, 1500; arquitecto, 1900; y bastión, 2300.
+      \item \textbf{\mbox{RN-03}} La IA no es un \textit{Usuario} y no tiene \textit{Participacion}. Su nivel se guarda en la \textit{Partida} y sus jugadas llevan \texttt{id\_\allowbreak{}usuario} nulo.
+      \item \textbf{\mbox{RN-04}} Las jugadas de la IA se validan con las mismas reglas que las del jugador. La IA no tiene privilegios sobre el tablero.
+      \item \textbf{\mbox{RN-05}} Deshacer no elimina jugadas: las marca como deshechas. Se deshace siempre la jugada del jugador junto con la respuesta de la IA, para volver a su turno.
+      \item \textbf{\mbox{RN-06}} Las partidas contra la IA pueden jugarse sin reloj, con tablero de 9×9 o de 7×7.
+      \item \textbf{\mbox{RN-07}} Un jugador puede tener una sola \textit{Participacion} sin terminar. Una partida contra la IA pendiente nunca impide entrar a otra partida: se cierra sola, sin consecuencias, en la misma transacción que crea la nueva (\mbox{D-11}).
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} El repaso de tres puntos se calcula al terminar a partir de las jugadas registradas, comparando cada una con la que el motor habría recomendado.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué la partida se guarda si no da elo.}\par
+    Guardar las partidas contra la IA escribe filas que no afectan a la clasificación, y podría parecer desperdicio. Se guardan porque de ellas dependen tres cosas que el diseño promete: que aparezcan en el historial, que tengan repetición y que el repaso de errores se calcule en el servidor, donde está el motor que sabe cuál era la jugada correcta. Además, la experiencia sí se otorga, y otorgar algo a partir de una partida que el servidor no conoce sería aceptar un resultado dictado por el cliente.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 4)}
+      \item \textit{ColaEmparejamiento}, \textit{SalaParticipante}, \textit{Participacion}: lee, para las exclusiones \textit{(pasos 4, \mbox{FA-03})}
+      \item \textit{NivelIA}, \textit{Modo}: lee \textit{(pasos 1, 6)}
+      \item \textit{Partida}: cierra la de IA pendiente; crea con \texttt{tipo} \texttt{IA}, \texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}, \texttt{permite\_\allowbreak{}deshacer}, \texttt{permite\_\allowbreak{}sugerencias}; escribe \texttt{deshacer\_\allowbreak{}usados} y \texttt{sugerencias\_\allowbreak{}usadas} \textit{(pasos 5, 6, \mbox{FA-04}, \mbox{FA-05})}
+      \item \textit{Participacion}, \textit{ParticipacionObjeto}: crea la del jugador \textit{(paso 7)}
+      \item \textit{Jugada}: crea las de la IA con \texttt{id\_\allowbreak{}usuario} nulo; marca \texttt{deshecha} \textit{(pasos 11, \mbox{FA-04})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

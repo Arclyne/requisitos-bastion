@@ -1,0 +1,255 @@
+\subsection*{CU-02: Registrar cuenta}
+\addcontentsline{toc}{subsection}{CU-02: Registrar cuenta}
+\label{cu-02}
+
+\begin{fichacu}{CU-02}{Registrar cuenta}
+  \crudFila{Responsable}{José Eduardo Prior Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Servicio de correo, Base de datos}
+  \crudFila{Prototipos}{6c, 6d, 7e}
+  \crudFila{Objetivo}{Permitir a una persona crear su propia cuenta de \textit{Usuario} en el SJM, con el objetivo de poder acreditarse después mediante el \mbox{CU-01} y acceder a las funciones que exigen una cuenta. El alta deja la cuenta en espera de que su correo sea verificado, y crea de una sola vez todo lo que un jugador necesita para existir en el sistema: sus \textit{EstadisticaModo} en cero, sus objetos cosméticos iniciales equipados y el registro de los términos que aceptó.}
+  \crudFila{Disparador}{El Jugador selecciona la opción ``Crear cuenta'' en la \texttt{GUI\_\allowbreak{}Login}, sea directamente o por el \mbox{FA-02} del \mbox{CU-01}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El cliente del SJM está instalado y en ejecución en el dispositivo del Jugador.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y acepta conexiones TCP en el extremo de red configurado.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas tiene una conexión disponible con la Base de datos.
+      \item \textbf{\mbox{PRE-04}} El Jugador no tiene una sesión abierta en el cliente.
+      \item \textbf{\mbox{PRE-05}} El catálogo contiene, para cada una de las seis \textit{Ranura}, al menos un \textit{ObjetoCosmetico} marcado como inicial y exactamente uno marcado como predeterminado, sin los cuales la cuenta no podría quedar con un objeto equipado en cada ranura (\mbox{RN-08}).
+      \item \textbf{\mbox{PRE-06}} Existe una versión vigente de los términos de uso y su texto está disponible en el idioma de la interfaz.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Register}, solicitando el \texttt{nickname}, el \texttt{correo}, la contraseña y su confirmación, la \texttt{fecha\_\allowbreak{}nacimiento} y el \texttt{idioma\_\allowbreak{}preferido}; junto con la casilla de aceptación de los términos de uso y las opciones ``Crear cuenta'', ``Cancelar'' y el selector de idioma. \textit{(Ver \mbox{FA-01}, \mbox{FA-02}, \mbox{FA-12})}
+      \item El Jugador captura los datos solicitados, marca la casilla de aceptación de los términos de uso y da click en ``Crear cuenta''.
+      \item El SJM valida que todos los campos obligatorios estén completos y con el formato esperado. \textit{(Ver \mbox{FA-03})}
+      \item El SJM valida que la contraseña cumpla la política de \mbox{RN-03} y que coincida con su confirmación. \textit{(Ver \mbox{FA-04})}
+      \item El SJM valida que la casilla de los términos esté marcada. \textit{(Ver \mbox{FA-05})}
+      \item El SJM calcula la edad a partir de la \texttt{fecha\_\allowbreak{}nacimiento} capturada y verifica que sea de ocho años o más. \textit{(Ver \mbox{FA-06})}
+      \item El SJM abre la conexión TCP con el Servidor de partidas y negocia la versión del protocolo. \textit{(Ver \mbox{EX-01}, \mbox{EX-02})}
+      \item El SJM envía el mensaje \texttt{REGISTER\_\allowbreak{}REQUEST} con los datos capturados, la contraseña, la versión de los términos aceptada, la huella del dispositivo y la \texttt{version\_\allowbreak{}cliente}. \textit{(Ver \mbox{EX-03}, \mbox{EX-07}, \mbox{EX-08})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas vuelve a aplicar sobre los datos recibidos todas las validaciones de los pasos 3 a 6, sin dar por buena la validación del cliente (\mbox{RN-10}). \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas verifica que el \texttt{nickname} no contenga términos del catálogo de \textit{PalabraProhibida}. \textit{(Ver \mbox{FA-08})}
+      \item El Servidor de partidas verifica que el \texttt{nickname} no esté en uso por otro \textit{Usuario}. \textit{(Ver \mbox{FA-09})}
+      \item El Servidor de partidas normaliza el \texttt{correo} a minúsculas y verifica que no esté registrado por otro \textit{Usuario}. \textit{(Ver \mbox{FA-10})}
+      \item El Servidor de partidas verifica que la versión de los términos recibida sea la vigente. \textit{(Ver \mbox{FA-11})}
+      \item El Servidor de partidas inicia una transacción sobre la Base de datos.
+      \item El Servidor de partidas genera la \texttt{contrasena\_\allowbreak{}sal} y deriva la \texttt{contrasena\_\allowbreak{}hash} de la contraseña recibida.
+      \item El Servidor de partidas crea el registro de \textit{Usuario} con \texttt{tipo\_\allowbreak{}cuenta} en \texttt{REGISTRADA}, \texttt{estado\_\allowbreak{}cuenta} en \texttt{PENDIENTE}, un \texttt{codigo\_\allowbreak{}amigo} único, la \texttt{fecha\_\allowbreak{}registro} actual, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{experiencia} y \texttt{saldo\_\allowbreak{}monedas} en cero, \texttt{nivel} en uno, \texttt{rol} en \texttt{JUGADOR}, \texttt{bloqueada\_\allowbreak{}hasta} y \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} en nulo, y \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} en falso. \textit{(Ver \mbox{EX-04})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item El Servidor de partidas crea una \textit{EstadisticaModo} del \textit{Usuario} por cada \textit{Modo} activo, con todos sus contadores en cero y el elo inicial. \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas otorga al \textit{Usuario} los \textit{ObjetoCosmetico} marcados como iniciales, creando sus \textit{UsuarioObjeto} con la \texttt{fecha\_\allowbreak{}obtencion} y el origen \texttt{INICIAL}, y crea una fila de \textit{Equipamiento} por cada \textit{Ranura} apuntando al objeto predeterminado. \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas registra la \textit{AceptacionTerminos} con la versión aceptada, la fecha y la dirección de red de origen. \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas genera un \textit{TokenVerificacionCorreo} para el \textit{Usuario}, con propósito \texttt{ALTA} y su fecha de expiración. \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-05})}
+      \item El Servidor de partidas solicita al Servicio de correo el envío del mensaje de verificación, en el \texttt{idioma\_\allowbreak{}preferido} del \textit{Usuario}. \textit{(Ver \mbox{EX-06})}
+      \item El Servidor de partidas actualiza \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} del \textit{Usuario}.
+      \item El Servidor de partidas registra el alta en la \textit{BitacoraAcceso} con el resultado \texttt{REGISTRO\_\allowbreak{}EXITOSO}.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=25]
+      \item El Servidor de partidas responde con el mensaje \texttt{REGISTER\_\allowbreak{}OK}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}RegistrationSuccess}, indicando que se envió un correo de verificación a la dirección capturada, mostrada de forma parcialmente oculta; al aceptarlo, vuelve a la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: Cancelar el registro}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Cancelar''.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} preguntando si desea descartar los datos capturados, con las opciones ``Descartar'' y ``Seguir editando''.
+      \item El Jugador selecciona ``Descartar'' y el SJM descarta los datos capturados sin haberlos enviado al Servidor de partidas, y despliega la \texttt{GUI\_\allowbreak{}Login}. Si selecciona ``Seguir editando'', el flujo continúa en el paso 2 del FN.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: Cambiar el idioma de la interfaz}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona un idioma distinto en el selector de idioma.
+      \item El SJM carga el catálogo de recursos correspondiente, incluido el texto de los términos de uso, y vuelve a dibujar la \texttt{GUI\_\allowbreak{}Register} conservando lo capturado salvo la contraseña y su confirmación.
+      \item El SJM desmarca la casilla de aceptación, porque el texto que el Jugador había aceptado ya no es el que está viendo.
+      \item El SJM propone ese mismo idioma como \texttt{idioma\_\allowbreak{}preferido} de la cuenta, sin impedir que el Jugador elija otro distinto.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: Campos incompletos o con formato inválido}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando qué campos están incompletos o mal formados, los resalta y escribe junto a cada uno qué se espera de él, en lugar de reunir todos los avisos en un solo mensaje al principio del formulario.
+      \item El flujo continúa en el paso 2 del FN. La validación es local y no llega al Servidor de partidas.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La contraseña no cumple la política o no coincide}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} explicando en una frase qué le falta a la contraseña conforme a \mbox{RN-03}, o bien que las dos capturas no coinciden, y limpia ambos campos.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: No se aceptaron los términos de uso}\par
+    \begin{cuenum}[start=1]
+      \item El SJM resalta la casilla de aceptación y escribe junto a ella que debe marcarse para continuar, sin abrir ninguna ventana adicional.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El aspirante no alcanza la edad mínima}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que el juego está dirigido a personas de ocho años o más.
+      \item El SJM descarta los datos capturados sin enviarlos al Servidor de partidas y sin escribir la \texttt{fecha\_\allowbreak{}nacimiento} en ninguna bitácora (\mbox{RN-13}), y despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El servidor rechaza datos que el cliente había aceptado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra en la bitácora del servidor la discrepancia entre lo que el cliente dio por válido y lo que él rechaza, junto con la \texttt{version\_\allowbreak{}cliente} y la dirección de red de origen, por tratarse de un indicio de cliente modificado.
+      \item El Servidor de partidas registra el intento en la \textit{BitacoraAcceso} con el resultado \texttt{REGISTRO\_\allowbreak{}RECHAZADO}.
+      \item El Servidor de partidas responde con \texttt{REGISTER\_\allowbreak{}FAILED} y el motivo \texttt{DATOS\_\allowbreak{}INVALIDOS}, enumerando los campos rechazados.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} con los campos rechazados y los resalta en el formulario.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: El nickname contiene lenguaje inapropiado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{REGISTER\_\allowbreak{}FAILED} y el motivo \texttt{NICKNAME\_\allowbreak{}NO\_\allowbreak{}PERMITIDO}, sin indicar qué término activó el filtro, para no ir revelando el contenido del catálogo a base de intentos.
+      \item El Servidor de partidas registra el intento en la \textit{BitacoraAcceso} con el resultado \texttt{REGISTRO\_\allowbreak{}RECHAZADO}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que ese \texttt{nickname} no puede usarse y que elija otro, y limpia el campo.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-09}: El nickname ya está en uso}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas arma hasta tres sugerencias de \texttt{nickname} disponibles a partir del capturado.
+      \item El Servidor de partidas registra el intento en la \textit{BitacoraAcceso} con el resultado \texttt{REGISTRO\_\allowbreak{}RECHAZADO}.
+      \item El Servidor de partidas responde con \texttt{REGISTER\_\allowbreak{}FAILED}, el motivo \texttt{NICKNAME\_\allowbreak{}EN\_\allowbreak{}USO} y las sugerencias.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que ese nombre ya está ocupado, con las sugerencias como opciones seleccionables; la que el Jugador elija queda en el campo del \texttt{nickname}.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-10}: El correo ya está registrado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra el intento en la \textit{BitacoraAcceso} con el resultado \texttt{REGISTRO\_\allowbreak{}RECHAZADO}.
+      \item El Servidor de partidas responde con \texttt{REGISTER\_\allowbreak{}FAILED} y el motivo \texttt{CORREO\_\allowbreak{}EN\_\allowbreak{}USO}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que ya existe una cuenta con ese correo, con las opciones ``Iniciar sesión'' y ``Aceptar''.
+      \item El Jugador selecciona ``Iniciar sesión'' y el flujo continúa en el \mbox{CU-01} Iniciar sesión. Si selecciona ``Aceptar'', continúa en el paso 2 del FN.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-11}: Los términos aceptados no son los vigentes}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra el intento en la \textit{BitacoraAcceso} con el resultado \texttt{REGISTRO\_\allowbreak{}RECHAZADO}.
+      \item El Servidor de partidas responde con \texttt{REGISTER\_\allowbreak{}FAILED}, el motivo \texttt{TERMINOS\_\allowbreak{}DESACTUALIZADOS} y el identificador de la versión vigente.
+      \item El SJM carga el texto de la versión vigente, desmarca la casilla de aceptación y muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que los términos cambiaron mientras llenaba el formulario y que deben aceptarse de nuevo.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-12}: El dispositivo tiene una cuenta de invitado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que conserva el token de una cuenta de invitado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageConfirm} advirtiendo que una cuenta nueva empieza vacía y que el progreso del invitado solo se conserva vinculándolo, con las opciones ``Vincular mi progreso'' y ``Crear cuenta nueva''.
+      \item Si el Jugador selecciona ``Vincular mi progreso'', el flujo continúa en el \mbox{CU-07} Vincular la cuenta de invitado y termina este caso de uso. Si selecciona ``Crear cuenta nueva'', el flujo continúa en el paso 2 del FN y la cuenta de invitado permanece intacta en el dispositivo.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: No se puede establecer la conexión con el servidor}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que la conexión TCP no pudo establecerse dentro del tiempo límite configurado, y registra el fallo en la bitácora local del cliente.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que no fue posible contactar al servidor, con las opciones ``Reintentar'' y ``Aceptar''. Los datos capturados se conservan.
+      \item El Jugador selecciona ``Reintentar'' y el flujo continúa en el paso 7 del FN. Si selecciona ``Aceptar'', continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: La versión del protocolo es incompatible}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{PROTOCOL\_\allowbreak{}VERSION\_\allowbreak{}MISMATCH}, indicando la versión mínima que acepta, y cierra la conexión.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la versión instalada del juego es incompatible y que debe actualizarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que transcurrió el tiempo límite de respuesta sin haber recibido un mensaje completo del Servidor de partidas.
+      \item El SJM cierra la conexión TCP y descarta el intercambio en curso, sin suponer que el alta fracasó: el servidor pudo haberla completado.
+      \item El SJM registra el fallo en la bitácora local del cliente y muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la cuenta pudo haberse creado de todos modos y que conviene revisar el correo antes de volver a intentarlo.
+      \item Fin del caso de uso. Si el alta sí se completó en el servidor, un segundo intento con los mismos datos termina en el \mbox{FA-09} o en el \mbox{FA-10}, que le indican al Jugador que la cuenta ya existe.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción completa, de modo que no quede un \textit{Usuario} sin \textit{EstadisticaModo}, sin objetos iniciales, sin \textit{Equipamiento} o sin su token de verificación (\mbox{RN-06}).
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor con un identificador de incidencia, sin incluir la contraseña recibida.
+      \item El Servidor de partidas responde con \texttt{SERVER\_\allowbreak{}ERROR} y el identificador de incidencia, y cierra la conexión.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador de incidencia. Los datos capturados se conservan, salvo la contraseña.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-05}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no obtiene confirmación de que la transacción se haya escrito y la trata como fallida.
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor, señalando que el estado del alta es indeterminado y debe verificarse, y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que no fue posible confirmar la creación de la cuenta y que revise su correo antes de reintentar.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-06}: El servicio de correo no está disponible}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas agota los reintentos previstos hacia el Servicio de correo sin obtener confirmación de entrega.
+      \item El Servidor de partidas conserva el \textit{Usuario} y su \textit{TokenVerificacionCorreo}: la cuenta ya está creada y revertirla obligaría al Jugador a capturarlo todo de nuevo por un fallo que no es suyo (\mbox{RN-07}).
+      \item El Servidor de partidas deja \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} en nulo, de modo que el reenvío del \mbox{FA-09} del \mbox{CU-01} pueda solicitarse de inmediato, sin esperar los cinco minutos que exige su \mbox{RN-10}.
+      \item El Servidor de partidas registra el fallo del servicio externo en la bitácora del servidor, registra el alta en la \textit{BitacoraAcceso} con el resultado \texttt{REGISTRO\_\allowbreak{}SIN\_\allowbreak{}CORREO} y responde con \texttt{REGISTER\_\allowbreak{}OK\_\allowbreak{}MAIL\_\allowbreak{}FAILED}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}RegistrationSuccess} indicando que la cuenta se creó pero que el correo de verificación no pudo enviarse, y que puede pedirlo de nuevo al intentar iniciar sesión; al aceptarlo, vuelve a la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-07}: La conexión se interrumpe durante el intercambio}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta el cierre inesperado del socket antes de recibir un mensaje completo.
+      \item El SJM trata el resultado del alta como desconocido, igual que en el \mbox{EX-03}, y registra el fallo en la bitácora local del cliente.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que se perdió la conexión con el servidor y que la cuenta pudo haberse creado.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-08}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no logra delimitar o deserializar el mensaje recibido conforme al protocolo acordado.
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local del cliente el contenido truncado y la posición donde falló la lectura.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta del servidor no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe un \textit{Usuario} con \texttt{tipo\_\allowbreak{}cuenta} en \texttt{REGISTRADA}, \texttt{estado\_\allowbreak{}cuenta} en \texttt{PENDIENTE}, su \texttt{contrasena\_\allowbreak{}hash}, su \texttt{contrasena\_\allowbreak{}sal}, su \texttt{codigo\_\allowbreak{}amigo} y su \texttt{fecha\_\allowbreak{}registro}.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, existe una \textit{EstadisticaModo} de ese \textit{Usuario} por cada \textit{Modo} activo, con todos sus contadores en cero.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, el \textit{Usuario} posee los objetos iniciales y tiene un objeto equipado en cada una de las seis \textit{Ranura}.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el FN, existe un registro de \textit{AceptacionTerminos} con la versión aceptada, la fecha y la dirección de red de origen.
+      \item \textbf{\mbox{POST-05}} Si el caso termina por el FN, existe un \textit{TokenVerificacionCorreo} vigente y se solicitó su envío al Servicio de correo.
+      \item \textbf{\mbox{POST-06}} Si el caso termina por el FN, el \texttt{nickname} y el \texttt{correo} quedan ocupados y ningún otro \textit{Usuario} puede tomarlos.
+      \item \textbf{\mbox{POST-07}} El Jugador todavía no puede iniciar sesión: el \mbox{CU-01} lo rechazará por su \mbox{FA-09} hasta que la cuenta pase a \texttt{ACTIVA} con el \mbox{CU-04}.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-08}} Si el caso termina por cualquier flujo alterno, o por las excepciones \mbox{EX-01} a \mbox{EX-05}, \mbox{EX-07} o \mbox{EX-08}, no se creó ningún \textit{Usuario} ni ninguno de sus registros asociados.
+      \item \textbf{\mbox{POST-09}} Si el caso termina por el \mbox{EX-06}, el \textit{Usuario} sí existe en \texttt{PENDIENTE}, sin correo enviado y con \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} en nulo.
+      \item \textbf{\mbox{POST-10}} Salvo en los \mbox{FA-01} a \mbox{FA-06} y \mbox{FA-12}, que no llegan al servidor, el intento quedó registrado en la \textit{BitacoraAcceso} con su resultado, su fecha y hora y la dirección de red de origen.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} El \texttt{nickname} es único, mide entre tres y treinta caracteres y se compara sin distinguir mayúsculas ni acentos, de modo que dos jugadores no puedan elegir nombres que se vean iguales.
+      \item \textbf{\mbox{RN-02}} El \texttt{correo} es único y se normaliza a minúsculas antes de compararlo y de guardarlo.
+      \item \textbf{\mbox{RN-03}} La contraseña tiene al menos ocho caracteres y combina al menos tres de estos cuatro grupos: minúsculas, mayúsculas, dígitos y signos. No puede contener el \texttt{nickname} ni el \texttt{correo}. Nunca viaja ni se almacena en claro.
+      \item \textbf{\mbox{RN-04}} Toda cuenta nace en \texttt{PENDIENTE}. Solo la verificación del correo la lleva a \texttt{ACTIVA}; ningún otro flujo puede hacerlo.
+      \item \textbf{\mbox{RN-05}} La edad mínima es de ocho años, calculada a partir de la \texttt{fecha\_\allowbreak{}nacimiento} contra la fecha del registro.
+      \item \textbf{\mbox{RN-06}} El alta del \textit{Usuario}, sus \textit{EstadisticaModo}, sus objetos iniciales, su \textit{Equipamiento}, la \textit{AceptacionTerminos} y el \textit{TokenVerificacionCorreo} ocurren en una sola transacción: o existen todos o no existe ninguno.
+      \item \textbf{\mbox{RN-07}} El envío del correo queda fuera de esa transacción. Que el correo falle no puede deshacer una cuenta ya creada, porque el fallo es del servicio externo y el costo lo pagaría el jugador.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} Todo \textit{Usuario} tiene exactamente un \textit{ObjetoCosmetico} equipado en cada una de las seis \textit{Ranura} desde el momento del alta, por lo que el catálogo debe contener siempre un objeto predeterminado por ranura (\mbox{D-03}).
+      \item \textbf{\mbox{RN-09}} El \texttt{nickname} se filtra contra el catálogo de \textit{PalabraProhibida} en el servidor y nunca solo en el cliente, porque un cliente modificado no aplicaría el filtro.
+      \item \textbf{\mbox{RN-10}} Todas las validaciones del cliente se repiten en el servidor. Las del cliente existen para dar respuesta inmediata al jugador, no para decidir.
+      \item \textbf{\mbox{RN-11}} El \textit{TokenVerificacionCorreo} tiene una vigencia de veinticuatro horas y es de un solo uso.
+      \item \textbf{\mbox{RN-12}} Se registra la versión de los términos aceptada, y no solo el hecho de haberlos aceptado, para poder demostrar más adelante qué texto aceptó cada cuenta.
+      \item \textbf{\mbox{RN-13}} Los datos de una persona que no alcanza la edad mínima no se envían al servidor ni se escriben en ninguna bitácora.
+      \item \textbf{\mbox{RN-14}} Todos los textos visibles, incluidos los términos de uso, provienen de los catálogos de recursos y se almacenan y transmiten en Unicode.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-15}} El tiempo transcurrido entre el paso 2 y el paso 26 del FN debe ser menor a un segundo, sin contar el envío del correo, que ocurre fuera de la transacción.
+      \item \textbf{\mbox{RN-16}} El registro solo pide los datos que algún flujo usa: no se piden apellidos ni región (\mbox{D-06}).
+    \end{cureglas}} \\ \hline
+  \textbf{Trazabilidad} & \cuCelda{Restricciones \mbox{CON-01} (C\#), \mbox{CON-02} y \mbox{CON-03} (TCP sin WebSockets), \mbox{CON-04} (SQL Server), \mbox{CON-05} (Unicode), \mbox{CON-07} (respuesta menor a un segundo), \mbox{CON-09} (filtro de palabras, aquí aplicado al nickname), \mbox{CON-11} (cambio de idioma) y \mbox{CON-12} (comprensible a los ocho años). Concerns \mbox{CRN-05} (datos mínimos), \mbox{CRN-15} y \mbox{CRN-16} (localización), \mbox{CRN-21} (fallos de terceros) y \mbox{CRN-23} (cliente modificado). Características de calidad \mbox{QA-01}, \mbox{QA-02}, \mbox{QA-03}, \mbox{QA-04}, \mbox{QA-06}, \mbox{QA-08} y \mbox{QA-09}. Preguntas abiertas \mbox{Q-04} y \mbox{Q-05}, resueltas para este caso como se indica en las observaciones.} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre el trato por edad (\mbox{Q-05}).}\par
+    El registro solo comprueba el mínimo de ocho años; todas las cuentas nacen iguales. Es la decisión más barata de construir y la que menos datos de menores recolecta, pero deja sin cubrir el \mbox{CRN-04}, que es el motivo por el que un padre puede vetar el uso del juego. La protección del menor recae entonces por completo en el filtro de palabras del servidor exigido por \mbox{CON-09}, que se especifica en el \mbox{CU-28}. Si más adelante se decide desactivar el chat a los menores o exigir consentimiento del tutor, este caso de uso y el esquema de \textit{Usuario} tendrán que modificarse: haría falta al menos un indicador de chat habilitado y, en el segundo supuesto, una tabla de consentimientos y un flujo alterno completo.} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre el correo en uso (\mbox{FA-10}).}\par
+    Decirle al aspirante que ese correo ya tiene cuenta convierte el formulario de registro en una forma de averiguar si una dirección está registrada, que es justo lo que el \mbox{RN-01} del \mbox{CU-01} y del \mbox{CU-03} evita. Se aceptó la contradicción a propósito: callarlo obligaría a mostrar un falso mensaje de éxito y a avisar por correo, lo que ante un niño de ocho años que simplemente olvidó que ya tenía cuenta es indescifrable. Si más adelante se prioriza la privacidad sobre la claridad, el cambio está acotado al \mbox{FA-10}.} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre el correo fuera de la transacción (\mbox{RN-07}, \mbox{EX-06}).}\par
+    La alternativa era revertir el alta si el correo falla, lo que dejaría al jugador sin cuenta y sin explicación por un fallo ajeno. En su lugar la cuenta queda creada y en \texttt{PENDIENTE}, y el reenvío se pide desde el propio inicio de sesión. Es la respuesta concreta al \mbox{CRN-21}: el sistema se degrada de forma controlada en vez de quedarse colgado o de deshacer trabajo del usuario.} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre la contraseña elegida por el jugador.}\par
+    El registro es autoservicio: no hay un coordinador que dé de alta a nadie ni un sistema que genere la contraseña y la envíe por correo. Eso elimina la necesidad de enviar una contraseña en claro, que es el punto más frágil de los flujos de alta asistida.} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre la activación y la edad.}\par
+    Este caso no activa la cuenta: lo hace el \mbox{CU-04} cuando el jugador abre el enlace del correo, fuera de la aplicación. La edad tampoco se almacena: se calcula a partir de \texttt{fecha\_\allowbreak{}nacimiento} cada vez que se necesita, porque guardarla obligaría a recalcularla en cada cumpleaños de cada cuenta.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Usuario}: lee \texttt{nickname} y \texttt{correo} de las demás cuentas \textit{(pasos 11, 12)}
+      \item \textit{Usuario}: crea con \texttt{tipo\_\allowbreak{}cuenta}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}nacimiento}, \texttt{idioma\_\allowbreak{}preferido}, \texttt{codigo\_\allowbreak{}amigo}, \texttt{rol}, \texttt{nivel}, \texttt{experiencia}, \texttt{saldo\_\allowbreak{}monedas}, \texttt{fecha\_\allowbreak{}registro}; escribe \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} \textit{(pasos 16, 23)}
+      \item \textit{PalabraProhibida}: lee el catálogo con ámbito de nickname \textit{(paso 10)}
+      \item \textit{Modo}: lee los activos \textit{(paso 17)}
+      \item \textit{EstadisticaModo}: crea una por modo \textit{(paso 17)}
+      \item \textit{Ranura}, \textit{ObjetoCosmetico}: lee los iniciales y el predeterminado de cada ranura \textit{(paso 18)}
+      \item \textit{UsuarioObjeto}: crea uno por objeto inicial \textit{(paso 18)}
+      \item \textit{Equipamiento}: crea una fila por ranura \textit{(paso 18)}
+    \end{cudatos}} \\
+   & \cuCelda{\begin{cudatos}
+      \item \textit{AceptacionTerminos}: crea \textit{(paso 19)}
+      \item \textit{TokenVerificacionCorreo}: crea con propósito \texttt{ALTA} \textit{(paso 20)}
+      \item \textit{BitacoraAcceso}: inserta \textit{(pasos 24, \mbox{FA-07} a \mbox{FA-11}, \mbox{EX-06})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage
