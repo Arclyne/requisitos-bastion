@@ -1,0 +1,182 @@
+\subsection*{CU-09: Cambiar contraseña o correo}
+\addcontentsline{toc}{subsection}{CU-09: Cambiar contraseña o correo}
+\label{cu-09}
+
+\begin{fichacu}{CU-09}{Cambiar contraseña o correo}
+  \crudFila{Responsable}{José Eduardo Prior Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Servicio de correo, Base de datos}
+  \crudFila{Prototipos}{9f}
+  \crudFila{Objetivo}{Permitir al Jugador con sesión abierta cambiar su contraseña o su correo, exigiendo la contraseña actual como prueba de identidad, cerrando las demás sesiones cuando cambia la contraseña y sin dejar la cuenta sin un correo verificado mientras se confirma el nuevo.}
+  \crudFila{Disparador}{El Jugador selecciona ``cambiar'' junto a la contraseña o junto al correo en la \texttt{GUI\_\allowbreak{}AccountSettings}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El \textit{Usuario} tiene \texttt{tipo\_\allowbreak{}cuenta} en \texttt{REGISTRADA} y \texttt{estado\_\allowbreak{}cuenta} en \texttt{ACTIVA}.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Jugador selecciona ``cambiar'' junto a la contraseña. \textit{(Ver \mbox{FA-01})}
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}ChangePassword}, solicitando la contraseña actual, la contraseña nueva y su confirmación, con las opciones ``Guardar'' y ``Cancelar''. \textit{(Ver \mbox{FA-02})}
+      \item El Jugador captura los tres campos y da click en ``Guardar''.
+      \item El SJM valida que los campos estén completos, que la contraseña nueva cumpla la política de \mbox{RN-03} y que coincida con su confirmación. \textit{(Ver \mbox{FA-03})}
+      \item El SJM envía el mensaje \texttt{CHANGE\_\allowbreak{}PASSWORD\_\allowbreak{}REQUEST} con la contraseña actual, la nueva y el token de sesión. \textit{(Ver \mbox{EX-03}, \mbox{EX-04}, \mbox{EX-05})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas deriva el resumen de la contraseña actual recibida con la \texttt{contrasena\_\allowbreak{}sal} del \textit{Usuario} y lo compara contra \texttt{contrasena\_\allowbreak{}hash} (\mbox{RN-01}). \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas vuelve a validar la política de la contraseña nueva y comprueba que no coincida con la actual (\mbox{RN-08}). \textit{(Ver \mbox{FA-06})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas inicia una transacción sobre la Base de datos.
+      \item El Servidor de partidas genera una \texttt{contrasena\_\allowbreak{}sal} nueva y deriva la \texttt{contrasena\_\allowbreak{}hash} de la contraseña nueva (\mbox{RN-02}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas cierra todas las \textit{Sesion} abiertas del \textit{Usuario} \textbf{salvo la que envió la solicitud}, con \texttt{motivo\_\allowbreak{}cierre} igual a \texttt{CAMBIO\_\allowbreak{}CREDENCIALES} (\mbox{RN-04}).
+      \item El Servidor de partidas invalida los \textit{TokenRecuperacion} pendientes del \textit{Usuario}, porque ya no hace falta recuperar una contraseña que se acaba de cambiar.
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
+      \item El Servidor de partidas registra el cambio en la \textit{BitacoraAcceso} con el resultado \texttt{CAMBIO\_\allowbreak{}CONTRASENA}.
+      \item El Servidor de partidas solicita al Servicio de correo un aviso al \texttt{correo} del \textit{Usuario} informando del cambio, fuera de la transacción (\mbox{RN-05}). \textit{(Ver \mbox{EX-06})}
+      \item El Servidor de partidas responde con \texttt{CHANGE\_\allowbreak{}PASSWORD\_\allowbreak{}OK} y el número de sesiones cerradas.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageSuccess} indicando que la contraseña se cambió y en cuántos dispositivos se cerró la sesión, y vuelve a la \texttt{GUI\_\allowbreak{}AccountSettings}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador cambia su correo}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``cambiar'' junto al correo.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}ChangeEmail}, solicitando el correo nuevo y la contraseña actual.
+      \item El Jugador los captura y da click en ``Guardar''.
+      \item El SJM valida el formato del correo y envía el mensaje \texttt{CHANGE\_\allowbreak{}EMAIL\_\allowbreak{}REQUEST} con el correo nuevo, la contraseña actual y el token de sesión.
+      \item El Servidor de partidas verifica la contraseña actual como en el paso 7 del FN. \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas normaliza el correo nuevo a minúsculas y verifica que sea distinto del actual y que no esté registrado por otro \textit{Usuario}. \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas verifica que hayan transcurrido al menos cinco minutos desde \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, o que sea nulo. \textit{(Ver \mbox{FA-08})}
+      \item El Servidor de partidas invalida los \textit{TokenVerificacionCorreo} pendientes del \textit{Usuario} y genera uno nuevo con propósito \texttt{CAMBIO\_\allowbreak{}CORREO}, el \texttt{correo\_\allowbreak{}destino} igual al correo nuevo y su fecha de expiración. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas solicita al Servicio de correo el envío del enlace de confirmación \textbf{al correo nuevo}, y un aviso \textbf{al correo actual} informando de la solicitud (\mbox{RN-06}). \textit{(Ver \mbox{EX-06})}
+      \item El Servidor de partidas actualiza \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} y registra la solicitud en la \textit{BitacoraAcceso} con el resultado \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}SOLICITADO}.
+      \item El Servidor de partidas responde con \texttt{CHANGE\_\allowbreak{}EMAIL\_\allowbreak{}PENDING}.
+      \item El SJM muestra en la \texttt{GUI\_\allowbreak{}AccountSettings} el correo actual como vigente y el nuevo como pendiente de confirmar. El cambio se completa cuando el Jugador abre el enlace, conforme al \mbox{FA-07} del \mbox{CU-04} (\mbox{RN-07}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Jugador cancela el cambio}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Cancelar''.
+      \item El SJM descarta lo capturado sin enviarlo y vuelve a la \texttt{GUI\_\allowbreak{}AccountSettings}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: Campos incompletos, contraseña fuera de política o que no coincide}\par
+    \begin{cuenum}[start=1]
+      \item El SJM resalta los campos afectados y escribe junto a cada uno qué se espera, conforme a \mbox{RN-03}.
+      \item El SJM limpia los campos de contraseña.
+      \item El flujo continúa en el paso 3 del FN. La validación es local y no llega al Servidor de partidas.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que la sesión terminó y despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: La contraseña actual es incorrecta}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas incrementa \texttt{intentos\_\allowbreak{}fallidos} y actualiza \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido} del \textit{Usuario}, aplicando el bloqueo escalonado del \mbox{RN-03} del \mbox{CU-01} (\mbox{RN-09}).
+      \item El Servidor de partidas registra el intento en la \textit{BitacoraAcceso} con el resultado \texttt{CONTRASENA\_\allowbreak{}INCORRECTA}.
+      \item Si la cuenta quedó bloqueada, el Servidor de partidas cierra todas sus \textit{Sesion} con \texttt{motivo\_\allowbreak{}cierre} igual a \texttt{CAMBIO\_\allowbreak{}CREDENCIALES} y responde con \texttt{ACCOUNT\_\allowbreak{}LOCKED}; el SJM despliega la \texttt{GUI\_\allowbreak{}Login} con el aviso de bloqueo y termina el caso de uso.
+      \item En caso contrario, el Servidor de partidas responde con \texttt{CHANGE\_\allowbreak{}CREDENTIALS\_\allowbreak{}FAILED} y el motivo \texttt{CONTRASENA\_\allowbreak{}ACTUAL\_\allowbreak{}INCORRECTA}; el SJM limpia el campo y el flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: La contraseña nueva es igual a la actual}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{CHANGE\_\allowbreak{}CREDENTIALS\_\allowbreak{}FAILED} y el motivo \texttt{MISMA\_\allowbreak{}CONTRASENA}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que debe elegir una distinta y limpia los campos.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El correo nuevo es el actual o ya está registrado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{CHANGE\_\allowbreak{}CREDENTIALS\_\allowbreak{}FAILED} y el motivo \texttt{CORREO\_\allowbreak{}IGUAL} o \texttt{CORREO\_\allowbreak{}EN\_\allowbreak{}USO}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} con el motivo y conserva el campo para corregirlo.
+      \item El flujo continúa en el paso 3 del \mbox{FA-01}.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: Se solicita el cambio de correo antes del tiempo permitido}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{CHANGE\_\allowbreak{}EMAIL\_\allowbreak{}THROTTLED} y los segundos que faltan.
+      \item El SJM los muestra en la \texttt{GUI\_\allowbreak{}MessageWarning}.
+      \item El flujo continúa en el paso 3 del \mbox{FA-01}.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-09}: El Jugador cancela un cambio de correo pendiente}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``cancelar cambio'' junto al correo pendiente.
+      \item El SJM envía el mensaje \texttt{CANCEL\_\allowbreak{}EMAIL\_\allowbreak{}CHANGE\_\allowbreak{}REQUEST}.
+      \item El Servidor de partidas invalida el \textit{TokenVerificacionCorreo} con propósito \texttt{CAMBIO\_\allowbreak{}CORREO} y responde con \texttt{CANCEL\_\allowbreak{}EMAIL\_\allowbreak{}CHANGE\_\allowbreak{}OK}.
+      \item El SJM retira el correo pendiente de la \texttt{GUI\_\allowbreak{}AccountSettings}.
+      \item Fin del caso de uso. El correo vigente nunca dejó de serlo.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no quede la contraseña cambiada con las demás sesiones todavía abiertas, ni un token de cambio de correo a medio crear.
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor con un identificador de incidencia, sin incluir ninguna contraseña recibida.
+      \item El Servidor de partidas responde con \texttt{SERVER\_\allowbreak{}ERROR} y el identificador.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador y limpia los campos de contraseña.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas trata la transacción como fallida y registra la excepción señalando que el estado es indeterminado.
+      \item El Servidor de partidas responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que el cambio pudo haberse aplicado y que, si la contraseña nueva no funciona al volver a entrar, use la anterior.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que transcurrió el tiempo límite sin recibir un mensaje completo.
+      \item El SJM no reenvía la solicitud y muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que el cambio pudo haberse aplicado.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: La conexión se interrumpe durante el intercambio}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta el cierre inesperado del socket antes de recibir respuesta.
+      \item El flujo continúa en el paso 2 del \mbox{EX-03}.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-05}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-06}: El servicio de correo no está disponible}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas agota los reintentos previstos hacia el Servicio de correo.
+      \item Si el correo que falló era el aviso de cambio de contraseña, el Servidor de partidas conserva el cambio, que ya está confirmado, y registra el fallo del aviso en la bitácora del servidor.
+      \item Si el correo que falló era el enlace de confirmación del cambio de correo, el Servidor de partidas invalida el token que había generado y deja \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} en su valor anterior, para que el Jugador pueda reintentar de inmediato.
+      \item El Servidor de partidas responde con \texttt{EXTERNAL\_\allowbreak{}SERVICE\_\allowbreak{}UNAVAILABLE} indicando qué envío falló.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} con el resultado correspondiente.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene una \texttt{contrasena\_\allowbreak{}hash} y una \texttt{contrasena\_\allowbreak{}sal} nuevas, y la contraseña anterior ya no permite el acceso.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, la única \textit{Sesion} abierta de la cuenta es la que realizó el cambio.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-01}, el \texttt{correo} del \textit{Usuario} no cambió todavía; existe un \textit{TokenVerificacionCorreo} vigente con propósito \texttt{CAMBIO\_\allowbreak{}CORREO} y el correo nuevo como destino.
+      \item \textbf{\mbox{POST-04}} El \texttt{estado\_\allowbreak{}cuenta} no cambia en ningún flujo: cambiar el correo no devuelve la cuenta a \texttt{PENDIENTE}.
+      \item \textbf{\mbox{POST-05}} Si el caso termina por el \mbox{FA-05} con bloqueo, ninguna \textit{Sesion} de la cuenta sigue abierta.
+      \item \textbf{\mbox{POST-06}} En todos los casos que llegan al servidor, el intento quedó registrado en la \textit{BitacoraAcceso}.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Cambiar la contraseña o el correo exige la contraseña actual, aunque haya una sesión abierta. La sesión prueba que alguien usa el dispositivo, no que sea el dueño de la cuenta.
+      \item \textbf{\mbox{RN-02}} Las contraseñas no se almacenan, transmiten ni registran en claro.
+      \item \textbf{\mbox{RN-03}} La contraseña nueva cumple la misma política que el alta (\mbox{RN-03} del \mbox{CU-02}).
+      \item \textbf{\mbox{RN-04}} Cambiar la contraseña cierra todas las demás sesiones de la cuenta, pero conserva la que hizo el cambio. A diferencia del \mbox{CU-03}, aquí quien cambia la contraseña ya demostró conocer la anterior.
+      \item \textbf{\mbox{RN-05}} Todo cambio de contraseña se avisa al correo de la cuenta. El aviso queda fuera de la transacción: que falle no deshace el cambio.
+      \item \textbf{\mbox{RN-06}} Un cambio de correo avisa al correo actual y se confirma desde el nuevo. Así, quien robó la sesión no puede quedarse con la cuenta cambiando el correo sin que el dueño se entere.
+      \item \textbf{\mbox{RN-07}} El correo vigente no se sustituye hasta que el nuevo se confirma. La cuenta nunca queda sin un correo verificado.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} La contraseña nueva debe ser distinta de la actual.
+      \item \textbf{\mbox{RN-09}} Una contraseña actual incorrecta cuenta como intento fallido para el bloqueo escalonado, igual que en el inicio de sesión. De otro modo, este caso sería una forma de probar contraseñas sin límite desde una sesión robada.
+      \item \textbf{\mbox{RN-10}} Los invitados no usan este caso: no tienen contraseña ni correo hasta vincular la cuenta con el \mbox{CU-07}.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre dónde vive el correo pendiente.}\par
+    Se consideró guardar el correo nuevo en una columna \texttt{correo\_\allowbreak{}pendiente} de \textit{Usuario}. Se descartó porque el correo pendiente no tiene sentido sin el token que lo confirma: caduca con él, se invalida con él y se sustituye con él. Guardarlo en el \textit{TokenVerificacionCorreo}, junto con un \texttt{proposito} que distinga el alta del cambio, mantiene en una sola fila todo lo que tiene la misma vigencia, y evita una columna de \textit{Usuario} que estaría nula en casi todas las cuentas.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token; cierra las demás \textit{(pasos 6, 11)}
+      \item \textit{Usuario}: lee \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{correo}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} \textit{(pasos 7, \mbox{FA-01})}
+      \item \textit{Usuario}: escribe \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta} \textit{(pasos 10, \mbox{FA-01}, \mbox{FA-05})}
+      \item \textit{TokenRecuperacion}: invalida los pendientes \textit{(paso 12)}
+      \item \textit{TokenVerificacionCorreo}: invalida los pendientes y crea uno con \texttt{proposito} y \texttt{correo\_\allowbreak{}destino} \textit{(pasos \mbox{FA-01}, \mbox{FA-09})}
+      \item \textit{BitacoraAcceso}: inserta \textit{(pasos 14, \mbox{FA-01}, \mbox{FA-05})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

@@ -1,0 +1,113 @@
+\subsection*{CU-23: Rendirse}
+\addcontentsline{toc}{subsection}{CU-23: Rendirse}
+\label{cu-23}
+
+\begin{fichacu}{CU-23}{Rendirse}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{19d, 7g}
+  \crudFila{Objetivo}{Permitir al Jugador dar por perdida la partida en cualquier momento, avisándole antes del elo que va a perder.}
+  \crudFila{Disparador}{El Jugador selecciona ``rendirse'' en el menú de partida.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Participacion} sin terminar en una \textit{Partida} con \texttt{estado} igual a \texttt{EN\_\allowbreak{}CURSO}.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Jugador abre el menú de partida y selecciona ``rendirse''.
+      \item El SJM envía el mensaje \texttt{SURRENDER\_\allowbreak{}PREVIEW\_\allowbreak{}REQUEST} para conocer las consecuencias. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
+      \item El Servidor de partidas calcula, sin escribir nada, el elo que el Jugador perdería con una derrota a partir de su \texttt{elo\_\allowbreak{}inicial} y el de sus rivales (\mbox{RN-02}). \textit{(Ver \mbox{FA-01})}
+      \item El Servidor de partidas responde con \texttt{SURRENDER\_\allowbreak{}PREVIEW\_\allowbreak{}OK} y la pérdida estimada.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} con el aviso ``Perderás N de elo'' y las opciones ``Rendirme'' y ``Seguir jugando''. El reloj sigue corriendo mientras decide (\mbox{RN-03}). \textit{(Ver \mbox{FA-02})}
+      \item El Jugador selecciona ``Rendirme''.
+      \item El SJM envía el mensaje \texttt{SURRENDER\_\allowbreak{}REQUEST} con el token de sesión.
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y a una \textit{Participacion} sin terminar de esa partida. \textit{(Ver \mbox{FA-03})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas verifica que la partida siga \texttt{EN\_\allowbreak{}CURSO}. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas marca como \texttt{CADUCADA} cualquier \textit{OfertaTablas} pendiente de la partida.
+      \item Si la partida es de dos jugadores, el flujo continúa en el \mbox{CU-25} Finalizar la partida con la forma de término \texttt{RENDICION} y el rival como ganador. \textit{(Ver \mbox{FA-05})}
+      \item El SJM despliega la pantalla de fin de partida con el resultado y el elo perdido.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La partida no es clasificatoria}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con la pérdida estimada en cero, indicando que la partida es privada o contra la IA.
+      \item El SJM muestra la confirmación sin mencionar el elo, solo que la partida se dará por perdida.
+      \item El flujo continúa en el paso 6 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Jugador decide seguir jugando}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Seguir jugando''.
+      \item El SJM cierra la confirmación sin enviar nada más.
+      \item Fin del caso de uso. La partida sigue.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: La sesión o la participación no son válidas}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID} o \texttt{NOT\_\allowbreak{}A\_\allowbreak{}PARTICIPANT}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login} o el menú principal, según corresponda.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La partida terminó mientras el Jugador confirmaba}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra la partida \texttt{FINALIZADA}, por ejemplo porque su reloj llegó a cero durante la confirmación.
+      \item El Servidor de partidas no aplica la rendición y responde con \texttt{MATCH\_\allowbreak{}ALREADY\_\allowbreak{}FINISHED} y el resultado real.
+      \item El SJM despliega la pantalla de fin con ese resultado.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: La partida es de cuatro jugadores}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas cierra solo la \textit{Participacion} del Jugador con resultado perdido, forma de término \texttt{RENDICION} y la última posición entre los activos, y retira su peón del tablero (\mbox{RN-04}).
+      \item Los muros que había colocado permanecen en el tablero.
+      \item Si quedan al menos dos jugadores activos, la partida sigue y el turno salta al Jugador; si queda uno solo, el flujo continúa en el \mbox{CU-25} para toda la partida.
+      \item El SJM del Jugador despliega su resultado y ofrece seguir viendo la partida como espectador, que continúa en el \mbox{CU-34}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El Jugador se rinde contra la IA}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas cierra la partida con la forma de término \texttt{RENDICION} conforme al \mbox{FA-01} del \mbox{CU-25}, que otorga la experiencia correspondiente y prepara el repaso.
+      \item El SJM despliega el fin de partida contra la IA con su repaso de tres puntos.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al cerrar la partida}\par
+    \begin{cuenum}[start=1]
+      \item El \mbox{CU-25} no logra cerrar la partida y la deja \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} conforme a su \mbox{EX-01}.
+      \item La rendición queda registrada como la causa del término y se aplicará al reintentar el cierre.
+      \item El SJM muestra que el resultado se está procesando.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía la rendición y solicita el estado con \texttt{MATCH\_\allowbreak{}STATE\_\allowbreak{}REQUEST}.
+      \item El SJM muestra la partida en curso o el resultado, según lo que diga el servidor.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida.
+      \item Si la rendición no llegó a enviarse, la partida sigue y el flujo continúa en el \mbox{CU-26}; si llegó, el resultado se verá al reconectar.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, la partida está cerrada con la forma de término \texttt{RENDICION}, el rival es el ganador y el Jugador perdió la partida.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el \mbox{FA-05}, solo la \textit{Participacion} del Jugador está cerrada; la partida sigue para los demás.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-02}, nada cambió.
+      \item \textbf{\mbox{POST-04}} El elo mostrado en la confirmación es el mismo que después aplicó el \mbox{CU-25}, salvo que la partida hubiera terminado por otra causa.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Un jugador puede rendirse en cualquier momento de la partida, sea o no su turno.
+      \item \textbf{\mbox{RN-02}} La confirmación muestra el elo que se perderá, calculado con la misma fórmula que aplicará el \mbox{CU-25}. Es la confirmación intermedia de las tres que frenan una partida.
+      \item \textbf{\mbox{RN-03}} Confirmar la rendición no detiene el reloj.
+      \item \textbf{\mbox{RN-04}} En el modo de cuatro jugadores, rendirse retira al jugador con la última posición entre los activos; sus muros se quedan.
+      \item \textbf{\mbox{RN-05}} Una rendición cuenta como derrota en todos los contadores y rompe la racha.
+      \item \textbf{\mbox{RN-06}} Rendirse es distinto de abandonar: la rendición se hace desde el menú y termina la participación de forma ordenada; el abandono es el \mbox{CU-24}.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre la vista previa del elo.}\par
+    Calcular el elo en la confirmación obliga a un intercambio adicional con el servidor antes de rendirse, que se podría evitar calculándolo en el cliente. No se hace así porque el cliente no conoce con certeza el elo de entrada de los rivales ni los parámetros del modo, y un aviso que dice ``perderás 12'' y después resta 15 es peor que no avisar. La consulta no escribe nada, así que cancelar la rendición no deja rastro.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}, \textit{Participacion}: lee por token y \texttt{elo\_\allowbreak{}inicial} de todos \textit{(pasos 3, 8)}
+      \item \textit{Partida}, \textit{Modo}: lee \texttt{estado}, \texttt{tipo} y número de jugadores \textit{(pasos 9, 11)}
+      \item \textit{OfertaTablas}: marca las pendientes como \texttt{CADUCADA} \textit{(paso 10)}
+      \item \textit{Participacion}: escribe resultado, posición y forma de término, en el \mbox{FA-05} \textit{(paso \mbox{FA-05})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

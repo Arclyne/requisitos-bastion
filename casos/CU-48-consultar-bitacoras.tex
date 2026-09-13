@@ -1,0 +1,106 @@
+\subsection*{CU-48: Consultar las bitácoras}
+\addcontentsline{toc}{subsection}{CU-48: Consultar las bitácoras}
+\label{cu-48}
+
+\begin{fichacu}{CU-48}{Consultar las bitácoras}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Administrador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{—}
+  \crudFila{Objetivo}{Permitir al Administrador revisar los registros de acceso y de moderación del sistema, filtrados por fecha, usuario, dirección de red o resultado, para investigar incidentes, detectar intentos de acceso sistemáticos y auditar a los moderadores.}
+  \crudFila{Disparador}{El Administrador selecciona ``bitácoras'' en la \texttt{GUI\_\allowbreak{}AdminPanel}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Administrador tiene una \textit{Sesion} abierta y su \textit{Usuario} tiene \texttt{rol} igual a \texttt{ADMINISTRADOR}.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Administrador selecciona ``bitácoras''.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Logs} con la elección entre la bitácora de acceso y la de moderación, el rango de fechas —las últimas veinticuatro horas por defecto— y los filtros opcionales por usuario, dirección de red y resultado o acción.
+      \item El Administrador elige la bitácora de acceso, ajusta los filtros y selecciona ``Consultar''. \textit{(Ver \mbox{FA-01})}
+      \item El SJM valida que la fecha de inicio sea anterior a la de fin y que el rango no supere noventa días (\mbox{RN-03}). \textit{(Ver \mbox{FA-02})}
+      \item El SJM envía el mensaje \texttt{LOGS\_\allowbreak{}REQUEST} con la bitácora, los filtros, la primera página y el token. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y que el \texttt{rol} sea \texttt{ADMINISTRADOR} (\mbox{RN-01}). \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas registra la consulta en la \textit{BitacoraModeracion} con la acción \texttt{CONSULTA\_\allowbreak{}BITACORA}, la bitácora consultada y los filtros (\mbox{RN-04}).
+      \item El Servidor de partidas recupera los registros de la \textit{BitacoraAcceso} que cumplen los filtros, ordenados por \texttt{fecha\_\allowbreak{}hora} descendente, con su \texttt{id\_\allowbreak{}usuario}, su \texttt{identificador\_\allowbreak{}capturado}, su \texttt{resultado} y su \texttt{direccion\_\allowbreak{}ip}, y el \texttt{nickname} del \textit{Usuario} cuando existe. \textit{(Ver \mbox{EX-01})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas calcula el total de registros y los conteos por resultado del rango filtrado.
+      \item El Servidor de partidas responde con \texttt{LOGS\_\allowbreak{}OK}, la página, el total y los conteos.
+      \item El SJM despliega la tabla de registros con los conteos por resultado arriba. \textit{(Ver \mbox{FA-04}, \mbox{FA-05}, \mbox{FA-06})}
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Administrador consulta la bitácora de moderación}\par
+    \begin{cuenum}[start=1]
+      \item El Administrador elige la bitácora de moderación y, opcionalmente, un moderador o una acción.
+      \item El Servidor de partidas recupera los registros de la \textit{BitacoraModeracion} con su \texttt{id\_\allowbreak{}moderador}, su \texttt{accion}, su \texttt{id\_\allowbreak{}usuario\_\allowbreak{}afectado}, su \texttt{detalle} y su \texttt{fecha\_\allowbreak{}hora}, y el \texttt{nickname} de ambos usuarios.
+      \item El flujo continúa en el paso 9 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El rango de fechas no es válido}\par
+    \begin{cuenum}[start=1]
+      \item El SJM resalta las fechas e indica que el inicio debe ser anterior al fin y que el rango máximo es de noventa días.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: La sesión no es válida o el usuario no es administrador}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID} o con \texttt{FORBIDDEN}.
+      \item Si la sesión era válida pero falta el rol, el Servidor de partidas registra el intento en la \textit{BitacoraModeracion}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login} o el menú principal.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: No hay registros que cumplan los filtros}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra un estado vacío con la acción ``ampliar rango''.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El Administrador agrupa por dirección de red}\par
+    \begin{cuenum}[start=1]
+      \item El Administrador selecciona ``agrupar por dirección'' en la bitácora de acceso.
+      \item El Servidor de partidas agrupa los registros fallidos del rango por \texttt{direccion\_\allowbreak{}ip}, con el número de intentos y de cuentas distintas afectadas, ordenados de mayor a menor.
+      \item El SJM muestra la agrupación, que permite detectar intentos sistemáticos desde un mismo origen.
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El Administrador abre un usuario o pasa de página}\par
+    \begin{cuenum}[start=1]
+      \item Si el Administrador selecciona un usuario de un registro, el SJM filtra la bitácora por ese usuario y el flujo continúa en el paso 5 del FN.
+      \item Si pasa de página, el SJM solicita la siguiente y el flujo continúa en el paso 8 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM sugiere reducir el rango de fechas o añadir filtros, y ofrece reintentar.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y conserva la página ya cargada.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} El Administrador ve los registros filtrados de la bitácora elegida.
+      \item \textbf{\mbox{POST-02}} La consulta quedó registrada en la \textit{BitacoraModeracion} con el administrador, la bitácora y los filtros.
+      \item \textbf{\mbox{POST-03}} Ningún registro de bitácora se modificó ni se eliminó.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Solo un administrador consulta las bitácoras.
+      \item \textbf{\mbox{RN-02}} Las bitácoras solo admiten inserción: nunca se modifican ni se eliminan desde la aplicación.
+      \item \textbf{\mbox{RN-03}} Una consulta abarca como máximo noventa días, para que no pueda recorrerse la bitácora completa de una vez.
+      \item \textbf{\mbox{RN-04}} Consultar una bitácora queda registrado a su vez en la bitácora de moderación: quien audita también es auditado.
+      \item \textbf{\mbox{RN-05}} Ninguna bitácora contiene contraseñas ni códigos (\mbox{RN-02} del \mbox{CU-01}), así que consultarlas no expone credenciales.
+      \item \textbf{\mbox{RN-06}} Los registros de accesos fallidos a cuentas inexistentes muestran el identificador capturado, porque es el único rastro de esos intentos (\mbox{FA-06} del \mbox{CU-01}).
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué hay dos bitácoras y no una.}\par
+    Una sola bitácora con un campo de tipo podría registrar accesos y acciones de moderación. Se separan porque describen hechos con estructura distinta: un acceso tiene un identificador capturado, un resultado y una dirección de red, y puede no tener usuario; una acción de moderación tiene siempre un autor, un afectado y un detalle. Fundirlas dejaría la mitad de las columnas nulas en cada fila, y obligaría a filtrar por tipo en cada consulta.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}, \textit{Usuario}: lee el \texttt{rol} del administrador \textit{(paso 6)}
+      \item \textit{BitacoraAcceso}: lee con filtros, agrupa por \texttt{direccion\_\allowbreak{}ip} \textit{(pasos 8, 9, \mbox{FA-05})}
+      \item \textit{BitacoraModeracion}: lee con filtros \textit{(paso \mbox{FA-01})}
+      \item \textit{BitacoraModeracion}: inserta la propia consulta \textit{(pasos 7, \mbox{FA-03})}
+      \item \textit{Usuario}: lee el \texttt{nickname} de los usuarios de cada registro \textit{(pasos 8, \mbox{FA-01})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

@@ -1,0 +1,187 @@
+\subsection*{CU-21: Colocar un muro}
+\addcontentsline{toc}{subsection}{CU-21: Colocar un muro}
+\label{cu-21}
+
+\begin{fichacu}{CU-21}{Colocar un muro}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{15a, 15b, 21a, 20b, 7b, 19b}
+  \crudFila{Objetivo}{Ejecutar la otra acción posible del turno: colocar uno de los muros del inventario en un surco válido del tablero, sin dejar a ningún jugador sin camino a su meta.}
+  \crudFila{Disparador}{Es el turno del Jugador y este coge un muro del inventario.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y una \textit{Participacion} sin terminar en una \textit{Partida} con estado \texttt{EN\_\allowbreak{}CURSO}.
+      \item \textbf{\mbox{PRE-02}} Es el turno del Jugador conforme al orden de la partida.
+      \item \textbf{\mbox{PRE-03}} El Jugador tiene al menos un muro restante en su \textit{Participacion}. \textit{(Ver \mbox{FA-01})}
+      \item \textbf{\mbox{PRE-04}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El SJM indica que es el turno del Jugador y muestra el inventario de muros con su contador.
+      \item El Jugador coge un muro del inventario, pulsándolo o arrastrándolo.
+      \item El SJM entra en modo muro y resalta los surcos válidos del tablero (\mbox{RN-03}, \mbox{RN-04}, \mbox{RN-05}).
+      \item El Jugador lleva el muro a un surco resaltado. \textit{(Ver \mbox{FA-02})}
+      \item El SJM muestra sobre el muro un cartel flotante con la casilla, cómo cambia el camino más corto de cada jugador y las acciones rotar, cancelar y confirmar, con sus atajos (\mbox{RN-09}). \textit{(Ver \mbox{FA-03}, \mbox{FA-04})}
+      \item El Jugador confirma la colocación.
+      \item El SJM envía el mensaje \texttt{PLACE\_\allowbreak{}WALL\_\allowbreak{}REQUEST} con el surco, la orientación, el número de jugada y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y a una \textit{Participacion} de esa \textit{Partida}. \textit{(Ver \mbox{FA-05})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas verifica que la \textit{Partida} siga \texttt{EN\_\allowbreak{}CURSO} y que sea el turno de ese jugador con el número de jugada esperado. \textit{(Ver \mbox{FA-06}, \mbox{FA-07})}
+      \item El Servidor de partidas descuenta del reloj el tiempo transcurrido y verifica que no se haya agotado. \textit{(Ver \mbox{FA-08})}
+      \item El Servidor de partidas verifica que la \textit{Participacion} tenga muros restantes (\mbox{RN-02}). \textit{(Ver \mbox{FA-09})}
+      \item El Servidor de partidas reconstruye el tablero a partir de las \textit{Jugada} registradas.
+      \item El Servidor de partidas verifica que el muro quepa en el surco: que no se solape ni se cruce con otro ya colocado (\mbox{RN-04}). \textit{(Ver \mbox{FA-10})}
+      \item El Servidor de partidas verifica que, con el muro puesto, \textbf{todos} los jugadores activos conserven al menos un camino a su fila de meta (\mbox{RN-05}). \textit{(Ver \mbox{FA-11})}
+      \item El Servidor de partidas inicia una transacción sobre la Base de datos.
+      \item El Servidor de partidas crea la \textit{Jugada} con su número de orden, el tipo \texttt{MURO}, el surco, la orientación, el tiempo consumido y la fecha. \textit{(Ver \mbox{EX-01})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item El Servidor de partidas descuenta uno a los muros restantes de la \textit{Participacion} y actualiza su reloj.
+      \item El Servidor de partidas pasa el turno al siguiente jugador activo.
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas notifica a todos los participantes, y a los espectadores con el retraso previsto, con \texttt{PLACE\_\allowbreak{}WALL\_\allowbreak{}OK} y el estado actualizado.
+      \item El SJM dibuja el muro, actualiza el contador del inventario, añade la jugada al historial en notación y atenúa el tablero. \textit{(Ver \mbox{FA-12})}
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador se quedó sin muros}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el inventario vacío y no permite entrar en modo muro.
+      \item El Jugador solo puede mover el peón, que es el \mbox{CU-20} (\mbox{RN-02}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Jugador lleva el muro a un surco no válido}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no permite soltarlo ahí y muestra el aviso junto al cursor indicando el motivo: se solapa, se cruza con otro o encerraría a un jugador (\mbox{RN-10}).
+      \item El flujo continúa en el paso 4 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El Jugador rota el muro}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``rotar'' o pulsa su atajo.
+      \item El SJM cambia la orientación del muro entre horizontal y vertical y vuelve a calcular los surcos válidos y el cartel flotante.
+      \item El flujo continúa en el paso 4 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El Jugador cancela la colocación}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``cancelar'' o pulsa su atajo.
+      \item El SJM devuelve el muro al inventario y sale del modo muro, sin enviar nada al Servidor de partidas.
+      \item El flujo continúa en el paso 1 del FN. El Jugador conserva su turno y puede mover el peón.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: La sesión o la participación no son válidas}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID} o \texttt{NOT\_\allowbreak{}A\_\allowbreak{}PARTICIPANT}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login} o el menú principal, según corresponda.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: La partida ya terminó}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{MATCH\_\allowbreak{}ALREADY\_\allowbreak{}FINISHED} y el resultado.
+      \item El SJM descarta la jugada y despliega la pantalla de fin de partida del \mbox{CU-25}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: No es el turno del Jugador, o la jugada llega fuera de orden}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{NOT\_\allowbreak{}YOUR\_\allowbreak{}TURN} y el estado vigente con el número de jugada esperado.
+      \item El SJM devuelve el muro al inventario y sincroniza el tablero.
+      \item El flujo continúa en el paso 1 del FN cuando vuelva a ser su turno.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: El reloj del Jugador se agotó antes de la jugada}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas descarta la colocación recibida.
+      \item El flujo continúa en el \mbox{CU-25} Finalizar la partida, con la forma de término \texttt{TIEMPO\_\allowbreak{}AGOTADO} para ese jugador.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-09}: El servidor no encuentra muros restantes}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{PLACE\_\allowbreak{}WALL\_\allowbreak{}REJECTED} y el motivo \texttt{SIN\_\allowbreak{}MUROS}.
+      \item El Servidor de partidas registra el intento en la bitácora del servidor: la interfaz no lo permite, así que es indicio de cliente modificado.
+      \item El SJM sincroniza el inventario con el estado recibido.
+      \item El flujo continúa en el paso 1 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-10}: El muro se solapa o se cruza con otro}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{PLACE\_\allowbreak{}WALL\_\allowbreak{}REJECTED} y el motivo \texttt{SURCO\_\allowbreak{}OCUPADO}, junto con el estado vigente.
+      \item El SJM reconstruye el tablero, devuelve el muro al inventario y muestra el aviso junto al cursor.
+      \item El flujo continúa en el paso 4 del FN. El turno no se consume.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-11}: El muro dejaría a un jugador sin camino}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{PLACE\_\allowbreak{}WALL\_\allowbreak{}REJECTED} y el motivo \texttt{ENCERRARIA\_\allowbreak{}JUGADOR}, indicando a cuál (\mbox{RN-05}).
+      \item El SJM devuelve el muro al inventario y muestra el aviso junto al cursor, resaltando al jugador afectado.
+      \item El flujo continúa en el paso 4 del FN. El turno no se consume.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-12}: El Jugador planea un muro fuera de su turno}\par
+    \begin{cuenum}[start=1]
+      \item Mientras no es su turno, el SJM permite coger un muro y situarlo, en estado planeado, con el tablero atenuado (\mbox{RN-11}).
+      \item El SJM no envía nada al Servidor de partidas y no muestra el cartel de confirmación.
+      \item Al llegar el turno del Jugador, el SJM recalcula los surcos válidos sobre el tablero ya actualizado. Si el surco planeado sigue siendo válido, el flujo continúa en el paso 5 del FN. Si dejó de serlo, el SJM devuelve el muro al inventario e informa junto al cursor.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no quede el muro registrado sin descontarse del inventario, ni al revés (\mbox{RN-12}).
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}, conservando el turno del jugador.
+      \item El SJM devuelve el muro al inventario y muestra el aviso en la barra de conexión.
+      \item El flujo continúa en el paso 4 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que transcurrió el tiempo límite sin recibir respuesta.
+      \item El SJM no reenvía la colocación: solicita el estado vigente con \texttt{MATCH\_\allowbreak{}STATE\_\allowbreak{}REQUEST} (\mbox{RN-13}).
+      \item El SJM reconstruye el tablero y el inventario con el estado recibido, que ya dirá si el muro se colocó.
+      \item El flujo continúa en el paso 1 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe durante el turno}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta el cierre inesperado del socket y muestra la barra de conexión perdida.
+      \item El reloj del Jugador sigue corriendo en el servidor.
+      \item El flujo continúa en el \mbox{CU-26} Reconectar a una partida en curso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas trata la transacción como fallida y no notifica la jugada a nadie.
+      \item El Servidor de partidas registra la excepción señalando que el estado es indeterminado y conserva el turno del jugador.
+      \item El flujo continúa en el paso 4 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-05}: El tablero 3D no puede dibujarse}\par
+    \begin{cuenum}[start=1]
+      \item El SJM pasa a la vista plana, con las mismas reglas y los mismos surcos resaltados.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe una \textit{Jugada} de tipo \texttt{MURO} con su surco, su orientación, su número de orden y el tiempo consumido.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, los muros restantes de la \textit{Participacion} disminuyeron en uno y su reloj quedó descontado.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, todos los jugadores activos conservan al menos un camino a su meta.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el FN, el turno corresponde al siguiente jugador activo.
+      \item \textbf{\mbox{POST-05}} Si el caso termina por el \mbox{FA-04}, el \mbox{FA-10} o el \mbox{FA-11}, el tablero no cambió, el inventario no se tocó y sigue siendo el turno del Jugador.
+      \item \textbf{\mbox{POST-06}} Si el caso termina por cualquier excepción, o el muro quedó registrado y descontado, o no ocurrió nada de las dos cosas.
+      \item \textbf{\mbox{POST-07}} Los muros de un jugador que abandonó o se clasificó siguen en el tablero y siguen bloqueando.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} El Servidor de partidas es la única autoridad sobre el estado del tablero.
+      \item \textbf{\mbox{RN-02}} Cada jugador dispone de un número de muros fijado por el \textit{Modo}: diez en clásico, cinco en cuatro jugadores y seis en rápida. Agotados, solo puede mover.
+      \item \textbf{\mbox{RN-03}} Un muro ocupa el surco entre casillas y mide exactamente dos casillas.
+      \item \textbf{\mbox{RN-04}} Los muros no se solapan ni se cruzan entre sí.
+      \item \textbf{\mbox{RN-05}} Un muro \textbf{nunca} puede dejar a un jugador sin ningún camino a su fila de meta. La comprobación se hace sobre todos los jugadores activos, no solo sobre el rival inmediato, y es la única regla del juego que obliga a recorrer el tablero entero antes de aceptar una jugada.
+      \item \textbf{\mbox{RN-06}} En cada turno el Jugador hace exactamente una cosa: mover el peón o colocar un muro.
+      \item \textbf{\mbox{RN-07}} Un muro colocado no se retira ni se mueve en toda la partida.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} El servidor recalcula la validez de la colocación sobre su propio estado.
+      \item \textbf{\mbox{RN-09}} Antes de confirmar, el Jugador ve cómo cambia el camino más corto de cada jugador. La información es la misma que él podría calcular mirando el tablero: no revela nada oculto.
+      \item \textbf{\mbox{RN-10}} Un intento inválido se avisa junto al cursor y no consume el turno ni el muro.
+      \item \textbf{\mbox{RN-11}} Un muro planeado fuera de turno es solo una intención del cliente: no se envía, no reserva el surco y puede dejar de ser válido cuando llegue el turno.
+      \item \textbf{\mbox{RN-12}} La \textit{Jugada}, el descuento del muro y el cambio de turno ocurren en una sola transacción.
+      \item \textbf{\mbox{RN-13}} Ante una respuesta que no llega, el cliente pide el estado en lugar de reenviar.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre dónde se guardan los muros.}\par
+    Los muros no tienen tabla propia: son \textit{Jugada} de tipo \texttt{MURO}. Se consideró una tabla \textit{Muro} aparte, con su surco y su dueño, que haría más directa la consulta del tablero actual. Se descartó porque obligaría a mantener dos fuentes de verdad —la jugada que lo colocó y el muro resultante— que pueden contradecirse, y porque la repetición del \mbox{CU-37} necesita de todos modos la secuencia completa de jugadas en orden. El tablero actual se reconstruye leyendo las jugadas de la partida, que en el caso más largo son unas pocas decenas de filas.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 8)}
+      \item \textit{Partida}: lee estado y turno; escribe el turno siguiente \textit{(pasos 9, 18)}
+      \item \textit{Participacion}: lee muros restantes y reloj \textit{(paso 11)}
+      \item \textit{Participacion}: escribe muros restantes y reloj \textit{(paso 17)}
+      \item \textit{Jugada}: lee todas las de la partida, para reconstruir el tablero \textit{(paso 12)}
+      \item \textit{Jugada}: crea una de tipo \texttt{MURO} \textit{(paso 16)}
+      \item \textit{Modo}: lee el número de muros por jugador \textit{(paso \mbox{PRE-03})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

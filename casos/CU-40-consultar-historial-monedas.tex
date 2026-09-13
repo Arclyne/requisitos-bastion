@@ -1,0 +1,108 @@
+\subsection*{CU-40: Consultar el historial de monedas}
+\addcontentsline{toc}{subsection}{CU-40: Consultar el historial de monedas}
+\label{cu-40}
+
+\begin{fichacu}{CU-40}{Consultar el historial de monedas}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador o Invitado}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{16e}
+  \crudFila{Objetivo}{Mostrar al jugador todos los movimientos de sus monedas —ingresos por partidas y niveles, gastos en objetos y cajas, conversiones de repetidos y devoluciones— con el origen de cada uno, y garantizar que el saldo mostrado coincide con ellos.}
+  \crudFila{Disparador}{El jugador selecciona su saldo de monedas en la \texttt{GUI\_\allowbreak{}Shop} o ``historial de monedas'' en su perfil.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El jugador selecciona su saldo de monedas.
+      \item El SJM envía el mensaje \texttt{COIN\_\allowbreak{}HISTORY\_\allowbreak{}REQUEST} sin filtro, con la primera página y el token. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-01})}
+      \item El Servidor de partidas recupera los \textit{MovimientoMoneda} del jugador ordenados por \texttt{fecha\_\allowbreak{}movimiento} descendente, con su \texttt{tipo}, su \texttt{importe} y sus referencias al objeto, la caja o la partida que lo originó. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas recupera el nombre del \textit{ObjetoCosmetico}, el tipo de \textit{Caja} o el \textit{Modo} y el resultado de la \textit{Partida} a los que apunta cada movimiento, para describirlo.
+      \item El Servidor de partidas calcula la suma de todos los movimientos del jugador y la compara con \texttt{saldo\_\allowbreak{}monedas} del \textit{Usuario} (\mbox{RN-02}). \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas calcula los totales de ingresos, gastos y conversiones del periodo mostrado.
+      \item El Servidor de partidas responde con \texttt{COIN\_\allowbreak{}HISTORY\_\allowbreak{}OK}, la página, los totales y el saldo.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}CoinHistory} con el saldo arriba, los totales y la lista de movimientos, cada uno con su fecha, su descripción y el importe con signo y color: ganancias, gastos y conversiones distinguidos también por icono. \textit{(Ver \mbox{FA-02}, \mbox{FA-03}, \mbox{FA-04})}
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El jugador filtra por tipo de movimiento}\par
+    \begin{cuenum}[start=1]
+      \item El jugador elige ``ingresos'', ``gastos'' o ``conversiones''.
+      \item El SJM repite la solicitud con el filtro, y el Servidor de partidas restringe el paso 4 del FN a los tipos correspondientes: \texttt{PARTIDA} y \texttt{NIVEL} para ingresos; \texttt{COMPRA} y \texttt{COMPRA\_\allowbreak{}CAJA} para gastos; \texttt{CONVERSION} y \texttt{DEVOLUCION} para conversiones.
+      \item El flujo continúa en el paso 9 del FN. El saldo mostrado sigue siendo el total, no el del filtro.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El jugador no tiene movimientos}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el saldo en cero y un estado vacío que explica cómo se ganan monedas, con la acción ``buscar partida''.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El jugador abre el detalle de un movimiento}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona un movimiento.
+      \item Si es una compra o una conversión, el SJM muestra el objeto con su vista previa; si es una caja, su contenido tal como quedó en \textit{CajaContenido}; si es una partida, ofrece abrir su repetición, que continúa en el \mbox{CU-37}.
+      \item El flujo continúa en el paso 9 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El saldo no coincide con la suma de los movimientos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas detecta que \texttt{saldo\_\allowbreak{}monedas} es distinto de la suma de los \textit{MovimientoMoneda}.
+      \item El Servidor de partidas registra la incidencia en la bitácora del servidor con el \texttt{id\_\allowbreak{}usuario}, el saldo guardado y la suma calculada, para su corrección (\mbox{RN-03}).
+      \item El Servidor de partidas responde con la suma de los movimientos como saldo, que es el valor correcto (\mbox{RN-02}).
+      \item El SJM muestra el saldo recibido sin mencionar la discrepancia al jugador.
+      \item El flujo continúa en el paso 9 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El jugador pasa de página}\par
+    \begin{cuenum}[start=1]
+      \item El jugador llega al final de la lista.
+      \item El SJM solicita la página siguiente y el flujo continúa en el paso 4 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con la opción ``Reintentar''.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el esqueleto de la lista con la opción ``Reintentar''.
+      \item Si el jugador reintenta, el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y conserva las páginas ya cargadas.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje y muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} El jugador ve todos sus movimientos de monedas con su origen y un saldo que coincide con ellos.
+      \item \textbf{\mbox{POST-02}} Ninguna estructura de la base de datos se modificó.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-05}, la discrepancia quedó registrada para su corrección.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Los movimientos de monedas nunca se modifican ni se eliminan: una corrección es un movimiento nuevo de tipo \texttt{DEVOLUCION}.
+      \item \textbf{\mbox{RN-02}} El saldo verdadero es la suma de los \textit{MovimientoMoneda}. \texttt{saldo\_\allowbreak{}monedas} en \textit{Usuario} es una copia que se mantiene por rendimiento, y cuando discrepan manda la suma.
+      \item \textbf{\mbox{RN-03}} Una discrepancia entre el saldo y la suma se registra, pero no se corrige desde este caso, que solo lee.
+      \item \textbf{\mbox{RN-04}} Solo existen monedas del juego; ningún movimiento procede de dinero real.
+      \item \textbf{\mbox{RN-05}} Cada movimiento apunta a lo que lo originó: una partida, un objeto o una caja.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre la redundancia de saldo\_monedas.}\par
+    Este caso es el que hace explícita una decisión que el modelo tendrá que justificar en su evidencia de tercera forma normal. \texttt{saldo\_\allowbreak{}monedas} depende de todos los movimientos del usuario y no solo de la clave de \textit{Usuario}, así que es un dato derivado guardado. Se conserva porque el saldo se muestra en la tienda, en la personalización y en cada compra, y sumar el historial completo en cada una sería costoso. La redundancia se controla de dos formas: todo caso que mueve monedas escribe el movimiento y el saldo en la misma transacción, y este caso comprueba que ambos coincidan cada vez que se consulta.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 3)}
+      \item \textit{MovimientoMoneda}: lee los del jugador y calcula su suma \textit{(pasos 4, 6)}
+      \item \textit{ObjetoCosmetico}, \textit{Caja}, \textit{TipoCaja}, \textit{Partida}, \textit{Modo}, \textit{CajaContenido}: lee, para describir cada movimiento \textit{(pasos 5, \mbox{FA-04})}
+      \item \textit{Usuario}: lee \texttt{saldo\_\allowbreak{}monedas} \textit{(paso 6)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

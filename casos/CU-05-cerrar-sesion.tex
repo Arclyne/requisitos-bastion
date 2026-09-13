@@ -1,0 +1,109 @@
+\subsection*{CU-05: Cerrar sesión}
+\addcontentsline{toc}{subsection}{CU-05: Cerrar sesión}
+\label{cu-05}
+
+\begin{fichacu}{CU-05}{Cerrar sesión}
+  \crudFila{Responsable}{José Eduardo Prior Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{9f}
+  \crudFila{Objetivo}{Terminar de forma ordenada la sesión del dispositivo en uso, dejando constancia de que el cierre fue voluntario y liberando el token para que no siga siendo válido.}
+  \crudFila{Disparador}{El Jugador selecciona ``Cerrar sesión'' en la \texttt{GUI\_\allowbreak{}AccountSettings}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta en este cliente y conserva un token válido.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Cerrar sesión'' en la \texttt{GUI\_\allowbreak{}AccountSettings}.
+      \item El SJM comprueba si el Jugador participa en una partida sin terminar. \textit{(Ver \mbox{FA-01})}
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} preguntando si desea cerrar la sesión, con las opciones ``Cerrar sesión'' y ``Cancelar''. \textit{(Ver \mbox{FA-02})}
+      \item El Jugador selecciona ``Cerrar sesión''.
+      \item El SJM envía el mensaje \texttt{LOGOUT\_\allowbreak{}REQUEST} con el token de la sesión en uso. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
+      \item El Servidor de partidas recupera de la Base de datos la \textit{Sesion} asociada al token. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas verifica que la \textit{Sesion} siga abierta, es decir, que su \texttt{fecha\_\allowbreak{}fin} sea nula. \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas registra en la \textit{Sesion} la \texttt{fecha\_\allowbreak{}fin} actual y el \texttt{motivo\_\allowbreak{}cierre} \texttt{CIERRE\_\allowbreak{}VOLUNTARIO}. \textit{(Ver \mbox{EX-01})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas invalida el token, de modo que cualquier mensaje posterior que lo presente sea rechazado (\mbox{RN-02}).
+      \item El Servidor de partidas registra el cierre en la \textit{BitacoraAcceso} con el resultado \texttt{CIERRE\_\allowbreak{}VOLUNTARIO}.
+      \item El Servidor de partidas responde con \texttt{LOGOUT\_\allowbreak{}OK}.
+      \item El SJM descarta el token, el perfil y las \textit{EstadisticaModo} que tenía en memoria (\mbox{RN-03}).
+      \item El SJM cierra la conexión TCP y despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador participa en una partida sin terminar}\par
+    \begin{cuenum}[start=1]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} advirtiendo que tiene una partida en curso, que su reloj sigue corriendo y que cerrar sesión no lo retira de ella, con las opciones ``Volver a la partida'', ``Cerrar sesión de todos modos'' y ``Cancelar''.
+      \item Si el Jugador selecciona ``Volver a la partida'', el flujo continúa en el \mbox{CU-26} Reconectar a una partida en curso y termina el caso de uso.
+      \item Si selecciona ``Cerrar sesión de todos modos'', el flujo continúa en el paso 5 del FN. La \textit{Participacion} no se cierra: el Jugador sigue en la partida y puede volver desde otro dispositivo mientras su reloj se lo permita (\mbox{RN-04}).
+      \item Si selecciona ``Cancelar'', el flujo continúa en el paso 1.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Jugador cancela el cierre}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Cancelar''.
+      \item El SJM cierra la \texttt{GUI\_\allowbreak{}MessageConfirm} y vuelve a la \texttt{GUI\_\allowbreak{}AccountSettings} sin enviar nada al Servidor de partidas.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: La sesión ya estaba cerrada en el servidor}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no modifica la \textit{Sesion}, que ya tiene \texttt{fecha\_\allowbreak{}fin} y un \texttt{motivo\_\allowbreak{}cierre} anterior: pudo cerrarla el \mbox{CU-10} desde otro dispositivo, el \mbox{CU-03} al cambiar la contraseña o una sanción.
+      \item El Servidor de partidas responde con \texttt{LOGOUT\_\allowbreak{}OK} de todos modos, porque el estado que el Jugador pedía ya se cumple.
+      \item El flujo continúa en el paso 12 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El token ya no es válido}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no encuentra ninguna \textit{Sesion} asociada al token recibido.
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM descarta igualmente lo que tuviera en memoria y despliega la \texttt{GUI\_\allowbreak{}Login}, sin mostrar error: el Jugador pidió quedarse fuera y fuera se queda.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El Jugador cierra la aplicación en vez de cerrar sesión}\par
+    \begin{cuenum}[start=1]
+      \item El SJM envía \texttt{LOGOUT\_\allowbreak{}REQUEST} en el cierre de la aplicación, si le da tiempo.
+      \item Si no le da tiempo o el envío falla, la \textit{Sesion} queda abierta en la Base de datos y solo se cerrará al expirar por el \mbox{RN-01}, o cuando el Jugador la cierre desde el \mbox{CU-10}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar o actualizar la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor con un identificador de incidencia.
+      \item El Servidor de partidas responde con \texttt{SERVER\_\allowbreak{}ERROR} y cierra la conexión.
+      \item El SJM descarta el token y el perfil de su memoria y despliega la \texttt{GUI\_\allowbreak{}Login}, advirtiendo mediante la \texttt{GUI\_\allowbreak{}MessageWarning} que la sesión pudo no cerrarse en el servidor y que puede cerrarla desde ajustes en su próximo acceso.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que transcurrió el tiempo límite sin recibir \texttt{LOGOUT\_\allowbreak{}OK}.
+      \item El SJM cierra la conexión y descarta el token localmente: aunque la \textit{Sesion} siguiera abierta en el servidor, este cliente ya no la usará.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login} advirtiendo que el cierre pudo no registrarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe durante el intercambio}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta el cierre inesperado del socket antes de recibir la respuesta.
+      \item El flujo continúa en el paso 2 del \mbox{EX-02}.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, la \textit{Sesion} tiene \texttt{fecha\_\allowbreak{}fin} y su \texttt{motivo\_\allowbreak{}cierre} es \texttt{CIERRE\_\allowbreak{}VOLUNTARIO}.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, el token ya no es válido y ningún mensaje posterior que lo presente será atendido.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, el cliente no conserva en memoria ni el token ni ningún dato del perfil, y muestra la \texttt{GUI\_\allowbreak{}Login}.
+      \item \textbf{\mbox{POST-04}} Las demás \textit{Sesion} del mismo \textit{Usuario}, si las hay, siguen abiertas: este caso cierra una, no todas (\mbox{D-01}).
+      \item \textbf{\mbox{POST-05}} Si el Jugador participaba en una partida, su \textit{Participacion} sigue abierta y su reloj sigue corriendo.
+      \item \textbf{\mbox{POST-06}} Si el caso termina por una excepción, el cliente queda fuera de todos modos, aunque la \textit{Sesion} pueda haber quedado abierta en la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} El token de sesión tiene una vigencia máxima de veinticuatro horas y se invalida al cerrar sesión, al cambiar las credenciales o al aplicarse una sanción de ámbito de cuenta.
+      \item \textbf{\mbox{RN-02}} Cerrar la sesión invalida el token en el servidor. No basta con que el cliente lo olvide: un cliente modificado podría conservarlo.
+      \item \textbf{\mbox{RN-03}} El cliente no conserva en disco ningún dato del perfil tras cerrar sesión, salvo el idioma de la interfaz, que es configuración local y se eligió antes de saber quién era el Jugador.
+      \item \textbf{\mbox{RN-04}} Cerrar sesión no retira al Jugador de una partida en curso ni detiene su reloj. Abandonar una partida es el \mbox{CU-24} y tiene consecuencias distintas.
+      \item \textbf{\mbox{RN-05}} Cerrar una sesión no afecta a las demás sesiones abiertas de la misma cuenta. Para cerrarlas todas está el \mbox{CU-10}.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué este caso confirma.}\par
+    Cerrar sesión es reversible y barato, así que una confirmación parecería sobrar. Se mantiene por el \mbox{FA-01}: el único momento en que cerrar sesión hace daño es cuando hay una partida corriendo, y ahí el aviso no es una cortesía sino la diferencia entre volver a tiempo y perder por reloj. Confirmar siempre evita tener que explicar por qué unas veces pregunta y otras no.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token, comprueba \texttt{fecha\_\allowbreak{}fin} \textit{(pasos 6, 7)}
+      \item \textit{Sesion}: escribe \texttt{fecha\_\allowbreak{}fin}, \texttt{motivo\_\allowbreak{}cierre} \textit{(paso 8)}
+      \item \textit{Participacion}: lee, para el \mbox{FA-01} \textit{(paso 2)}
+      \item \textit{BitacoraAcceso}: inserta \textit{(paso 10)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

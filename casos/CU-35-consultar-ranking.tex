@@ -1,0 +1,121 @@
+\subsection*{CU-35: Consultar el ranking}
+\addcontentsline{toc}{subsection}{CU-35: Consultar el ranking}
+\label{cu-35}
+
+\begin{fichacu}{CU-35}{Consultar el ranking}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador o Invitado}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{2c, 2d, 13b, 13c}
+  \crudFila{Objetivo}{Mostrar la clasificación de los jugadores por elo, global o entre amigos y por modo, con la fila del propio jugador siempre fijada abajo, y permitir buscar a cualquier jugador por nombre o por código de amigo.}
+  \crudFila{Disparador}{El jugador selecciona ``ranking'' en la \texttt{GUI\_\allowbreak{}MainMenu}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El jugador selecciona ``ranking''.
+      \item El SJM envía el mensaje \texttt{RANKING\_\allowbreak{}REQUEST} con el alcance global, el modo clásico 9×9, la primera página y el token. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-01})}
+      \item El Servidor de partidas recupera las \textit{EstadisticaModo} del modo solicitado con al menos cinco \texttt{partidas\_\allowbreak{}jugadas}, cuyo \textit{Usuario} tenga \texttt{estado\_\allowbreak{}cuenta} en \texttt{ACTIVA}, ordenadas por \texttt{puntos\_\allowbreak{}elo} descendente, y calcula la posición de cada una (\mbox{RN-01}, \mbox{RN-02}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas recupera del \textit{Usuario} de cada fila el \texttt{nickname}, el \texttt{id\_\allowbreak{}icono} y la \texttt{division} de su estadística, y la página solicitada.
+      \item El Servidor de partidas calcula la posición del propio jugador en ese modo, o las partidas que le faltan para clasificar. \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas responde con \texttt{RANKING\_\allowbreak{}OK}, la página, el total de clasificados y la fila del jugador.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Ranking} como tabla con posición, jugador, división y elo, las tres primeras filas destacadas, y la fila del jugador fijada abajo aunque no esté en la página visible. \textit{(Ver \mbox{FA-03}, \mbox{FA-04}, \mbox{FA-05}, \mbox{FA-06}, \mbox{FA-07})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El jugador todavía no clasifica en ese modo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra menos de cinco \texttt{partidas\_\allowbreak{}jugadas} en la \textit{EstadisticaModo} del jugador.
+      \item El SJM muestra la fila fijada con ``sin clasificar'' y cuántas partidas faltan, con la acción ``buscar partida'', que continúa en el \mbox{CU-17}.
+      \item El flujo continúa en el paso 8 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El jugador cambia el alcance a amigos}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona la pestaña ``amigos''.
+      \item El SJM envía \texttt{RANKING\_\allowbreak{}REQUEST} con el alcance de amigos.
+      \item El Servidor de partidas restringe el paso 4 del FN a los jugadores con los que el jugador tiene \textit{Amistad}, más el propio jugador, y responde.
+      \item Si no tiene amigos, el SJM muestra un estado vacío con la acción ``añadir amigo'', que continúa en el \mbox{CU-30}.
+      \item El flujo continúa en el paso 8 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El jugador cambia el modo}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona otro \textit{Modo}.
+      \item El SJM repite la solicitud con ese modo, y el Servidor de partidas repite los pasos 4 a 7 del FN.
+      \item El flujo continúa en el paso 8 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El jugador abre la vista por divisiones}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona ``divisiones''.
+      \item El Servidor de partidas agrupa los clasificados del modo por \textit{Division}, con el número de jugadores de cada una y los tres primeros de la división del jugador.
+      \item El SJM despliega la vista por divisiones con el podio destacado (2d).
+      \item El flujo continúa en el paso 8 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El jugador busca a otro jugador}\par
+    \begin{cuenum}[start=1]
+      \item El jugador escribe un nombre o un código de amigo en el buscador y confirma.
+      \item El SJM envía \texttt{SEARCH\_\allowbreak{}PLAYER\_\allowbreak{}REQUEST}; el Servidor de partidas busca por \texttt{codigo\_\allowbreak{}amigo} si el texto tiene ese formato, o por coincidencia de \texttt{nickname} en caso contrario, descartando cuentas eliminadas y jugadores con \textit{Bloqueo} (\mbox{RN-04}).
+      \item El Servidor de partidas responde con los resultados y la posición de cada uno en el modo activo.
+      \item Si hay resultados, el SJM los muestra; si no, muestra el estado vacío de que ese nombre no existe, con una acción para volver a buscar (13c).
+      \item El flujo continúa en el paso 8 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El jugador abre el perfil de una fila o pasa de página}\par
+    \begin{cuenum}[start=1]
+      \item Si el jugador selecciona una fila, el flujo continúa en el \mbox{CU-16}.
+      \item Si el jugador pasa de página, el SJM solicita la siguiente y el flujo continúa en el paso 4 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con la opción ``Reintentar''.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el esqueleto de la tabla con la opción ``Reintentar''.
+      \item Si el jugador reintenta, el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y conserva la última página cargada.
+      \item Al recuperar la conexión, el SJM la recarga.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje y muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} El jugador ve la clasificación del alcance y el modo elegidos, con su propia posición o las partidas que le faltan.
+      \item \textbf{\mbox{POST-02}} Ninguna estructura de la base de datos se modificó.
+      \item \textbf{\mbox{POST-03}} Las posiciones mostradas son las del momento de la consulta; no se almacenan.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Hacen falta cinco partidas en un modo para aparecer en su clasificación (\mbox{RN-14} del \mbox{CU-25}).
+      \item \textbf{\mbox{RN-02}} Solo aparecen cuentas \texttt{ACTIVA}: las eliminadas, suspendidas y baneadas no figuran en el ranking.
+      \item \textbf{\mbox{RN-03}} El ranking global que se muestra por defecto es el del modo clásico 9×9 (\mbox{D-04}).
+      \item \textbf{\mbox{RN-04}} La búsqueda no devuelve a jugadores con los que exista un \textit{Bloqueo}, en ningún sentido.
+      \item \textbf{\mbox{RN-05}} La fila del jugador se muestra siempre, aunque esté fuera de la página visible o no clasifique.
+      \item \textbf{\mbox{RN-06}} A igualdad de elo, ordena primero quien alcanzó ese elo antes, para que la posición no cambie entre consultas sin que nadie haya jugado.
+      \item \textbf{\mbox{RN-07}} No hay temporadas: el ranking es permanente.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre las temporadas.}\par
+    \texttt{descripcion.md} deja abierto si el ranking se organiza por temporadas. Este caso lo resuelve sin ellas, porque las recompensas de fin de temporada se descartaron y sin recompensa la temporada solo añade un reinicio que castiga a quien juega poco. Si se decide adoptarlas, el cambio no toca este caso sino el modelo: haría falta una entidad \textit{Temporada} y que \textit{EstadisticaModo} dependa de ella, lo que convertiría la clave de usuario y modo en una de usuario, modo y temporada.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 3)}
+      \item \textit{EstadisticaModo}: lee \texttt{puntos\_\allowbreak{}elo}, \texttt{partidas\_\allowbreak{}jugadas}, \texttt{division} del modo \textit{(pasos 4, 6)}
+      \item \textit{Usuario}: lee \texttt{nickname}, \texttt{id\_\allowbreak{}icono}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{codigo\_\allowbreak{}amigo} \textit{(pasos 4, 5, \mbox{FA-06})}
+      \item \textit{Division}: lee, para la vista por divisiones \textit{(paso \mbox{FA-05})}
+      \item \textit{Amistad}: lee, para el alcance entre amigos \textit{(paso \mbox{FA-03})}
+      \item \textit{Bloqueo}: lee, para la búsqueda \textit{(paso \mbox{FA-06})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

@@ -1,0 +1,175 @@
+\subsection*{CU-44: Aplicar una sanción}
+\addcontentsline{toc}{subsection}{CU-44: Aplicar una sanción}
+\label{cu-44}
+
+\begin{fichacu}{CU-44}{Aplicar una sanción}
+  \crudFila{Responsable}{José Eduardo Prior Hernández}
+  \crudFila{Actor principal}{Moderador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Actores interesados}{Jugador sancionado}
+  \crudFila{Prototipos}{10d, 10e}
+  \crudFila{Objetivo}{Aplicar una sanción a un jugador tras revisar un reporte, eligiendo su ámbito y su duración, y dejando constancia de quién la aplicó y por qué.}
+  \crudFila{Disparador}{El Moderador resuelve un \textit{Reporte} en el \mbox{CU-43} decidiendo que procede sancionar.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Moderador tiene una \textit{Sesion} abierta y su \textit{Usuario} tiene el rol de moderación, otorgado por el \mbox{CU-46}.
+      \item \textbf{\mbox{PRE-02}} Existe el \textit{Usuario} a sancionar y no tiene \texttt{estado\_\allowbreak{}cuenta} en \texttt{ELIMINADA}.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}ApplySanction} con el jugador, el \textit{Reporte} que la origina, el historial de sanciones previas de ese jugador y los campos de ámbito, tipo y duración (\mbox{RN-06}).
+      \item El Moderador elige el ámbito —cuenta o chat—, el tipo —temporal o permanente— y, si es temporal, la duración, y escribe el motivo. \textit{(Ver \mbox{FA-01})}
+      \item El SJM valida que el ámbito, el tipo y el motivo estén completos, y que haya duración si el tipo es temporal. \textit{(Ver \mbox{FA-02})}
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} resumiendo la sanción en una frase, con las opciones ``Aplicar'' y ``Cancelar'' (\mbox{RN-08}). \textit{(Ver \mbox{FA-03})}
+      \item El Moderador confirma.
+      \item El SJM envía el mensaje \texttt{APPLY\_\allowbreak{}SANCTION\_\allowbreak{}REQUEST} con el sancionado, el ámbito, el tipo, la duración, el motivo, el reporte de origen y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y que el \textit{Usuario} tenga rol de moderación (\mbox{RN-01}). \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas verifica que el sancionado exista y no sea el propio Moderador. \textit{(Ver \mbox{FA-05})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas verifica que el sancionado no tenga rol de moderación o superior al del Moderador (\mbox{RN-02}). \textit{(Ver \mbox{FA-06})}
+      \item El Servidor de partidas comprueba si ya existe una \textit{Sancion} activa del mismo ámbito sobre ese jugador. \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas calcula la \texttt{fecha\_\allowbreak{}fin} sumando la duración a la fecha actual, o la deja en nulo si el tipo es permanente (\mbox{RN-04}).
+      \item El Servidor de partidas inicia una transacción sobre la Base de datos.
+      \item El Servidor de partidas crea la \textit{Sancion} con el sancionado, el moderador que la aplica, el ámbito, el tipo, el motivo, la \texttt{fecha\_\allowbreak{}inicio}, la \texttt{fecha\_\allowbreak{}fin}, el reporte de origen y \texttt{activa} en verdadero. \textit{(Ver \mbox{EX-01})}
+      \item Si el ámbito es de cuenta, el Servidor de partidas cambia el \texttt{estado\_\allowbreak{}cuenta} del \textit{Usuario} a \texttt{SUSPENDIDA} si la sanción es temporal, o a \texttt{BANEADA} si es permanente (\mbox{RN-03}).
+      \item Si el ámbito es de cuenta, el Servidor de partidas cierra todas las \textit{Sesion} abiertas del sancionado con \texttt{motivo\_\allowbreak{}cierre} igual a \texttt{SANCION}, e invalida sus tokens (\mbox{RN-05}).
+      \item Si el ámbito es de cuenta y el sancionado tiene una \textit{Participacion} sin terminar, el Servidor de partidas la cierra con la forma de término \texttt{ABANDONO}, y el flujo continúa en el \mbox{CU-25} para esa partida. \textit{(Ver \mbox{FA-08})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item Si el ámbito es de chat, el Servidor de partidas \textbf{no} toca el \texttt{estado\_\allowbreak{}cuenta}, \textbf{no} cierra ninguna sesión y \textbf{no} interrumpe ninguna partida (\mbox{RN-03}).
+      \item El Servidor de partidas marca el \textit{Reporte} de origen como \texttt{RESUELTO\_\allowbreak{}CON\_\allowbreak{}SANCION}.
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas registra la aplicación en la bitácora de moderación, con el moderador, el sancionado y la sanción (\mbox{RN-07}).
+      \item El Servidor de partidas notifica al sancionado, si tiene sesión abierta, con \texttt{SANCTION\_\allowbreak{}APPLIED}, el motivo, el ámbito y la fecha de término.
+      \item El SJM del sancionado despliega la pantalla informativa de sanción, con acceso a la apelación del \mbox{CU-45}.
+      \item El SJM del Moderador muestra la \texttt{GUI\_\allowbreak{}MessageSuccess} y vuelve a la cola de reportes.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Moderador decide no sancionar}\par
+    \begin{cuenum}[start=1]
+      \item El Moderador selecciona ``Descartar reporte''.
+      \item El flujo continúa en el \mbox{CU-43} Revisar un reporte, que lo marca como \texttt{RESUELTO\_\allowbreak{}SIN\_\allowbreak{}SANCION}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: Faltan campos o falta la duración}\par
+    \begin{cuenum}[start=1]
+      \item El SJM resalta los campos incompletos y escribe junto a cada uno qué se espera.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El Moderador cancela en la confirmación}\par
+    \begin{cuenum}[start=1]
+      \item El Moderador selecciona ``Cancelar''.
+      \item El SJM cierra la confirmación sin enviar nada y vuelve al paso 2 del FN con lo capturado intacto.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La sesión no es válida o falta el rol}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID} o con \texttt{FORBIDDEN}.
+      \item El Servidor de partidas registra el intento en la bitácora de moderación si la sesión era válida pero faltaba el rol, por tratarse de un intento de actuar sin permiso (\mbox{RN-01}).
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login} o el menú principal, según corresponda.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El sancionado no existe o es el propio Moderador}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{APPLY\_\allowbreak{}SANCTION\_\allowbreak{}FAILED} y el motivo \texttt{DESTINATARIO\_\allowbreak{}INVALIDO}.
+      \item El SJM lo indica mediante la \texttt{GUI\_\allowbreak{}MessageWarning}.
+      \item El flujo continúa en el paso 1 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El sancionado tiene rol de moderación}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{APPLY\_\allowbreak{}SANCTION\_\allowbreak{}FAILED} y el motivo \texttt{DESTINATARIO\_\allowbreak{}PROTEGIDO} (\mbox{RN-02}).
+      \item El Servidor de partidas registra el intento en la bitácora de moderación.
+      \item El SJM lo indica y sugiere escalarlo a la administración.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: Ya existe una sanción activa del mismo ámbito}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SANCTION\_\allowbreak{}ALREADY\_\allowbreak{}ACTIVE} y los datos de la vigente.
+      \item El SJM las muestra lado a lado y ofrece ``Sustituir'' y ``Cancelar''.
+      \item Si el Moderador elige sustituir, el Servidor de partidas marca la anterior como \texttt{activa} en falso, con su fecha de retirada y una referencia a la nueva, y el flujo continúa en el paso 12 del FN (\mbox{RN-09}).
+      \item Si elige cancelar, el flujo continúa en el paso 1 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: El sancionado está jugando una partida}\par
+    \begin{cuenum}[start=1]
+      \item Si el ámbito es de cuenta, el Servidor de partidas cierra su \textit{Participacion} con la forma de término \texttt{ABANDONO} y la partida se resuelve conforme al \mbox{CU-25} para los demás jugadores.
+      \item Si el ámbito es de chat, la partida sigue con normalidad: el jugador puede seguir jugando y solo pierde la escritura en el chat (\mbox{D-05}).
+      \item El flujo continúa en el paso 18 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-09}: La sanción se aplica sin reporte de origen}\par
+    \begin{cuenum}[start=1]
+      \item El Moderador aplica la sanción desde el perfil de un jugador y no desde la cola de reportes.
+      \item El Servidor de partidas crea la \textit{Sancion} con el reporte de origen en nulo y omite el paso 18 del FN.
+      \item El flujo continúa en el paso 19 del FN. El motivo escrito por el Moderador pasa a ser la única justificación registrada, y por eso el \mbox{RN-06} lo exige siempre.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no quede una sanción registrada sin que el estado de la cuenta la refleje, ni una cuenta suspendida sin sanción que la explique (\mbox{RN-10}).
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador y conserva lo capturado.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía la sanción por su cuenta: podría aplicarse dos veces.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que consulte el historial del jugador antes de volver a intentarlo.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y conserva lo capturado.
+      \item Al recuperar la conexión, el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas trata la transacción como fallida y registra la excepción señalando que el estado de la sanción es indeterminado.
+      \item El Servidor de partidas no notifica nada al sancionado: anunciar una sanción que puede no existir sería peor que no anunciarla.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que compruebe el historial del jugador.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-05}: El sancionado no puede ser notificado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no encuentra ninguna \textit{Sesion} abierta del sancionado, o la notificación no llega.
+      \item El Servidor de partidas no reintenta: la sanción ya está escrita y surte efecto sin que el sancionado la haya visto.
+      \item El sancionado verá la pantalla informativa en su próximo intento de iniciar sesión, por el \mbox{FA-05} del \mbox{CU-17} o por el \mbox{FA-03} del \mbox{CU-28}, según el ámbito.
+      \item El flujo continúa en el paso 23 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe una \textit{Sancion} activa con su ámbito, su tipo, su motivo, su moderador, su fecha de inicio y su fecha de término, nula si es permanente.
+      \item \textbf{\mbox{POST-02}} Si el ámbito era de cuenta, el \texttt{estado\_\allowbreak{}cuenta} del sancionado es \texttt{SUSPENDIDA} o \texttt{BANEADA}, ninguna de sus \textit{Sesion} sigue abierta y no puede iniciar sesión.
+      \item \textbf{\mbox{POST-03}} Si el ámbito era de chat, el \texttt{estado\_\allowbreak{}cuenta} no cambió, sus sesiones siguen abiertas y puede jugar: solo no puede escribir.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el FN con un reporte de origen, ese \textit{Reporte} quedó marcado como resuelto con sanción.
+      \item \textbf{\mbox{POST-05}} Si el caso termina por el FN, la aplicación quedó registrada en la bitácora de moderación con quién la aplicó.
+      \item \textbf{\mbox{POST-06}} Un jugador no tiene dos \textit{Sancion} activas del mismo ámbito a la vez.
+      \item \textbf{\mbox{POST-07}} Si el caso termina por cualquier flujo alterno o excepción, ni la \textit{Sancion} ni el \texttt{estado\_\allowbreak{}cuenta} cambiaron.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-08}} La sanción no borra nada del jugador: sus partidas, sus mensajes, su elo y sus objetos siguen intactos.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Solo un \textit{Usuario} con rol de moderación puede aplicar sanciones. El rol lo otorga la administración en el \mbox{CU-46}.
+      \item \textbf{\mbox{RN-02}} Un moderador no puede sancionar a otro moderador ni a un administrador. Esos casos se escalan.
+      \item \textbf{\mbox{RN-03}} La sanción tiene ámbito. La de cuenta impide iniciar sesión y jugar; la de chat impide escribir pero deja leer y jugar con normalidad. Es la decisión \mbox{D-05} y la razón de que \texttt{Baneo} se sustituyera por \textit{Sancion}.
+      \item \textbf{\mbox{RN-04}} Una sanción temporal tiene \texttt{fecha\_\allowbreak{}fin}; una permanente la tiene en nulo y no caduca.
+      \item \textbf{\mbox{RN-05}} Una sanción de cuenta cierra todas las sesiones del sancionado e invalida sus tokens. De otro modo seguiría jugando hasta cerrar el juego.
+      \item \textbf{\mbox{RN-06}} Toda sanción lleva un motivo escrito por el moderador, incluso cuando nace de un reporte con su propio motivo: el catálogo dice de qué se le acusó, el texto dice qué se comprobó.
+      \item \textbf{\mbox{RN-07}} Toda sanción queda registrada en la bitácora de moderación con el moderador que la aplicó. Una sanción sin autor no puede revisarse en una apelación.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} Aplicar una sanción exige confirmación explícita con el resumen a la vista.
+      \item \textbf{\mbox{RN-09}} Aplicar una sanción del mismo ámbito sobre un jugador que ya la tiene sustituye la anterior, que queda registrada como retirada. No se acumulan.
+      \item \textbf{\mbox{RN-10}} La creación de la \textit{Sancion}, el cambio de \texttt{estado\_\allowbreak{}cuenta}, el cierre de sesiones y la resolución del reporte ocurren en una sola transacción.
+      \item \textbf{\mbox{RN-11}} Una sanción no elimina contenido del sancionado. Retirar contenido, si hace falta, es una acción distinta.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué la sanción caduca sola y no hay caso que la levante.}\par
+    Una sanción temporal no necesita un caso de uso que la retire: deja de aplicarse en cuanto su \texttt{fecha\_\allowbreak{}fin} queda atrás, y todos los flujos que la consultan —el inicio de sesión, el emparejamiento y el chat— comparan esa fecha con la actual. Escribir un proceso que recorriera las sanciones vencidas para desactivarlas añadiría un trabajo periódico cuyo único efecto sería cambiar una bandera que nadie lee sin mirar también la fecha. \texttt{activa} existe para el \mbox{RN-09}, es decir, para distinguir una sanción retirada a mano de una que simplemente venció, no para saber si está surtiendo efecto ahora.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token; cierra las del sancionado \textit{(pasos 7, 15)}
+      \item \textit{Usuario}: lee el rol del moderador y del sancionado \textit{(pasos 7, 9)}
+      \item \textit{Usuario}: escribe \texttt{estado\_\allowbreak{}cuenta}, solo si el ámbito es de cuenta \textit{(paso 14)}
+      \item \textit{Sancion}: lee las activas del mismo ámbito \textit{(paso 10)}
+      \item \textit{Sancion}: crea, y desactiva la anterior en el \mbox{FA-07} \textit{(pasos 13, \mbox{FA-07})}
+      \item \textit{Reporte}: lee el de origen; escribe su resolución \textit{(pasos 1, 18)}
+      \item \textit{Participacion}: cierra la que esté sin terminar, solo si el ámbito es de cuenta \textit{(paso 16)}
+      \item \textit{BitacoraModeracion}: inserta \textit{(paso 20)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

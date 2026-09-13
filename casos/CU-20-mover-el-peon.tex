@@ -1,0 +1,168 @@
+\subsection*{CU-20: Mover el peón}
+\addcontentsline{toc}{subsection}{CU-20: Mover el peón}
+\label{cu-20}
+
+\begin{fichacu}{CU-20}{Mover el peón}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{17c, 8c, 8d, 20a, 7a, 17d}
+  \crudFila{Objetivo}{Ejecutar una de las dos acciones posibles del turno: desplazar el peón propio una casilla, o saltar al rival cuando lo tiene delante, y dejar la jugada registrada.}
+  \crudFila{Disparador}{Es el turno del Jugador y este pulsa su peón en el tablero.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y una \textit{Participacion} sin terminar en una \textit{Partida} con estado \texttt{EN\_\allowbreak{}CURSO}.
+      \item \textbf{\mbox{PRE-02}} Es el turno del Jugador conforme al orden de la partida.
+      \item \textbf{\mbox{PRE-03}} El reloj del Jugador no está agotado.
+      \item \textbf{\mbox{PRE-04}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El SJM indica en la \texttt{GUI\_\allowbreak{}Match} que es el turno del Jugador y activa las casillas del tablero.
+      \item El Jugador pulsa su peón.
+      \item El SJM calcula las casillas alcanzables y las resalta: las ortogonales adyacentes libres de muro, y las de salto si hay un rival adyacente (\mbox{RN-02}, \mbox{RN-03}).
+      \item El Jugador pulsa una casilla resaltada. \textit{(Ver \mbox{FA-01}, \mbox{FA-02})}
+      \item El SJM envía el mensaje \texttt{MOVE\_\allowbreak{}PAWN\_\allowbreak{}REQUEST} con la casilla de destino, el número de jugada y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y a una \textit{Participacion} de esa \textit{Partida}. \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas verifica que la \textit{Partida} siga \texttt{EN\_\allowbreak{}CURSO}. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas verifica que sea el turno de ese jugador y que el número de jugada recibido sea el esperado (\mbox{RN-06}). \textit{(Ver \mbox{FA-05})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas descuenta del reloj del jugador el tiempo transcurrido desde el inicio de su turno y verifica que no se haya agotado. \textit{(Ver \mbox{FA-06})}
+      \item El Servidor de partidas reconstruye el estado del tablero a partir de las \textit{Jugada} registradas y vuelve a calcular las casillas alcanzables, sin dar por buena la validación del cliente (\mbox{RN-07}). \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas verifica que la casilla de destino esté entre las alcanzables.
+      \item El Servidor de partidas inicia una transacción sobre la Base de datos.
+      \item El Servidor de partidas crea la \textit{Jugada} con su número de orden, el tipo \texttt{MOVIMIENTO}, la casilla de origen, la de destino, el tiempo consumido y la fecha. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas actualiza en la \textit{Participacion} la casilla actual del peón y el tiempo de reloj restante.
+      \item El Servidor de partidas comprueba si la casilla de destino pertenece a la fila de meta del jugador. \textit{(Ver \mbox{FA-08})}
+      \item El Servidor de partidas pasa el turno al siguiente jugador en orden, saltando a los que ya estén clasificados o hayan abandonado (\mbox{RN-08}).
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas notifica a todos los participantes, y a los espectadores con el retraso previsto, con \texttt{MOVE\_\allowbreak{}PAWN\_\allowbreak{}OK} y el estado actualizado.
+      \item El SJM anima el desplazamiento del peón, añade la jugada al historial en notación y atenúa el tablero, que ya no es su turno.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador pulsa una casilla no alcanzable}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el aviso junto al cursor indicando por qué no puede ir ahí: hay un muro, está ocupada o no es adyacente (\mbox{RN-09}).
+      \item El SJM no envía nada al Servidor de partidas y mantiene el peón seleccionado.
+      \item El flujo continúa en el paso 4 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Jugador deselecciona el peón}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador pulsa fuera del tablero o vuelve a pulsar su peón.
+      \item El SJM retira el resaltado de las casillas.
+      \item El flujo continúa en el paso 2 del FN. El Jugador puede optar por colocar un muro, que es el \mbox{CU-21}.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: La sesión o la participación no son válidas}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID} o \texttt{NOT\_\allowbreak{}A\_\allowbreak{}PARTICIPANT}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login} o el menú principal, según corresponda.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La partida ya terminó}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{MATCH\_\allowbreak{}ALREADY\_\allowbreak{}FINISHED} y el resultado.
+      \item El SJM descarta la jugada y despliega la pantalla de fin de partida del \mbox{CU-25}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: No es el turno del Jugador, o la jugada llega fuera de orden}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{NOT\_\allowbreak{}YOUR\_\allowbreak{}TURN} y el estado vigente, incluyendo el número de jugada esperado.
+      \item El Servidor de partidas registra el desfase en la bitácora del servidor si el número recibido es mayor que el esperado, por tratarse de un indicio de cliente modificado.
+      \item El SJM sincroniza el tablero con el estado recibido y lo atenúa.
+      \item El flujo continúa en el paso 1 del FN cuando vuelva a ser su turno.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El reloj del Jugador se agotó antes de la jugada}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas descarta la jugada recibida: llegó tarde.
+      \item El flujo continúa en el \mbox{CU-25} Finalizar la partida, con la forma de término \texttt{TIEMPO\_\allowbreak{}AGOTADO} para ese jugador (\mbox{RN-10}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El servidor rechaza una jugada que el cliente había aceptado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la discrepancia en la bitácora del servidor con la \texttt{version\_\allowbreak{}cliente}, el estado del tablero y la jugada rechazada.
+      \item El Servidor de partidas responde con \texttt{MOVE\_\allowbreak{}REJECTED} y el estado vigente, que es la única verdad (\mbox{RN-01}).
+      \item El SJM reconstruye el tablero con el estado recibido y muestra el aviso junto al cursor.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: El peón llega a la fila de meta}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas marca la \textit{Participacion} como clasificada, con su posición y la fecha.
+      \item Si el \textit{Modo} es de dos jugadores, o si en el de cuatro solo queda un jugador sin clasificar, el flujo continúa en el \mbox{CU-25} Finalizar la partida.
+      \item Si el \textit{Modo} es de cuatro jugadores y quedan al menos dos sin clasificar, la partida sigue: el flujo continúa en el paso 16 del FN, y el jugador clasificado deja de recibir turno (\mbox{RN-08}).
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-09}: El Jugador confirma cada jugada}\par
+    \begin{cuenum}[start=1]
+      \item Si el Jugador tiene activada la opción de confirmar cada jugada en accesibilidad, el SJM muestra la casilla elegida en estado provisional y pide confirmación antes de enviar.
+      \item Si el Jugador confirma, el flujo continúa en el paso 5 del FN. Si cancela, continúa en el paso 4.
+      \item El reloj no se detiene durante la confirmación (\mbox{RN-11}).
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no quede una \textit{Jugada} registrada sin que la \textit{Participacion} refleje su efecto (\mbox{RN-12}).
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}, conservando el turno del jugador.
+      \item El SJM muestra el aviso en la barra de conexión y devuelve el peón a su casilla.
+      \item El flujo continúa en el paso 4 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que transcurrió el tiempo límite sin recibir respuesta.
+      \item El SJM no reenvía la jugada: podría aplicarse dos veces. Solicita el estado vigente con \texttt{MATCH\_\allowbreak{}STATE\_\allowbreak{}REQUEST} (\mbox{RN-13}).
+      \item El SJM reconstruye el tablero con el estado recibido, que ya dirá si la jugada se aplicó.
+      \item El flujo continúa en el paso 1 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe durante el turno}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta el cierre inesperado del socket y muestra la barra de conexión perdida.
+      \item El reloj del Jugador sigue corriendo en el servidor: la partida no se detiene por una desconexión (\mbox{RN-11}).
+      \item El flujo continúa en el \mbox{CU-26} Reconectar a una partida en curso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas trata la transacción como fallida y no notifica la jugada a nadie.
+      \item El Servidor de partidas registra la excepción señalando que el estado de la jugada es indeterminado y conserva el turno del jugador.
+      \item El flujo continúa en el paso 4 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-05}: El tablero 3D no puede dibujarse}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que el equipo no puede con la representación tridimensional y pasa a la vista plana, con las mismas reglas y las mismas casillas resaltadas.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe una \textit{Jugada} de tipo \texttt{MOVIMIENTO} con su número de orden, su origen, su destino y el tiempo consumido.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, la \textit{Participacion} del Jugador refleja la casilla nueva y el reloj descontado.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, el turno corresponde al siguiente jugador en orden que siga activo.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el \mbox{FA-08}, la \textit{Participacion} queda marcada como clasificada con su posición.
+      \item \textbf{\mbox{POST-05}} Si el caso termina por el \mbox{FA-01}, el \mbox{FA-02} o el \mbox{FA-07}, el tablero no cambió y sigue siendo el turno del Jugador.
+      \item \textbf{\mbox{POST-06}} Si el caso termina por cualquier excepción, o la jugada quedó completa o no quedó nada de ella: nunca a medias.
+      \item \textbf{\mbox{POST-07}} La secuencia de \textit{Jugada} de la partida es continua y sin huecos, lo que permite reconstruir el tablero en cualquier punto y alimenta la repetición del \mbox{CU-37}.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} El Servidor de partidas es la única autoridad sobre el estado de la partida. Lo que el cliente calcula sirve para responder al instante, no para decidir.
+      \item \textbf{\mbox{RN-02}} El peón se mueve una casilla en ortogonal, a una casilla libre y sin muro de por medio.
+      \item \textbf{\mbox{RN-03}} Si un rival ocupa la casilla adyacente, el peón puede saltarlo: en recto si no hay muro ni otro peón detrás de él, y en diagonal a cualquiera de sus dos lados si lo hay.
+      \item \textbf{\mbox{RN-04}} Un peón no puede quedar en la misma casilla que otro.
+      \item \textbf{\mbox{RN-05}} En cada turno el Jugador hace exactamente una cosa: mover el peón o colocar un muro. Nunca las dos, nunca ninguna.
+      \item \textbf{\mbox{RN-06}} Cada \textit{Jugada} lleva un número de orden consecutivo dentro de la partida. Una jugada con un número distinto del esperado se rechaza, lo que impide que un mensaje repetido se aplique dos veces.
+      \item \textbf{\mbox{RN-07}} El servidor recalcula la validez de la jugada sobre su propio estado. Un cliente modificado no puede colocar un peón donde quiera.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} Un jugador clasificado o que abandonó deja de recibir turno, pero sus muros permanecen en el tablero.
+      \item \textbf{\mbox{RN-09}} Un intento de jugada inválida se avisa junto al cursor, sin ventanas ni bloqueos, y no consume el turno.
+      \item \textbf{\mbox{RN-10}} El reloj lo lleva el servidor. El del cliente es una representación y puede ir desfasado.
+      \item \textbf{\mbox{RN-11}} Nada de lo que haga el Jugador detiene su reloj: ni confirmar una jugada, ni abrir ajustes, ni perder la conexión.
+      \item \textbf{\mbox{RN-12}} La \textit{Jugada}, la actualización de la \textit{Participacion} y el cambio de turno ocurren en una sola transacción.
+      \item \textbf{\mbox{RN-13}} Ante una respuesta que no llega, el cliente nunca reenvía la jugada: pide el estado. Reenviar podría duplicarla si la primera sí se aplicó.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué se guarda cada jugada.}\par
+    Se consideró guardar solo el resultado de la partida y no las jugadas, que es mucho más barato. Se descartó porque el documento de diseño del juego promete repetición jugada a jugada con línea de tiempo y notación exportable, porque la reconexión del \mbox{CU-26} necesita reconstruir el tablero, y porque el reporte del \mbox{CU-42} adjunta la repetición automáticamente. Las tres funciones se apoyan en la misma tabla. Guardar la jugada como origen y destino, y no como una fotografía del tablero, mantiene la fila pequeña: el tablero completo siempre puede reconstruirse sumando las jugadas desde el inicio.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 6)}
+      \item \textit{Partida}: lee estado y turno; escribe el turno siguiente \textit{(pasos 7, 8, 16)}
+      \item \textit{Participacion}: lee la del jugador y las de los rivales \textit{(pasos 6, 10)}
+      \item \textit{Participacion}: escribe casilla actual, reloj restante y, en el \mbox{FA-08}, la clasificación \textit{(pasos 14, \mbox{FA-08})}
+      \item \textit{Jugada}: lee todas las de la partida, para reconstruir el tablero \textit{(paso 10)}
+      \item \textit{Jugada}: crea \textit{(paso 13)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

@@ -1,0 +1,150 @@
+\subsection*{CU-43: Revisar un reporte y resolverlo}
+\addcontentsline{toc}{subsection}{CU-43: Revisar un reporte y resolverlo}
+\label{cu-43}
+
+\begin{fichacu}{CU-43}{Revisar un reporte y resolverlo}
+  \crudFila{Responsable}{José Eduardo Prior Hernández}
+  \crudFila{Actor principal}{Moderador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{10b, 10e}
+  \crudFila{Objetivo}{Permitir al Moderador tomar un reporte pendiente de la cola, revisar las pruebas —la repetición y el chat de la partida, y el historial del reportado— y resolverlo con o sin sanción; y, con el mismo procedimiento, resolver las apelaciones de sanciones.}
+  \crudFila{Disparador}{El Moderador abre la \texttt{GUI\_\allowbreak{}ModerationQueue}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Moderador tiene una \textit{Sesion} abierta y su \textit{Usuario} tiene \texttt{rol} igual a \texttt{MODERADOR}.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Moderador abre la \texttt{GUI\_\allowbreak{}ModerationQueue}.
+      \item El SJM envía el mensaje \texttt{MODERATION\_\allowbreak{}QUEUE\_\allowbreak{}REQUEST} con el token. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y que el \texttt{rol} del \textit{Usuario} sea \texttt{MODERADOR} (\mbox{RN-01}). \textit{(Ver \mbox{FA-01})}
+      \item El Servidor de partidas devuelve a \texttt{PENDIENTE} los \textit{Reporte} que llevan más de treinta minutos \texttt{EN\_\allowbreak{}REVISION} sin resolverse (\mbox{RN-03}).
+      \item El Servidor de partidas recupera los \textit{Reporte} en \texttt{PENDIENTE}, ordenados por \texttt{fecha\_\allowbreak{}reporte}, con su \textit{MotivoReporte}, y las \textit{Apelacion} pendientes, excluyendo aquellos en los que el Moderador es denunciante o reportado, o aplicó la sanción apelada (\mbox{RN-04}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas responde con \texttt{MODERATION\_\allowbreak{}QUEUE\_\allowbreak{}OK}.
+      \item El SJM despliega la cola con los reportes y las apelaciones, su motivo, su antigüedad y el número de reportes que acumula cada reportado. \textit{(Ver \mbox{FA-02})}
+      \item El Moderador selecciona ``tomar'' en un reporte. \textit{(Ver \mbox{FA-08})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El SJM envía el mensaje \texttt{TAKE\_\allowbreak{}REPORT\_\allowbreak{}REQUEST} con el \texttt{id\_\allowbreak{}reporte}.
+      \item El Servidor de partidas verifica, dentro de una transacción, que el \textit{Reporte} siga \texttt{PENDIENTE}, y lo marca \texttt{EN\_\allowbreak{}REVISION} con el \texttt{id\_\allowbreak{}moderador} y la \texttt{fecha\_\allowbreak{}asignacion} (\mbox{RN-02}). \textit{(Ver \mbox{FA-03}, \mbox{EX-01})}
+      \item El Servidor de partidas recupera las pruebas: la \textit{Partida} asociada con sus \textit{Jugada} y los \textit{Mensaje} del canal de partida, la descripción del denunciante, las \textit{Sancion} previas del reportado y los demás \textit{Reporte} contra él. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas registra que el Moderador tomó el reporte en la \textit{BitacoraModeracion}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}ReportReview} con el motivo, la descripción, el acceso a la repetición en el \mbox{CU-37}, el chat de la partida con los mensajes del reportado resaltados, el historial de sanciones y las opciones ``Resolver sin sanción'', ``Sancionar'' y ``Liberar''. \textit{(Ver \mbox{FA-05}, \mbox{FA-06})}
+      \item El Moderador revisa las pruebas y selecciona ``Resolver sin sanción''.
+      \item El SJM pide una nota de resolución obligatoria y el Moderador la escribe.
+      \item El SJM envía el mensaje \texttt{RESOLVE\_\allowbreak{}REPORT\_\allowbreak{}REQUEST} con la resolución y la nota.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item El Servidor de partidas verifica que el \textit{Reporte} siga \texttt{EN\_\allowbreak{}REVISION} asignado a ese Moderador, y lo actualiza con \texttt{estado} igual a \texttt{RESUELTO\_\allowbreak{}SIN\_\allowbreak{}SANCION}, la \texttt{nota\_\allowbreak{}resolucion} y la \texttt{fecha\_\allowbreak{}resolucion}. \textit{(Ver \mbox{FA-07}, \mbox{EX-01}, \mbox{EX-02})}
+      \item El Servidor de partidas registra la resolución en la \textit{BitacoraModeracion}.
+      \item El Servidor de partidas responde con \texttt{RESOLVE\_\allowbreak{}REPORT\_\allowbreak{}OK} y \textbf{no} notifica al denunciante (\mbox{RN-05}).
+      \item El SJM retira el reporte de la cola y vuelve a la \texttt{GUI\_\allowbreak{}ModerationQueue}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La sesión no es válida o el usuario ya no es moderador}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID} o con \texttt{FORBIDDEN}.
+      \item Si la sesión era válida pero falta el rol, el Servidor de partidas lo registra en la \textit{BitacoraModeracion}, por tratarse de un intento de actuar sin permiso.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login} o el menú principal.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: La cola está vacía}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra un estado vacío indicando que no hay reportes ni apelaciones pendientes.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: Otro moderador tomó el reporte}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra el \textit{Reporte} ya \texttt{EN\_\allowbreak{}REVISION} con otro moderador.
+      \item El Servidor de partidas responde con \texttt{REPORT\_\allowbreak{}ALREADY\_\allowbreak{}TAKEN}.
+      \item El SJM retira el reporte de la cola y lo indica.
+      \item El flujo continúa en el paso 7 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El reporte no tiene partida asociada}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no encuentra \textit{Partida} en el reporte, porque se hizo desde fuera de una partida.
+      \item El SJM muestra en lugar de la repetición y el chat un aviso de que la única prueba es la descripción del denunciante y el historial del reportado.
+      \item El flujo continúa en el paso 14 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El Moderador decide sancionar}\par
+    \begin{cuenum}[start=1]
+      \item El Moderador selecciona ``Sancionar''.
+      \item El flujo continúa en el \mbox{CU-44} Aplicar una sanción, que resuelve el reporte como \texttt{RESUELTO\_\allowbreak{}CON\_\allowbreak{}SANCION} en la misma transacción.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El Moderador libera el reporte sin resolverlo}\par
+    \begin{cuenum}[start=1]
+      \item El Moderador selecciona ``Liberar''.
+      \item El Servidor de partidas devuelve el \textit{Reporte} a \texttt{PENDIENTE}, deja \texttt{id\_\allowbreak{}moderador} en nulo y registra la liberación en la \textit{BitacoraModeracion}.
+      \item El SJM vuelve a la cola.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El reporte dejó de estar asignado al Moderador}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra el \textit{Reporte} en otro estado o con otro moderador, porque se liberó por tiempo (\mbox{RN-03}) o porque al Moderador le retiraron el rol.
+      \item El Servidor de partidas responde con \texttt{REPORT\_\allowbreak{}NOT\_\allowbreak{}ASSIGNED} sin aplicar la resolución.
+      \item El SJM informa y vuelve a la cola.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: El Moderador toma una apelación}\par
+    \begin{cuenum}[start=1]
+      \item El Moderador selecciona ``tomar'' en una apelación.
+      \item El Servidor de partidas la marca \texttt{EN\_\allowbreak{}REVISION} con el \texttt{id\_\allowbreak{}moderador}, igual que un reporte, y recupera la \textit{Sancion} apelada con su motivo, el \textit{Reporte} que la originó con sus pruebas y el texto de la apelación.
+      \item El SJM despliega la revisión de la apelación con las opciones ``Mantener la sanción'' y ``Retirar la sanción'', ambas con nota obligatoria.
+      \item Si el Moderador mantiene la sanción, el Servidor de partidas marca la \textit{Apelacion} como \texttt{RECHAZADA} con la nota y la \texttt{fecha\_\allowbreak{}resolucion}.
+      \item Si la retira, el Servidor de partidas marca la \textit{Apelacion} como \texttt{ACEPTADA} y, en la misma transacción, pone la \textit{Sancion} con \texttt{activa} en falso y \texttt{fecha\_\allowbreak{}retiro}; si era de ámbito de cuenta, devuelve el \texttt{estado\_\allowbreak{}cuenta} a \texttt{ACTIVA} (\mbox{RN-06}).
+      \item El Servidor de partidas registra la resolución en la \textit{BitacoraModeracion} y notifica al jugador sancionado del resultado, a diferencia de lo que ocurre con un reporte (\mbox{RN-05}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar o escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción en curso, de modo que no quede un reporte resuelto sin registro en la bitácora, ni una sanción retirada con la apelación todavía pendiente.
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador y conserva la nota escrita.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas trata la transacción como fallida y registra la excepción señalando que el estado es indeterminado.
+      \item El SJM recarga el reporte, que mostrará si la resolución se aplicó.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía la solicitud y recarga la cola.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: La conexión se interrumpe durante la revisión}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y conserva la nota escrita.
+      \item Si el Moderador no vuelve en treinta minutos, el reporte se libera solo conforme al \mbox{RN-03}.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Reporte} está \texttt{RESUELTO\_\allowbreak{}SIN\_\allowbreak{}SANCION}, con el moderador, la nota y la fecha de resolución.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el \mbox{FA-06}, el \textit{Reporte} está \texttt{PENDIENTE} sin moderador asignado.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-08}, la \textit{Apelacion} está \texttt{ACEPTADA} o \texttt{RECHAZADA} y, si se aceptó, la \textit{Sancion} está retirada.
+      \item \textbf{\mbox{POST-04}} Toda toma, liberación y resolución quedó registrada en la \textit{BitacoraModeracion}.
+      \item \textbf{\mbox{POST-05}} Un reporte no está nunca en revisión por dos moderadores a la vez.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Solo un \textit{Usuario} con \texttt{rol} igual a \texttt{MODERADOR} revisa reportes y apelaciones. El rol se comprueba en cada solicitud, no solo al abrir la cola.
+      \item \textbf{\mbox{RN-02}} Un reporte o una apelación en revisión lo atiende un solo moderador; tomarlo se hace dentro de una transacción para que dos moderadores no tomen el mismo.
+      \item \textbf{\mbox{RN-03}} Un reporte o una apelación en revisión durante más de treinta minutos sin resolverse vuelve a la cola.
+      \item \textbf{\mbox{RN-04}} Un moderador no puede revisar un reporte en el que es denunciante o reportado, ni la apelación de una sanción que aplicó él mismo.
+      \item \textbf{\mbox{RN-05}} La resolución de un reporte no se comunica al denunciante. La de una apelación sí se comunica al sancionado, porque le afecta directamente.
+      \item \textbf{\mbox{RN-06}} Retirar una sanción la desactiva sin eliminarla: la \textit{Sancion} conserva su motivo, su autor y su vigencia original, y queda marcada con la fecha de retiro.
+      \item \textbf{\mbox{RN-07}} Toda resolución exige una nota escrita del moderador.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué las apelaciones se revisan en este caso.}\par
+    Las apelaciones podrían tener su propia pantalla y su propio caso. Se resuelven aquí porque el procedimiento es el mismo —tomar un elemento de una cola, revisar pruebas y decidir con una nota— y porque las pruebas de una apelación son precisamente las del reporte que originó la sanción. Mantener una sola cola además evita que las apelaciones, que suelen ser menos, queden olvidadas en una pantalla aparte.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}, \textit{Usuario}: lee por token y el \texttt{rol} \textit{(paso 3)}
+      \item \textit{Reporte}: lee la cola; escribe \texttt{estado}, \texttt{id\_\allowbreak{}moderador}, \texttt{fecha\_\allowbreak{}asignacion}, \texttt{nota\_\allowbreak{}resolucion}, \texttt{fecha\_\allowbreak{}resolucion} \textit{(pasos 4, 5, 10, 17, \mbox{FA-06})}
+      \item \textit{MotivoReporte}: lee \textit{(paso 5)}
+      \item \textit{Apelacion}: lee la cola; escribe \texttt{estado}, \texttt{id\_\allowbreak{}moderador}, \texttt{nota\_\allowbreak{}resolucion}, \texttt{fecha\_\allowbreak{}resolucion} \textit{(pasos 5, \mbox{FA-08})}
+      \item \textit{Partida}, \textit{Jugada}, \textit{Mensaje}: lee las pruebas \textit{(paso 11)}
+      \item \textit{Sancion}: lee el historial; retira la apelada en el \mbox{FA-08} \textit{(pasos 11, \mbox{FA-08})}
+      \item \textit{Usuario}: escribe \texttt{estado\_\allowbreak{}cuenta}, al retirar una sanción de cuenta \textit{(paso \mbox{FA-08})}
+      \item \textit{BitacoraModeracion}: inserta \textit{(pasos 12, 18, \mbox{FA-06}, \mbox{FA-08})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

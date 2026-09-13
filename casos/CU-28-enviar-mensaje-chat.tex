@@ -1,0 +1,163 @@
+\subsection*{CU-28: Enviar un mensaje de chat}
+\addcontentsline{toc}{subsection}{CU-28: Enviar un mensaje de chat}
+\label{cu-28}
+
+\begin{fichacu}{CU-28}{Enviar un mensaje de chat}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{20c, 5f, 1b, 10g}
+  \crudFila{Objetivo}{Enviar un mensaje a uno de los tres canales de chat —partida, global o amigos— aplicando el filtro de lenguaje y respetando los silencios, los bloqueos y las sanciones de chat.}
+  \crudFila{Disparador}{El Jugador escribe un mensaje en el chat y pulsa enviar.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El Jugador tiene acceso al canal en el que escribe: participa en la partida, si es el canal de partida, o tiene al menos un amigo, si es el de amigos.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Jugador abre el chat desde su icono y selecciona el canal: partida, global o amigos.
+      \item El SJM despliega el panel de chat con los mensajes recientes del canal y el indicador de mensajes nuevos por canal.
+      \item El Jugador escribe el mensaje y pulsa enviar.
+      \item El SJM valida que el mensaje no esté vacío y no exceda el largo máximo (\mbox{RN-03}). \textit{(Ver \mbox{FA-01})}
+      \item El SJM envía el mensaje \texttt{CHAT\_\allowbreak{}SEND\_\allowbreak{}REQUEST} con el canal, el texto y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas verifica que el \textit{Usuario} no tenga una \textit{Sancion} activa de ámbito de chat (\mbox{RN-05}). \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas verifica que el \textit{Usuario} tenga acceso al canal indicado. \textit{(Ver \mbox{FA-04})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas vuelve a validar el largo del mensaje (\mbox{RN-08}). \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas comprueba el ritmo de envío del \textit{Usuario} en ese canal (\mbox{RN-04}). \textit{(Ver \mbox{FA-06})}
+      \item El Servidor de partidas contrasta el texto contra el catálogo de \textit{PalabraProhibida} con ámbito de chat o de ambos, en el idioma del canal y en los que apliquen a todos (\mbox{RN-01}). \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas crea el \textit{Mensaje} con su canal, su autor, el texto, la fecha y, si el canal es de partida, la \textit{Partida} a la que pertenece. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas determina los destinatarios del canal y descarta a los que tengan un \textit{Bloqueo} con el autor (\mbox{RN-06}).
+      \item El Servidor de partidas entrega el mensaje a los destinatarios con \texttt{CHAT\_\allowbreak{}MESSAGE}, omitiendo a quienes hayan silenciado al autor (\mbox{RN-07}).
+      \item El SJM del autor muestra el mensaje como enviado en su panel.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El mensaje está vacío o excede el largo}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no envía nada y, si excede el largo, muestra el contador en rojo junto al campo.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que la sesión terminó y despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El Jugador tiene una sanción de chat vigente}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{CHAT\_\allowbreak{}RESTRICTED}, el motivo y la fecha en que termina la restricción.
+      \item El SJM deshabilita el campo de escritura y muestra sobre el chat un aviso con el tiempo restante y acceso a la apelación del \mbox{CU-45} (\mbox{RN-05}).
+      \item El Jugador sigue pudiendo leer el chat y jugar con normalidad (\mbox{D-05}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El Jugador no tiene acceso al canal}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{CHAT\_\allowbreak{}CHANNEL\_\allowbreak{}FORBIDDEN}.
+      \item El Servidor de partidas registra el intento en la bitácora del servidor: la interfaz no ofrece canales sin acceso, así que es indicio de cliente modificado.
+      \item El SJM recarga la lista de canales disponibles.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El servidor rechaza un mensaje que el cliente había aceptado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la discrepancia en la bitácora del servidor con la \texttt{version\_\allowbreak{}cliente}.
+      \item El Servidor de partidas responde con \texttt{CHAT\_\allowbreak{}REJECTED} y el motivo \texttt{MENSAJE\_\allowbreak{}INVALIDO}.
+      \item El SJM muestra el aviso junto al campo y conserva el texto.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El Jugador envía mensajes demasiado rápido}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{CHAT\_\allowbreak{}THROTTLED} y los segundos que faltan.
+      \item El SJM deshabilita el envío durante ese tiempo y lo indica junto al campo, sin borrar el texto.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El mensaje contiene lenguaje inapropiado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas \textbf{no} crea el \textit{Mensaje} ni lo entrega a nadie.
+      \item El Servidor de partidas registra el rechazo en la bitácora del servidor con el identificador del \textit{Usuario} y el canal, sin indicar al Jugador qué término activó el filtro (\mbox{RN-02}).
+      \item El Servidor de partidas responde con \texttt{CHAT\_\allowbreak{}REJECTED} y el motivo \texttt{LENGUAJE\_\allowbreak{}NO\_\allowbreak{}PERMITIDO}.
+      \item El SJM muestra junto al campo que el mensaje no pudo enviarse y limpia el texto.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: El Jugador escribe en el canal de partida sin ser participante}\par
+    \begin{cuenum}[start=1]
+      \item Si el Jugador es espectador, el Servidor de partidas encamina el mensaje al canal de espectadores, que es distinto del de los jugadores (\mbox{RN-09}).
+      \item El flujo continúa en el paso 12 del FN sobre ese canal.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-09}: El destinatario ha silenciado al autor}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas crea el \textit{Mensaje} con normalidad: el silencio es local del destinatario y no afecta a lo que el autor escribe (\mbox{RN-07}).
+      \item El Servidor de partidas omite la entrega solo a ese destinatario.
+      \item El flujo continúa en el paso 15 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-10}: El Jugador escribe en el chat de una sala de espera}\par
+    \begin{cuenum}[start=1]
+      \item El SJM envía el mensaje con el canal \texttt{SALA} desde la \texttt{GUI\_\allowbreak{}WaitingRoom}.
+      \item El Servidor de partidas verifica en el paso 8 que el Jugador tenga una \textit{SalaParticipante} en esa \textit{Sala}.
+      \item El Servidor de partidas crea el \textit{Mensaje} con el canal \texttt{SALA} y el \texttt{id\_\allowbreak{}sala}, y lo entrega solo a los miembros de la sala.
+      \item El flujo continúa en el paso 15 del FN. Al iniciarse la partida, el chat de partida sustituye al de sala.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no entrega el mensaje a nadie: entregar lo que no quedó guardado dejaría una conversación que el reporte del \mbox{CU-42} no podría adjuntar.
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra el mensaje como no enviado, con la opción de reintentarlo, y conserva el texto.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM marca el mensaje como no confirmado y no lo reenvía por su cuenta (\mbox{RN-10}).
+      \item El SJM ofrece al Jugador reintentarlo de forma explícita.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y deshabilita el envío, conservando el texto escrito.
+      \item Al recuperar la conexión, el SJM recarga los mensajes recientes del canal y habilita el envío.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El catálogo de palabras prohibidas no puede consultarse}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas \textbf{rechaza} el mensaje en lugar de entregarlo sin filtrar (\mbox{RN-11}).
+      \item El Servidor de partidas registra la incidencia en la bitácora del servidor y responde con \texttt{CHAT\_\allowbreak{}UNAVAILABLE}.
+      \item El SJM indica que el chat no está disponible temporalmente.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe un \textit{Mensaje} con su canal, su autor, su texto y su fecha, y la \textit{Partida} asociada si el canal era de partida.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, el mensaje llegó a todos los destinatarios del canal salvo a los que tienen un \textit{Bloqueo} con el autor o lo han silenciado.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-07}, no existe ningún \textit{Mensaje}: el texto rechazado no se guarda en ninguna parte.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el \mbox{FA-03}, no existe ningún \textit{Mensaje} y el Jugador conserva intacta su capacidad de leer y de jugar.
+      \item \textbf{\mbox{POST-05}} Si el caso termina por cualquier excepción, o el mensaje quedó guardado y entregado, o no quedó guardado ni se entregó.
+      \item \textbf{\mbox{POST-06}} Los mensajes del canal de partida quedan asociados a su \textit{Partida}, lo que permite que el \mbox{CU-42} los adjunte a un reporte.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Todo mensaje se filtra contra el catálogo de \textit{PalabraProhibida} en el servidor. El filtro del cliente, si existe, es una cortesía y no decide.
+      \item \textbf{\mbox{RN-02}} El rechazo no indica qué término activó el filtro, para no revelar el catálogo a base de intentos.
+      \item \textbf{\mbox{RN-03}} Un mensaje tiene un largo máximo y no puede estar vacío.
+      \item \textbf{\mbox{RN-04}} El ritmo de envío por canal está acotado, de modo que el chat no pueda inundarse.
+      \item \textbf{\mbox{RN-05}} Una \textit{Sancion} de ámbito de chat impide escribir, pero no leer, no jugar y no iniciar sesión. Es la diferencia que justifica que la sanción tenga ámbito (\mbox{D-05}).
+      \item \textbf{\mbox{RN-06}} Un \textit{Bloqueo} impide que los mensajes del autor lleguen al bloqueador, y es recíproco a efectos de entrega.
+      \item \textbf{\mbox{RN-07}} Silenciar es local y reversible: el destinatario deja de leer al autor, pero el mensaje existe y llega a los demás. Es la diferencia con el bloqueo.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} Todas las validaciones del cliente se repiten en el servidor.
+      \item \textbf{\mbox{RN-09}} El chat de espectadores está separado del de los jugadores. Un espectador no puede escribir en el canal de la partida: podría soplar jugadas.
+      \item \textbf{\mbox{RN-10}} El cliente no reenvía por su cuenta un mensaje no confirmado. Reenviar podría duplicarlo si el primero sí se guardó.
+      \item \textbf{\mbox{RN-11}} Si el filtro no puede aplicarse, el mensaje se rechaza. Entregar sin filtrar convierte un fallo técnico en un fallo de moderación.
+      \item \textbf{\mbox{RN-12}} El chat no se traduce. Los mensajes se guardan y transmiten en Unicode tal como se escribieron.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué los mensajes se guardan.}\par
+    Se consideró que el chat fuera efímero y no dejara filas, que es más barato y más respetuoso con la privacidad. Se descartó por el \mbox{CU-42}: el documento de diseño del juego dice que el reporte adjunta el chat de la partida automáticamente, y eso exige que el chat exista cuando alguien reporta, que es siempre después de haberse escrito. Guardar solo los mensajes del canal de partida y descartar los de global y amigos sería una opción intermedia razonable, pero dejaría el canal global sin ninguna trazabilidad, que es justo donde la moderación hace más falta.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 6)}
+      \item \textit{Sancion}: lee las activas de ámbito de chat \textit{(paso 7)}
+      \item \textit{Participacion}, \textit{Amistad}: lee, para comprobar el acceso al canal \textit{(paso 8)}
+      \item \textit{Mensaje}: lee los recientes del canal \textit{(paso 2)}
+      \item \textit{Mensaje}: crea \textit{(paso 12)}
+      \item \textit{PalabraProhibida}: lee el catálogo con ámbito de chat \textit{(paso 11)}
+      \item \textit{Bloqueo}, \textit{Silencio}: lee, para decidir la entrega \textit{(pasos 13, 14)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

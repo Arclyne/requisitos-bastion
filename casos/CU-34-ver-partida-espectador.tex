@@ -1,0 +1,143 @@
+\subsection*{CU-34: Ver una partida como espectador}
+\addcontentsline{toc}{subsection}{CU-34: Ver una partida como espectador}
+\label{cu-34}
+
+\begin{fichacu}{CU-34}{Ver una partida como espectador}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador, Invitado o Anónimo}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{10f, 10g, 13a, 13b, 13d, 13e}
+  \crudFila{Objetivo}{Permitir ver en directo, con retraso, la partida de otros jugadores —entrando desde la lista de amigos, el ranking o un enlace compartido que funciona incluso sin cuenta—, con cámara libre, historial de jugadas y un chat de espectadores separado del de los jugadores.}
+  \crudFila{Disparador}{El espectador selecciona ``ver partida'' junto a un amigo que está jugando o en el ranking, o abre un enlace de partida compartido.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} Existe una \textit{Partida} en línea con \texttt{estado} igual a \texttt{EN\_\allowbreak{}CURSO}.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El espectador selecciona ``ver partida'' junto a un amigo en el bloque de quién está jugando ahora. \textit{(Ver \mbox{FA-01}, \mbox{FA-02})}
+      \item El SJM envía el mensaje \texttt{SPECTATE\_\allowbreak{}REQUEST} con el \texttt{id\_\allowbreak{}partida} y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
+      \item El Servidor de partidas recupera la \textit{Partida} y verifica que siga \texttt{EN\_\allowbreak{}CURSO}. \textit{(Ver \mbox{FA-03}, \mbox{EX-01})}
+      \item El Servidor de partidas verifica que todos los participantes tengan \texttt{permite\_\allowbreak{}espectadores} en verdadero y, si la partida viene de una sala, que la \textit{Sala} lo permita (\mbox{RN-02}). \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas verifica que no exista un \textit{Bloqueo} entre el espectador y ningún participante. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas verifica que el número de espectadores conectados a la partida, que lleva en memoria, sea menor de doscientos (\mbox{RN-03}). \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas verifica que el espectador no sea participante de la misma partida. \textit{(Ver \mbox{FA-06})}
+      \item El Servidor de partidas incorpora al espectador a la difusión de la partida y responde con \texttt{SPECTATE\_\allowbreak{}OK} y el estado de la partida \textbf{con ocho segundos de retraso}: las \textit{Jugada} registradas hasta ese instante, las \textit{Participacion} con su nombre, símbolo, muros y relojes, y la \textit{ParticipacionObjeto} de cada jugador (\mbox{RN-01}).
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Spectator} con el tablero en cámara libre, los jugadores, sus relojes, el historial de jugadas, el indicador de retraso, el número de espectadores y el chat de espectadores. \textit{(Ver \mbox{FA-07}, \mbox{FA-08})}
+      \item El Servidor de partidas envía cada jugada nueva al espectador ocho segundos después de registrarla, y el SJM la anima.
+      \item Al terminar la partida, el Servidor de partidas envía el resultado con el mismo retraso y retira al espectador de la difusión.
+      \item El SJM muestra el resultado y ofrece ver la repetición, que continúa en el \mbox{CU-37}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El espectador entra desde el ranking o desde un perfil}\par
+    \begin{cuenum}[start=1]
+      \item El espectador selecciona ``ver partida'' junto a un jugador del ranking o en su tarjeta.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El espectador abre un enlace compartido}\par
+    \begin{cuenum}[start=1]
+      \item El espectador abre un enlace de partida, con o sin sesión en el juego, incluso sin cuenta.
+      \item El SJM envía \texttt{SPECTATE\_\allowbreak{}LINK\_\allowbreak{}REQUEST} con el token del enlace.
+      \item El Servidor de partidas deriva el resumen del token y busca el \textit{EnlaceEspectador} con ese \texttt{token\_\allowbreak{}hash}, \texttt{activo} en verdadero.
+      \item Si no existe o su partida terminó, el Servidor de partidas responde con \texttt{LINK\_\allowbreak{}EXPIRED} y, si la partida terminó, el SJM ofrece ver su repetición, que continúa en el \mbox{CU-37} (13d).
+      \item Si existe, el flujo continúa en el paso 3 del FN con el \texttt{id\_\allowbreak{}partida} del enlace. Un espectador anónimo solo puede leer el chat de espectadores, no escribir (\mbox{RN-05}).
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: La partida ya terminó}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{MATCH\_\allowbreak{}ALREADY\_\allowbreak{}FINISHED}.
+      \item El SJM ofrece ver la repetición, que continúa en el \mbox{CU-37}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La partida no admite espectadores, o hay un bloqueo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SPECTATE\_\allowbreak{}NOT\_\allowbreak{}ALLOWED}, igual en ambos casos.
+      \item El SJM indica que esa partida no se puede ver.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: Se alcanzó el aforo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SPECTATE\_\allowbreak{}FULL}.
+      \item El SJM indica que la partida alcanzó el máximo de espectadores y ofrece reintentar.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El espectador es participante de la partida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{YOU\_\allowbreak{}ARE\_\allowbreak{}PLAYING}.
+      \item El flujo continúa en el \mbox{CU-26} Reconectar a una partida en curso.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El espectador mira desde la vista de un jugador}\par
+    \begin{cuenum}[start=1]
+      \item El espectador selecciona ``vista de'' y elige un jugador.
+      \item El SJM coloca la cámara en el ángulo inicial de ese jugador, sin revelar nada que los demás no vean: no hay información oculta en el tablero.
+      \item El flujo continúa en el paso 10 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: El espectador escribe en el chat de espectadores}\par
+    \begin{cuenum}[start=1]
+      \item El espectador con sesión escribe un mensaje.
+      \item El flujo continúa en el \mbox{CU-28} con el canal \texttt{ESPECTADORES} asociado a la partida. Los jugadores no ven ese canal (\mbox{RN-04}).
+      \item El flujo continúa en el paso 10 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-09}: Un jugador comparte su partida}\par
+    \begin{cuenum}[start=1]
+      \item Un participante selecciona ``compartir partida'' en el menú de partida.
+      \item El Servidor de partidas verifica que la partida admita espectadores y crea el \textit{EnlaceEspectador} con el \texttt{id\_\allowbreak{}partida}, el \texttt{id\_\allowbreak{}creador}, el resumen del token, la \texttt{fecha\_\allowbreak{}creacion} y \texttt{activo} en verdadero, o devuelve el existente.
+      \item El SJM copia el enlace al portapapeles y lo indica (13e).
+      \item Al finalizar la partida, el \mbox{CU-25} marca los \textit{EnlaceEspectador} de la partida con \texttt{activo} en falso (\mbox{RN-06}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-10}: El espectador sale}\par
+    \begin{cuenum}[start=1]
+      \item El espectador cierra la \texttt{GUI\_\allowbreak{}Spectator}.
+      \item El Servidor de partidas lo retira de la difusión y descuenta el aforo.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con la opción ``Reintentar''.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el tablero vacío con la opción ``Reintentar''.
+      \item Si el espectador reintenta, el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe durante la retransmisión}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y congela el tablero.
+      \item Al recuperar la conexión, el flujo continúa en el paso 2 del FN y el tablero se reconstruye con el retraso vigente.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el espectador vio la partida con ocho segundos de retraso y conoce su resultado.
+      \item \textbf{\mbox{POST-02}} Ninguna \textit{Participacion}, \textit{Jugada} ni \textit{Partida} se modificó por la presencia de espectadores.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-09}, existe un \textit{EnlaceEspectador} activo para la partida, que dejará de funcionar al terminar.
+      \item \textbf{\mbox{POST-04}} El número de espectadores de una partida nunca supera doscientos.
+      \item \textbf{\mbox{POST-05}} Los espectadores no quedan registrados individualmente en la base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Los espectadores ven la partida con ocho segundos de retraso, para que nadie pueda soplar jugadas a un participante. El retraso se aplica también en partidas solo entre amigos.
+      \item \textbf{\mbox{RN-02}} Cada jugador decide si permite espectadores con \texttt{permite\_\allowbreak{}espectadores}. Una partida admite espectadores solo si todos sus participantes lo permiten.
+      \item \textbf{\mbox{RN-03}} El aforo de espectadores es de doscientos por partida.
+      \item \textbf{\mbox{RN-04}} El chat de espectadores está separado del de los jugadores, y los jugadores no lo ven.
+      \item \textbf{\mbox{RN-05}} Un espectador sin cuenta puede ver la partida y leer el chat de espectadores, pero no escribir.
+      \item \textbf{\mbox{RN-06}} Un enlace de espectador caduca al terminar la partida.
+      \item \textbf{\mbox{RN-07}} Un \textit{Bloqueo} entre el espectador y un participante impide verla, y la respuesta no lo revela.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} Las partidas contra la IA no admiten espectadores.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué los espectadores no se guardan.}\par
+    El catálogo previó una estructura de espectadores. Al detallar el caso resultó innecesaria: el aforo solo importa mientras la partida está en curso, y el servidor que retransmite ya lleva la cuenta en memoria; si se reinicia, los espectadores reconectan y el conteo se reconstruye. Guardar cada entrada y salida escribiría hasta doscientas filas por partida sin que ninguna funcionalidad las lea después. Lo único que sí debe persistir es el enlace compartido, porque se abre desde fuera del juego y tiene que sobrevivir a un reinicio.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token, cuando hay sesión \textit{(paso 2)}
+      \item \textit{Partida}: lee \texttt{estado}, \texttt{tipo} \textit{(paso 3)}
+      \item \textit{Participacion}, \textit{Usuario}: lee los participantes y su \texttt{permite\_\allowbreak{}espectadores} \textit{(pasos 4, 7, 8)}
+      \item \textit{Sala}: lee \texttt{permite\_\allowbreak{}espectadores}, si la partida viene de una sala \textit{(paso 4)}
+      \item \textit{Bloqueo}: lee entre el espectador y los participantes \textit{(paso 5)}
+      \item \textit{Jugada}, \textit{ParticipacionObjeto}: lee \textit{(paso 8)}
+      \item \textit{EnlaceEspectador}: lee por \texttt{token\_\allowbreak{}hash}; crea; marca \texttt{activo} en falso al terminar \textit{(pasos \mbox{FA-02}, \mbox{FA-09})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

@@ -1,0 +1,174 @@
+\subsection*{CU-17: Elegir modo y buscar partida clasificatoria}
+\addcontentsline{toc}{subsection}{CU-17: Elegir modo y buscar partida clasificatoria}
+\label{cu-17}
+
+\begin{fichacu}{CU-17}{Elegir modo y buscar partida clasificatoria}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{16a, 16b, 1f, 1g, 7d}
+  \crudFila{Objetivo}{Emparejar al Jugador con rivales de fuerza parecida en el modo y reloj que elija, y dejar creada la partida con todos sus participantes.}
+  \crudFila{Disparador}{El Jugador selecciona ``Buscar partida'' en la \texttt{GUI\_\allowbreak{}MainMenu}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El \textit{Usuario} tiene \texttt{estado\_\allowbreak{}cuenta} en \texttt{ACTIVA}.
+      \item \textbf{\mbox{PRE-03}} El \textit{Usuario} no participa en ninguna partida sin terminar (\mbox{D-01}). \textit{(Ver \mbox{FA-01})}
+      \item \textbf{\mbox{PRE-04}} El catálogo contiene al menos un \textit{Modo} activo.
+      \item \textbf{\mbox{PRE-05}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}SelectMode} con los \textit{Modo} disponibles —clásico 9×9, cuatro jugadores y rápida 7×7— y los relojes de tres, cinco y diez minutos, preseleccionando la última elección del Jugador (\mbox{RN-07}). \textit{(Ver \mbox{FA-02})}
+      \item El Jugador elige modo y reloj y da click en ``Buscar''. \textit{(Ver \mbox{FA-03})}
+      \item El SJM envía el mensaje \texttt{MATCHMAKING\_\allowbreak{}JOIN} con el modo, el reloj y el token de sesión. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas verifica que el \textit{Usuario} no tenga ninguna \textit{Participacion} sin terminar en una partida en línea (\mbox{RN-01}). Una partida contra la IA sin terminar no lo impide: se cierra en la transacción del paso 14, conforme al \mbox{RN-07} del \mbox{CU-27}. \textit{(Ver \mbox{FA-01})}
+      \item El Servidor de partidas verifica que el \textit{Usuario} no tenga una \textit{Sancion} activa de ámbito de cuenta. \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas recupera la \textit{EstadisticaModo} del \textit{Usuario} para el \textit{Modo} elegido y toma su \texttt{puntos\_\allowbreak{}elo}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas inserta al \textit{Usuario} en la \textit{ColaEmparejamiento} del modo y reloj elegidos, con su elo y la fecha de entrada. \textit{(Ver \mbox{EX-01})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas responde con \texttt{MATCHMAKING\_\allowbreak{}JOINED} y la posición estimada.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Matchmaking} como panel sobre el menú, mostrando el tiempo transcurrido y la opción ``Cancelar'', y permite seguir navegando por el resto del juego (\mbox{RN-08}). \textit{(Ver \mbox{FA-06})}
+      \item El Servidor de partidas busca en la cola candidatos cuya diferencia de elo esté dentro de la ventana vigente, ampliándola conforme pasa el tiempo de espera (\mbox{RN-03}).
+      \item El Servidor de partidas verifica que ninguno de los candidatos tenga un \textit{Bloqueo} mutuo con los demás (\mbox{RN-05}). \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas reúne tantos jugadores como exija el \textit{Modo}: dos en clásico y rápida, cuatro en el modo de cuatro jugadores.
+      \item El Servidor de partidas inicia una transacción sobre la Base de datos.
+      \item El Servidor de partidas crea la \textit{Partida} con su \textit{Modo}, el reloj elegido, el número de muros por jugador que fija el modo, el estado \texttt{EN\_\allowbreak{}CURSO} y la \texttt{fecha\_\allowbreak{}inicio}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas crea una \textit{Participacion} por cada jugador, con su orden de turno, su símbolo de peón, sus muros restantes iniciales, el elo que tenía al empezar y el equipamiento con el que entra (\mbox{RN-04}, \mbox{RN-06}).
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item El Servidor de partidas retira a los jugadores emparejados de la \textit{ColaEmparejamiento}.
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
+      \item El Servidor de partidas notifica a cada cliente con \texttt{MATCH\_\allowbreak{}FOUND}, incluyendo el identificador de la partida, los participantes con su \texttt{nickname}, su elo y su equipamiento, y el orden de turno.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}VersusScreen} con los participantes.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Match} con el tablero, y el flujo continúa en el \mbox{CU-20} Mover el peón o en el \mbox{CU-21} Colocar un muro, según lo que el Jugador decida en su turno.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador ya participa en una partida sin terminar}\par
+    \begin{cuenum}[start=1]
+      \item El SJM o el Servidor de partidas, según dónde se detecte, impide la entrada a la cola.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que tiene una partida en curso, con las opciones ``Volver a la partida'' y ``Aceptar'' (\mbox{D-01}, \mbox{D-11}).
+      \item Si el Jugador selecciona ``Volver a la partida'', el flujo continúa en el \mbox{CU-26} Reconectar a una partida en curso. Si selecciona ``Aceptar'', continúa en el paso 1 del FN.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Jugador abre la hoja rápida en lugar de la pantalla de modos}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador da click en ``Buscar partida'' manteniendo la elección anterior.
+      \item El SJM despliega la hoja rápida sobre el menú, con el modo y el reloj de la última búsqueda ya elegidos y un enlace a la pantalla completa.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El Jugador cancela la búsqueda}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Cancelar'' en la \texttt{GUI\_\allowbreak{}Matchmaking}.
+      \item El SJM envía el mensaje \texttt{MATCHMAKING\_\allowbreak{}LEAVE}.
+      \item El Servidor de partidas retira al \textit{Usuario} de la \textit{ColaEmparejamiento} y responde con \texttt{MATCHMAKING\_\allowbreak{}LEFT}.
+      \item El SJM cierra el panel y vuelve al menú principal.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que la sesión terminó y despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: La cuenta tiene una sanción de ámbito de cuenta}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{MATCHMAKING\_\allowbreak{}FAILED} y el motivo \texttt{CUENTA\_\allowbreak{}SANCIONADA}, con el tipo de sanción y su fecha de término si es temporal.
+      \item El SJM despliega la pantalla informativa de sanción, con acceso a la apelación del \mbox{CU-45}.
+      \item Fin del caso de uso. Una sanción de ámbito de chat \textbf{no} llega a este flujo: no impide jugar (\mbox{D-05}).
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: No se encuentra rival en un tiempo prolongado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas mantiene al \textit{Usuario} en la cola y sigue ampliando la ventana de elo conforme a \mbox{RN-03}.
+      \item Superado el umbral de espera, el Servidor de partidas envía \texttt{MATCHMAKING\_\allowbreak{}SLOW} con el tiempo transcurrido.
+      \item El SJM lo indica en la \texttt{GUI\_\allowbreak{}Matchmaking} y propone cambiar de modo o jugar contra la IA.
+      \item Si el Jugador acepta la propuesta de IA, el flujo continúa en el \mbox{FA-03} y después en el \mbox{CU-27}. En caso contrario, continúa en el paso 11 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: Los candidatos tienen un bloqueo mutuo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas descarta esa combinación de candidatos y no la vuelve a considerar.
+      \item El flujo continúa en el paso 11 del FN, buscando otra combinación.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: Un jugador emparejado se desconecta antes de aceptar}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas detecta que uno de los clientes no confirma la recepción de \texttt{MATCH\_\allowbreak{}FOUND} dentro del tiempo previsto.
+      \item El Servidor de partidas revierte la creación de la \textit{Partida} y de sus \textit{Participacion}, y devuelve a los demás jugadores a la \textit{ColaEmparejamiento}, conservando su tiempo de espera acumulado para que no salgan perjudicados (\mbox{RN-09}).
+      \item El Servidor de partidas envía \texttt{MATCHMAKING\_\allowbreak{}REQUEUED} a los clientes afectados, que el SJM informa en el panel.
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar o escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción en curso, si la hubiera, de modo que no quede una \textit{Partida} sin todas sus \textit{Participacion} (\mbox{RN-10}).
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador y cierra el panel de búsqueda.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas trata la transacción como fallida, registra la excepción señalando que el estado de la partida es indeterminado y no envía \texttt{MATCH\_\allowbreak{}FOUND} a nadie.
+      \item Los jugadores permanecen en la cola o vuelven a ella, según lo que la reversión haya dejado.
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que transcurrió el tiempo límite sin recibir un mensaje completo.
+      \item El SJM cierra la conexión y descarta el intercambio, sin suponer que el servidor no lo procesó: puede haber quedado en la cola.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que vuelva al menú y compruebe si tiene una partida en curso.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: La conexión se interrumpe durante la búsqueda}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta el cierre inesperado del socket.
+      \item El Servidor de partidas retira al \textit{Usuario} de la \textit{ColaEmparejamiento} al perder su conexión, para no emparejar a alguien que no está.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que se perdió la conexión y despliega el menú principal cuando la recupere.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-05}: La conexión se interrumpe justo después de crearse la partida}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no llega a recibir \texttt{MATCH\_\allowbreak{}FOUND}, pero la \textit{Partida} y su \textit{Participacion} ya están escritas.
+      \item El Servidor de partidas mantiene la partida viva y el reloj del Jugador corriendo, conforme al \mbox{CU-26}.
+      \item Al recuperar la conexión, el SJM detecta la \textit{Participacion} sin terminar y ofrece volver a la partida.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe una \textit{Partida} con estado \texttt{EN\_\allowbreak{}CURSO}, su \textit{Modo}, su reloj y su \texttt{fecha\_\allowbreak{}inicio}.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, existe una \textit{Participacion} por cada jugador, con su orden de turno, su símbolo, sus muros iniciales y el elo que tenía al empezar.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, ninguno de los jugadores emparejados sigue en la \textit{ColaEmparejamiento}.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el FN, ninguno de ellos puede entrar a otra búsqueda hasta que su \textit{Participacion} termine (\mbox{RN-01}).
+      \item \textbf{\mbox{POST-05}} Si el caso termina por el \mbox{FA-03}, el \textit{Usuario} no está en la cola y no se creó ninguna partida.
+      \item \textbf{\mbox{POST-06}} Si el caso termina por cualquier excepción, no existe ninguna \textit{Partida} con participantes incompletos.
+      \item \textbf{\mbox{POST-07}} El elo del \textit{Usuario} no cambió: el emparejamiento lo lee, y solo el \mbox{CU-25} lo modifica.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Un \textit{Usuario} no puede tener más de una \textit{Participacion} sin terminar. Es la regla que sustituye a la sesión única del \mbox{CU-01} (\mbox{D-01}) y la que garantiza que dos clientes de la misma cuenta no manden jugadas a partidas distintas.
+      \item \textbf{\mbox{RN-02}} Cada \textit{Modo} fija el tamaño del tablero, el número de jugadores y los muros por jugador: clásico 9×9 con dos jugadores y diez muros, cuatro jugadores 9×9 con cinco muros, rápida 7×7 con dos jugadores y seis muros.
+      \item \textbf{\mbox{RN-03}} El emparejamiento busca rivales dentro de una ventana de elo que se amplía conforme crece la espera, para que nadie se quede sin partida por ser demasiado bueno o demasiado nuevo.
+      \item \textbf{\mbox{RN-04}} El elo con el que cada jugador entra se guarda en su \textit{Participacion}. Sin ese valor, el \mbox{CU-25} no podría calcular ni mostrar el cambio de elo de la partida.
+      \item \textbf{\mbox{RN-05}} Dos jugadores con un \textit{Bloqueo} entre ellos no pueden ser emparejados.
+      \item \textbf{\mbox{RN-06}} El equipamiento con el que un jugador entra se fija al crearse la \textit{Participacion} y no cambia durante la partida, aunque el jugador equipe otra cosa (\mbox{RN-03} del \mbox{CU-14}).
+      \item \textbf{\mbox{RN-07}} El modo y el reloj de la última búsqueda se recuerdan en la configuración local del cliente, no en la cuenta: es una comodidad del dispositivo, no una preferencia del jugador.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} El Jugador puede seguir navegando por el juego mientras busca. La búsqueda es un panel, no una pantalla que secuestre la interfaz.
+      \item \textbf{\mbox{RN-09}} Si un emparejamiento se deshace por culpa de otro jugador, los demás vuelven a la cola conservando su tiempo de espera acumulado.
+      \item \textbf{\mbox{RN-10}} La creación de la \textit{Partida}, de todas sus \textit{Participacion} y la salida de la cola ocurren en una sola transacción: una partida a la que le falte un participante no es jugable.
+      \item \textbf{\mbox{RN-11}} Solo las partidas creadas por este caso son clasificatorias. Las de sala privada del \mbox{CU-18} y las de la IA del \mbox{CU-27} no otorgan elo.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué la cola es una tabla.}\par
+    Se consideró mantener la cola de emparejamiento solo en memoria del servidor, que es más rápido y evita escribir filas de vida muy corta. Se conserva como \textit{ColaEmparejamiento} en la base por una razón concreta: si el servidor se reinicia con gente esperando, una cola en memoria los deja colgados sin que nadie sepa que estaban ahí, y el cliente seguiría mostrando el panel de búsqueda para siempre. Con la cola persistida, el reinicio puede vaciarla explícitamente y avisar. El costo es un insert y un delete por búsqueda, que es despreciable frente al de la partida que viene después.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 4)}
+      \item \textit{Participacion}: lee, para comprobar que no haya ninguna sin terminar \textit{(paso 5)}
+      \item \textit{Sancion}: lee las activas de ámbito de cuenta \textit{(paso 6)}
+      \item \textit{EstadisticaModo}: lee \texttt{puntos\_\allowbreak{}elo} del modo elegido \textit{(paso 7)}
+      \item \textit{Modo}: lee el catálogo y los parámetros del modo \textit{(pasos 1, 15)}
+      \item \textit{ColaEmparejamiento}: inserta, consulta y borra \textit{(pasos 8, 11, 17)}
+      \item \textit{Bloqueo}: lee, para descartar emparejamientos \textit{(paso 12)}
+      \item \textit{Partida}: crea \textit{(paso 15)}
+    \end{cudatos}} \\
+   & \cuCelda{\begin{cudatos}
+      \item \textit{Participacion}: crea una por jugador \textit{(paso 16)}
+      \item \textit{Equipamiento}: lee, para fijar el aspecto de cada participante \textit{(paso 16)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

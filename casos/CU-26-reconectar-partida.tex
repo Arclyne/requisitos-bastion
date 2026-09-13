@@ -1,0 +1,124 @@
+\subsection*{CU-26: Reconectar a una partida en curso}
+\addcontentsline{toc}{subsection}{CU-26: Reconectar a una partida en curso}
+\label{cu-26}
+
+\begin{fichacu}{CU-26}{Reconectar a una partida en curso}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores interesados}{Rivales de la partida}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{6e, 6f, 7c}
+  \crudFila{Objetivo}{Devolver al Jugador a la partida que dejó por una desconexión, en el mismo estado en que está en el servidor y con su reloj tal como quedó tras seguir corriendo, y mantener informados a sus rivales mientras tanto.}
+  \crudFila{Disparador}{El SJM recupera la conexión durante una partida, o recibe una \textit{Participacion} sin terminar al iniciar sesión (\mbox{FA-19} del \mbox{CU-01}), o el Jugador selecciona ``volver a la partida'' en un aviso de otro caso de uso.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El Jugador tiene una \textit{Participacion} sin terminar en una \textit{Partida} en línea.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Servidor de partidas detecta que la conexión del Jugador con la partida se perdió, pone \texttt{conectado} en falso y escribe \texttt{fecha\_\allowbreak{}desconexion} en su \textit{Participacion}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas notifica a los rivales con \texttt{OPPONENT\_\allowbreak{}DISCONNECTED}, y sus SJM despliegan la \texttt{GUI\_\allowbreak{}OpponentDisconnected} sobre el tablero con el tiempo transcurrido; a los sesenta segundos habilitan ``Reclamar victoria'', que continúa en el \mbox{FA-06} del \mbox{CU-24} (\mbox{RN-03}).
+      \item El reloj del Jugador sigue corriendo en el servidor si es su turno (\mbox{RN-01}).
+      \item El SJM del Jugador recupera la conexión o se vuelve a abrir, y despliega la barra de reconexión. \textit{(Ver \mbox{FA-01})}
+      \item El SJM envía el mensaje \texttt{RECONNECT\_\allowbreak{}REQUEST} con el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas recupera la \textit{Participacion} sin terminar del Jugador y su \textit{Partida}, y verifica que la partida siga \texttt{EN\_\allowbreak{}CURSO}. \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas recalcula los relojes restantes descontando el tiempo transcurrido del turno en curso, y verifica que el del Jugador no se haya agotado. \textit{(Ver \mbox{FA-04})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas recupera todas las \textit{Jugada} de la partida, las \textit{Participacion} de todos los jugadores con su casilla, sus muros y su posición, su \textit{ParticipacionObjeto} y la \textit{OfertaTablas} pendiente, si la hay.
+      \item El Servidor de partidas pone \texttt{conectado} en verdadero en la \textit{Participacion} del Jugador y asocia la conexión a la sesión que reconecta, aunque sea otro dispositivo (\mbox{RN-04}). \textit{(Ver \mbox{FA-05}, \mbox{EX-01})}
+      \item El Servidor de partidas responde con \texttt{RECONNECT\_\allowbreak{}OK} y el estado completo de la partida.
+      \item El Servidor de partidas notifica a los rivales con \texttt{OPPONENT\_\allowbreak{}RECONNECTED}, y sus SJM retiran la espera.
+      \item El SJM reconstruye el tablero aplicando las jugadas en orden, restaura los relojes y el historial, y despliega la \texttt{GUI\_\allowbreak{}Match} con un aviso de que la partida siguió viva (6e). \textit{(Ver \mbox{FA-06})}
+      \item El flujo continúa en el \mbox{CU-20} o en el \mbox{CU-21} cuando llegue el turno del Jugador.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador no quiere volver todavía}\par
+    \begin{cuenum}[start=1]
+      \item El SJM, al iniciar sesión, muestra el aviso de partida en curso con las opciones ``Volver a la partida'' y ``Más tarde''.
+      \item El Jugador selecciona ``Más tarde'' y el SJM despliega el menú principal con un indicador permanente de partida en curso.
+      \item La partida sigue en el servidor con el Jugador desconectado y su reloj corriendo, y los rivales pueden reclamar la victoria.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login}. Al iniciar sesión de nuevo, el \mbox{FA-19} del \mbox{CU-01} lo traerá de vuelta a este caso.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: La partida terminó mientras el Jugador estaba fuera}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra la partida \texttt{FINALIZADA}: el rival reclamó la victoria, el reloj se agotó, o la partida de cuatro jugadores terminó sin él.
+      \item El Servidor de partidas responde con \texttt{MATCH\_\allowbreak{}ALREADY\_\allowbreak{}FINISHED}, el resultado y el cambio de elo.
+      \item El SJM despliega la pantalla de fin de partida con ese resultado y la forma de término.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El reloj del Jugador se agotó durante la desconexión}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas detecta que el reloj restante es cero o negativo.
+      \item El flujo continúa en el \mbox{CU-25} con la forma de término \texttt{TIEMPO\_\allowbreak{}AGOTADO} para el Jugador, y después en el \mbox{FA-03} de este caso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El Jugador reconecta desde otro dispositivo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra que la conexión anterior a la partida sigue abierta en otro dispositivo, porque no llegó a detectarse su caída.
+      \item El Servidor de partidas cierra esa conexión con la partida enviándole \texttt{MATCH\_\allowbreak{}TAKEN\_\allowbreak{}OVER}, sin cerrar su \textit{Sesion} (\mbox{RN-04}).
+      \item El SJM del dispositivo anterior sale de la partida y muestra que se continúa en otro dispositivo.
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El rival está desconectado cuando el Jugador vuelve}\par
+    \begin{cuenum}[start=1]
+      \item El SJM recibe en el estado de la partida que un rival tiene \texttt{conectado} en falso.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}OpponentDisconnected} con el tiempo que lleva fuera, y habilita ``Reclamar victoria'' si ya pasaron sesenta segundos.
+      \item El flujo continúa en el paso 14 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: La desconexión fue del propio servidor}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas se reinicia y recupera de la Base de datos todas las \textit{Partida} en \texttt{EN\_\allowbreak{}CURSO}.
+      \item El Servidor de partidas marca todas sus \textit{Participacion} con \texttt{conectado} en falso y \textbf{no} descuenta de ningún reloj el tiempo que estuvo caído (\mbox{RN-05}).
+      \item Conforme los clientes reconectan, el flujo continúa en el paso 5 del FN para cada uno.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar o escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM mantiene la barra de reconexión y reintenta con espera creciente.
+      \item El flujo continúa en el paso 5 del FN en el siguiente intento.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM reintenta la reconexión con espera creciente, sin descartar el estado local de la partida.
+      \item El flujo continúa en el paso 5 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: El mensaje con el estado de la partida está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el estado recibido y no reconstruye el tablero con datos parciales.
+      \item El SJM solicita de nuevo el estado completo; si falla tres veces, muestra la \texttt{GUI\_\allowbreak{}MessageError} y vuelve al menú con el indicador de partida en curso.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, la \textit{Participacion} del Jugador tiene \texttt{conectado} en verdadero y el cliente muestra el mismo estado de la partida que el servidor.
+      \item \textbf{\mbox{POST-02}} Mientras el Jugador está desconectado, su \textit{Participacion} tiene \texttt{conectado} en falso y \texttt{fecha\_\allowbreak{}desconexion}, y la partida sigue en curso.
+      \item \textbf{\mbox{POST-03}} Ninguna jugada se perdió ni se repitió: el tablero reconstruido es exactamente la secuencia de \textit{Jugada} registradas.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el \mbox{FA-03} o el \mbox{FA-04}, el Jugador ve el resultado real de la partida.
+      \item \textbf{\mbox{POST-05}} Ninguna \textit{Sesion} se cerró por reconectar desde otro dispositivo.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} La desconexión de un jugador no detiene su reloj. Si se desconecta en su turno, su tiempo se consume; si no es su turno, la partida sigue para los demás.
+      \item \textbf{\mbox{RN-02}} La partida se conserva completa en el servidor mientras dure: toda jugada se escribe antes de notificarse (\mbox{RN-12} del \mbox{CU-20}), así que no hay nada que recuperar del cliente.
+      \item \textbf{\mbox{RN-03}} Los rivales pueden reclamar la victoria a partir de los sesenta segundos de desconexión (\mbox{RN-06} del \mbox{CU-24}).
+      \item \textbf{\mbox{RN-04}} Una partida admite una sola conexión por participante. Reconectar desde otro dispositivo toma el control de la partida, pero no cierra la sesión del dispositivo anterior.
+      \item \textbf{\mbox{RN-05}} Si el que se cae es el servidor, el tiempo de caída no se descuenta de ningún reloj: la culpa no es de ningún jugador.
+      \item \textbf{\mbox{RN-06}} El cliente nunca reconstruye el tablero con un estado parcial.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué conectado se guarda en la base de datos.}\par
+    El estado de conexión cambia con mucha frecuencia y parece propio de la memoria del servidor. Se guarda de todos modos por el \mbox{FA-07}: si el servidor se reinicia, necesita saber qué jugadores estaban desconectados y desde cuándo para que el plazo de sesenta segundos siga contando bien, y para que nadie pueda reclamar una victoria sobre un jugador que en realidad cayó junto con el servidor.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 6)}
+      \item \textit{Participacion}: escribe \texttt{conectado} y \texttt{fecha\_\allowbreak{}desconexion} \textit{(pasos 1, 10, \mbox{FA-07})}
+      \item \textit{Participacion}: lee las de todos los jugadores con casilla, muros, reloj y posición \textit{(pasos 7, 9)}
+      \item \textit{Partida}: lee \texttt{estado}, \texttt{turno\_\allowbreak{}actual} \textit{(paso 7)}
+      \item \textit{Jugada}: lee todas las de la partida en orden \textit{(paso 9)}
+      \item \textit{ParticipacionObjeto}, \textit{OfertaTablas}: lee \textit{(paso 9)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

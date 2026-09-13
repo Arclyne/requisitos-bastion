@@ -1,0 +1,127 @@
+\subsection*{CU-15: Consultar el perfil propio}
+\addcontentsline{toc}{subsection}{CU-15: Consultar el perfil propio}
+\label{cu-15}
+
+\begin{fichacu}{CU-15}{Consultar el perfil propio}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador o Invitado}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{5a, 16c, 16d}
+  \crudFila{Objetivo}{Mostrar al jugador su propio progreso: nivel y experiencia, estadísticas por modo, elo actual y máximo, división, títulos equipados, enlaces y la evolución de su elo en el tiempo.}
+  \crudFila{Disparador}{El jugador selecciona su avatar o la opción ``perfil'' en la \texttt{GUI\_\allowbreak{}MainMenu}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El jugador selecciona su avatar en la \texttt{GUI\_\allowbreak{}MainMenu}.
+      \item El SJM envía el mensaje \texttt{PROFILE\_\allowbreak{}REQUEST} sin identificador de jugador, lo que indica el perfil propio, junto con el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-01})}
+      \item El Servidor de partidas recupera del \textit{Usuario} el \texttt{nickname}, el \texttt{nivel}, la \texttt{experiencia}, el \texttt{id\_\allowbreak{}icono}, la \texttt{fecha\_\allowbreak{}registro} y el \texttt{tipo\_\allowbreak{}cuenta}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas recupera el \textit{Avatar} vigente, los \textit{EnlaceRed} y, del \textit{Equipamiento}, el título y el marco equipados.
+      \item El Servidor de partidas recupera las \textit{EstadisticaModo} del \textit{Usuario} para todos los \textit{Modo}: \texttt{partidas\_\allowbreak{}jugadas}, \texttt{partidas\_\allowbreak{}ganadas}, \texttt{partidas\_\allowbreak{}perdidas}, \texttt{puntos\_\allowbreak{}elo}, \texttt{elo\_\allowbreak{}maximo}, \texttt{racha\_\allowbreak{}actual}, \texttt{mejor\_\allowbreak{}racha} y \texttt{division}.
+      \item El Servidor de partidas recupera la \textit{Division} vigente del modo clásico 9×9 con su \texttt{elo\_\allowbreak{}minimo} y su \texttt{elo\_\allowbreak{}descenso}, para marcar el umbral en la gráfica.
+      \item El Servidor de partidas recupera, de las \textit{Participacion} en partidas clasificatorias finalizadas del modo clásico 9×9, el \texttt{elo\_\allowbreak{}final} y la \texttt{fecha\_\allowbreak{}fin} de la \textit{Partida}, ordenados por fecha, junto con los \textit{HistorialDivision} del mismo modo (\mbox{RN-04}).
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas calcula, sin almacenarlos, el porcentaje de victorias de cada modo, la experiencia necesaria para el siguiente nivel y las partidas que faltan para entrar en la clasificación (\mbox{RN-01}, \mbox{RN-02}).
+      \item El Servidor de partidas responde con \texttt{PROFILE\_\allowbreak{}OK} y todos los datos.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Profile} con el avatar y el marco, el \texttt{nickname} y el título, el nivel con su barra de experiencia, las partidas, el porcentaje de victorias, la mejor racha, el elo actual y el máximo, el desglose por modo, los enlaces y la gráfica de evolución del elo con el umbral de la división marcado. \textit{(Ver \mbox{FA-02}, \mbox{FA-03}, \mbox{FA-04}, \mbox{FA-05}, \mbox{FA-06})}
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que la sesión terminó y despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El jugador cambia el modo de la gráfica}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona otro \textit{Modo} en el selector de la gráfica.
+      \item El SJM envía el mensaje \texttt{ELO\_\allowbreak{}HISTORY\_\allowbreak{}REQUEST} con el modo elegido.
+      \item El Servidor de partidas repite los pasos 7 y 8 del FN para ese modo y responde con \texttt{ELO\_\allowbreak{}HISTORY\_\allowbreak{}OK}.
+      \item El SJM redibuja la gráfica con el umbral de la división de ese modo.
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El jugador abre la vista que compara los tres modos}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona ``comparar modos''.
+      \item El SJM envía \texttt{ELO\_\allowbreak{}HISTORY\_\allowbreak{}REQUEST} indicando todos los modos.
+      \item El Servidor de partidas repite el paso 8 del FN para cada \textit{Modo} y responde con las tres series.
+      \item El SJM despliega la vista comparada, con una serie por modo distinguida por color y por forma de marcador (\mbox{RN-05}).
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El jugador no tiene partidas en un modo, o tiene menos de cinco}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el desglose de ese modo con los contadores en cero o con las partidas jugadas, y en lugar de la división escribe cuántas partidas faltan para clasificar (\mbox{RN-02}).
+      \item Si no hay partidas clasificatorias en el modo de la gráfica, el SJM muestra un estado vacío con la acción ``buscar partida'', que continúa en el \mbox{CU-17}.
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El jugador es un invitado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el perfil completo con el aviso permanente de cuenta no vinculada y la opción ``vincular cuenta'', que continúa en el \mbox{CU-07}.
+      \item El SJM no muestra la sección de enlaces a redes, que las cuentas de invitado no pueden editar.
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El jugador quiere editar su perfil}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona ``editar''.
+      \item El flujo continúa en el \mbox{CU-12} Editar el perfil y las preferencias.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El jugador tiene una partida pendiente de cierre}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas detecta una \textit{Partida} del jugador en \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} (\mbox{RN-13} del \mbox{CU-25}).
+      \item El Servidor de partidas responde con los datos actuales y una marca de estadísticas en proceso de actualización.
+      \item El SJM muestra el perfil con un aviso discreto de que la última partida todavía no se refleja.
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador y las opciones ``Reintentar'' y ``Volver''.
+      \item Si el jugador selecciona ``Reintentar'', el flujo continúa en el paso 2 del FN. En caso contrario, el SJM vuelve a la \texttt{GUI\_\allowbreak{}MainMenu}.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que transcurrió el tiempo límite sin recibir un mensaje completo.
+      \item El SJM muestra el esqueleto del perfil con la opción ``Reintentar''.
+      \item Si el jugador selecciona ``Reintentar'', el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe durante el intercambio}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida.
+      \item Al recuperar la conexión, el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} El jugador ve su perfil con los datos vigentes en el servidor al momento de la consulta.
+      \item \textbf{\mbox{POST-02}} Ninguna estructura de la base de datos se modificó: este caso solo lee.
+      \item \textbf{\mbox{POST-03}} Los valores derivados —porcentaje de victorias, experiencia para el siguiente nivel, partidas que faltan para clasificar— se calcularon en la consulta y no quedaron almacenados.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} El porcentaje de victorias se calcula como \texttt{partidas\_\allowbreak{}ganadas} entre \texttt{partidas\_\allowbreak{}jugadas}. No se almacena, porque sería un dato derivado que podría contradecir a los contadores de los que sale.
+      \item \textbf{\mbox{RN-02}} Hacen falta cinco partidas en un modo para tener división y aparecer en su clasificación (\mbox{RN-14} del \mbox{CU-25}).
+      \item \textbf{\mbox{RN-03}} El elo del encabezado del perfil y del menú es el del modo clásico 9×9 (\mbox{D-04}).
+      \item \textbf{\mbox{RN-04}} La gráfica de evolución del elo usa solo partidas clasificatorias finalizadas: las privadas y las de la IA no mueven el elo y aplanarían la curva.
+      \item \textbf{\mbox{RN-05}} Las series de la vista comparada se distinguen por color y por forma, nunca solo por color, conforme a los modos de accesibilidad.
+      \item \textbf{\mbox{RN-06}} Este caso solo lee: ningún dato del perfil se modifica desde aquí.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre de dónde sale la gráfica de elo.}\par
+    No existe una tabla de historial de elo. Cada punto de la gráfica es el \texttt{elo\_\allowbreak{}final} de una \textit{Participacion} clasificatoria, fechado con la \texttt{fecha\_\allowbreak{}fin} de su \textit{Partida}, y esos datos ya existen porque el \mbox{CU-25} los escribe al cerrar cada partida. Una tabla de historial aparte duplicaría esa información con el riesgo de que ambas diverjan. La única excepción son los cambios de división, que no se deducen de una sola partida porque dependen de las partidas de margen, y por eso se guardan en \textit{HistorialDivision}.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 3)}
+      \item \textit{Usuario}: lee \texttt{nickname}, \texttt{nivel}, \texttt{experiencia}, \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}registro}, \texttt{tipo\_\allowbreak{}cuenta} \textit{(paso 4)}
+      \item \textit{Avatar}, \textit{EnlaceRed}, \textit{Equipamiento}: lee \textit{(paso 5)}
+      \item \textit{EstadisticaModo}: lee todas las del usuario \textit{(paso 6)}
+      \item \textit{Division}: lee los umbrales \textit{(paso 7)}
+      \item \textit{Participacion}, \textit{Partida}: lee \texttt{elo\_\allowbreak{}final} y \texttt{fecha\_\allowbreak{}fin} de las clasificatorias \textit{(paso 8)}
+      \item \textit{HistorialDivision}: lee los cambios de división \textit{(paso 8)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

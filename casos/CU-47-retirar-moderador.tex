@@ -1,0 +1,112 @@
+\subsection*{CU-47: Retirar a un moderador}
+\addcontentsline{toc}{subsection}{CU-47: Retirar a un moderador}
+\label{cu-47}
+
+\begin{fichacu}{CU-47}{Retirar a un moderador}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Administrador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{—}
+  \crudFila{Objetivo}{Permitir al Administrador quitar el rol de moderación a un usuario, liberando los reportes que tuviera en revisión y conservando intactas las sanciones que aplicó y su autoría.}
+  \crudFila{Disparador}{El Administrador selecciona ``retirar rol'' junto a un moderador en la lista de moderadores de la \texttt{GUI\_\allowbreak{}AdminPanel}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Administrador tiene una \textit{Sesion} abierta y su \textit{Usuario} tiene \texttt{rol} igual a \texttt{ADMINISTRADOR}.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Administrador selecciona ``retirar rol'' junto a un moderador.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} con el nombre del moderador, cuántos reportes tiene en revisión y un campo de motivo obligatorio, con las opciones ``Retirar rol'' y ``Cancelar''. \textit{(Ver \mbox{FA-01})}
+      \item El Administrador escribe el motivo y selecciona ``Retirar rol''.
+      \item El SJM envía el mensaje \texttt{REVOKE\_\allowbreak{}MODERATOR\_\allowbreak{}REQUEST} con el \texttt{id\_\allowbreak{}usuario}, el motivo y el token. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y que el \texttt{rol} del solicitante sea \texttt{ADMINISTRADOR}. \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas verifica que el \texttt{rol} del afectado sea \texttt{MODERADOR}. \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas inicia una transacción y cambia el \texttt{rol} del afectado a \texttt{JUGADOR}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas devuelve a \texttt{PENDIENTE}, sin moderador asignado, los \textit{Reporte} y las \textit{Apelacion} que el afectado tenía \texttt{EN\_\allowbreak{}REVISION} (\mbox{RN-02}).
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas registra en la \textit{BitacoraModeracion} la acción \texttt{ROL\_\allowbreak{}RETIRADO} con el administrador, el afectado, el motivo, la fecha y el número de elementos liberados, y confirma la transacción. \textit{(Ver \mbox{EX-02})}
+      \item El Servidor de partidas notifica al afectado, si tiene sesión abierta, con \texttt{ROLE\_\allowbreak{}REVOKED}; su SJM cierra la cola de moderación si la tenía abierta (\mbox{RN-04}).
+      \item El Servidor de partidas responde con \texttt{REVOKE\_\allowbreak{}MODERATOR\_\allowbreak{}OK}.
+      \item El SJM retira al usuario de la lista de moderadores y muestra cuántos reportes volvieron a la cola.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Administrador cancela}\par
+    \begin{cuenum}[start=1]
+      \item El Administrador selecciona ``Cancelar''.
+      \item El SJM cierra la confirmación sin enviar nada.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: La sesión no es válida o el usuario no es administrador}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID} o con \texttt{FORBIDDEN}.
+      \item Si la sesión era válida pero falta el rol, el Servidor de partidas registra el intento en la \textit{BitacoraModeracion}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login} o el menú principal.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El afectado ya no es moderador}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra que el \texttt{rol} ya es \texttt{JUGADOR}, porque otro administrador lo retiró antes.
+      \item El Servidor de partidas responde con \texttt{REVOKE\_\allowbreak{}MODERATOR\_\allowbreak{}OK} sin modificar nada, porque el estado pedido ya se cumple.
+      \item El flujo continúa en el paso 12 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El Administrador intenta retirar el rol a un administrador}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no ofrece ``retirar rol'' sobre cuentas de administración.
+      \item Si la solicitud llega de todos modos, el Servidor de partidas responde con \texttt{REVOKE\_\allowbreak{}MODERATOR\_\allowbreak{}FAILED} y el motivo \texttt{CUENTA\_\allowbreak{}DE\_\allowbreak{}ADMINISTRACION}, y registra el intento.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El moderador estaba resolviendo un reporte en ese momento}\par
+    \begin{cuenum}[start=1]
+      \item El moderador envía su resolución justo después de que se le retiró el rol.
+      \item El Servidor de partidas comprueba el rol en esa solicitud, lo encuentra retirado y rechaza la resolución con \texttt{FORBIDDEN}, conforme al \mbox{FA-07} del \mbox{CU-43}.
+      \item El reporte sigue \texttt{PENDIENTE} en la cola para otro moderador.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no quede un rol retirado con reportes todavía asignados a quien ya no puede resolverlos.
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas trata la transacción como fallida y registra la excepción señalando que el estado es indeterminado.
+      \item El SJM recarga la lista de moderadores, que mostrará el rol real.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía la solicitud y recarga la lista de moderadores.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y recarga la lista al recuperarla.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene \texttt{rol} igual a \texttt{JUGADOR}.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, ningún \textit{Reporte} ni \textit{Apelacion} sigue en revisión asignado a ese usuario.
+      \item \textbf{\mbox{POST-03}} Todas las \textit{Sancion} que aplicó siguen como estaban, con su \texttt{id\_\allowbreak{}moderador}.
+      \item \textbf{\mbox{POST-04}} La \textit{BitacoraModeracion} registra quién retiró el rol, a quién, por qué y cuándo.
+      \item \textbf{\mbox{POST-05}} La cuenta del afectado sigue activa y con todo su progreso.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Solo un administrador retira el rol de moderación, y no puede retirárselo a otro administrador.
+      \item \textbf{\mbox{RN-02}} Al retirar el rol, los reportes y apelaciones en revisión del afectado vuelven a la cola sin moderador asignado.
+      \item \textbf{\mbox{RN-03}} Las sanciones aplicadas por un moderador siguen vigentes aunque se le retire el rol, y conservan su autoría. Si alguna fue injusta, se corrige por la vía de la apelación, no retirando el rol.
+      \item \textbf{\mbox{RN-04}} El retiro surte efecto en la siguiente solicitud del afectado, porque el rol se comprueba en cada una.
+      \item \textbf{\mbox{RN-05}} Retirar el rol no sanciona ni modifica de ningún otro modo la cuenta.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué las sanciones del moderador retirado no se revisan en bloque.}\par
+    Podría parecer razonable reabrir todas las sanciones de un moderador al retirarle el rol, sobre todo si se le retira por abuso. No se hace porque el retiro del rol puede tener causas que no ponen en duda su trabajo —dejar de estar disponible, por ejemplo— y porque reabrir sanciones en bloque devolvería el acceso a jugadores sancionados con razón. Cada sancionado conserva su derecho a apelar, y la apelación la revisa un moderador distinto; eso basta para corregir las injustas una por una.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}, \textit{Usuario}: lee el \texttt{rol} del administrador y del afectado \textit{(pasos 5, 6)}
+      \item \textit{Usuario}: escribe \texttt{rol} \textit{(paso 7)}
+      \item \textit{Reporte}, \textit{Apelacion}: devuelve a \texttt{PENDIENTE} los que tenía en revisión \textit{(paso 8)}
+      \item \textit{BitacoraModeracion}: inserta \textit{(pasos 9, \mbox{FA-02}, \mbox{FA-04})}
+      \item \textit{Sancion}: no se toca
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

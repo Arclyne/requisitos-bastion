@@ -1,0 +1,122 @@
+\subsection*{CU-37: Ver la repetición de una partida}
+\addcontentsline{toc}{subsection}{CU-37: Ver la repetición de una partida}
+\label{cu-37}
+
+\begin{fichacu}{CU-37}{Ver la repetición de una partida}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador, Invitado o Moderador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{2f, 15e}
+  \crudFila{Objetivo}{Reproducir una partida terminada jugada a jugada sobre el tablero 3D, con línea de tiempo, cámara libre y notación exportable, para aprender de ella o revisar lo que ocurrió.}
+  \crudFila{Disparador}{El jugador selecciona una partida en su historial, en las partidas en común de un perfil o en el fin de partida; o un moderador abre las pruebas de un reporte.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} La \textit{Partida} tiene \texttt{estado} igual a \texttt{FINALIZADA}.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El jugador selecciona una partida y elige ``ver repetición''.
+      \item El SJM envía el mensaje \texttt{REPLAY\_\allowbreak{}REQUEST} con el \texttt{id\_\allowbreak{}partida} y el token. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-01})}
+      \item El Servidor de partidas recupera la \textit{Partida} y verifica que esté \texttt{FINALIZADA}. \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas verifica que el jugador tenga acceso a la repetición: que haya participado en la partida, o que tenga rol de moderación y la partida esté asociada a un \textit{Reporte} (\mbox{RN-01}). \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas recupera las \textit{Participacion} con su \texttt{orden\_\allowbreak{}turno} y su \texttt{simbolo\_\allowbreak{}peon}, el \texttt{nickname} de cada jugador, la \textit{ParticipacionObjeto} de cada uno y el \textit{Modo} de la partida. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas recupera todas las \textit{Jugada} ordenadas por \texttt{numero\_\allowbreak{}jugada}, con su tipo, origen, destino o surco y orientación, tiempo consumido y la marca \texttt{deshecha}.
+      \item El Servidor de partidas responde con \texttt{REPLAY\_\allowbreak{}OK} y todos los datos.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El SJM reconstruye el tablero inicial con el tamaño del modo y los peones en sus casillas de salida, con el aspecto que cada jugador tenía en esa partida (\mbox{RN-03}).
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Replay} con el tablero en cámara libre, la línea de tiempo con una marca por jugada, los controles de reproducir, pausar, avanzar y retroceder, el panel de notación y el resultado. \textit{(Ver \mbox{FA-04}, \mbox{FA-05}, \mbox{FA-06}, \mbox{FA-07})}
+      \item El jugador selecciona ``reproducir''.
+      \item El SJM aplica las jugadas en orden sobre el tablero con su animación, mostrando los relojes de cada momento reconstruidos a partir del tiempo consumido, hasta la última jugada.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: La partida no está finalizada}\par
+    \begin{cuenum}[start=1]
+      \item Si la partida está \texttt{EN\_\allowbreak{}CURSO}, el Servidor de partidas responde con \texttt{MATCH\_\allowbreak{}IN\_\allowbreak{}PROGRESS} y el SJM ofrece verla como espectador, que continúa en el \mbox{CU-34}.
+      \item Si está \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE}, responde con \texttt{REPLAY\_\allowbreak{}NOT\_\allowbreak{}READY} y el SJM indica que estará disponible cuando se procese el resultado.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El jugador no tiene acceso a esa repetición}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{REPLAY\_\allowbreak{}NOT\_\allowbreak{}FOUND}, sin distinguir entre una partida inexistente y una ajena.
+      \item El SJM muestra que la repetición no está disponible.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El jugador salta a una jugada concreta}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona una marca de la línea de tiempo o una jugada del panel de notación.
+      \item El SJM reconstruye el tablero aplicando desde el inicio todas las jugadas hasta la elegida, sin animación, y detiene la reproducción (\mbox{RN-02}).
+      \item El flujo continúa en el paso 10 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El jugador exporta la notación}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona ``exportar notación''.
+      \item El SJM genera en el cliente el texto de la partida en la notación del tablero —letras o números, según los ajustes de idioma—, con los jugadores, el modo, la fecha y el resultado.
+      \item El SJM ofrece copiarlo al portapapeles o guardarlo como archivo de texto en el equipo del jugador.
+      \item Fin del caso de uso. La notación no se almacena en el servidor (\mbox{RN-04}).
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: La partida fue contra la IA y tiene jugadas deshechas}\par
+    \begin{cuenum}[start=1]
+      \item El SJM oculta por defecto las \textit{Jugada} marcadas como \texttt{deshecha} y muestra la línea tal como quedó.
+      \item El jugador puede activar ``mostrar jugadas deshechas'', que las presenta en gris en el panel de notación sin aplicarlas al tablero.
+      \item El flujo continúa en el paso 10 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El equipo no puede con el tablero 3D}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que no puede dibujar el tablero tridimensional y pasa a la vista plana, con la misma línea de tiempo y la misma notación.
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con la opción ``Reintentar''.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la opción ``Reintentar''.
+      \item Si el jugador reintenta, el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item Si la repetición ya se cargó, el SJM la sigue reproduciendo sin conexión: todos los datos están en el cliente.
+      \item Si no se había cargado, el SJM muestra la barra de conexión perdida y reintenta al recuperarla.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: La secuencia de jugadas recibida es inconsistente}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta al reconstruir que una jugada no es válida sobre el tablero que resulta de las anteriores, o que falta un número de jugada.
+      \item El SJM detiene la reconstrucción en la última jugada válida y muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la repetición está incompleta.
+      \item El SJM informa la inconsistencia al Servidor de partidas, que la registra en la bitácora del servidor con el \texttt{id\_\allowbreak{}partida} para su revisión.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} El jugador puede reproducir la partida completa y saltar a cualquier jugada.
+      \item \textbf{\mbox{POST-02}} Ninguna estructura de la base de datos se modificó.
+      \item \textbf{\mbox{POST-03}} El tablero mostrado en cada punto es exactamente el que resulta de aplicar las jugadas registradas hasta ese punto.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Pueden ver la repetición de una partida sus participantes y, cuando la partida está asociada a un reporte, los moderadores que lo revisan.
+      \item \textbf{\mbox{RN-02}} El tablero de cada instante se reconstruye aplicando las jugadas en orden desde el inicio. No se almacenan fotografías del tablero (observación del \mbox{CU-21}).
+      \item \textbf{\mbox{RN-03}} Cada jugador aparece con el aspecto que tenía en esa partida, tomado de \textit{ParticipacionObjeto}, no con el que tiene equipado hoy.
+      \item \textbf{\mbox{RN-04}} La notación exportable se genera en el cliente a partir de las jugadas y no se guarda.
+      \item \textbf{\mbox{RN-05}} Solo se reproducen partidas finalizadas.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué el acceso se limita a los participantes.}\par
+    \texttt{descripcion.md} permite abrir repeticiones desde el perfil de otro jugador, pero solo de las partidas jugadas juntos. Abrir cualquier repetición a cualquier jugador permitiría estudiar a fondo a un rival antes de enfrentarlo, cosa que el retraso de ocho segundos de los espectadores intenta evitar en directo. Limitar el acceso a quienes jugaron la partida mantiene esa coherencia, y la excepción de los moderadores existe porque la repetición es la prueba principal de un reporte.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 3)}
+      \item \textit{Partida}, \textit{Modo}: lee \textit{(pasos 4, 6)}
+      \item \textit{Participacion}, \textit{Usuario}: lee, para el acceso y para los jugadores \textit{(pasos 5, 6)}
+      \item \textit{Reporte}: lee, para el acceso de moderación \textit{(paso 5)}
+      \item \textit{ParticipacionObjeto}: lee el aspecto de cada jugador \textit{(paso 6)}
+      \item \textit{Jugada}: lee todas en orden \textit{(paso 7)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

@@ -1,0 +1,187 @@
+\subsection*{CU-03: Recuperar contraseña}
+\addcontentsline{toc}{subsection}{CU-03: Recuperar contraseña}
+\label{cu-03}
+
+\begin{fichacu}{CU-03}{Recuperar contraseña}
+  \crudFila{Responsable}{José Eduardo Prior Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Servicio de correo, Base de datos}
+  \crudFila{Prototipos}{9a, 9b}
+  \crudFila{Objetivo}{Devolver el acceso a un Jugador que olvidó su contraseña, sin intervención humana y sin que el proceso revele qué correos están registrados.}
+  \crudFila{Disparador}{El Jugador selecciona ``Olvidé mi contraseña'' en la \texttt{GUI\_\allowbreak{}Login}, directamente o por el \mbox{FA-03} del \mbox{CU-01}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El cliente del SJM está instalado y en ejecución.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y acepta conexiones TCP.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas tiene conexión disponible con la Base de datos.
+      \item \textbf{\mbox{PRE-04}} El Jugador no tiene una sesión abierta en este cliente.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}ForgotPassword}, solicitando el \texttt{correo} y mostrando las opciones ``Enviar'' y ``Cancelar''. \textit{(Ver \mbox{FA-08})}
+      \item El Jugador captura su \texttt{correo} y da click en ``Enviar''.
+      \item El SJM valida en el cliente que el campo esté completo y tenga formato de correo. \textit{(Ver \mbox{FA-01})}
+      \item El SJM abre la conexión TCP con el Servidor de partidas y negocia la versión del protocolo. \textit{(Ver \mbox{EX-01}, \mbox{EX-02})}
+      \item El SJM envía el mensaje \texttt{PASSWORD\_\allowbreak{}RESET\_\allowbreak{}REQUEST} con el correo capturado. \textit{(Ver \mbox{EX-06}, \mbox{EX-07})}
+      \item El Servidor de partidas normaliza el correo a minúsculas y recupera de la Base de datos el \textit{Usuario} cuyo \texttt{correo} coincida. \textit{(Ver \mbox{EX-03})}
+      \item El Servidor de partidas verifica que el \textit{Usuario} exista y que su \texttt{estado\_\allowbreak{}cuenta} no sea \texttt{ELIMINADA}. \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas verifica que hayan transcurrido al menos cinco minutos desde \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion} (\mbox{RN-06}). \textit{(Ver \mbox{FA-03})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas invalida los \textit{TokenRecuperacion} pendientes del \textit{Usuario} (\mbox{RN-05}).
+      \item El Servidor de partidas genera un \textit{TokenRecuperacion} nuevo, guarda únicamente su resumen criptográfico y su fecha de expiración (\mbox{RN-04}, \mbox{RN-08}). \textit{(Ver \mbox{EX-03})}
+      \item El Servidor de partidas actualiza \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion} del \textit{Usuario}.
+      \item El Servidor de partidas solicita al Servicio de correo el envío del código en el \texttt{idioma\_\allowbreak{}preferido} del \textit{Usuario}. \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas registra el intento en la \textit{BitacoraAcceso} con el resultado \texttt{RECUPERACION\_\allowbreak{}SOLICITADA}.
+      \item El Servidor de partidas responde con \texttt{PASSWORD\_\allowbreak{}RESET\_\allowbreak{}SENT}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}ResetPassword}, solicitando el código recibido, la contraseña nueva y su confirmación.
+      \item El Jugador captura el código y la contraseña nueva con su confirmación, y da click en ``Cambiar contraseña''.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item El SJM valida que la contraseña cumpla la política de \mbox{RN-03} y que coincida con su confirmación. \textit{(Ver \mbox{FA-04})}
+      \item El SJM envía el mensaje \texttt{PASSWORD\_\allowbreak{}RESET\_\allowbreak{}CONFIRM} con el código y la contraseña nueva.
+      \item El Servidor de partidas verifica que el \textit{TokenRecuperacion} exista, no esté usado y no haya expirado. \textit{(Ver \mbox{FA-05}, \mbox{FA-06})}
+      \item El Servidor de partidas deriva el resumen de la contraseña nueva y comprueba que no coincida con \texttt{contrasena\_\allowbreak{}hash}. \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas inicia una transacción sobre la Base de datos.
+      \item El Servidor de partidas genera una \texttt{contrasena\_\allowbreak{}sal} nueva y deriva la \texttt{contrasena\_\allowbreak{}hash} de la contraseña recibida (\mbox{RN-02}). \textit{(Ver \mbox{EX-03})}
+      \item El Servidor de partidas marca el \textit{TokenRecuperacion} como usado (\mbox{RN-04}).
+      \item El Servidor de partidas restablece \texttt{intentos\_\allowbreak{}fallidos} a cero y deja \texttt{bloqueada\_\allowbreak{}hasta} en nulo.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=25]
+      \item El Servidor de partidas cierra todas las \textit{Sesion} abiertas del \textit{Usuario}, con \texttt{motivo\_\allowbreak{}cierre} igual a \texttt{CAMBIO\_\allowbreak{}CREDENCIALES} (\mbox{RN-07}).
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-05})}
+      \item El Servidor de partidas registra el cambio en la \textit{BitacoraAcceso} con el resultado \texttt{RECUPERACION\_\allowbreak{}EXITOSA}.
+      \item El Servidor de partidas responde con \texttt{PASSWORD\_\allowbreak{}RESET\_\allowbreak{}OK}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageSuccess} y vuelve a la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El correo está incompleto o mal formado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando qué le falta al campo y lo resalta.
+      \item El flujo continúa en el paso 2 del FN. La validación es local y no llega al Servidor de partidas.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El correo no corresponde a ninguna cuenta}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no genera ningún token ni solicita ningún envío.
+      \item El Servidor de partidas registra el intento en la \textit{BitacoraAcceso} con el resultado \texttt{RECUPERACION\_\allowbreak{}CORREO\_\allowbreak{}INEXISTENTE}, dejando \texttt{id\_\allowbreak{}usuario} en nulo.
+      \item El Servidor de partidas espera el mismo tiempo que habría consumido el envío y responde con \texttt{PASSWORD\_\allowbreak{}RESET\_\allowbreak{}SENT}, idéntico al del FN (\mbox{RN-01}).
+      \item El flujo continúa en el paso 15 del FN. El Jugador verá la pantalla del código y no podrá deducir si el correo existe.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: Se solicita el envío antes del tiempo permitido}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{PASSWORD\_\allowbreak{}RESET\_\allowbreak{}THROTTLED} y los segundos que faltan.
+      \item El SJM los muestra en la \texttt{GUI\_\allowbreak{}MessageWarning}.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La contraseña nueva no cumple la política o no coincide}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} explicando en una frase qué le falta conforme a \mbox{RN-03}, o bien que las dos capturas no coinciden, y limpia ambos campos.
+      \item El flujo continúa en el paso 16 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El código es incorrecto}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas incrementa en uno el atributo \texttt{intentos} del \textit{TokenRecuperacion}.
+      \item El Servidor de partidas evalúa \texttt{intentos} contra \mbox{RN-09}. Si alcanza el máximo, invalida el token y lo registra en la \textit{BitacoraAcceso}.
+      \item El Servidor de partidas responde con \texttt{PASSWORD\_\allowbreak{}RESET\_\allowbreak{}INVALID\_\allowbreak{}CODE} y los intentos restantes.
+      \item Si se agotaron los intentos, el flujo continúa en el paso 1 del FN. En caso contrario, continúa en el paso 16.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El código expiró}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas marca el \textit{TokenRecuperacion} como invalidado.
+      \item El Servidor de partidas responde con \texttt{PASSWORD\_\allowbreak{}RESET\_\allowbreak{}EXPIRED}, que el SJM informa mediante la \texttt{GUI\_\allowbreak{}MessageWarning}.
+      \item El flujo continúa en el paso 1 del FN, para que el Jugador solicite uno nuevo.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: La contraseña nueva es igual a la anterior}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{PASSWORD\_\allowbreak{}RESET\_\allowbreak{}SAME\_\allowbreak{}PASSWORD} sin consumir el token, para que el Jugador pueda reintentar con otra.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que debe elegir una contraseña distinta.
+      \item El flujo continúa en el paso 16 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: Cancelar la recuperación}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Cancelar''.
+      \item El SJM descarta lo capturado y despliega la \texttt{GUI\_\allowbreak{}Login}. Si ya se había generado un token, este sigue vigente hasta expirar.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: No se puede establecer la conexión con el servidor}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que la conexión TCP no pudo establecerse dentro del tiempo límite y registra el fallo en la bitácora local del cliente.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con las opciones ``Reintentar'' y ``Aceptar''.
+      \item Si el Jugador selecciona ``Reintentar'', el flujo continúa en el paso 4 del FN. Si selecciona ``Aceptar'', continúa en el paso 2.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: La versión del protocolo es incompatible}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{PROTOCOL\_\allowbreak{}VERSION\_\allowbreak{}MISMATCH} y cierra la conexión.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que debe actualizarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Fallo al consultar o actualizar la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción en curso, si la hubiera, de modo que no quede una contraseña cambiada sin las sesiones cerradas.
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor con un identificador de incidencia, sin incluir la contraseña ni el código recibidos (\mbox{RN-02}).
+      \item El Servidor de partidas responde con \texttt{SERVER\_\allowbreak{}ERROR} y el identificador de incidencia, y cierra la conexión.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El servicio de correo no está disponible}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas agota los reintentos previstos hacia el Servicio de correo sin obtener confirmación de entrega.
+      \item El Servidor de partidas invalida el \textit{TokenRecuperacion} que había generado, para que no quede uno vigente que nadie recibió.
+      \item El Servidor de partidas deja \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion} en su valor anterior, de modo que el Jugador pueda reintentar de inmediato sin esperar los cinco minutos de \mbox{RN-06}.
+      \item El Servidor de partidas registra el fallo en la bitácora del servidor y responde con \texttt{EXTERNAL\_\allowbreak{}SERVICE\_\allowbreak{}UNAVAILABLE}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que no fue posible enviar el correo.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-05}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no obtiene confirmación de que la transacción se haya escrito y la trata como fallida.
+      \item El Servidor de partidas registra la excepción señalando que el estado del cambio es indeterminado, y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que no fue posible confirmar el cambio y que intente iniciar sesión con la contraseña nueva antes de repetir el proceso.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-06}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que transcurrió el tiempo límite sin recibir un mensaje completo.
+      \item El SJM cierra la conexión TCP y descarta el intercambio en curso, sin suponer que el servidor no lo procesó.
+      \item El SJM registra el fallo en la bitácora local y lo informa mediante la \texttt{GUI\_\allowbreak{}MessageError}.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-07}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no logra delimitar o deserializar el mensaje conforme al protocolo acordado.
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene una \texttt{contrasena\_\allowbreak{}hash} y una \texttt{contrasena\_\allowbreak{}sal} nuevas, y la anterior ya no permite el acceso.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, el \textit{TokenRecuperacion} consumido queda marcado como usado y no puede volver a emplearse.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, ninguna \textit{Sesion} del \textit{Usuario} sigue abierta: todas tienen \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} igual a \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por el FN, \texttt{intentos\_\allowbreak{}fallidos} vale cero y \texttt{bloqueada\_\allowbreak{}hasta} es nulo, de modo que un bloqueo temporal previo deja de impedir el acceso.
+      \item \textbf{\mbox{POST-05}} Si el caso termina por el \mbox{FA-02}, no existe ningún \textit{TokenRecuperacion} nuevo y no se envió ningún correo, pero el Jugador recibió la misma respuesta que en el FN.
+      \item \textbf{\mbox{POST-06}} Si el caso termina por el \mbox{EX-04}, existe la solicitud pero no hay token vigente ni correo enviado, y el Jugador puede reintentar sin esperar.
+      \item \textbf{\mbox{POST-07}} En todos los casos en que el correo correspondía a una cuenta existente, el intento quedó registrado en la \textit{BitacoraAcceso} con su resultado, su fecha y hora y la dirección de red de origen.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} La respuesta del servidor es idéntica exista o no una cuenta con ese correo, y consume un tiempo equivalente. El proceso de recuperación no puede usarse para averiguar si una dirección está registrada.
+      \item \textbf{\mbox{RN-02}} La contraseña nueva y el código no se almacenan, transmiten ni registran en claro. De ambos se guarda únicamente su resumen criptográfico con sal.
+      \item \textbf{\mbox{RN-03}} La contraseña nueva cumple la misma política que el alta: al menos ocho caracteres y al menos tres de los cuatro grupos de minúsculas, mayúsculas, dígitos y signos. No puede contener el \texttt{nickname} ni el \texttt{correo}.
+      \item \textbf{\mbox{RN-04}} El \textit{TokenRecuperacion} tiene una vigencia de treinta minutos y es de un solo uso.
+      \item \textbf{\mbox{RN-05}} Solo puede existir un \textit{TokenRecuperacion} vigente por cuenta. Generar uno nuevo invalida el anterior.
+      \item \textbf{\mbox{RN-06}} El correo de recuperación puede solicitarse a lo sumo una vez cada cinco minutos por cuenta.
+      \item \textbf{\mbox{RN-07}} Cambiar la contraseña cierra todas las sesiones abiertas de la cuenta, en todos los dispositivos. Es la contrapartida de permitir varias sesiones simultáneas (\mbox{D-01}): si alguien entró a la cuenta, recuperar la contraseña debe echarlo.
+    \end{cureglas}} \\
+   & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-08}} Del token se almacena su resumen, nunca su valor, por el mismo motivo que la contraseña.
+      \item \textbf{\mbox{RN-09}} El código admite un máximo de tres intentos de verificación. Agotarlos lo invalida y obliga a solicitar uno nuevo.
+      \item \textbf{\mbox{RN-10}} Una cuenta en \texttt{ELIMINADA} no puede recuperarse por esta vía, y se trata como inexistente para efectos de \mbox{RN-01}.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre una tensión con el \mbox{CU-02}.}\par
+    El \mbox{RN-01} oculta si un correo está registrado, pero el \mbox{FA-10} del \mbox{CU-02} lo dice abiertamente cuando alguien intenta darse de alta con un correo ya usado, y esa contradicción está aceptada a propósito en las observaciones de aquel caso. Se mantiene aquí la respuesta indistinguible de todos modos: cuesta lo mismo implementarla, y si más adelante se decide cerrar la fuga del registro, este caso ya no habría que tocarlo.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Usuario}: lee \texttt{correo}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{idioma\_\allowbreak{}preferido} \textit{(pasos 6, 7, 20)}
+      \item \textit{Usuario}: escribe \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion} \textit{(pasos 11, 22, 24)}
+      \item \textit{TokenRecuperacion}: crea, invalida y marca como usado \textit{(pasos 9, 10, 23)}
+      \item \textit{Sesion}: cierra todas las abiertas \textit{(paso 25)}
+      \item \textit{BitacoraAcceso}: inserta \textit{(pasos 13, 27)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

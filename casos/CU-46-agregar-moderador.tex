@@ -1,0 +1,119 @@
+\subsection*{CU-46: Agregar un moderador}
+\addcontentsline{toc}{subsection}{CU-46: Agregar un moderador}
+\label{cu-46}
+
+\begin{fichacu}{CU-46}{Agregar un moderador}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Administrador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{—}
+  \crudFila{Objetivo}{Permitir al Administrador otorgar el rol de moderación a un jugador de confianza, dejando constancia de quién lo otorgó, para que pueda revisar reportes y aplicar sanciones.}
+  \crudFila{Disparador}{El Administrador selecciona ``agregar moderador'' en la \texttt{GUI\_\allowbreak{}AdminPanel}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Administrador tiene una \textit{Sesion} abierta y su \textit{Usuario} tiene \texttt{rol} igual a \texttt{ADMINISTRADOR}.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Administrador selecciona ``agregar moderador''.
+      \item El SJM despliega un buscador por \texttt{nickname} o \texttt{codigo\_\allowbreak{}amigo}.
+      \item El Administrador busca al jugador y lo selecciona de los resultados. \textit{(Ver \mbox{FA-01})}
+      \item El SJM despliega la ficha del candidato con su \texttt{nickname}, su \texttt{fecha\_\allowbreak{}registro}, su \texttt{estado\_\allowbreak{}cuenta}, su \texttt{tipo\_\allowbreak{}cuenta}, su historial de \textit{Sancion} y los \textit{Reporte} recibidos, y la opción ``Otorgar rol de moderador''.
+      \item El Administrador selecciona la opción, escribe el motivo y confirma en la \texttt{GUI\_\allowbreak{}MessageConfirm}. \textit{(Ver \mbox{FA-02})}
+      \item El SJM envía el mensaje \texttt{GRANT\_\allowbreak{}MODERATOR\_\allowbreak{}REQUEST} con el \texttt{id\_\allowbreak{}usuario}, el motivo y el token. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y que el \texttt{rol} del solicitante sea \texttt{ADMINISTRADOR} (\mbox{RN-01}). \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas verifica que el candidato tenga \texttt{tipo\_\allowbreak{}cuenta} en \texttt{REGISTRADA} y \texttt{estado\_\allowbreak{}cuenta} en \texttt{ACTIVA} (\mbox{RN-02}). \textit{(Ver \mbox{FA-04})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas verifica que el candidato no tenga ninguna \textit{Sancion} activa (\mbox{RN-02}). \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas verifica que el \texttt{rol} del candidato sea \texttt{JUGADOR}. \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas inicia una transacción, cambia el \texttt{rol} del candidato a \texttt{MODERADOR} y registra en la \textit{BitacoraModeracion} la acción \texttt{ROL\_\allowbreak{}OTORGADO} con el administrador, el afectado, el motivo y la fecha. \textit{(Ver \mbox{EX-01}, \mbox{EX-02})}
+      \item El Servidor de partidas notifica al candidato, si tiene sesión abierta, con \texttt{ROLE\_\allowbreak{}GRANTED}.
+      \item El Servidor de partidas responde con \texttt{GRANT\_\allowbreak{}MODERATOR\_\allowbreak{}OK}.
+      \item El SJM muestra la confirmación y añade al jugador a la lista de moderadores.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La búsqueda no encuentra al jugador}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra un estado vacío indicando que no hay jugadores con ese nombre o código.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Administrador cancela}\par
+    \begin{cuenum}[start=1]
+      \item El Administrador selecciona ``Cancelar'' en la confirmación.
+      \item El SJM cierra la confirmación sin enviar nada.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: La sesión no es válida o el usuario no es administrador}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID} o con \texttt{FORBIDDEN}.
+      \item Si la sesión era válida pero falta el rol, el Servidor de partidas registra el intento en la \textit{BitacoraModeracion}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login} o el menú principal.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El candidato no cumple los requisitos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{GRANT\_\allowbreak{}MODERATOR\_\allowbreak{}FAILED} y el motivo: \texttt{CUENTA\_\allowbreak{}INVITADO}, \texttt{CUENTA\_\allowbreak{}NO\_\allowbreak{}ACTIVA} o \texttt{SANCION\_\allowbreak{}ACTIVA}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} con el motivo.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El candidato ya es moderador o administrador}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{GRANT\_\allowbreak{}MODERATOR\_\allowbreak{}FAILED} y el motivo \texttt{YA\_\allowbreak{}TIENE\_\allowbreak{}ROL}, con el rol actual.
+      \item El SJM lo indica en la ficha del candidato.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El Administrador consulta la lista de moderadores}\par
+    \begin{cuenum}[start=1]
+      \item El Administrador selecciona ``moderadores'' en la \texttt{GUI\_\allowbreak{}AdminPanel}.
+      \item El Servidor de partidas recupera los \textit{Usuario} con \texttt{rol} igual a \texttt{MODERADOR}, con la fecha en que se les otorgó según la \textit{BitacoraModeracion} y el número de reportes que han resuelto.
+      \item El SJM despliega la lista, con acceso a retirar el rol en el \mbox{CU-47}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no quede un rol otorgado sin su registro en la bitácora.
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas trata la transacción como fallida y registra la excepción señalando que el estado es indeterminado.
+      \item El SJM recarga la ficha del candidato, que mostrará su rol real.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía la solicitud y recarga la ficha del candidato.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: La conexión se interrumpe}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y recarga la ficha al recuperarla.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene \texttt{rol} igual a \texttt{MODERADOR}.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, la \textit{BitacoraModeracion} registra quién otorgó el rol, a quién, por qué y cuándo.
+      \item \textbf{\mbox{POST-03}} Ninguna otra propiedad de la cuenta cambió.
+      \item \textbf{\mbox{POST-04}} El nuevo moderador tiene acceso a la cola de moderación en su siguiente solicitud, sin cerrar sesión.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Solo un administrador otorga el rol de moderación.
+      \item \textbf{\mbox{RN-02}} Solo puede ser moderador una cuenta \texttt{REGISTRADA}, \texttt{ACTIVA} y sin sanciones activas.
+      \item \textbf{\mbox{RN-03}} Los roles posibles son \texttt{JUGADOR}, \texttt{MODERADOR} y \texttt{ADMINISTRADOR}. Un usuario tiene exactamente uno.
+      \item \textbf{\mbox{RN-04}} Las cuentas de administración no se crean desde la aplicación: se crean por SQL, igual que los catálogos precargados (\mbox{D-09}).
+      \item \textbf{\mbox{RN-05}} Todo cambio de rol queda en la \textit{BitacoraModeracion} con su autor y su motivo.
+      \item \textbf{\mbox{RN-06}} El rol se comprueba en el servidor en cada solicitud, así que el cambio surte efecto sin necesidad de volver a iniciar sesión.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué el rol es un atributo y no una tabla.}\par
+    Un usuario tiene exactamente un rol y los tres roles son excluyentes, así que \texttt{rol} es un atributo de \textit{Usuario} con un dominio de tres valores. Una tabla de roles con una relación de muchos a muchos solo tendría sentido si un usuario pudiera tener varios roles a la vez o si los permisos de cada rol se configuraran desde la aplicación, y ninguna de las dos cosas está prevista. La historia de los cambios de rol, que sí interesa conservar, está en la \textit{BitacoraModeracion}.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}, \textit{Usuario}: lee el \texttt{rol} del administrador \textit{(paso 7)}
+      \item \textit{Usuario}: lee el candidato por \texttt{nickname} o \texttt{codigo\_\allowbreak{}amigo} \textit{(pasos 3, 8)}
+      \item \textit{Sancion}, \textit{Reporte}: lee el historial del candidato \textit{(pasos 4, 9)}
+      \item \textit{Usuario}: escribe \texttt{rol} \textit{(paso 11)}
+      \item \textit{BitacoraModeracion}: inserta \textit{(pasos 11, \mbox{FA-03})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

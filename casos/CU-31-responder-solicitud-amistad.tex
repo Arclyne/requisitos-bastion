@@ -1,0 +1,127 @@
+\subsection*{CU-31: Responder una solicitud de amistad}
+\addcontentsline{toc}{subsection}{CU-31: Responder una solicitud de amistad}
+\label{cu-31}
+
+\begin{fichacu}{CU-31}{Responder una solicitud de amistad}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador destinatario}
+  \crudFila{Actores interesados}{Jugador solicitante}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{5c, 2b}
+  \crudFila{Objetivo}{Permitir al Jugador aceptar o rechazar las solicitudes de amistad que recibió, y cancelar las que envió y siguen sin respuesta.}
+  \crudFila{Disparador}{El Jugador abre la pestaña de solicitudes en la \texttt{GUI\_\allowbreak{}Friends}, o selecciona la notificación de una solicitud nueva.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El \textit{Usuario} tiene \texttt{tipo\_\allowbreak{}cuenta} en \texttt{REGISTRADA}.
+      \item \textbf{\mbox{PRE-03}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Jugador abre la pestaña de solicitudes.
+      \item El SJM envía el mensaje \texttt{LIST\_\allowbreak{}FRIEND\_\allowbreak{}REQUESTS} con el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas recupera las \textit{Solicitud} en las que el \textit{Usuario} es destinatario y las que envió, descartando las caducadas (\mbox{RN-05}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas responde con las solicitudes entrantes y enviadas, con el \texttt{nickname}, el icono y el elo del modo clásico de cada jugador.
+      \item El SJM despliega las dos listas: entrantes, con ``Aceptar'' y ``Rechazar'', y enviadas, con ``Cancelar''. \textit{(Ver \mbox{FA-01})}
+      \item El Jugador selecciona ``Aceptar'' en una solicitud entrante. \textit{(Ver \mbox{FA-02}, \mbox{FA-03})}
+      \item El SJM envía el mensaje \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}ACCEPT} con el identificador de la solicitud.
+      \item El Servidor de partidas verifica que la \textit{Solicitud} exista y que el \textit{Usuario} sea su destinatario (\mbox{RN-01}). \textit{(Ver \mbox{FA-04})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas verifica que ninguno de los dos jugadores haya alcanzado el límite de cien amigos (\mbox{RN-02}). \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas verifica que no haya surgido un \textit{Bloqueo} entre ambos desde que se envió. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas inicia una transacción, crea la \textit{Amistad} con el identificador menor en \texttt{id\_\allowbreak{}usuario\_\allowbreak{}a}, el mayor en \texttt{id\_\allowbreak{}usuario\_\allowbreak{}b} y la \texttt{fecha\_\allowbreak{}amistad}, y elimina la \textit{Solicitud} (\mbox{RN-03}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas confirma la transacción y notifica al solicitante, si tiene sesión abierta, con \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}ACCEPTED}.
+      \item El Servidor de partidas responde con \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}ACCEPT\_\allowbreak{}OK}.
+      \item El SJM retira la solicitud de la lista y añade al jugador a la lista de amigos.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: No hay solicitudes}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra un estado vacío en cada pestaña sin solicitudes, con la acción ``añadir amigo'', que continúa en el \mbox{CU-30}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El Jugador rechaza la solicitud}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Rechazar'' y el SJM envía \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}DECLINE}.
+      \item El Servidor de partidas verifica que el \textit{Usuario} sea el destinatario y elimina la \textit{Solicitud}.
+      \item El Servidor de partidas \textbf{no} notifica al solicitante (\mbox{RN-04}).
+      \item El SJM retira la solicitud de la lista.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El Jugador cancela una solicitud que envió}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Cancelar'' en una solicitud enviada y el SJM envía \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}CANCEL}.
+      \item El Servidor de partidas verifica que el \textit{Usuario} sea el solicitante y elimina la \textit{Solicitud}.
+      \item El SJM retira la solicitud de la lista de enviadas; si el destinatario la tenía abierta, desaparece de la suya en su siguiente recarga.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La solicitud ya no existe o hay un bloqueo}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no encuentra la \textit{Solicitud}, porque el solicitante la canceló, caducó o se respondió desde otro dispositivo, o encuentra un \textit{Bloqueo} entre ambos.
+      \item Si hay bloqueo, el Servidor de partidas elimina la \textit{Solicitud} sin crear la \textit{Amistad}.
+      \item El Servidor de partidas responde con \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}NOT\_\allowbreak{}FOUND}, igual en todos los casos.
+      \item El SJM retira la solicitud de la lista con un aviso breve de que ya no está disponible.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: Uno de los dos alcanzó el límite de amigos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{FRIEND\_\allowbreak{}REQUEST\_\allowbreak{}FAILED} y el motivo \texttt{LIMITE\_\allowbreak{}ALCANZADO}, indicando si es el propio Jugador o el solicitante.
+      \item El Servidor de partidas conserva la \textit{Solicitud}, para que pueda aceptarse si se libera espacio antes de que caduque.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} con el motivo; si el límite es propio, propone revisar la lista de amigos.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El Jugador responde desde la notificación}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Aceptar'' o ``Rechazar'' directamente en el aviso emergente de solicitud nueva.
+      \item El flujo continúa en el paso 7 del FN o en el paso 1 del \mbox{FA-02}, sin abrir la pestaña.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar o escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no quede una \textit{Amistad} creada con la \textit{Solicitud} todavía pendiente, ni la solicitud eliminada sin la amistad.
+      \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador y conserva la solicitud en la lista.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no reenvía la respuesta y recarga las listas, que dirán si se aplicó.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe durante el intercambio}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida y recarga las listas al recuperarla.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe una \textit{Amistad} entre ambos jugadores y ya no existe la \textit{Solicitud}.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el \mbox{FA-02} o el \mbox{FA-03}, la \textit{Solicitud} no existe y no se creó ninguna \textit{Amistad}.
+      \item \textbf{\mbox{POST-03}} No existen dos \textit{Amistad} para el mismo par de jugadores, en ningún orden.
+      \item \textbf{\mbox{POST-04}} Ninguno de los dos jugadores supera los cien amigos.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Solo el destinatario puede aceptar o rechazar una solicitud, y solo el solicitante puede cancelarla.
+      \item \textbf{\mbox{RN-02}} El límite de cien amigos se vuelve a comprobar al aceptar, en los dos jugadores, porque pudo alcanzarse después de enviada la solicitud.
+      \item \textbf{\mbox{RN-03}} Una \textit{Amistad} se guarda una sola vez por par, con el identificador menor en \texttt{id\_\allowbreak{}usuario\_\allowbreak{}a}. La tabla declara esa condición con una restricción, de modo que A–B y B–A no puedan coexistir aunque falle la aplicación.
+      \item \textbf{\mbox{RN-04}} Rechazar no se notifica al solicitante: para él, la solicitud simplemente deja de estar pendiente.
+      \item \textbf{\mbox{RN-05}} Una solicitud sin responder caduca a los treinta días.
+      \item \textbf{\mbox{RN-06}} Responder una solicitud elimina la fila de \textit{Solicitud} en todos los casos: la solicitud describe un estado presente, no un hecho que haya que conservar.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre la restricción del par ordenado.}\par
+    Guardar la amistad dos veces, una en cada sentido, haría más sencillas algunas consultas, pero duplicaría cada amistad y abriría la puerta a que exista en un sentido y no en el otro. Guardarla una sola vez con el par ordenado exige, a cambio, que las consultas busquen al jugador en cualquiera de las dos columnas. Es un costo pequeño y fijo a cambio de que la base de datos, y no la aplicación, garantice que la amistad es recíproca.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textit{Sesion}: lee por token \textit{(paso 2)}
+      \item \textit{Solicitud}: lee las entrantes y enviadas \textit{(pasos 3, 8)}
+      \item \textit{Solicitud}: elimina \textit{(pasos 11, \mbox{FA-02}, \mbox{FA-03}, \mbox{FA-04})}
+      \item \textit{Usuario}: lee \texttt{nickname} e \texttt{id\_\allowbreak{}icono} de cada jugador \textit{(paso 4)}
+      \item \textit{EstadisticaModo}: lee el elo del modo clásico \textit{(paso 4)}
+      \item \textit{Amistad}: lee, para contar el límite \textit{(paso 9)}
+      \item \textit{Amistad}: crea \textit{(paso 11)}
+      \item \textit{Bloqueo}: lee \textit{(paso 10)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage
