@@ -1,0 +1,17 @@
+%=====================================================================
+% Modelo de datos · Supuestos del modelo
+%=====================================================================
+\subsection*{Supuestos del modelo}
+\addcontentsline{toc}{subsection}{Supuestos del modelo}
+
+Los casos de uso y la tabla de dominios del análisis CRUD fijan casi todos los valores del esquema, y los \at{CHECK} de la base usan exactamente esos. Algunos datos, sin embargo, no los fija ningún caso. Se tomaron estos supuestos, que conviene confirmar igual que las decisiones \mbox{D-02} a \mbox{D-21}:
+
+\begin{reglas}
+  \item \textbf{Rarezas.} \at{COMUN}, \at{RARO}, \at{EPICO} y \at{LEGENDARIO}. La tabla de dominios no las lista y los casos solo mencionan el objeto raro de la garantía (\mbox{CU-39} \mbox{RN-05}), que se interpreta como raro o superior.
+  \item \textbf{Divisiones.} Un solo catálogo de divisiones para todos los modos, con las de la tabla de dominios. Si cada modo necesitara umbrales propios, \textit{Division} ganaría \at{id\_modo}.
+  \item \textbf{Umbrales y recompensas de nivel.} Ningún caso de uso los escribe ni los consulta como datos, así que se tratan como parámetros del servidor, igual que la fórmula del elo. Si se quisieran editar sin publicar una versión del servidor, harían falta un catálogo de niveles y otro de recompensas.
+  \item \textbf{Invitados caducados.} El \mbox{CU-06} \mbox{RN-10} dice que un invitado inactivo ``se marca como caducado'', pero ningún caso define esa marca. Se propone tratarlo como una baja: \at{estado\_cuenta} = \at{ELIMINADA} con su \at{fecha\_baja} y la anonimización en la misma transacción (\mbox{D-17}). El procedimiento \at{usp\_Usuario\_DarDeBaja}, que hoy solo acepta cuentas registradas (\mbox{CU-11} \mbox{RN-07}), tendría que aceptar también las de invitado.
+  \item \textbf{Repetición pública.} El \mbox{CU-37} abre la repetición a cualquier jugador si la partida admitió espectadores, y lo decide leyendo el \at{permite\_espectadores} actual de cada participante. Si un participante cambia después su preferencia, cambia también el acceso a sus partidas pasadas. Si se quisiera congelar, \textit{Partida} tendría que guardar si admitió espectadores al empezar.
+  \item \textbf{Largo máximo del chat.} 500 caracteres (\mbox{CU-28} \mbox{RN-03} habla de un largo máximo sin fijarlo). Descripciones de reporte, motivos de sanción y notas de resolución, entre 500 y 1\,000.
+  \item \textbf{Actividad de la sala.} \textit{Sala} guarda \at{fecha\_ultima\_actividad}, que el \mbox{CU-18} no nombra, porque sin ella no puede aplicarse su cierre por inactividad (\mbox{RN-08}): ni los mensajes ni las entradas a la sala registran todo lo que cuenta como actividad.
+\end{reglas}

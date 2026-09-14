@@ -1,0 +1,55 @@
+%=====================================================================
+% Datos · Relaciones entre tablas
+%=====================================================================
+\subsection*{Relaciones entre tablas}
+\addcontentsline{toc}{subsection}{Relaciones entre tablas}
+
+Cada consulta de esta subsección une tablas por sus llaves foráneas. Si un registro apuntara a otro que no existe, la unión lo perdería y la consulta devolvería menos filas de las que tiene la tabla; la base, además, no lo permite, como muestra la prueba 5 de los casos que la base rechaza.
+
+\subsubsection*{La partida y sus participantes}
+\addcontentsline{toc}{subsubsection}{La partida y sus participantes}
+
+\textit{Partida} se relaciona con \textit{Modo} (N:1) y con \textit{Usuario} a través de \textit{Participacion}, la entidad asociativa que guarda el resultado y el elo de cada jugador. La consulta devuelve las \dpNumPartidas{} partidas con sus participantes: dos en las de dos jugadores, cuatro en la de cuatro y uno en la de la IA, que no es un usuario.
+
+\consulta{relpartidas}
+\input{bd/tex/datos/relpartidas}
+
+\captura{04-relaciones}{Captura 3. La misma consulta en la consola: veinticinco participaciones de doce partidas.}
+
+\subsubsection*{Del jugador a su aspecto}
+\addcontentsline{toc}{subsubsection}{Del jugador a su aspecto}
+
+\textit{Equipamiento} tiene dos llaves foráneas compuestas: (\at{id\_usuario}, \at{id\_objeto}) hacia \textit{UsuarioObjeto}, que obliga a equipar solo lo que se posee (\mbox{CU-14} \mbox{RN-02}), e (\at{id\_objeto}, \at{id\_ranura}) hacia \textit{ObjetoCosmetico}, que obliga a que el objeto sea de esa ranura (\mbox{D-03}). La consulta recorre la cadena completa para \at{luis\_quo}, con una fila por ranura:
+
+\consulta{relequipamiento}
+\input{bd/tex/datos/relequipamiento}
+
+Los seis objetos llegan por tres caminos distintos: los iniciales del alta (\mbox{CU-02} \mbox{RN-08}), el título que ganó al subir de nivel y los dos que compró.
+
+\subsubsection*{Del reporte a la apelación}
+\addcontentsline{toc}{subsubsection}{Del reporte a la apelación}
+
+Un \textit{Reporte} tiene dos relaciones con \textit{Usuario}, una por papel, y una con \textit{MotivoReporte}; una \textit{Sancion} puede venir de un reporte, y una \textit{Apelacion} pertenece a una sanción. Las uniones externas conservan los reportes sin sanción y las sanciones sin apelación:
+
+\consulta{relmoderacion}
+\input{bd/tex/datos/relmoderacion}
+
+El reporte 1 produjo dos sanciones: la segunda sustituye a la primera, y es la que rayo apeló. El 4 terminó en el baneo de \at{4dm1n\_oficial}; el 5 se resolvió sin sanción, y el 2 y el 3 siguen abiertos.
+
+\subsubsection*{De la caja a su contenido}
+\addcontentsline{toc}{subsubsection}{De la caja a su contenido}
+
+\textit{Caja} pertenece a una cuenta y a un \textit{TipoCaja}; \textit{CajaContenido} es su entidad débil, con los tres objetos que salieron, y cada objeto repetido genera un \textit{MovimientoMoneda} de conversión que apunta a la caja y al objeto:
+
+\consulta{relcajas}
+\input{bd/tex/datos/relcajas}
+
+Solo la caja abierta tiene contenido. El \at{EMOTE\_RISA} que salió en ella ya lo tenía luis, así que se convirtió en 40 monedas (\mbox{CU-39} \mbox{RN-03}) con el movimiento 28.
+
+\subsubsection*{Una sanción que sustituye a otra}
+\addcontentsline{toc}{subsubsection}{Una sanción que sustituye a otra}
+
+La única relación de una tabla consigo misma: \at{id\_sancion\_sustituta} de \textit{Sancion} apunta a otra fila de \textit{Sancion} (\mbox{CU-44} \mbox{RN-09}). La sanción sustituida queda retirada, con su fecha de retiro, y no se borra:
+
+\consulta{relsustitucion}
+\input{bd/tex/datos/relsustitucion}

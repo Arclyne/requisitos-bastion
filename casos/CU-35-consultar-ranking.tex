@@ -18,7 +18,7 @@
       \item El SJM envía el mensaje \texttt{RANKING\_\allowbreak{}REQUEST} con el alcance global, el modo clásico 9×9, la primera página y el token. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-01})}
       \item El Servidor de partidas recupera las \textit{EstadisticaModo} del modo solicitado con al menos cinco \texttt{partidas\_\allowbreak{}jugadas}, cuyo \textit{Usuario} tenga \texttt{estado\_\allowbreak{}cuenta} en \texttt{ACTIVA}, ordenadas por \texttt{puntos\_\allowbreak{}elo} descendente, y calcula la posición de cada una (\mbox{RN-01}, \mbox{RN-02}). \textit{(Ver \mbox{EX-01})}
-      \item El Servidor de partidas recupera del \textit{Usuario} de cada fila el \texttt{nickname}, el \texttt{id\_\allowbreak{}icono} y la \texttt{division} de su estadística, y la página solicitada.
+      \item El Servidor de partidas recupera del \textit{Usuario} de cada fila el \texttt{nickname}, el \texttt{id\_\allowbreak{}icono} y la división (\texttt{id\_\allowbreak{}division}) de su estadística, y la página solicitada.
       \item El Servidor de partidas calcula la posición del propio jugador en ese modo, o las partidas que le faltan para clasificar. \textit{(Ver \mbox{FA-02})}
       \item El Servidor de partidas responde con \texttt{RANKING\_\allowbreak{}OK}, la página, el total de clasificados y la fila del jugador.
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}Ranking} como tabla con posición, jugador, división y elo, las tres primeras filas destacadas, y la fila del jugador fijada abajo aunque no esté en la página visible. \textit{(Ver \mbox{FA-03}, \mbox{FA-04}, \mbox{FA-05}, \mbox{FA-06}, \mbox{FA-07})}
@@ -111,7 +111,7 @@
     \texttt{descripcion.md} deja abierto si el ranking se organiza por temporadas. Este caso lo resuelve sin ellas, porque las recompensas de fin de temporada se descartaron y sin recompensa la temporada solo añade un reinicio que castiga a quien juega poco. Si se decide adoptarlas, el cambio no toca este caso sino el modelo: haría falta una entidad \textit{Temporada} y que \textit{EstadisticaModo} dependa de ella, lo que convertiría la clave de usuario y modo en una de usuario, modo y temporada.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 3)}
-      \item \textbf{\textit{EstadisticaModo}:} lee \texttt{puntos\_\allowbreak{}elo}, \texttt{partidas\_\allowbreak{}jugadas}, \texttt{division} del modo \textit{(pasos 4, 6)}
+      \item \textbf{\textit{EstadisticaModo}:} lee \texttt{puntos\_\allowbreak{}elo}, \texttt{partidas\_\allowbreak{}jugadas}, \texttt{id\_\allowbreak{}division} del modo \textit{(pasos 4, 6)}
       \item \textbf{\textit{Usuario}:} lee \texttt{nickname}, \texttt{id\_\allowbreak{}icono}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{codigo\_\allowbreak{}amigo} \textit{(pasos 4, 5, \mbox{FA-06})}
       \item \textbf{\textit{Division}:} lee, para la vista por divisiones \textit{(paso \mbox{FA-05})}
       \item \textbf{\textit{Amistad}:} lee, para el alcance entre amigos \textit{(paso \mbox{FA-03})}

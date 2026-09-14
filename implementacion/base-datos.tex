@@ -1,0 +1,16 @@
+%=====================================================================
+% Implementación · Script de creación de la base de datos
+%=====================================================================
+\subsection*{Script de creación de la base de datos}
+\addcontentsline{toc}{subsection}{Script de creación de la base de datos}
+
+\at{bd/crear\_base\_datos.sql} tiene dos partes:
+
+\begin{reglas}
+  \item \textbf{La base.} Si \textit{Bastion} ya existe, la pone en modo de un solo usuario, cerrando las conexiones abiertas, y la elimina; después la crea vacía. Es un script de instalación, no de actualización: volver a ejecutarlo deja una base nueva, lista para \at{crear\_tablas.sql}. La intercalación de la base es \at{Modern\_Spanish\_100\_CI\_AS\_SC\_UTF8}: español, sin distinguir mayúsculas y distinguiendo acentos, y con el texto codificado en UTF-8, de modo que toda columna admite la ñ, los acentos y cualquier carácter Unicode (\mbox{D-21}); la subsección \textit{Codificación e internacionalización} explica cada parte del nombre. Las columnas que deben compararse también sin acentos, como \at{nickname} y el término de \textit{PalabraProhibida}, declaran su propia intercalación, \at{Latin1\_General\_100\_CI\_AI\_SC\_UTF8}, en \at{crear\_tablas.sql} (\mbox{CU-02} \mbox{RN-01}).
+  \item \textbf{El usuario de conexión.} Crea el inicio de sesión \at{BastionServerConnection} con la contraseña \at{B4sT10nCONnecti0n} y la política de contraseñas de Windows, su usuario en la base con el esquema \at{dbo} por omisión, y le concede \at{SELECT}, \at{INSERT}, \at{UPDATE} y \at{EXECUTE} sobre toda la base. Termina con la consulta que lista esos permisos. El porqué de cada decisión está en la subsección \textit{Usuario de conexión del servidor} del modelo de datos.
+\end{reglas}
+
+Los permisos se conceden a nivel de base de datos, así que alcanzan también a las tablas y a los procedimientos que crea el script siguiente, aunque todavía no existan.
+
+\lstinputlisting[style=sql, basicstyle=\ttfamily\footnotesize]{bd/crear_base_datos.sql}

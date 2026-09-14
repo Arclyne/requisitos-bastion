@@ -1,0 +1,22 @@
+%=====================================================================
+% Modelo de datos · Normalización: primera forma normal
+%=====================================================================
+\subsubsection*{Paso a primera forma normal}
+\addcontentsline{toc}{subsubsection}{Paso a primera forma normal}
+
+\begin{center}\small
+\begin{longtable}{|L{0.25\textwidth}|L{0.30\textwidth}|L{0.35\textwidth}|}
+\hline
+\textbf{Problema} & \textbf{Dónde} & \textbf{Transformación} \\ \hline
+\endfirsthead
+\hline
+\textbf{Problema} & \textbf{Dónde} & \textbf{Transformación} \\ \hline
+\endhead
+Atributo compuesto & \at{nombre\_completo} de \textit{Usuario}, formado por nombre y dos apellidos & Se descompone en atributos atómicos. Después, la \mbox{D-06} elimina los tres, porque ningún flujo los usa. \\ \hline
+Grupo repetido de ranuras & \at{id\_skin\_equipada} de \textit{Usuario} solo guarda un objeto; con seis ranuras harían falta seis columnas (\at{id\_peon}, \at{id\_muro}, \dots) del mismo tipo & Se separa en \textit{Equipamiento}(\underline{\at{id\_usuario}, \at{id\_ranura}}, \at{id\_objeto}), una fila por ranura. Añadir una ranura es insertar una fila en el catálogo, no alterar \textit{Usuario} (\mbox{CU-14}). \\ \hline
+Grupo repetido de modos & \textit{Estadisticas} tiene una sola fila por usuario; con elo por modo harían falta \at{puntos\_elo\_clasico}, \at{puntos\_elo\_rapida}, \dots\ para cada contador & Se separa en \textit{EstadisticaModo}(\underline{\at{id\_usuario}, \at{id\_modo}}, \dots) y el catálogo \textit{Modo} (\mbox{D-04}). \\ \hline
+Lista dentro de un atributo & Guardar las jugadas de una partida, o sus muros, como un texto con la secuencia & Cada jugada es una fila de \textit{Jugada}(\underline{\at{id\_partida}, \at{numero\_jugada}}, \dots). Los muros son jugadas de tipo \at{MURO} y no tienen tabla propia (\mbox{CU-21}). \\ \hline
+Credencial no atómica & \at{contraseña} guardaría a la vez el algoritmo, la sal y el resumen & Se separa en \at{contrasena\_hash} y \at{contrasena\_sal}. \\ \hline
+Nombre en varios idiomas & Con dos idiomas (\mbox{D-21}), guardar el nombre visible de cada catálogo exigiría \at{nombre\_es}, \at{nombre\_en}, \dots, una columna por idioma & No se guarda: cada fila guarda un \at{codigo}, y su nombre en cada idioma está en los diccionarios de recursos. El catálogo queda atómico y añadir un idioma no altera la base. \\ \hline
+\end{longtable}
+\end{center}

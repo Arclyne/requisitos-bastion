@@ -1,4 +1,4 @@
-% Archivo generado por bd/generar_tablas.ps1 a partir de bd/bastion.sql. No editar a mano.
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
 \begin{center}\small
 \begin{longtable}{|L{0.21\textwidth}|L{0.28\textwidth}|L{0.18\textwidth}|L{0.21\textwidth}|}
 \hline
@@ -7,16 +7,16 @@
 \hline
 \textbf{Entidad} & \textbf{Llave primaria} & \textbf{Clase} & \textbf{Otras llaves candidatas} \\ \hline
 \endhead
-\textit{Ranura} & (\texttt{id\_\allowbreak{}ranura}) & Simple, asignada en la carga & (\texttt{nombre}) \\ \hline
-\textit{Objeto\-Cosmetico} & (\texttt{id\_\allowbreak{}objeto}) & Simple, asignada en la carga & --- \\ \hline
-\textit{Modo} & (\texttt{id\_\allowbreak{}modo}) & Simple, asignada en la carga & (\texttt{nombre}) \\ \hline
-\textit{Division} & (\texttt{id\_\allowbreak{}division}) & Simple, asignada en la carga & (\texttt{nombre}); (\texttt{orden}) \\ \hline
-\textit{Nivel\-IA} & (\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}) & Simple, asignada en la carga & (\texttt{nombre}) \\ \hline
-\textit{Leccion} & (\texttt{id\_\allowbreak{}leccion}) & Simple, asignada en la carga & (\texttt{orden}) \\ \hline
-\textit{Tipo\-Caja} & (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}) & Simple, asignada en la carga & (\texttt{nombre}) \\ \hline
+\textit{Ranura} & (\texttt{id\_\allowbreak{}ranura}) & Simple, asignada en la carga & (\texttt{codigo}) \\ \hline
+\textit{Objeto\-Cosmetico} & (\texttt{id\_\allowbreak{}objeto}) & Simple, asignada en la carga & (\texttt{codigo}) \\ \hline
+\textit{Modo} & (\texttt{id\_\allowbreak{}modo}) & Simple, asignada en la carga & (\texttt{codigo}) \\ \hline
+\textit{Division} & (\texttt{id\_\allowbreak{}division}) & Simple, asignada en la carga & (\texttt{codigo}); (\texttt{elo\_\allowbreak{}minimo}) \\ \hline
+\textit{Nivel\-IA} & (\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}) & Simple, asignada en la carga & (\texttt{codigo}) \\ \hline
+\textit{Leccion} & (\texttt{id\_\allowbreak{}leccion}) & Simple, asignada en la carga & (\texttt{codigo}); (\texttt{orden}) \\ \hline
+\textit{Tipo\-Caja} & (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}) & Simple, asignada en la carga & (\texttt{codigo}) \\ \hline
 \textit{Tipo\-Caja\-Objeto} & (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}, \texttt{id\_\allowbreak{}objeto}) & Compuesta & --- \\ \hline
 \textit{Palabra\-Prohibida} & (\texttt{id\_\allowbreak{}palabra}) & Simple, sustituta & (\texttt{termino}, \texttt{idioma}, \texttt{ambito}) \\ \hline
-\textit{Motivo\-Reporte} & (\texttt{id\_\allowbreak{}motivo}) & Simple, asignada en la carga & (\texttt{nombre}) \\ \hline
+\textit{Motivo\-Reporte} & (\texttt{id\_\allowbreak{}motivo}) & Simple, asignada en la carga & (\texttt{codigo}) \\ \hline
 \textit{Usuario} & (\texttt{id\_\allowbreak{}usuario}) & Simple, sustituta & (\texttt{nickname}) \\ \hline
 \textit{Sesion} & (\texttt{id\_\allowbreak{}sesion}) & Simple, sustituta & (\texttt{token\_\allowbreak{}hash}) \\ \hline
 \textit{Codigo\-Segundo\-Factor} & (\texttt{id\_\allowbreak{}codigo}) & Simple, sustituta & --- \\ \hline

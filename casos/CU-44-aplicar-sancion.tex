@@ -30,7 +30,7 @@
       \item El Servidor de partidas comprueba si ya existe una \textit{Sancion} activa del mismo ámbito sobre ese jugador. \textit{(Ver \mbox{FA-07})}
       \item El Servidor de partidas calcula la \texttt{fecha\_\allowbreak{}fin} sumando la duración a la fecha actual, o la deja en nulo si el tipo es permanente (\mbox{RN-04}).
       \item El Servidor de partidas inicia una transacción sobre la Base de datos.
-      \item El Servidor de partidas crea la \textit{Sancion} con el sancionado, el moderador que la aplica, el ámbito, el tipo, el motivo, la \texttt{fecha\_\allowbreak{}inicio}, la \texttt{fecha\_\allowbreak{}fin}, el reporte de origen y \texttt{activa} en verdadero. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas crea la \textit{Sancion} con el sancionado, el moderador que la aplica, el ámbito, el tipo, el motivo, la \texttt{fecha\_\allowbreak{}inicio}, la \texttt{fecha\_\allowbreak{}fin} y el reporte de origen; sin \texttt{fecha\_\allowbreak{}retiro}, nace \texttt{activa}. \textit{(Ver \mbox{EX-01})}
       \item Si el ámbito es de cuenta, el Servidor de partidas cambia el \texttt{estado\_\allowbreak{}cuenta} del \textit{Usuario} a \texttt{SUSPENDIDA} si la sanción es temporal, o a \texttt{BANEADA} si es permanente (\mbox{RN-03}).
       \item Si el ámbito es de cuenta, el Servidor de partidas cierra todas las \textit{Sesion} abiertas del sancionado con \texttt{motivo\_\allowbreak{}cierre} igual a \texttt{SANCION}, e invalida sus tokens (\mbox{RN-05}).
       \item Si el ámbito es de cuenta y el sancionado tiene una \textit{Participacion} sin terminar, el Servidor de partidas la cierra con la forma de término \texttt{ABANDONO}, y el flujo continúa en el \mbox{CU-25} para esa partida. \textit{(Ver \mbox{FA-08})}
@@ -85,7 +85,7 @@
     \begin{cuenum}[start=1]
       \item El Servidor de partidas responde con \texttt{SANCTION\_\allowbreak{}ALREADY\_\allowbreak{}ACTIVE} y los datos de la vigente.
       \item El SJM las muestra lado a lado y ofrece ``Sustituir'' y ``Cancelar''.
-      \item Si el Moderador elige sustituir, el Servidor de partidas marca la anterior como \texttt{activa} en falso, con su fecha de retirada y una referencia a la nueva, y el flujo continúa en el paso 12 del FN (\mbox{RN-09}).
+      \item Si el Moderador elige sustituir, el Servidor de partidas escribe en la anterior su \texttt{fecha\_\allowbreak{}retiro} y una referencia a la nueva, con lo que deja de estar \texttt{activa}, y el flujo continúa en el paso 12 del FN (\mbox{RN-09}).
       \item Si elige cancelar, el flujo continúa en el paso 1 del FN.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-08}: El sancionado está jugando una partida}\par
@@ -160,7 +160,7 @@
       \item \textbf{\mbox{RN-11}} Una sanción no elimina contenido del sancionado. Retirar contenido, si hace falta, es una acción distinta.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué la sanción caduca sola y no hay caso que la levante.}\par
-    Una sanción temporal no necesita un caso de uso que la retire: deja de aplicarse en cuanto su \texttt{fecha\_\allowbreak{}fin} queda atrás, y todos los flujos que la consultan —el inicio de sesión, el emparejamiento y el chat— comparan esa fecha con la actual. El único rastro que deja en la cuenta, el \texttt{estado\_\allowbreak{}cuenta} en \texttt{SUSPENDIDA}, lo devuelve a \texttt{ACTIVA} el propio inicio de sesión cuando la fecha ya pasó (\mbox{FA-20} del \mbox{CU-01}). Escribir un proceso que recorriera las sanciones vencidas para desactivarlas añadiría un trabajo periódico cuyo único efecto sería cambiar una bandera que nadie lee sin mirar también la fecha. \texttt{activa} existe para el \mbox{RN-09}, es decir, para distinguir una sanción retirada a mano de una que simplemente venció, no para saber si está surtiendo efecto ahora.} \\ \hline
+    Una sanción temporal no necesita un caso de uso que la retire: deja de aplicarse en cuanto su \texttt{fecha\_\allowbreak{}fin} queda atrás, y todos los flujos que la consultan —el inicio de sesión, el emparejamiento y el chat— comparan esa fecha con la actual. El único rastro que deja en la cuenta, el \texttt{estado\_\allowbreak{}cuenta} en \texttt{SUSPENDIDA}, lo devuelve a \texttt{ACTIVA} el propio inicio de sesión cuando la fecha ya pasó (\mbox{FA-19} del \mbox{CU-01}). Escribir un proceso que recorriera las sanciones vencidas para desactivarlas añadiría un trabajo periódico cuyo único efecto sería cambiar una bandera que nadie lee sin mirar también la fecha. \texttt{activa} existe para el \mbox{RN-09}, es decir, para distinguir una sanción retirada a mano de una que simplemente venció, no para saber si está surtiendo efecto ahora; por eso no se escribe, sino que se calcula a partir de \texttt{fecha\_\allowbreak{}retiro}.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}:} lee por token; cierra las del sancionado \textit{(pasos 7, 15)}
       \item \textbf{\textit{Usuario}:} lee el rol del moderador y del sancionado \textit{(pasos 7, 9)}

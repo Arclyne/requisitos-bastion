@@ -1,4 +1,4 @@
-% Archivo generado por bd/generar_tablas.ps1 a partir de bd/bastion.sql. No editar a mano.
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
 \begin{center}\small
 \begin{longtable}{|L{0.2\textwidth}|L{0.2\textwidth}|L{0.1\textwidth}|L{0.38\textwidth}|}
 \hline
@@ -29,7 +29,6 @@
 \multicolumn{4}{|l|}{\textbf{Partida}} \\ \hline
 \textit{Modo} & \textit{Partida} & 1:N & Un modo se juega en muchas partidas; cada partida es de un modo. \\ \hline
 \textit{Nivel\-IA} & \textit{Partida} & 0..1:N & Un nivel de IA se enfrenta en muchas partidas; solo las de tipo IA lo tienen. \\ \hline
-\textit{Participacion} & \textit{Partida} & 0..1:0..1 & El ganador, si lo hay, es uno de los participantes de la misma partida. \\ \hline
 \textit{Partida} & \textit{Participacion} & 1:N & Una partida tiene de 1 a 4 participaciones (1 contra la IA). \\ \hline
 \textit{Usuario} & \textit{Participacion} & 1:N & Un usuario participa en muchas partidas. \\ \hline
 \textit{Participacion} & \textit{Participacion\-Objeto} & 1:N & Una participación fija un objeto por cada ranura. \\ \hline
@@ -82,7 +81,8 @@
 \textit{Usuario} & \textit{Reporte} & 1:N & Un usuario emite muchos reportes (relación Emite del diagrama). \\ \hline
 \textit{Usuario} & \textit{Reporte} & 1:N & Un usuario recibe muchos reportes (relación Señala del diagrama). \\ \hline
 \textit{Motivo\-Reporte} & \textit{Reporte} & 1:N & Un motivo clasifica muchos reportes. \\ \hline
-\textit{Partida} & \textit{Reporte} & 0..1:N & Una partida es prueba de muchos reportes (relación Sobre del diagrama). \\ \hline
+\textit{Participacion} & \textit{Reporte} & 0..1:N & La partida adjunta es una que jugó el denunciante (\mbox{CU-42} \mbox{RN-09}; relación Sobre del diagrama). \\ \hline
+\textit{Participacion} & \textit{Reporte} & 0..1:N & La partida adjunta es una que jugó el reportado (\mbox{CU-42} \mbox{RN-09}). \\ \hline
 \textit{Usuario} & \textit{Reporte} & 0..1:N & Un moderador revisa muchos reportes. \\ \hline
 \textit{Usuario} & \textit{Sancion} & 1:N & Un usuario recibe muchas sanciones (relación Recibe del diagrama). \\ \hline
 \textit{Usuario} & \textit{Sancion} & 1:N & Un moderador aplica muchas sanciones. \\ \hline

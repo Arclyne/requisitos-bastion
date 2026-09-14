@@ -1,5 +1,6 @@
-﻿# Genera las tablas del modelo de datos del documento a partir de bd/bastion.sql,
-# para que el documento y el script no puedan contradecirse.
+﻿# Genera las tablas del modelo de datos del documento a partir de bd/crear_tablas.sql,
+# para que el documento y el script no puedan contradecirse. Escribe también
+# er/esquema.json, del que parten los diagramas entidad-relación de er/.
 #
 # Uso, desde la raíz del repositorio:
 #     powershell -ExecutionPolicy Bypass -File bd\generar_tablas.ps1
@@ -9,10 +10,12 @@
 #   -- @fn texto                          observación de normalización ("[3FN]" si no llega a FNBC)
 #   columna TIPO ... ,  -- descripción    una columna por línea
 #   CONSTRAINT ... PRIMARY KEY / UNIQUE / FOREIGN KEY ...  -- [cardinalidad |] descripción
+#   CONSTRAINT CK_... CHECK (...)         en una o varias líneas
+#   CREATE INDEX ... / CREATE PROCEDURE ...   solo se cuentan
 #   CREATE UNIQUE INDEX ... WHERE ...;  -- descripción
 # En las descripciones, `x` se escribe como código y *X* en cursiva.
 param(
-    [string]$Sql = (Join-Path $PSScriptRoot 'bastion.sql'),
+    [string]$Sql = (Join-Path $PSScriptRoot 'crear_tablas.sql'),
     [string]$Salida = (Join-Path $PSScriptRoot 'tex')
 )
 $ErrorActionPreference = 'Stop'
@@ -51,6 +54,14 @@ function Ent([string]$n) { '\textit{' + [regex]::Replace($n, '(?<=[a-z])(?=[A-Z]
 #---------------------------------------------------------------------
 $tablas = New-Object System.Collections.Specialized.OrderedDictionary
 $area = $null; $descPend = $null; $fnPend = $null; $actual = $null
+$ck = $null; $numIndices = 0; $numProcs = 0
+
+function Saldo([string]$s) { ($s.Split('(').Count - 1) - ($s.Split(')').Count - 1) }
+function CerrarCk($c) {
+    $t = ($c.Texto -replace '\s+', ' ').Trim().TrimEnd(',').Trim()
+    $t = $t.Substring(1, $t.Length - 2).Trim()   # quita el paréntesis del propio CHECK
+    [void]$c.Tabla.Ck.Add([pscustomobject]@{ Nombre = $c.Nombre; Expr = $t; Desc = $c.Desc })
+}
 
 function NuevaFk($tabla, $nombre, $cols, $ref, $refCols, $comentario) {
     $card = '1:N'; $texto = $comentario
@@ -68,6 +79,7 @@ foreach ($l in [IO.File]::ReadAllLines($Sql, [Text.Encoding]::UTF8)) {
             Columnas = New-Object System.Collections.ArrayList
             Pk = @(); Uq = New-Object System.Collections.ArrayList
             Fk = New-Object System.Collections.ArrayList; UqIdx = New-Object System.Collections.ArrayList
+            Ck = New-Object System.Collections.ArrayList
         }
         $tablas[$actual.Nombre] = $actual
         continue
@@ -80,7 +92,17 @@ foreach ($l in [IO.File]::ReadAllLines($Sql, [Text.Encoding]::UTF8)) {
         [void]$tablas[$matches[2]].UqIdx.Add([pscustomobject]@{ Nombre = $matches[1]; Cols = @(Cols $matches[3]); Filtro = $matches[4]; Desc = $matches[5] })
         continue
     }
+    if ($l -match '^CREATE INDEX ') { $numIndices++; continue }
+    if ($l -match '^CREATE PROCEDURE ') { $numProcs++; continue }
     if (-not $actual) { continue }
+    if ($ck) {
+        # continuación de un CHECK de varias líneas
+        $parte = $l; $k = $l.IndexOf(' -- ')
+        if ($k -ge 0) { $parte = $l.Substring(0, $k); $ck.Desc = $l.Substring($k + 4).Trim() }
+        $ck.Texto += ' ' + $parte.Trim(); $ck.Saldo += (Saldo $parte)
+        if ($ck.Saldo -le 0) { CerrarCk $ck; $ck = $null }
+        continue
+    }
     if ($l -match '^\);') { $actual = $null; continue }
 
     $def = $l; $comentario = ''
@@ -95,9 +117,15 @@ foreach ($l in [IO.File]::ReadAllLines($Sql, [Text.Encoding]::UTF8)) {
     if ($def -match '^CONSTRAINT (\w+) FOREIGN KEY \(([^)]*)\) REFERENCES dbo\.(\w+) \(([^)]*)\)') {
         [void]$actual.Fk.Add((NuevaFk $actual.Nombre $matches[1] $matches[2] $matches[3] $matches[4] $comentario)); continue
     }
+    if ($def -match '^CONSTRAINT (CK_\w+) CHECK (.*)$') {
+        $nuevo = [pscustomobject]@{ Tabla = $actual; Nombre = $matches[1]; Texto = $matches[2]; Saldo = 0; Desc = $comentario }
+        $nuevo.Saldo = Saldo $nuevo.Texto
+        if ($nuevo.Saldo -le 0) { CerrarCk $nuevo } else { $ck = $nuevo }
+        continue
+    }
     if ($def -notmatch '^([a-z][a-z0-9_]*)\s+(INT|SMALLINT|TINYINT|BIGINT|BIT|DATE|DATETIME2|VARCHAR|NVARCHAR|CHAR|VARBINARY|DECIMAL|AS)\b(.*)$') { continue }
 
-    $col = [pscustomobject]@{ Nombre = $matches[1]; Tipo = ''; Nulo = ''; Calculada = $false; Desc = $comentario }
+    $col = [pscustomobject]@{ Nombre = $matches[1]; Tipo = ''; Nulo = ''; Calculada = $false; Desc = $comentario; Omision = '' }
     if ($matches[2] -eq 'AS') {
         $col.Tipo = 'calculada'; $col.Nulo = '---'; $col.Calculada = $true
     } else {
@@ -105,7 +133,7 @@ foreach ($l in [IO.File]::ReadAllLines($Sql, [Text.Encoding]::UTF8)) {
         $identidad = $resto -match 'IDENTITY'
         $col.Nulo = if ($resto -match '\bNOT NULL\b') { 'No' } else { 'Sí' }
         if ($resto -match 'DEFAULT \((.*)\)\s*$') {
-            $v = $matches[1]
+            $v = $matches[1]; $col.Omision = $v
             if ($v -eq 'SYSUTCDATETIME()') { $col.Desc += ' Por omisión, la fecha actual.' }
             else { $v = $v.Trim('(', ')').Trim("'"); $col.Desc += " Por omisión, ``$v``." }
         }
@@ -120,8 +148,20 @@ foreach ($l in [IO.File]::ReadAllLines($Sql, [Text.Encoding]::UTF8)) {
 #---------------------------------------------------------------------
 function ColsFk($t) { @($t.Fk | ForEach-Object { $_.Cols }) }
 
+# Llave de retorno: apunta a una tabla que se identifica por esta, como lo haría una
+# llave de Partida hacia una de sus Participacion. No identifica a la tabla, así que
+# no cuenta para clasificarla. El esquema actual no tiene ninguna.
+function EsRetorno($t, $f) {
+    $r = $tablas[$f.Ref]
+    foreach ($g in $r.Fk) {
+        if ($g.Ref -eq $t.Nombre -and @($g.Cols | Where-Object { $r.Pk -notcontains $_ }).Count -eq 0) { return $true }
+    }
+    return $false
+}
+function ColsFkPropias($t) { @($t.Fk | Where-Object { -not (EsRetorno $t $_) } | ForEach-Object { $_.Cols }) }
+
 function TipoEntidad($t) {
-    $fkCols = ColsFk $t
+    $fkCols = ColsFkPropias $t
     $pkEnFk = @($t.Pk | Where-Object { $fkCols -contains $_ })
     if ($t.Area -like 'Catálogos*') {
         if ($t.Pk.Count -ge 2) { return 'Catálogo asociativo' } else { return 'Catálogo' }
@@ -159,7 +199,7 @@ function Llave($t, $nombreCol) {
 
 function Escribir($archivo, $lineas) { [IO.File]::WriteAllText((Join-Path $Salida $archivo), (($lineas -join "`n") + "`n"), $utf8) }
 
-$aviso = '% Archivo generado por bd/generar_tablas.ps1 a partir de bd/bastion.sql. No editar a mano.'
+$aviso = '% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.'
 $areas = @($tablas.Values | ForEach-Object { $_.Area } | Select-Object -Unique)
 
 #---------------------------------------------------------------------
@@ -180,9 +220,19 @@ Escribir 'entidades.tex' $o
 #---------------------------------------------------------------------
 # 2. Atributos de cada entidad
 #---------------------------------------------------------------------
-$o = @($aviso)
+function Slug([string]$s) {
+    $s = ($s -replace '\(.*?\)', '').Trim().ToLowerInvariant().Normalize([Text.NormalizationForm]::FormD)
+    $s = -join ($s.ToCharArray() | Where-Object { [Globalization.CharUnicodeInfo]::GetUnicodeCategory($_) -ne 'NonSpacingMark' })
+    ($s -replace '[^a-z0-9]+', '-').Trim('-')
+}
+
+# Un archivo por área, para que un cambio en una tabla solo toque el archivo de su área.
+$dirAtributos = Join-Path $Salida 'atributos'
+if (-not (Test-Path $dirAtributos)) { New-Item -ItemType Directory -Path $dirAtributos | Out-Null }
+$indice = @($aviso)
 foreach ($a in $areas) {
-    $o += '\subsubsection*{' + (Tex $a) + '}', ''
+    $slug = Slug $a
+    $o = @($aviso, '\subsubsection*{' + (Tex $a) + '}', '\addcontentsline{toc}{subsubsection}{' + (Tex $a) + '}', '')
     foreach ($t in @($tablas.Values | Where-Object { $_.Area -eq $a })) {
         $o += '\atributosde{' + $t.Nombre + '}{' + (Tex $t.Desc) + '}'
         $o += '\begin{tablaatributos}'
@@ -191,8 +241,10 @@ foreach ($a in $areas) {
         }
         $o += '\end{tablaatributos}', ''
     }
+    [IO.File]::WriteAllText((Join-Path $dirAtributos "$slug.tex"), (($o -join "`n") + "`n"), $utf8)
+    $indice += "\input{bd/tex/atributos/$slug}"
 }
-Escribir 'atributos.tex' $o
+Escribir 'atributos.tex' $indice
 
 #---------------------------------------------------------------------
 # 3. Llaves primarias y restricciones de unicidad
@@ -274,15 +326,91 @@ $o += '\end{longtable}', '\end{center}'
 Escribir 'normalizacion.tex' $o
 
 #---------------------------------------------------------------------
+# 7. Restricciones CHECK y valores por omisión (sección de implementación)
+#---------------------------------------------------------------------
+function TexSql([string]$s) {
+    $s = $s.Replace('\', '\textbackslash{}').Replace('_', '\_\allowbreak{}').Replace('%', '\%').Replace('&', '\&').Replace('#', '\#')
+    $s = $s.Replace("'", '\textquotesingle{}').Replace(',', ',\allowbreak{}').Replace(']', ']\allowbreak{}')
+    '\texttt{' + $s + '}'
+}
+# Nombre de restricción que puede cortarse tras cada guion bajo y antes de cada mayúscula interior
+function TexNombreLargo([string]$s) {
+    '\texttt{' + [regex]::Replace($s.Replace('_', '\_\allowbreak{}'), '(?<=[a-z])(?=[A-Z])', '\allowbreak{}') + '}'
+}
+$o = @($aviso, '\begin{center}\small', '\begin{longtable}{|L{0.19\textwidth}|L{0.23\textwidth}|L{0.48\textwidth}|}',
+    '\hline', '\textbf{Entidad} & \textbf{Restricción} & \textbf{Condición} \\ \hline', '\endfirsthead',
+    '\hline', '\textbf{Entidad} & \textbf{Restricción} & \textbf{Condición} \\ \hline', '\endhead')
+$numChecks = 0
+foreach ($a in $areas) {
+    $filas = @()
+    foreach ($t in @($tablas.Values | Where-Object { $_.Area -eq $a })) {
+        foreach ($c in $t.Ck) { $filas += (Ent $t.Nombre) + ' & ' + (TexNombreLargo $c.Nombre) + ' & ' + (TexSql $c.Expr) + ' \\ \hline'; $numChecks++ }
+    }
+    if ($filas.Count) { $o += '\multicolumn{3}{|l|}{\textbf{' + (Tex $a) + '}} \\ \hline'; $o += $filas }
+}
+$o += '\end{longtable}', '\end{center}'
+Escribir 'restricciones-check.tex' $o
+
+$o = @($aviso, '\begin{center}\small', '\begin{longtable}{|L{0.22\textwidth}|L{0.68\textwidth}|}',
+    '\hline', '\textbf{Entidad} & \textbf{Columna y valor por omisión} \\ \hline', '\endfirsthead',
+    '\hline', '\textbf{Entidad} & \textbf{Columna y valor por omisión} \\ \hline', '\endhead')
+$numDefaults = 0
+foreach ($t in $tablas.Values) {
+    $valores = @($t.Columnas | Where-Object { $_.Omision } | ForEach-Object { (TexCodigo $_.Nombre) + ' = ' + (TexSql $_.Omision) })
+    if ($valores.Count) { $o += (Ent $t.Nombre) + ' & ' + ($valores -join '; ') + ' \\ \hline'; $numDefaults += $valores.Count }
+}
+$o += '\end{longtable}', '\end{center}'
+Escribir 'valores-omision.tex' $o
+
+#---------------------------------------------------------------------
+# 8. Esquema en JSON para los diagramas entidad-relación de er/
+#---------------------------------------------------------------------
+$er = Join-Path (Split-Path $PSScriptRoot) 'er'
+if (Test-Path $er) {
+    $json = foreach ($t in $tablas.Values) {
+        $fkCols = ColsFk $t
+        [ordered]@{
+            nombre   = $t.Nombre
+            area     = $t.Area
+            clase    = (TipoEntidad $t)
+            pk       = @($t.Pk)
+            columnas = @(foreach ($c in $t.Columnas) {
+                [ordered]@{ nombre = $c.Nombre; pk = [bool]($t.Pk -contains $c.Nombre); fk = [bool]($fkCols -contains $c.Nombre); calculada = [bool]$c.Calculada }
+            })
+            fks      = @(foreach ($f in $t.Fk) {
+                $opcional = @($f.Cols | Where-Object { $cn = $_; ($t.Columnas | Where-Object { $_.Nombre -eq $cn }).Nulo -eq 'Sí' }).Count -gt 0
+                [ordered]@{ nombre = $f.Nombre; cols = @($f.Cols); ref = $f.Ref; card = $f.Card; texto = $f.Texto; opcional = [bool]$opcional }
+            })
+        }
+    }
+    [IO.File]::WriteAllText((Join-Path $er 'esquema.json'), (ConvertTo-Json @($json) -Depth 6), $utf8)
+}
+
+#---------------------------------------------------------------------
 # Resumen para el texto del documento
 #---------------------------------------------------------------------
 $cols = ($tablas.Values | ForEach-Object { $_.Columnas.Count } | Measure-Object -Sum).Sum
 $calc = ($tablas.Values | ForEach-Object { @($_.Columnas | Where-Object { $_.Calculada }).Count } | Measure-Object -Sum).Sum
+$noNulas = ($tablas.Values | ForEach-Object { @($_.Columnas | Where-Object { $_.Nulo -eq 'No' }).Count } | Measure-Object -Sum).Sum
+$unicas = ($tablas.Values | ForEach-Object { $_.Uq.Count } | Measure-Object -Sum).Sum
+$indicesUnicos = ($tablas.Values | ForEach-Object { $_.UqIdx.Count } | Measure-Object -Sum).Sum
+$pkCompuestas = @($tablas.Values | Where-Object { $_.Pk.Count -gt 1 }).Count
+$fkCompuestas = ($tablas.Values | ForEach-Object { @($_.Fk | Where-Object { $_.Cols.Count -gt 1 }).Count } | Measure-Object -Sum).Sum
 $resumen = @($aviso,
     "\newcommand{\bdNumTablas}{$($tablas.Count)}",
     "\newcommand{\bdNumColumnas}{$cols}",
     "\newcommand{\bdNumCalculadas}{$calc}",
     "\newcommand{\bdNumForaneas}{$totalFk}",
-    "\newcommand{\bdNumFNBC}{$($tablas.Count - $soloTercera)}")
+    "\newcommand{\bdNumFNBC}{$($tablas.Count - $soloTercera)}",
+    "\newcommand{\bdNumNoNulas}{$noNulas}",
+    "\newcommand{\bdNumChecks}{$numChecks}",
+    "\newcommand{\bdNumOmision}{$numDefaults}",
+    "\newcommand{\bdNumUnicas}{$unicas}",
+    "\newcommand{\bdNumIndicesUnicos}{$indicesUnicos}",
+    "\newcommand{\bdNumIndices}{$numIndices}",
+    "\newcommand{\bdNumProcedimientos}{$numProcs}",
+    "\newcommand{\bdNumPkCompuestas}{$pkCompuestas}",
+    "\newcommand{\bdNumFkCompuestas}{$fkCompuestas}")
 Escribir 'resumen.tex' $resumen
 "Tablas: $($tablas.Count); columnas: $cols; calculadas: $calc; llaves foráneas: $totalFk; solo 3FN: $soloTercera"
+"NOT NULL: $noNulas; CHECK: $numChecks; DEFAULT: $numDefaults; UNIQUE: $unicas; índices únicos: $indicesUnicos; índices: $numIndices; procedimientos: $numProcs"

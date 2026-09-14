@@ -9,7 +9,7 @@
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
   \crudFila{Prototipos}{6e, 6f, 7c}
   \crudFila{Objetivo}{Devolver al Jugador a la partida que dejó por una desconexión, en el mismo estado en que está en el servidor y con su reloj tal como quedó tras seguir corriendo, y mantener informados a sus rivales mientras tanto.}
-  \crudFila{Disparador}{El SJM recupera la conexión durante una partida, o recibe una \textit{Participacion} sin terminar al iniciar sesión (\mbox{FA-19} del \mbox{CU-01}), o el Jugador selecciona ``volver a la partida'' en un aviso de otro caso de uso.}
+  \crudFila{Disparador}{El SJM recupera la conexión durante una partida, o recibe una \textit{Participacion} sin terminar al iniciar sesión (\mbox{FA-18} del \mbox{CU-01}), o el Jugador selecciona ``volver a la partida'' en un aviso de otro caso de uso.}
   \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
       \item \textbf{\mbox{PRE-02}} El Jugador tiene una \textit{Participacion} sin terminar en una \textit{Partida} en línea.
@@ -44,7 +44,7 @@
    & \cuCelda{\textbf{\mbox{FA-02}: La sesión ya no es válida}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
-      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login}. Al iniciar sesión de nuevo, el \mbox{FA-19} del \mbox{CU-01} lo traerá de vuelta a este caso.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Login}. Al iniciar sesión de nuevo, el \mbox{FA-18} del \mbox{CU-01} lo traerá de vuelta a este caso.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-03}: La partida terminó mientras el Jugador estaba fuera}\par

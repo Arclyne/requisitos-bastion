@@ -1,0 +1,49 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
+\subsubsection*{
+Perfil y personalización
+}
+\addcontentsline{toc}{subsubsection}{
+Perfil y personalización
+}
+
+\atributosde{HistorialNickname}{Cambio de nombre de una cuenta, para que un jugador reportado no se vuelva irreconocible (\mbox{CU-13} \mbox{RN-03}). Se borra al dar de baja la cuenta (\mbox{CU-11}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Cuenta que cambió su nombre. Como llave primaria, impide un segundo cambio (\mbox{CU-13} \mbox{RN-01}). \\ \hline
+\texttt{nickname\_\allowbreak{}anterior} & \texttt{NVARCHAR(30)} & No &  & Nombre antes del cambio. \\ \hline
+\texttt{fecha\_\allowbreak{}cambio} & \texttt{DATETIME2(0)} & No &  & Momento del cambio. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Avatar}{Imagen subida por el jugador como foto de perfil (\mbox{CU-12} \mbox{FA-01}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}avatar} & \texttt{INT}, identidad & No & PK & Identificador del avatar. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta que lo subió. \\ \hline
+\texttt{ruta\_\allowbreak{}imagen} & \texttt{NVARCHAR(260)} & No &  & Ubicación del archivo en el almacenamiento del servidor. \\ \hline
+\texttt{formato} & \texttt{VARCHAR(4)} & No &  & \texttt{JPG} o \texttt{PNG} (\mbox{CU-12} \mbox{RN-05}). \\ \hline
+\texttt{tamano\_\allowbreak{}bytes} & \texttt{INT} & No &  & Tamaño del archivo; hasta dos megabytes. \\ \hline
+\texttt{fecha\_\allowbreak{}subida} & \texttt{DATETIME2(0)} & No &  & Momento de la subida. Por omisión, la fecha actual. \\ \hline
+\texttt{vigente} & \texttt{BIT} & No &  & Si es el avatar que se muestra; el anterior pasa a falso (\mbox{CU-12} \mbox{RN-06}). Por omisión, \texttt{1}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{EnlaceRed}{Enlace a una red social que el jugador muestra en su perfil (\mbox{CU-12}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}enlace} & \texttt{INT}, identidad & No & PK & Identificador del enlace. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta que lo publica. \\ \hline
+\texttt{orden} & \texttt{TINYINT} & No &  & Posición en el perfil, de 1 a 4. \\ \hline
+\texttt{url} & \texttt{NVARCHAR(500)} & No &  & Dirección web; no se admiten acortadores (\mbox{CU-12} \mbox{RN-04}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{UsuarioObjeto}{Objetos cosméticos que posee cada cuenta; es la relación N:M entre Usuario y ObjetoCosmetico (relación Posee del diagrama).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Cuenta que posee el objeto. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & PK, FK & Objeto poseído. \\ \hline
+\texttt{fecha\_\allowbreak{}obtencion} & \texttt{DATETIME2(0)} & No &  & Momento en que se obtuvo. Por omisión, la fecha actual. \\ \hline
+\texttt{origen} & \texttt{VARCHAR(10)} & No &  & \texttt{INICIAL}, \texttt{COMPRA}, \texttt{CAJA} o \texttt{NIVEL}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Equipamiento}{Objeto que cada cuenta lleva equipado en cada ranura; siempre hay exactamente uno por ranura (\mbox{CU-14} \mbox{RN-01}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Cuenta. \\ \hline
+\texttt{id\_\allowbreak{}ranura} & \texttt{TINYINT} & No & PK, FK & Ranura; con la cuenta forma la llave, así que no puede haber dos objetos en la misma ranura. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & FK & Objeto equipado; debe ser de la ranura y debe poseerse. \\ \hline
+\end{tablaatributos}
+

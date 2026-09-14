@@ -1,0 +1,27 @@
+%=====================================================================
+% Datos
+%   Una subsección por archivo en datos/. Las tablas de registros las
+%   genera bd/exportar_datos.py ejecutando bd/consultas_datos.sql sobre la
+%   base cargada; no se editan a mano.
+%=====================================================================
+\section*{Datos}
+\addcontentsline{toc}{section}{Datos}
+
+% \captura{archivo}{pie}: una captura de datos/capturas, a lo ancho, con su pie.
+\newcommand{\captura}[2]{%
+  \par\medskip\noindent\begin{minipage}{\linewidth}\centering
+  \includegraphics[width=\linewidth]{datos/capturas/#1}\par\smallskip
+  {\small\textit{#2}}
+  \end{minipage}\par\medskip}
+
+% \consulta{nombre}: el texto de una consulta de bd/consultas_datos.sql.
+\newcommand{\consulta}[1]{\lstinputlisting[style=sql, basicstyle=\ttfamily\scriptsize]{bd/tex/datos/#1.sql}}
+
+\input{datos/introduccion}
+\input{datos/escenario}
+\input{datos/casos-normales}
+\input{datos/relaciones}
+\input{datos/estados}
+\input{datos/variaciones}
+\input{datos/rechazos}
+\input{datos/registros}

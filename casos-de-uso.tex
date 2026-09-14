@@ -22,7 +22,12 @@
 \usepackage{ragged2e}
 \usepackage{needspace}
 \usepackage{graphicx}
+\usepackage{pdflscape}
 \usepackage{listings}
+% Marca de orden de bytes de los scripts UTF-8 que se incluyen con \lstinputlisting
+\DeclareUnicodeCharacter{FEFF}{}
+% pdflatex no tiene fuente para el emoji de los datos de prueba: se muestra su punto de código
+\DeclareUnicodeCharacter{1F44D}{\textlangle{}U+1F44D\textrangle{}}
 \usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
 
@@ -171,7 +176,7 @@
 \newcommand{\atund}{\textunderscore\allowbreak}
 \newcommand{\at}[1]{{\let\_\atund\texttt{#1}}}
 
-% Modelo de datos: tabla de atributos de una entidad (generada desde bd/bastion.sql)
+% Modelo de datos: tabla de atributos de una entidad (generada desde bd/crear_tablas.sql)
 \newcommand{\atributosde}[2]{\par\needspace{7\baselineskip}\medskip\noindent\textbf{\textit{#1}}. #2\par\nopagebreak}
 \newenvironment{tablaatributos}
 {%
@@ -193,9 +198,18 @@
   commentstyle=\itshape\color{black!60}, stringstyle=\color{black!80},
   morekeywords={LOGIN,PASSWORD,CHECK_POLICY,CHECK_EXPIRATION,DEFAULT_DATABASE,DEFAULT_SCHEMA,EXECUTE,IF,GO,SUSER_ID,USER_ID},
   columns=fullflexible, keepspaces=true, breaklines=true, frame=single, framesep=4pt,
-  xleftmargin=4pt, xrightmargin=4pt, aboveskip=8pt, belowskip=8pt, upquote=true
+  xleftmargin=4pt, xrightmargin=4pt, aboveskip=8pt, belowskip=8pt, upquote=true, showstringspaces=false,
+  % listings no entiende UTF-8 con pdflatex: los caracteres de los scripts se traducen aquí.
+  % pdflatex no tiene fuente para el emoji de los datos de prueba: se muestra su punto de código.
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+           {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+           {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {ü}{{\"u}}1 {¿}{{\textquestiondown}}1 {¡}{{\textexclamdown}}1
+           {×}{{$\times$}}1 {«}{{\guillemotleft}}1 {»}{{\guillemotright}}1 {—}{{\textemdash}}1
+           {👍}{{\textlangle{}U+1F44D\textrangle{}}}8
 }
 \input{bd/tex/resumen}
+\input{bd/tex/datos-prueba-resumen}
+\input{bd/tex/datos/datos-resumen}
 
 %=====================================================================
 \begin{document}
@@ -225,7 +239,7 @@
 \addcontentsline{toc}{section}{Historial de revisión}
 
 \noindent
-\begin{longtable}{|L{0.22\textwidth}|L{0.14\textwidth}|L{0.40\textwidth}|L{0.14\textwidth}|}
+\begin{longtable}{|L{0.22\textwidth}|L{0.14\textwidth}|L{0.39\textwidth}|L{0.14\textwidth}|}
 \hline
 \textbf{Nombre} & \textbf{Fecha} & \textbf{Razón de cambios} & \textbf{Versión} \\ \hline
 \endfirsthead
@@ -332,9 +346,26 @@ página donde empieza cada uno.
 
 %---------------------------------------------------------------------
 % SECCIÓN 7: MODELO DE DATOS
-%   Las tablas de bd/tex se generan desde bd/bastion.sql con
+%   Las tablas de bd/tex se generan desde bd/crear_tablas.sql con
 %   bd/generar_tablas.ps1; se editan en el script, no aquí.
 %---------------------------------------------------------------------
 \input{modelo-datos}
+\newpage
+
+%---------------------------------------------------------------------
+% IMPLEMENTACIÓN EN SQL SERVER
+%   Una subsección por archivo en implementacion/. Los listados leen
+%   los scripts de bd/ directamente.
+%---------------------------------------------------------------------
+\input{implementacion}
+\newpage
+
+%---------------------------------------------------------------------
+% DATOS
+%   Los registros con que se probó la base. Las tablas de bd/tex/datos
+%   las genera bd/exportar_datos.py consultando la base cargada; las
+%   capturas de datos/capturas se tomaron en la consola de Windows.
+%---------------------------------------------------------------------
+\input{datos}
 
 \end{document}

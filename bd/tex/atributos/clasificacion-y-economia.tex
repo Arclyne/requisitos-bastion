@@ -1,0 +1,69 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
+\subsubsection*{
+Clasificación y economía
+}
+\addcontentsline{toc}{subsubsection}{
+Clasificación y economía
+}
+
+\atributosde{EstadisticaModo}{Estadísticas y elo de cada cuenta en cada modo, solo de partidas clasificatorias (\mbox{CU-25} \mbox{RN-14}); es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, \mbox{D-04}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Cuenta. \\ \hline
+\texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & PK, FK & Modo. \\ \hline
+\texttt{puntos\_\allowbreak{}elo} & \texttt{SMALLINT} & No &  & Elo actual en el modo; lo escribe solo el \mbox{CU-25}. Por omisión, \texttt{1000}. \\ \hline
+\texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}partida} & \texttt{DATETIME2(0)} & Sí &  & Fin de la última partida clasificatoria del modo: cuándo se alcanzó el elo actual; desempata el ranking (\mbox{CU-35} \mbox{RN-06}). \\ \hline
+\texttt{elo\_\allowbreak{}maximo} & \texttt{SMALLINT} & No &  & Elo más alto alcanzado. Por omisión, \texttt{1000}. \\ \hline
+\texttt{partidas\_\allowbreak{}jugadas} & \texttt{INT} & No &  & Partidas clasificatorias, incluidas las tablas, que no son victoria ni derrota (\mbox{CU-25} \mbox{FA-05}). Por omisión, \texttt{0}. \\ \hline
+\texttt{partidas\_\allowbreak{}ganadas} & \texttt{INT} & No &  & Victorias. El porcentaje se calcula y no se guarda (\mbox{CU-15} \mbox{RN-01}). Por omisión, \texttt{0}. \\ \hline
+\texttt{partidas\_\allowbreak{}perdidas} & \texttt{INT} & No &  & Derrotas, incluidas rendiciones y abandonos. Por omisión, \texttt{0}. \\ \hline
+\texttt{racha\_\allowbreak{}actual} & \texttt{SMALLINT} & No &  & Victorias seguidas por llegada a meta (\mbox{CU-25} \mbox{RN-11}). Por omisión, \texttt{0}. \\ \hline
+\texttt{mejor\_\allowbreak{}racha} & \texttt{SMALLINT} & No &  & Racha más larga. Por omisión, \texttt{0}. \\ \hline
+\texttt{tiempo\_\allowbreak{}total\_\allowbreak{}jugado} & \texttt{INT} & No &  & Segundos jugados en partidas clasificatorias del modo. Por omisión, \texttt{0}. \\ \hline
+\texttt{barreras\_\allowbreak{}colocadas} & \texttt{INT} & No &  & Muros colocados, contados desde \textit{Jugada} al cerrar cada partida. Por omisión, \texttt{0}. \\ \hline
+\texttt{abandonos} & \texttt{INT} & No &  & Abandonos en partidas en línea, para la moderación (\mbox{CU-24} \mbox{RN-05}). Por omisión, \texttt{0}. \\ \hline
+\texttt{id\_\allowbreak{}division} & \texttt{TINYINT} & Sí & FK & División actual; nula hasta jugar cinco partidas en el modo (\mbox{CU-25} \mbox{RN-14}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{HistorialDivision}{Cambio de división de una cuenta en un modo. No se deduce de una sola partida por las partidas de margen, así que se guarda (\mbox{CU-15}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}historial\_\allowbreak{}division} & \texttt{INT}, identidad & No & PK & Identificador del cambio. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta. \\ \hline
+\texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & FK & Modo en que cambió de división. \\ \hline
+\texttt{id\_\allowbreak{}division\_\allowbreak{}anterior} & \texttt{TINYINT} & Sí & FK & División de la que sale; nula al obtener la primera. \\ \hline
+\texttt{id\_\allowbreak{}division\_\allowbreak{}nueva} & \texttt{TINYINT} & No & FK & División a la que llega. \\ \hline
+\texttt{fecha\_\allowbreak{}cambio} & \texttt{DATETIME2(0)} & No &  & Momento del cambio; lo marca la gráfica de elo. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Caja}{Caja comprada u obtenida al subir de nivel. Existe sin abrir entre la compra y la apertura (\mbox{CU-39} \mbox{RN-09}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}caja} & \texttt{INT}, identidad & No & PK & Identificador de la caja. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta dueña de la caja. \\ \hline
+\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja} & \texttt{TINYINT} & No & FK & Tipo, que fija el contenido posible. \\ \hline
+\texttt{origen} & \texttt{VARCHAR(10)} & No &  & \texttt{COMPRA} o \texttt{PARTIDA}. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{SIN\_\allowbreak{}ABRIR}, \texttt{ABIERTA} o \texttt{CADUCADA}. Por omisión, \texttt{SIN\_\allowbreak{}ABRIR}. \\ \hline
+\texttt{fecha\_\allowbreak{}obtencion} & \texttt{DATETIME2(0)} & No &  & Momento en que se obtuvo. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}apertura} & \texttt{DATETIME2(0)} & Sí &  & Momento en que se abrió. \\ \hline
+\texttt{fecha\_\allowbreak{}caducidad} & \texttt{DATETIME2(0)} & Sí &  & Solo en cajas ganadas jugando, a los catorce días; las compradas no caducan (\mbox{CU-39} \mbox{RN-06}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{CajaContenido}{Los tres objetos que salieron al abrir una caja, registrados para poder comprobarlos después (\mbox{CU-39} \mbox{RN-07}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}caja} & \texttt{INT} & No & PK, FK & Caja abierta. \\ \hline
+\texttt{numero} & \texttt{TINYINT} & No & PK & Posición del objeto en la caja, de 1 a 3. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & FK & Objeto que salió. \\ \hline
+\texttt{monedas\_\allowbreak{}conversion} & \texttt{INT} & Sí &  & Monedas recibidas si el objeto estaba repetido y se convirtió (\mbox{CU-39} \mbox{RN-03}). \\ \hline
+\texttt{convertido} & calculada & --- &  & Si el objeto se convirtió en monedas. Calculada: es exactamente que \texttt{monedas\_\allowbreak{}conversion} no sea nula. \\ \hline
+\end{tablaatributos}
+
+\atributosde{MovimientoMoneda}{Entrada o salida de monedas. El saldo verdadero es su suma; nunca se modifica ni se elimina (\mbox{CU-40} \mbox{RN-01}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}movimiento} & \texttt{BIGINT}, identidad & No & PK & Identificador del movimiento. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta afectada. \\ \hline
+\texttt{tipo} & \texttt{VARCHAR(12)} & No &  & \texttt{PARTIDA}, \texttt{NIVEL}, \texttt{COMPRA}, \texttt{COMPRA\_\allowbreak{}CAJA}, \texttt{CONVERSION} o \texttt{DEVOLUCION}. Discrimina qué origen aplica. \\ \hline
+\texttt{importe} & \texttt{INT} & No &  & Monedas; negativo en las compras. \\ \hline
+\texttt{fecha\_\allowbreak{}movimiento} & \texttt{DATETIME2(0)} & No &  & Momento del movimiento. Por omisión, la fecha actual. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & Sí & FK & Partida que lo originó, en \texttt{PARTIDA}. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & Sí & FK & Objeto comprado o convertido, en \texttt{COMPRA} y \texttt{CONVERSION}. \\ \hline
+\texttt{id\_\allowbreak{}caja} & \texttt{INT} & Sí & FK & Caja comprada o abierta, en \texttt{COMPRA\_\allowbreak{}CAJA} y \texttt{CONVERSION}. \\ \hline
+\end{tablaatributos}
+

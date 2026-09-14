@@ -19,7 +19,7 @@ Todos los casos de uso están redactados a detalle. La Matriz 1 se obtuvo direct
 Ninguna fila puede quedarse sin al menos un caso que la escriba. Una tabla que nadie escribe o no hace falta, o falta el caso de uso que la llena.
 
 \begin{center}\small
-\begin{longtable}{|L{0.240\textwidth}|L{0.280\textwidth}|L{0.240\textwidth}|L{0.100\textwidth}|}
+\begin{longtable}{|L{0.240\textwidth}|L{0.275\textwidth}|L{0.240\textwidth}|L{0.105\textwidth}|}
 \hline
 \textbf{Estructura} & \textbf{Escrita por} & \textbf{Leída por} & \textbf{Estado} \\ \hline
 \endfirsthead
@@ -76,7 +76,7 @@ Ninguna fila puede quedarse sin al menos un caso que la escriba. Una tabla que n
 \end{longtable}
 \end{center}
 
-\textbf{Sin huérfanas.} Las 47 estructuras que aparecen en los casos tienen al menos un caso de uso que las escribe, salvo los 10 catálogos, que por la decisión \mbox{D-09} se cargan con \texttt{insertar\_\allowbreak{}datos\_\allowbreak{}prueba.sql} y se mantienen por SQL. Esa es una elección, no un olvido, y conviene que aparezca escrita en el documento de entrega.
+\textbf{Sin huérfanas.} Las \bdNumTablas{} estructuras que aparecen en los casos tienen al menos un caso de uso que las escribe, salvo los 10 catálogos, que por la decisión \mbox{D-09} se cargan con \texttt{insertar\_\allowbreak{}datos\_\allowbreak{}prueba.sql} y se mantienen por SQL. Esa es una elección, no un olvido, y conviene que aparezca escrita en el documento de entrega.
 
 \textbf{Estructuras sin tabla propia.} Tres conceptos que podrían parecer tablas se resuelven sin ellas: el historial de elo sale de las \textit{Participacion} clasificatorias (\mbox{CU-15}), el marcador entre dos jugadores se calcula al consultarlo (\mbox{CU-16}) y los espectadores se llevan en memoria (\mbox{CU-34}). Cada caso justifica la decisión en su observación.
 
@@ -117,7 +117,6 @@ Un caso \textit{depende} de otro cuando lo invoca, lo continúa o presupone su r
 \mbox{CU-44} & \mbox{CU-46} & Exige el rol que la administración otorga \\ \hline
 \mbox{CU-08} & \mbox{CU-01}, \mbox{CU-06} & Se ofrece al terminar el primer acceso de cualquiera de los dos \\ \hline
 \mbox{CU-09} & \mbox{CU-04} & El cambio de correo se confirma con el enlace del \mbox{CU-04} (\mbox{FA-07}) \\ \hline
-\mbox{CU-11} & \mbox{CU-01} & La recuperación dentro de los catorce días ocurre al iniciar sesión (\mbox{FA-17}) \\ \hline
 \mbox{CU-19}, \mbox{CU-32} & \mbox{CU-18} & Entrar con código o por invitación supone una sala creada, y el inicio de la partida lo hace el \mbox{CU-18} \\ \hline
 \mbox{CU-22}, \mbox{CU-23}, \mbox{CU-24} & \mbox{CU-25} & Son formas de término; el cierre y la puntuación los hace el \mbox{CU-25} \\ \hline
 \mbox{CU-24} & \mbox{CU-26} & Reclamar la victoria convierte en abandono una desconexión que el \mbox{CU-26} no resolvió \\ \hline
@@ -157,7 +156,7 @@ Cambiar una decisión obliga a reescribir flujos, no solo tablas. Esta es la lis
 \mbox{D-14} · Tablas solo entre dos & \mbox{CU-22}, \mbox{CU-25} \\ \hline
 \mbox{D-15} · Abandono y desconexión & \mbox{CU-24}, \mbox{CU-25}, \mbox{CU-26} \\ \hline
 \mbox{D-16} · Salas privadas & \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-32} \\ \hline
-\mbox{D-17} · Recuperación y anonimización & \mbox{CU-01}, \mbox{CU-11} \\ \hline
+\mbox{D-17} · Anonimización inmediata & \mbox{CU-11} \\ \hline
 \mbox{D-18} · Tutorial en la cuenta & \mbox{CU-41} \\ \hline
 \mbox{D-19} · Espectadores sin persistencia & \mbox{CU-25}, \mbox{CU-34} \\ \hline
 \mbox{D-20} · Cambio de correo por token & \mbox{CU-04}, \mbox{CU-09} \\ \hline

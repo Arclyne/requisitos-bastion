@@ -1,4 +1,4 @@
-% Archivo generado por bd/generar_tablas.ps1 a partir de bd/bastion.sql. No editar a mano.
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
 \begin{center}\small
 \begin{longtable}{|L{0.24\textwidth}|L{0.17\textwidth}|L{0.49\textwidth}|}
 \hline
@@ -26,13 +26,13 @@
 \textit{Token\-Recuperacion} & Fuerte & Código enviado por correo para recuperar la contraseña (\mbox{CU-03}). \\ \hline
 \textit{Aceptacion\-Terminos} & Fuerte & Registro de la versión de los términos de uso que aceptó cada cuenta (\mbox{CU-02} \mbox{RN-12}). \\ \hline
 \multicolumn{3}{|l|}{\textbf{Perfil y personalización}} \\ \hline
-\textit{Historial\-Nickname} & Dependiente (1:0..1) & Cambio de nombre de una cuenta, para que un jugador reportado no se vuelva irreconocible (\mbox{CU-13} \mbox{RN-03}). \\ \hline
+\textit{Historial\-Nickname} & Dependiente (1:0..1) & Cambio de nombre de una cuenta, para que un jugador reportado no se vuelva irreconocible (\mbox{CU-13} \mbox{RN-03}). Se borra al dar de baja la cuenta (\mbox{CU-11}). \\ \hline
 \textit{Avatar} & Fuerte & Imagen subida por el jugador como foto de perfil (\mbox{CU-12} \mbox{FA-01}). \\ \hline
 \textit{Enlace\-Red} & Fuerte & Enlace a una red social que el jugador muestra en su perfil (\mbox{CU-12}). \\ \hline
 \textit{Usuario\-Objeto} & Asociativa (N:M) & Objetos cosméticos que posee cada cuenta; es la relación N:M entre Usuario y ObjetoCosmetico (relación Posee del diagrama). \\ \hline
 \textit{Equipamiento} & Asociativa (N:M) & Objeto que cada cuenta lleva equipado en cada ranura; siempre hay exactamente uno por ranura (\mbox{CU-14} \mbox{RN-01}). \\ \hline
 \multicolumn{3}{|l|}{\textbf{Partida}} \\ \hline
-\textit{Partida} & Dependiente (1:0..1) & Partida clasificatoria, privada o contra la IA. Se guarda completa porque de ella dependen el historial, la repetición, la reconexión y los reportes. \\ \hline
+\textit{Partida} & Fuerte & Partida clasificatoria, privada o contra la IA. Se guarda completa porque de ella dependen el historial, la repetición, la reconexión y los reportes. \\ \hline
 \textit{Participacion} & Asociativa (N:M) & Participación de un jugador en una partida; es la relación N:M entre Usuario y Partida (relación Participa del diagrama). La IA no tiene participación (\mbox{D-12}). \\ \hline
 \textit{Participacion\-Objeto} & Asociativa (N:M) & Aspecto con el que cada jugador entró a la partida, una fila por ranura; no cambia aunque el jugador equipe otra cosa (\mbox{CU-14} \mbox{RN-03}, \mbox{CU-37} \mbox{RN-03}). \\ \hline
 \textit{Jugada} & Débil & Movimiento de peón o colocación de muro, en orden. El tablero se reconstruye sumando las jugadas; los muros no tienen tabla propia (\mbox{CU-21}). \\ \hline
@@ -45,7 +45,7 @@
 \textit{Invitacion} & Fuerte & Invitación a jugar, que da acceso a una sala sin conocer su código (\mbox{CU-32}). \\ \hline
 \textit{Mensaje} & Fuerte & Mensaje de chat. Se guarda porque el reporte lo adjunta como prueba (\mbox{CU-28}, \mbox{CU-42}). \\ \hline
 \multicolumn{3}{|l|}{\textbf{Clasificación y economía}} \\ \hline
-\textit{Estadistica\-Modo} & Asociativa (N:M) & Estadísticas y elo de cada cuenta en cada modo; es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, \mbox{D-04}). \\ \hline
+\textit{Estadistica\-Modo} & Asociativa (N:M) & Estadísticas y elo de cada cuenta en cada modo, solo de partidas clasificatorias (\mbox{CU-25} \mbox{RN-14}); es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, \mbox{D-04}). \\ \hline
 \textit{Historial\-Division} & Fuerte & Cambio de división de una cuenta en un modo. No se deduce de una sola partida por las partidas de margen, así que se guarda (\mbox{CU-15}). \\ \hline
 \textit{Caja} & Fuerte & Caja comprada u obtenida al subir de nivel. Existe sin abrir entre la compra y la apertura (\mbox{CU-39} \mbox{RN-09}). \\ \hline
 \textit{Caja\-Contenido} & Débil & Los tres objetos que salieron al abrir una caja, registrados para poder comprobarlos después (\mbox{CU-39} \mbox{RN-07}). \\ \hline

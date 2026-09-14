@@ -7,3 +7,4 @@ casos-de-uso.pdf
 *.fdb_latexmk
 *.synctex*
 .DS_Store
+__pycache__/

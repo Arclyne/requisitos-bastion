@@ -1,4 +1,4 @@
-% Archivo generado por bd/generar_tablas.ps1 a partir de bd/bastion.sql. No editar a mano.
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
 \begin{center}\small
 \begin{longtable}{|L{0.2\textwidth}|L{0.25\textwidth}|L{0.45\textwidth}|}
 \hline
@@ -7,17 +7,19 @@
 \hline
 \textbf{Entidad} & \textbf{Columnas y condición} & \textbf{Regla que garantiza} \\ \hline
 \endhead
-\textit{Ranura} & (\texttt{nombre}) & Dos ranuras no se llaman igual. \\ \hline
+\textit{Ranura} & (\texttt{codigo}) & Dos ranuras no tienen la misma clave. \\ \hline
+\textit{Objeto\-Cosmetico} & (\texttt{codigo}) & Dos objetos no tienen la misma clave. \\ \hline
 \textit{Objeto\-Cosmetico} & (\texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}ranura}) & Superclave que usan Equipamiento y ParticipacionObjeto para exigir que el objeto sea de la ranura. \\ \hline
 \textit{Objeto\-Cosmetico} & (\texttt{id\_\allowbreak{}ranura}), si \texttt{es\_\allowbreak{}predeterminado = 1} & Un solo objeto predeterminado por ranura (\mbox{CU-02} \mbox{PRE-05}). \\ \hline
-\textit{Modo} & (\texttt{nombre}) & Dos modos no se llaman igual. \\ \hline
-\textit{Division} & (\texttt{nombre}) & Dos divisiones no se llaman igual. \\ \hline
-\textit{Division} & (\texttt{orden}) & Dos divisiones no ocupan la misma posición. \\ \hline
-\textit{Nivel\-IA} & (\texttt{nombre}) & Dos niveles no se llaman igual. \\ \hline
+\textit{Modo} & (\texttt{codigo}) & Dos modos no tienen la misma clave. \\ \hline
+\textit{Division} & (\texttt{codigo}) & Dos divisiones no tienen la misma clave. \\ \hline
+\textit{Division} & (\texttt{elo\_\allowbreak{}minimo}) & Dos divisiones no empiezan en el mismo elo, así que el orden no tiene empates. \\ \hline
+\textit{Nivel\-IA} & (\texttt{codigo}) & Dos niveles no tienen la misma clave. \\ \hline
+\textit{Leccion} & (\texttt{codigo}) & Dos lecciones no tienen la misma clave. \\ \hline
 \textit{Leccion} & (\texttt{orden}) & Dos lecciones no ocupan la misma posición. \\ \hline
-\textit{Tipo\-Caja} & (\texttt{nombre}) & Dos tipos de caja no se llaman igual. \\ \hline
+\textit{Tipo\-Caja} & (\texttt{codigo}) & Dos tipos de caja no tienen la misma clave. \\ \hline
 \textit{Palabra\-Prohibida} & (\texttt{termino}, \texttt{idioma}, \texttt{ambito}) & Un término no se repite en el mismo idioma y ámbito. \\ \hline
-\textit{Motivo\-Reporte} & (\texttt{nombre}) & Dos motivos no se llaman igual. \\ \hline
+\textit{Motivo\-Reporte} & (\texttt{codigo}) & Dos motivos no tienen la misma clave. \\ \hline
 \textit{Usuario} & (\texttt{nickname}) & El nickname es identificador de acceso (\mbox{CU-01} \mbox{RN-14}). \\ \hline
 \textit{Usuario} & (\texttt{correo}), si \texttt{correo IS NOT NULL} & El correo es único entre las cuentas que lo tienen (\mbox{CU-02} \mbox{RN-02}). \\ \hline
 \textit{Usuario} & (\texttt{codigo\_\allowbreak{}amigo}), si \texttt{codigo\_\allowbreak{}amigo IS NOT NULL} & El código de amigo es único por cuenta (\mbox{CU-30} \mbox{RN-06}). \\ \hline
@@ -31,7 +33,7 @@
 \textit{Enlace\-Red} & (\texttt{id\_\allowbreak{}usuario}, \texttt{orden}) & Junto con el CHECK del orden, limita a cuatro enlaces por cuenta (\mbox{CU-12} \mbox{RN-03}). \\ \hline
 \textit{Equipamiento} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & Llave candidata: como el objeto determina su ranura, la cuenta y el objeto también identifican la fila. \\ \hline
 \textit{Participacion} & (\texttt{id\_\allowbreak{}partida}, \texttt{orden\_\allowbreak{}turno}) & Dos jugadores no comparten turno en la misma partida. \\ \hline
-\textit{Participacion} & (\texttt{id\_\allowbreak{}usuario}), si \texttt{terminada = 0} & Una sola participación sin terminar por jugador, incluidas las de la IA (\mbox{D-11}). \\ \hline
+\textit{Participacion} & (\texttt{id\_\allowbreak{}usuario}), si \texttt{resultado IS NULL} & Una sola participación sin terminar por jugador, incluidas las de la IA (\mbox{D-11}). Filtra por \texttt{resultado} porque un índice filtrado no admite columnas calculadas. \\ \hline
 \textit{Participacion\-Objeto} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & Llave candidata: como el objeto determina su ranura, también identifica la fila. \\ \hline
 \textit{Oferta\-Tablas} & (\texttt{id\_\allowbreak{}partida}), si \texttt{estado = PENDIENTE} & A lo sumo una oferta pendiente por partida; la segunda es aceptación (\mbox{CU-22} \mbox{RN-04}). \\ \hline
 \textit{Enlace\-Espectador} & (\texttt{token\_\allowbreak{}hash}) & El token identifica un solo enlace. \\ \hline

@@ -31,7 +31,7 @@
       \item El Servidor de partidas invalida los \textit{TokenRecuperacion} pendientes del \textit{Usuario}, porque ya no hace falta recuperar una contraseña que se acaba de cambiar.
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
       \item El Servidor de partidas registra el cambio en la \textit{BitacoraAcceso} con el resultado \texttt{CAMBIO\_\allowbreak{}CONTRASENA}.
-      \item El Servidor de partidas solicita al Servicio de correo un aviso al \texttt{correo} del \textit{Usuario} informando del cambio, fuera de la transacción (\mbox{RN-05}). \textit{(Ver \mbox{EX-06})}
+      \item El Servidor de partidas solicita al Servicio de correo un aviso al \texttt{correo} del \textit{Usuario} informando del cambio, en su \texttt{idioma\_\allowbreak{}preferido} y fuera de la transacción (\mbox{RN-05}). \textit{(Ver \mbox{EX-06})}
       \item El Servidor de partidas responde con \texttt{CHANGE\_\allowbreak{}PASSWORD\_\allowbreak{}OK} y el número de sesiones cerradas.
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=17]
@@ -48,7 +48,7 @@
       \item El Servidor de partidas normaliza el correo nuevo a minúsculas y verifica que sea distinto del actual y que no esté registrado por otro \textit{Usuario}. \textit{(Ver \mbox{FA-07})}
       \item El Servidor de partidas verifica que hayan transcurrido al menos cinco minutos desde \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, o que sea nulo. \textit{(Ver \mbox{FA-08})}
       \item El Servidor de partidas invalida los \textit{TokenVerificacionCorreo} pendientes del \textit{Usuario} y genera uno nuevo con propósito \texttt{CAMBIO\_\allowbreak{}CORREO}, el \texttt{correo\_\allowbreak{}destino} igual al correo nuevo y su fecha de expiración. \textit{(Ver \mbox{EX-01})}
-      \item El Servidor de partidas solicita al Servicio de correo el envío del enlace de confirmación \textbf{al correo nuevo}, y un aviso \textbf{al correo actual} informando de la solicitud (\mbox{RN-06}). \textit{(Ver \mbox{EX-06})}
+      \item El Servidor de partidas solicita al Servicio de correo el envío del enlace de confirmación \textbf{al correo nuevo}, y un aviso \textbf{al correo actual} informando de la solicitud, los dos en el \texttt{idioma\_\allowbreak{}preferido} del \textit{Usuario} (\mbox{RN-06}). \textit{(Ver \mbox{EX-06})}
       \item El Servidor de partidas actualiza \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} y registra la solicitud en la \textit{BitacoraAcceso} con el resultado \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}SOLICITADO}.
       \item El Servidor de partidas responde con \texttt{CHANGE\_\allowbreak{}EMAIL\_\allowbreak{}PENDING}.
       \item El SJM muestra en la \texttt{GUI\_\allowbreak{}AccountSettings} el correo actual como vigente y el nuevo como pendiente de confirmar. El cambio se completa cuando el Jugador abre el enlace, conforme al \mbox{FA-07} del \mbox{CU-04} (\mbox{RN-07}).
@@ -183,7 +183,7 @@
     Se consideró guardar el correo nuevo en una columna \texttt{correo\_\allowbreak{}pendiente} de \textit{Usuario}. Se descartó porque el correo pendiente no tiene sentido sin el token que lo confirma: caduca con él, se invalida con él y se sustituye con él. Guardarlo en el \textit{TokenVerificacionCorreo}, junto con un \texttt{proposito} que distinga el alta del cambio, mantiene en una sola fila todo lo que tiene la misma vigencia, y evita una columna de \textit{Usuario} que estaría nula en casi todas las cuentas.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}:} lee por token; cierra las demás \textit{(pasos 6, 11)}
-      \item \textbf{\textit{Usuario}:} lee \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{correo}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} \textit{(pasos 7, \mbox{FA-01})}
+      \item \textbf{\textit{Usuario}:} lee \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{correo}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, \texttt{idioma\_\allowbreak{}preferido} \textit{(pasos 7, 15, \mbox{FA-01})}
       \item \textbf{\textit{Usuario}:} escribe \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta} \textit{(pasos 10, \mbox{FA-01}, \mbox{FA-05})}
       \item \textbf{\textit{TokenRecuperacion}:} invalida los pendientes \textit{(paso 12)}
       \item \textbf{\textit{TokenVerificacionCorreo}:} invalida los pendientes y crea uno con \texttt{proposito} y \texttt{correo\_\allowbreak{}destino} \textit{(pasos \mbox{FA-01}, \mbox{FA-09})}

@@ -1,0 +1,25 @@
+%=====================================================================
+% Modelo de datos · Normalización: segunda forma normal
+%=====================================================================
+\subsubsection*{Paso a segunda forma normal}
+\addcontentsline{toc}{subsubsection}{Paso a segunda forma normal}
+
+Las tablas del diagrama con llave compuesta, \textit{Posee} y \textit{Participa}, ya cumplen la 2FN: \at{fecha\_obtencion} depende del par usuario–skin, y resultado, color, turno y muros dependen del par usuario–partida. El riesgo aparece en las tablas compuestas que añade el modelo, donde es tentador copiar datos de uno de los dos lados. La tabla muestra los atributos que habrían violado la 2FN y en qué tabla quedaron.
+
+\begin{center}\small
+\begin{longtable}{|L{0.22\textwidth}|L{0.33\textwidth}|L{0.35\textwidth}|}
+\hline
+\textbf{Tabla} & \textbf{Dependencia parcial evitada} & \textbf{Dónde vive el dato} \\ \hline
+\endfirsthead
+\hline
+\textbf{Tabla} & \textbf{Dependencia parcial evitada} & \textbf{Dónde vive el dato} \\ \hline
+\endhead
+\textit{EstadisticaModo} & \at{id\_modo} $\rightarrow$ \at{tamano\_tablero}, \at{num\_jugadores}; \at{id\_usuario} $\rightarrow$ \at{nickname} & En \textit{Modo} y en \textit{Usuario}. El ranking los obtiene por las llaves foráneas. \\ \hline
+\textit{Participacion} & \at{id\_partida} $\rightarrow$ \at{id\_modo}, \at{minutos\_reloj}; \at{id\_usuario} $\rightarrow$ \at{permite\_espectadores} & En \textit{Partida} y en \textit{Usuario}. \\ \hline
+\textit{Jugada} & \at{id\_partida} $\rightarrow$ \at{estado}, \at{turno\_actual} & En \textit{Partida}. La jugada solo guarda lo que ocurrió en ella. \\ \hline
+\textit{UsuarioObjeto} & \at{id\_objeto} $\rightarrow$ \at{nombre}, \at{rareza}, \at{precio} & En \textit{ObjetoCosmetico}, donde el nombre queda como \at{codigo}, su clave en los diccionarios de recursos (\mbox{D-21}). El precio pagado queda en \textit{MovimientoMoneda}, que registra el hecho. \\ \hline
+\textit{TipoCajaObjeto} & \at{id\_tipo\_caja} $\rightarrow$ \at{precio} & En \textit{TipoCaja}. \\ \hline
+\textit{ProgresoTutorial} & \at{id\_leccion} $\rightarrow$ \at{num\_pasos} & En \textit{Leccion}. \\ \hline
+\textit{CajaContenido} & \at{id\_caja} $\rightarrow$ \at{id\_usuario}, \at{id\_tipo\_caja} & En \textit{Caja}. \\ \hline
+\end{longtable}
+\end{center}

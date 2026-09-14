@@ -1,0 +1,99 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
+\subsubsection*{
+Cuenta y acceso
+}
+\addcontentsline{toc}{subsubsection}{
+Cuenta y acceso
+}
+
+\atributosde{Usuario}{Cuenta de un jugador, invitado, moderador o administrador. Es la entidad central: casi todas las demás dependen de ella y su fila nunca se borra (\mbox{D-07}, \mbox{D-17}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT}, identidad & No & PK & Identificador de la cuenta; no cambia al vincular un invitado (\mbox{D-02}). \\ \hline
+\texttt{tipo\_\allowbreak{}cuenta} & \texttt{VARCHAR(10)} & No &  & \texttt{INVITADO} o \texttt{REGISTRADA}. Discrimina qué credenciales aplican. \\ \hline
+\texttt{estado\_\allowbreak{}cuenta} & \texttt{VARCHAR(10)} & No &  & \texttt{PENDIENTE}, \texttt{ACTIVA}, \texttt{SUSPENDIDA}, \texttt{BANEADA} o \texttt{ELIMINADA} (\mbox{CU-01} \mbox{RN-04}). Por omisión, \texttt{PENDIENTE}. \\ \hline
+\texttt{rol} & \texttt{VARCHAR(13)} & No &  & \texttt{JUGADOR}, \texttt{MODERADOR} o \texttt{ADMINISTRADOR}; exactamente uno (\mbox{CU-46} \mbox{RN-03}). Por omisión, \texttt{JUGADOR}. \\ \hline
+\texttt{nickname} & \texttt{NVARCHAR(30)} & No & UQ & Nombre visible, de 3 a 30 caracteres; único sin distinguir mayúsculas ni acentos (\mbox{CU-02} \mbox{RN-01}). \\ \hline
+\texttt{correo} & \texttt{NVARCHAR(254)} & Sí &  & Correo normalizado a minúsculas; nulo solo en invitados (\mbox{CU-02} \mbox{RN-02}). \\ \hline
+\texttt{contrasena\_\allowbreak{}hash} & \texttt{VARBINARY(64)} & Sí &  & Resumen criptográfico de la contraseña; nunca en claro (\mbox{CU-01} \mbox{RN-02}). \\ \hline
+\texttt{contrasena\_\allowbreak{}sal} & \texttt{VARBINARY(32)} & Sí &  & Sal del resumen. \\ \hline
+\texttt{fecha\_\allowbreak{}nacimiento} & \texttt{DATE} & Sí &  & Para comprobar la edad mínima de ocho años; la edad no se guarda (\mbox{CU-02}). \\ \hline
+\texttt{idioma\_\allowbreak{}preferido} & \texttt{VARCHAR(10)} & No &  & Idioma de la interfaz y de los correos, \texttt{es-MX} o \texttt{en} (\mbox{D-21}); viaja con el jugador a cualquier dispositivo (\mbox{CU-12} \mbox{RN-08}). Por omisión, \texttt{es-MX}. \\ \hline
+\texttt{codigo\_\allowbreak{}amigo} & \texttt{CHAR(8)} & Sí &  & Código para encontrar al jugador sin su nickname (\mbox{CU-30} \mbox{RN-06}). \\ \hline
+\texttt{id\_\allowbreak{}icono} & \texttt{TINYINT} & No &  & Icono predefinido, de 1 a 32 (\mbox{CU-08} \mbox{RN-03}). Por omisión, \texttt{1}. \\ \hline
+\texttt{permite\_\allowbreak{}espectadores} & \texttt{BIT} & No &  & Si admite espectadores en sus partidas (\mbox{CU-34} \mbox{RN-02}). Por omisión, \texttt{1}. \\ \hline
+\texttt{nivel} & \texttt{SMALLINT} & No &  & Nivel alcanzado. Por omisión, \texttt{1}. \\ \hline
+\texttt{experiencia} & \texttt{INT} & No &  & Experiencia acumulada. Por omisión, \texttt{0}. \\ \hline
+\texttt{saldo\_\allowbreak{}monedas} & \texttt{INT} & No &  & Copia de la suma de \textit{MovimientoMoneda}; redundancia controlada (\mbox{CU-40} \mbox{RN-02}). Por omisión, \texttt{0}. \\ \hline
+\texttt{cajas\_\allowbreak{}sin\_\allowbreak{}raro} & \texttt{TINYINT} & No &  & Cajas seguidas sin objeto raro, para la garantía (\mbox{CU-39} \mbox{RN-05}). Por omisión, \texttt{0}. \\ \hline
+\texttt{intentos\_\allowbreak{}fallidos} & \texttt{TINYINT} & No &  & Intentos fallidos consecutivos de inicio de sesión (\mbox{CU-01} \mbox{RN-03}). Por omisión, \texttt{0}. \\ \hline
+\texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido} & \texttt{DATETIME2(0)} & Sí &  & Para restablecer el contador a las 24 horas (\mbox{CU-01} \mbox{RN-03}). \\ \hline
+\texttt{bloqueada\_\allowbreak{}hasta} & \texttt{DATETIME2(0)} & Sí &  & Fin del bloqueo escalonado vigente. \\ \hline
+\texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} & \texttt{BIT} & No &  & Si la cuenta pide segundo factor (\mbox{CU-01} \mbox{RN-08}). Por omisión, \texttt{0}. \\ \hline
+\texttt{fecha\_\allowbreak{}registro} & \texttt{DATETIME2(0)} & No &  & Alta de la cuenta. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} & \texttt{DATETIME2(0)} & Sí &  & Marca de la configuración de primera vez (\mbox{CU-08} \mbox{RN-01}). \\ \hline
+\texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} & \texttt{DATETIME2(0)} & Sí &  & Último correo de verificación que sí se envió; limita el reenvío (\mbox{CU-01} \mbox{RN-10}). No sale del token: si el envío falla, el token existe y esta fecha no cambia. \\ \hline
+\texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion} & \texttt{DATETIME2(0)} & Sí &  & Último correo de recuperación que sí se envió; limita el envío (\mbox{CU-03} \mbox{RN-06}). \\ \hline
+\texttt{fecha\_\allowbreak{}baja} & \texttt{DATETIME2(0)} & Sí &  & Momento de la baja, que es definitiva: la cuenta se anonimiza en la misma transacción (\mbox{D-07}, \mbox{D-17}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{Sesion}{Sesión abierta desde un dispositivo. Una cuenta puede tener varias a la vez (\mbox{D-01}); al cerrarse no se borra.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}sesion} & \texttt{INT}, identidad & No & PK & Identificador de la sesión. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta dueña de la sesión. \\ \hline
+\texttt{token\_\allowbreak{}hash} & \texttt{VARBINARY(32)} & No & UQ & Resumen del token de sesión. \\ \hline
+\texttt{fecha\_\allowbreak{}inicio} & \texttt{DATETIME2(0)} & No &  & Apertura de la sesión. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}expiracion} & \texttt{DATETIME2(0)} & No &  & Vigencia máxima de veinticuatro horas (\mbox{CU-01} \mbox{RN-07}). \\ \hline
+\texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}uso} & \texttt{DATETIME2(0)} & No &  & Para reconocer sesiones olvidadas (\mbox{CU-10}); se actualiza por minutos. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}fin} & \texttt{DATETIME2(0)} & Sí &  & Cierre explícito; nula mientras está abierta. \\ \hline
+\texttt{motivo\_\allowbreak{}cierre} & \texttt{VARCHAR(20)} & Sí &  & \texttt{CIERRE\_\allowbreak{}VOLUNTARIO}, \texttt{CIERRE\_\allowbreak{}REMOTO}, \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}, \texttt{BAJA\_\allowbreak{}CUENTA} o \texttt{SANCION}. \\ \hline
+\texttt{direccion\_\allowbreak{}ip} & \texttt{VARCHAR(45)} & No &  & Dirección de red de origen. \\ \hline
+\texttt{huella\_\allowbreak{}dispositivo} & \texttt{VARCHAR(128)} & No &  & Huella del dispositivo. \\ \hline
+\texttt{nombre\_\allowbreak{}dispositivo} & \texttt{NVARCHAR(100)} & Sí &  & Nombre legible del dispositivo (\mbox{D-01}). \\ \hline
+\texttt{version\_\allowbreak{}cliente} & \texttt{VARCHAR(20)} & No &  & Versión del cliente que abrió la sesión. \\ \hline
+\end{tablaatributos}
+
+\atributosde{CodigoSegundoFactor}{Código del segundo factor emitido en un inicio de sesión (\mbox{CU-01} \mbox{RN-08}, \mbox{RN-09}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}codigo} & \texttt{INT}, identidad & No & PK & Identificador del código. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta que inicia sesión. \\ \hline
+\texttt{codigo\_\allowbreak{}hash} & \texttt{VARBINARY(32)} & No &  & Resumen del código; nunca en claro (\mbox{CU-01} \mbox{RN-02}). \\ \hline
+\texttt{canal} & \texttt{VARCHAR(20)} & No &  & Mecanismo de entrega que usó el proveedor del segundo factor. \\ \hline
+\texttt{fecha\_\allowbreak{}generacion} & \texttt{DATETIME2(0)} & No &  & Emisión del código. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}expiracion} & \texttt{DATETIME2(0)} & No &  & Vigencia de cinco minutos. \\ \hline
+\texttt{intentos} & \texttt{TINYINT} & No &  & Intentos de verificación; máximo tres. Por omisión, \texttt{0}. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{PENDIENTE}, \texttt{CONSUMIDO} o \texttt{INVALIDADO}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{TokenVerificacionCorreo}{Token del enlace que verifica el correo del alta o confirma un cambio de correo (\mbox{CU-04}, \mbox{D-20}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}token} & \texttt{INT}, identidad & No & PK & Identificador del token. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta a la que pertenece. \\ \hline
+\texttt{token\_\allowbreak{}hash} & \texttt{VARBINARY(32)} & No & UQ & Resumen del token del enlace (\mbox{CU-04} \mbox{RN-06}). \\ \hline
+\texttt{proposito} & \texttt{VARCHAR(15)} & No &  & \texttt{ALTA} o \texttt{CAMBIO\_\allowbreak{}CORREO}. \\ \hline
+\texttt{correo\_\allowbreak{}destino} & \texttt{NVARCHAR(254)} & Sí &  & Correo nuevo; solo en \texttt{CAMBIO\_\allowbreak{}CORREO}. En \texttt{ALTA} es el de la cuenta y no se repite. \\ \hline
+\texttt{fecha\_\allowbreak{}generacion} & \texttt{DATETIME2(0)} & No &  & Emisión del token. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}expiracion} & \texttt{DATETIME2(0)} & No &  & Vigencia de veinticuatro horas (\mbox{CU-04} \mbox{RN-02}). \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{PENDIENTE}, \texttt{USADO} o \texttt{INVALIDADO}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{TokenRecuperacion}{Código enviado por correo para recuperar la contraseña (\mbox{CU-03}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}token} & \texttt{INT}, identidad & No & PK & Identificador del token. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta que se recupera. \\ \hline
+\texttt{token\_\allowbreak{}hash} & \texttt{VARBINARY(32)} & No &  & Resumen del código (\mbox{CU-03} \mbox{RN-08}). \\ \hline
+\texttt{fecha\_\allowbreak{}generacion} & \texttt{DATETIME2(0)} & No &  & Emisión del código. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}expiracion} & \texttt{DATETIME2(0)} & No &  & Vigencia de treinta minutos (\mbox{CU-03} \mbox{RN-04}). \\ \hline
+\texttt{intentos} & \texttt{TINYINT} & No &  & Intentos de verificación; máximo tres (\mbox{CU-03} \mbox{RN-09}). Por omisión, \texttt{0}. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{PENDIENTE}, \texttt{USADO} o \texttt{INVALIDADO}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{AceptacionTerminos}{Registro de la versión de los términos de uso que aceptó cada cuenta (\mbox{CU-02} \mbox{RN-12}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}aceptacion} & \texttt{INT}, identidad & No & PK & Identificador de la aceptación. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta que aceptó. \\ \hline
+\texttt{version\_\allowbreak{}terminos} & \texttt{VARCHAR(20)} & No &  & Versión del texto aceptado. \\ \hline
+\texttt{idioma} & \texttt{VARCHAR(10)} & No &  & Idioma en que se mostró el texto, \texttt{es-MX} o \texttt{en}: cada versión existe en los dos, y lo que se aceptó es esa versión en ese idioma (\mbox{CU-02} \mbox{RN-12}, \mbox{D-21}). \\ \hline
+\texttt{fecha\_\allowbreak{}aceptacion} & \texttt{DATETIME2(0)} & No &  & Momento de la aceptación. Por omisión, la fecha actual. \\ \hline
+\texttt{direccion\_\allowbreak{}ip} & \texttt{VARCHAR(45)} & No &  & Dirección de red desde la que se aceptó. \\ \hline
+\end{tablaatributos}
+

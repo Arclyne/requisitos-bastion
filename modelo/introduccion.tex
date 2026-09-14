@@ -1,0 +1,21 @@
+%=====================================================================
+% Modelo de datos · Introducción y convenciones
+%=====================================================================
+\section*{Modelo de datos}
+\addcontentsline{toc}{section}{Modelo de datos}
+
+Esta sección define el esquema de la base de datos de \sistema{} en SQL Server (\mbox{CON-04}). Parte del diagrama entidad-relación inicial y lo lleva hasta las estructuras que exigen los casos de uso, el análisis CRUD y las decisiones de diseño: presenta el diagrama entidad-relación actualizado, identifica las entidades, sus atributos, sus llaves primarias y foráneas, las relaciones entre ellas con su cardinalidad, y justifica que el resultado está en tercera forma normal. Termina con el usuario con el que el Servidor de partidas se conecta a la base.
+
+El esquema tiene \bdNumTablas{} entidades, \bdNumColumnas{} atributos y \bdNumForaneas{} llaves foráneas. Todas las tablas cumplen la tercera forma normal y \bdNumFNBC{} cumplen además la forma normal de Boyce-Codd; las dos que no, se explican en la sección de normalización.
+
+La sección de implementación, que sigue a esta, crea la base con tres scripts: \at{bd/crear\_base\_datos.sql} crea la base y el usuario de conexión; \at{bd/crear\_tablas.sql}, las tablas, sus restricciones, los índices y los procedimientos almacenados de las eliminaciones físicas; e \at{bd/insertar\_datos\_prueba.sql} carga los catálogos y un conjunto de datos de prueba. Las tablas de atributos, de llaves y de relaciones de esta sección no se escribieron a mano: se generan a partir de \at{bd/crear\_tablas.sql} con \at{bd/generar\_tablas.ps1}, de modo que el documento y la base no pueden contradecirse. El mismo generador exporta el esquema a \at{er/esquema.json}, del que parten los diagramas entidad-relación. Si el esquema cambia, se edita el script y se vuelven a generar las tablas y los diagramas.
+
+Se siguen las convenciones del análisis CRUD: las entidades se escriben en cursiva y los atributos en tipografía de código, sin acentos ni eñes porque son identificadores de la base de datos. Además:
+
+\begin{reglas}
+  \item \textbf{Nombres.} Tablas en singular, con la misma forma que en los casos de uso (\textit{Usuario}, \textit{EstadisticaModo}); atributos en minúsculas separados por guion bajo.
+  \item \textbf{Fechas.} Todas en UTC, con \at{DATETIME2}. El servidor las convierte a la hora local solo para mostrarlas.
+  \item \textbf{Texto.} Todo lo que escribe o lee una persona es \at{NVARCHAR}, en Unicode (\mbox{CON-05}). Los códigos de estado y de dominio son \at{VARCHAR}, porque solo los lee la aplicación. La base usa una intercalación UTF-8, así que los dos tipos admiten la ñ, los acentos y cualquier carácter Unicode (\mbox{D-21}). Nada se guarda traducido: cada fila de catálogo guarda un \at{codigo}, la clave de su nombre en los diccionarios de recursos.
+  \item \textbf{Secretos.} Contraseñas, tokens y códigos se guardan como resumen criptográfico en \at{VARBINARY}; ninguna columna los contiene en claro (\mbox{CU-01} \mbox{RN-02}).
+  \item \textbf{Dominios.} Los valores permitidos de cada estado, tipo o ámbito que se listan en las descripciones están declarados en la base con restricciones \at{CHECK}.
+\end{reglas}

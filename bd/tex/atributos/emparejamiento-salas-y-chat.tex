@@ -1,0 +1,62 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
+\subsubsection*{
+Emparejamiento, salas y chat
+}
+\addcontentsline{toc}{subsubsection}{
+Emparejamiento, salas y chat
+}
+
+\atributosde{ColaEmparejamiento}{Jugadores que esperan partida clasificatoria. Se persiste para poder vaciarla y avisar si el servidor se reinicia (\mbox{CU-17}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Jugador en espera; como llave, impide que esté dos veces en la cola. \\ \hline
+\texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & FK & Modo buscado. \\ \hline
+\texttt{minutos\_\allowbreak{}reloj} & \texttt{TINYINT} & No &  & Reloj buscado: 3, 5 o 10. \\ \hline
+\texttt{fecha\_\allowbreak{}entrada} & \texttt{DATETIME2(0)} & No &  & Inicio de la espera; con ella se amplía la ventana de elo (\mbox{CU-17} \mbox{RN-03}). Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Sala}{Sala privada con código, con los ajustes que elige el anfitrión (\mbox{CU-18}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}sala} & \texttt{INT}, identidad & No & PK & Identificador de la sala. \\ \hline
+\texttt{codigo} & \texttt{CHAR(6)} & No &  & Seis caracteres sin 0, O, 1 ni I; único entre las salas no cerradas (\mbox{CU-18} \mbox{RN-01}). \\ \hline
+\texttt{id\_\allowbreak{}anfitrion} & \texttt{INT} & No & FK & Jugador que creó la sala. \\ \hline
+\texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & FK & Modo, que fija el tablero y las plazas. \\ \hline
+\texttt{muros\_\allowbreak{}por\_\allowbreak{}jugador} & \texttt{TINYINT} & No &  & De 1 a 20, elegido por el anfitrión (\mbox{CU-18} \mbox{RN-04}). \\ \hline
+\texttt{minutos\_\allowbreak{}reloj} & \texttt{TINYINT} & No &  & 3, 5 o 10. \\ \hline
+\texttt{permite\_\allowbreak{}espectadores} & \texttt{BIT} & No &  & Si la partida de la sala admite espectadores. Por omisión, \texttt{1}. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{ABIERTA}, \texttt{EN\_\allowbreak{}PARTIDA} o \texttt{CERRADA}. Por omisión, \texttt{ABIERTA}. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & Sí & FK & Partida que se inició desde la sala. \\ \hline
+\texttt{fecha\_\allowbreak{}creacion} & \texttt{DATETIME2(0)} & No &  & Creación de la sala. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}actividad} & \texttt{DATETIME2(0)} & No &  & Para cerrar la sala a los treinta minutos sin actividad (\mbox{CU-18} \mbox{RN-08}). Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{SalaParticipante}{Plaza que ocupa un jugador en una sala. Describe un estado presente y se borra al salir (\mbox{CU-19}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Jugador; como llave, impide que esté en dos salas a la vez (\mbox{CU-18} \mbox{RN-02}). \\ \hline
+\texttt{id\_\allowbreak{}sala} & \texttt{INT} & No & FK & Sala. \\ \hline
+\texttt{plaza} & \texttt{TINYINT} & No &  & Número de plaza, de 1 a 4. \\ \hline
+\texttt{listo} & \texttt{BIT} & No &  & Nadie está listo hasta declararlo (\mbox{CU-19} \mbox{RN-03}). Por omisión, \texttt{0}. \\ \hline
+\texttt{fecha\_\allowbreak{}union} & \texttt{DATETIME2(0)} & No &  & Momento en que entró. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Invitacion}{Invitación a jugar, que da acceso a una sala sin conocer su código (\mbox{CU-32}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}invitacion} & \texttt{INT}, identidad & No & PK & Identificador de la invitación. \\ \hline
+\texttt{id\_\allowbreak{}sala} & \texttt{INT} & No & FK & Sala a la que se invita. \\ \hline
+\texttt{id\_\allowbreak{}emisor} & \texttt{INT} & No & FK & Jugador que invita. \\ \hline
+\texttt{id\_\allowbreak{}destinatario} & \texttt{INT} & No & FK & Jugador invitado. \\ \hline
+\texttt{fecha\_\allowbreak{}invitacion} & \texttt{DATETIME2(0)} & No &  & Envío. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}expiracion} & \texttt{DATETIME2(0)} & No &  & Sesenta segundos después del envío (\mbox{CU-32} \mbox{RN-04}). \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{PENDIENTE}, \texttt{ACEPTADA}, \texttt{RECHAZADA} o \texttt{EXPIRADA}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Mensaje}{Mensaje de chat. Se guarda porque el reporte lo adjunta como prueba (\mbox{CU-28}, \mbox{CU-42}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}mensaje} & \texttt{BIGINT}, identidad & No & PK & Identificador del mensaje. \\ \hline
+\texttt{id\_\allowbreak{}autor} & \texttt{INT} & No & FK & Jugador que lo escribió. \\ \hline
+\texttt{canal} & \texttt{VARCHAR(12)} & No &  & \texttt{PARTIDA}, \texttt{ESPECTADORES}, \texttt{SALA}, \texttt{GLOBAL} o \texttt{AMIGOS}. Discrimina a qué pertenece el mensaje. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & Sí & FK & Partida; solo en los canales \texttt{PARTIDA} y \texttt{ESPECTADORES}. \\ \hline
+\texttt{id\_\allowbreak{}sala} & \texttt{INT} & Sí & FK & Sala; solo en el canal \texttt{SALA}. \\ \hline
+\texttt{texto} & \texttt{NVARCHAR(500)} & No &  & Texto tal como se escribió, en Unicode y sin traducir (\mbox{CU-28} \mbox{RN-12}). \\ \hline
+\texttt{fecha\_\allowbreak{}envio} & \texttt{DATETIME2(3)} & No &  & Momento del envío. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+

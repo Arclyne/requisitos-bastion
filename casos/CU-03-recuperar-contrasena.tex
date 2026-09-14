@@ -172,7 +172,7 @@
    & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-08}} Del token se almacena su resumen, nunca su valor, por el mismo motivo que la contraseña.
       \item \textbf{\mbox{RN-09}} El código admite un máximo de tres intentos de verificación. Agotarlos lo invalida y obliga a solicitar uno nuevo.
-      \item \textbf{\mbox{RN-10}} Una cuenta en \texttt{ELIMINADA} no puede recuperarse por esta vía, y se trata como inexistente para efectos de \mbox{RN-01}.
+      \item \textbf{\mbox{RN-10}} Una cuenta en \texttt{ELIMINADA} tiene el \texttt{correo} anonimizado, por lo que nunca coincide con el recibido y se trata como inexistente para efectos de \mbox{RN-01}.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre una tensión con el \mbox{CU-02}.}\par
     El \mbox{RN-01} oculta si un correo está registrado, pero el \mbox{FA-10} del \mbox{CU-02} lo dice abiertamente cuando alguien intenta darse de alta con un correo ya usado, y esa contradicción está aceptada a propósito en las observaciones de aquel caso. Se mantiene aquí la respuesta indistinguible de todos modos: cuesta lo mismo implementarla, y si más adelante se decide cerrar la fuga del registro, este caso ya no habría que tocarlo.} \\ \hline

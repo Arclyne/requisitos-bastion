@@ -25,7 +25,7 @@
       \item El Servidor de partidas verifica que el título recibido corresponda a un \textit{ObjetoCosmetico} de la \textit{Ranura} de título que el \textit{Usuario} posee, es decir, que exista su \textit{UsuarioObjeto}. \textit{(Ver \mbox{FA-06})}
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=9]
-      \item El Servidor de partidas verifica que el \texttt{idioma\_\allowbreak{}preferido} recibido pertenezca al catálogo de idiomas admitidos. \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas verifica que el \texttt{idioma\_\allowbreak{}preferido} recibido sea uno de los idiomas admitidos: \texttt{es-MX} o \texttt{en} (\mbox{D-21}). \textit{(Ver \mbox{FA-07})}
       \item El Servidor de partidas inicia una transacción sobre la Base de datos.
       \item El Servidor de partidas actualiza en el \textit{Usuario} el \texttt{id\_\allowbreak{}icono}, el \texttt{idioma\_\allowbreak{}preferido}, \texttt{permite\_\allowbreak{}espectadores} y, si el avatar cambió, la referencia a la imagen. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas actualiza la fila de \textit{Equipamiento} de la \textit{Ranura} de título, apuntando al objeto elegido (\mbox{RN-02}).

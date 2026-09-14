@@ -1,0 +1,63 @@
+%=====================================================================
+% Implementación · Verificación en SQL Server
+%=====================================================================
+\subsection*{Verificación en SQL Server}
+\addcontentsline{toc}{subsection}{Verificación en SQL Server}
+
+Los tres scripts se ejecutaron en orden sobre SQL Server 2025 (17.0.4065.4, edición Developer) sin ningún error. Todas las filas de prueba pasaron las llaves, las restricciones \at{CHECK} y los índices únicos al insertarse. Se comprobaron cuatro cosas más.
+
+\textbf{Los objetos creados son los del documento.} Esta consulta sobre el catálogo del sistema cuenta lo que \at{crear\_tablas.sql} creó:
+
+\begin{lstlisting}[style=sql, basicstyle=\ttfamily\footnotesize]
+SELECT 'tablas', COUNT(*) FROM sys.tables
+UNION ALL SELECT 'llaves primarias', COUNT(*) FROM sys.key_constraints WHERE type = 'PK'
+UNION ALL SELECT 'restricciones UNIQUE', COUNT(*) FROM sys.key_constraints WHERE type = 'UQ'
+UNION ALL SELECT 'llaves foráneas', COUNT(*) FROM sys.foreign_keys
+UNION ALL SELECT 'restricciones CHECK', COUNT(*) FROM sys.check_constraints
+UNION ALL SELECT 'valores por omisión', COUNT(*) FROM sys.default_constraints
+UNION ALL SELECT 'columnas calculadas', COUNT(*) FROM sys.computed_columns
+UNION ALL SELECT 'procedimientos', COUNT(*) FROM sys.procedures;
+\end{lstlisting}
+
+Devolvió exactamente las cifras de este documento: \bdNumTablas{} tablas con \bdNumTablas{} llaves primarias, \bdNumUnicas{} restricciones \at{UNIQUE}, \bdNumForaneas{} llaves foráneas, \bdNumChecks{} restricciones \at{CHECK}, \bdNumOmision{} valores por omisión, \bdNumCalculadas{} columnas calculadas y \bdNumProcedimientos{} procedimientos, además de \bdNumNoNulas{} columnas \at{NOT NULL} entre \bdNumColumnas{}.
+
+\textbf{Los datos de prueba son coherentes.} Las \dpNumComprobaciones{} consultas del final de \at{insertar\_datos\_prueba.sql} devolvieron cero incoherencias: el saldo coincide con los movimientos; las partidas, victorias, derrotas, muros y elo de cada modo, con las participaciones; la división solo existe desde la quinta partida; el estado del tablero coincide con las jugadas; cada cuenta tiene un objeto por ranura, los objetos iniciales y estadísticas en cada modo; cada partida decidida tiene un ganador; las probabilidades de cada caja suman 100; cada caja abierta tiene tres objetos; y cada texto con eñes, acentos o emojis se guardó idéntico al insertado.
+
+\textbf{La base guarda cualquier carácter.} Esta consulta construye con \at{NCHAR} el texto \textit{compañera} seguido de un emoji, el U+1F44D, y lo convierte a \at{VARCHAR}, primero con la intercalación de la base y luego con la que tenía antes, \at{Modern\_Spanish\_CI\_AS}:
+
+\begin{lstlisting}[style=sql, basicstyle=\ttfamily\footnotesize]
+DECLARE @t NVARCHAR(40) = N'compa' + NCHAR(241) + N'era ' + NCHAR(128077);
+SELECT CAST(@t AS VARCHAR(40))                              AS varchar_utf8,
+       DATALENGTH(CAST(@t AS VARCHAR(40)))                  AS bytes,
+       CAST(@t COLLATE Modern_Spanish_CI_AS AS VARCHAR(40)) AS varchar_1252,
+       LEN(@t)                                              AS caracteres;
+\end{lstlisting}
+
+Con la intercalación de la base, el \at{VARCHAR} conserva el texto entero en 15 bytes: dos para la \textit{ñ} y cuatro para el emoji. Con la anterior se convierte en \textit{compañera ??}: la \textit{ñ} cabe en la página de códigos 1252 y el emoji no. \at{LEN} devuelve 11, porque con \at{SC} el emoji cuenta como un solo carácter. La comprobación de los textos de los datos de prueba se probó también al revés: con el script sin su marca de orden de bytes y leído como página 1252, los \dpNumTextosUnicode{} textos con caracteres fuera de ASCII se guardaron alterados, y la comprobación los contó todos.
+
+\textbf{El usuario de conexión tiene solo los permisos pedidos.} Sin necesidad de su contraseña, un administrador puede actuar como él con \at{EXECUTE AS LOGIN = 'BastionServerConnection'}. Así se probó cada operación:
+
+\begin{center}\small
+\begin{longtable}{|L{0.3\textwidth}|L{0.6\textwidth}|}
+\hline
+\textbf{Operación} & \textbf{Resultado} \\ \hline
+\endfirsthead
+\hline
+\textbf{Operación} & \textbf{Resultado} \\ \hline
+\endhead
+\at{SELECT} sobre \textit{Usuario} & Permitido. \\ \hline
+\at{UPDATE} sobre \textit{Usuario} & Permitido. \\ \hline
+\at{DELETE} sobre \textit{Silencio} & Denegado: \textit{The DELETE permission was denied on the object 'Silencio'}. \\ \hline
+\at{CREATE TABLE} & Denegado: \textit{CREATE TABLE permission denied in database 'Bastion'}. \\ \hline
+\at{EXECUTE dbo.usp\_Silencio\_Eliminar} & Permitido, y el silencio se borra: el procedimiento pertenece a \at{dbo}, como la tabla, y el encadenamiento de propiedad no vuelve a comprobar el permiso \at{DELETE}. \\ \hline
+\end{longtable}
+\end{center}
+
+Las pruebas que modificaban datos se hicieron dentro de una transacción que después se revirtió.
+
+\textbf{Para que el servidor de partidas se conecte.} \at{BastionServerConnection} es un inicio de sesión de SQL Server, con contraseña propia. Si la instancia se instaló solo con autenticación de Windows, como la de prueba, hay que activar la autenticación mixta y reiniciar el servicio. Si el servidor de partidas corre en otra máquina, además hay que habilitar el protocolo TCP/IP en el Administrador de configuración de SQL Server:
+
+\begin{lstlisting}[style=sql]
+EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE',
+     N'Software\Microsoft\MSSQLServer\MSSQLServer', N'LoginMode', REG_DWORD, 2;
+\end{lstlisting}

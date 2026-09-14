@@ -31,7 +31,7 @@
       \item El Servidor de partidas verifica que el \texttt{nickname} no contenga términos del catálogo de \textit{PalabraProhibida} con ámbito de nickname. \textit{(Ver \mbox{FA-08})}
       \item El Servidor de partidas verifica que el \texttt{nickname} no esté en uso por otro \textit{Usuario}, comparando sin distinguir mayúsculas ni acentos (\mbox{RN-02}). \textit{(Ver \mbox{FA-09})}
       \item El Servidor de partidas inicia una transacción sobre la Base de datos.
-      \item El Servidor de partidas crea el registro de \textit{HistorialNickname} con el \texttt{nickname} anterior, el nuevo y la fecha del cambio (\mbox{RN-03}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas crea el registro de \textit{HistorialNickname} con el \texttt{nickname} anterior y la fecha del cambio (\mbox{RN-03}); el nuevo queda en el \textit{Usuario}. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas actualiza el \texttt{nickname} del \textit{Usuario}.
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
     \end{cuenum}} \\
@@ -120,7 +120,7 @@
     \end{cuenum}} \\ \hline
   \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene el \texttt{nickname} nuevo y ningún otro \textit{Usuario} puede tomarlo.
-      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, existe un \textit{HistorialNickname} con el nombre anterior, el nuevo y la fecha, y el Jugador ya no puede volver a cambiarlo.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, existe un \textit{HistorialNickname} con el nombre anterior y la fecha, y el Jugador ya no puede volver a cambiarlo.
       \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, el \texttt{nickname} anterior queda libre y otro \textit{Usuario} puede tomarlo (\mbox{RN-09}).
       \item \textbf{\mbox{POST-04}} Si el caso termina por cualquier flujo alterno o excepción, el \texttt{nickname} no cambió y el cambio sigue disponible.
       \item \textbf{\mbox{POST-05}} Las partidas, los mensajes y los reportes anteriores siguen apuntando al mismo \texttt{id\_\allowbreak{}usuario}, así que el historial no se rompe pese al cambio de nombre.

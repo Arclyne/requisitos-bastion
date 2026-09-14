@@ -1,4 +1,4 @@
-% Archivo generado por bd/generar_tablas.ps1 a partir de bd/bastion.sql. No editar a mano.
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
 \begin{center}\small
 \begin{longtable}{|L{0.21\textwidth}|L{0.26\textwidth}|L{0.29\textwidth}|L{0.12\textwidth}|}
 \hline
@@ -25,7 +25,6 @@
 \textit{Equipamiento} & (\texttt{id\_\allowbreak{}ranura}) & \textit{Ranura} (\texttt{id\_\allowbreak{}ranura}) & Sí \\ \hline
 \textit{Partida} & (\texttt{id\_\allowbreak{}modo}) & \textit{Modo} (\texttt{id\_\allowbreak{}modo}) & Sí \\ \hline
 \textit{Partida} & (\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}) & \textit{Nivel\-IA} (\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}) & No \\ \hline
-\textit{Partida} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}ganador}) & \textit{Participacion} (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & No \\ \hline
 \textit{Participacion} & (\texttt{id\_\allowbreak{}partida}) & \textit{Partida} (\texttt{id\_\allowbreak{}partida}) & Sí \\ \hline
 \textit{Participacion} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
 \textit{Participacion\-Objeto} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & \textit{Participacion} (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
@@ -74,7 +73,8 @@
 \textit{Reporte} & (\texttt{id\_\allowbreak{}denunciante}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
 \textit{Reporte} & (\texttt{id\_\allowbreak{}reportado}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
 \textit{Reporte} & (\texttt{id\_\allowbreak{}motivo}) & \textit{Motivo\-Reporte} (\texttt{id\_\allowbreak{}motivo}) & Sí \\ \hline
-\textit{Reporte} & (\texttt{id\_\allowbreak{}partida}) & \textit{Partida} (\texttt{id\_\allowbreak{}partida}) & No \\ \hline
+\textit{Reporte} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}denunciante}) & \textit{Participacion} (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & No \\ \hline
+\textit{Reporte} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}reportado}) & \textit{Participacion} (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & No \\ \hline
 \textit{Reporte} & (\texttt{id\_\allowbreak{}moderador}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & No \\ \hline
 \textit{Sancion} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
 \textit{Sancion} & (\texttt{id\_\allowbreak{}moderador}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline

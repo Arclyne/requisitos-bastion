@@ -1,0 +1,39 @@
+%=====================================================================
+% Implementación · Archivos y orden de ejecución
+%=====================================================================
+\subsection*{Archivos y orden de ejecución}
+\addcontentsline{toc}{subsection}{Archivos y orden de ejecución}
+
+La base de datos del modelo anterior se implementa en SQL Server, el motor que fija la restricción \mbox{CON-04}, con tres scripts de la carpeta \at{bd} del repositorio. Se ejecutan en este orden, los tres con una cuenta de administración de la instancia y no con el usuario de conexión del servidor:
+
+\begin{center}\small
+\begin{longtable}{|L{0.27\textwidth}|L{0.63\textwidth}|}
+\hline
+\textbf{Archivo} & \textbf{Qué hace} \\ \hline
+\endfirsthead
+\hline
+\textbf{Archivo} & \textbf{Qué hace} \\ \hline
+\endhead
+1. \at{crear\_base\_datos.sql} & Elimina la base \textit{Bastion} si existe, la crea vacía con el texto en UTF-8 (\mbox{D-21}) y crea el inicio de sesión y el usuario \at{BastionServerConnection} con sus permisos. \\ \hline
+2. \at{crear\_tablas.sql} & Crea las \bdNumTablas{} tablas con sus llaves primarias y foráneas, sus restricciones \at{NOT NULL}, \at{UNIQUE}, \at{CHECK} y \at{DEFAULT}, los índices y los \bdNumProcedimientos{} procedimientos de las eliminaciones físicas. \\ \hline
+3. \at{insertar\_datos\_prueba.sql} & Carga los catálogos precargados (\mbox{D-09}) y un escenario de prueba de \dpNumFilas{} filas, y termina con consultas que comprueban su coherencia. \\ \hline
+\end{longtable}
+\end{center}
+
+Los scripts se probaron en SQL Server 2025, versión 17.0.4065.4, edición Developer, y usan solo lo que existe desde SQL Server 2019. Pueden abrirse y ejecutarse uno tras otro en SQL Server Management Studio, o desde la línea de órdenes con \at{sqlcmd}:
+
+\begin{lstlisting}[style=sql]
+sqlcmd -S localhost -E -b -I -f 65001 -i bd\crear_base_datos.sql
+sqlcmd -S localhost -E -b -I -f 65001 -i bd\crear_tablas.sql
+sqlcmd -S localhost -E -b -I -f 65001 -i bd\insertar_datos_prueba.sql
+\end{lstlisting}
+
+\at{-E} entra con la cuenta de Windows, \at{-b} detiene el script en el primer error, \at{-I} activa \at{QUOTED\_IDENTIFIER}, que exigen los índices filtrados y las columnas calculadas, y \at{-f 65001} lee los archivos como UTF-8, porque sus comentarios y sus datos llevan eñes y acentos. Los dos últimos scripts activan además esas opciones al empezar, para no depender del cliente.
+
+\textbf{Relación con el modelo de datos.} \at{crear\_tablas.sql} es la fuente de la sección anterior: las tablas de atributos, de llaves, de relaciones y de normalización, y los diagramas entidad-relación, se generan a partir de él con \at{bd/generar\_tablas.ps1} y \at{er/generar.py}. Las tablas de restricciones de esta sección salen del mismo generador. \at{insertar\_datos\_prueba.sql}, a su vez, lo genera \at{bd/generar\_datos\_prueba.py} a partir del escenario descrito en \at{bd/datos\_prueba}. Si el esquema o el escenario cambian, se edita el script o el escenario y se regenera todo:
+
+\begin{lstlisting}[style=sql]
+powershell -ExecutionPolicy Bypass -File bd\generar_tablas.ps1
+python bd\generar_datos_prueba.py
+python er\generar.py
+\end{lstlisting}

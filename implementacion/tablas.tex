@@ -1,0 +1,25 @@
+%=====================================================================
+% Implementación · Script de creación de tablas
+%=====================================================================
+\subsection*{Script de creación de tablas}
+\addcontentsline{toc}{subsection}{Script de creación de tablas}
+
+\at{bd/crear\_tablas.sql} crea el esquema completo sobre la base vacía. Su listado completo está al final de esta sección. Se organiza en nueve partes, una por área del modelo, en el mismo orden que las tablas de atributos:
+
+\begin{reglas}
+  \item \textbf{1. Catálogos precargados (\mbox{D-09}).} \textit{Ranura}, \textit{ObjetoCosmetico}, \textit{Modo}, \textit{Division}, \textit{NivelIA}, \textit{Leccion}, \textit{TipoCaja}, \textit{TipoCajaObjeto}, \textit{PalabraProhibida} y \textit{MotivoReporte}. En lugar de un nombre visible, cada fila guarda un \at{codigo}, la clave de su nombre en los diccionarios de recursos (\mbox{D-21}).
+  \item \textbf{2 a 8. Las áreas del modelo.} Cuenta y acceso; perfil y personalización; partida; emparejamiento, salas y chat; clasificación y economía; relaciones entre jugadores y tutorial; y moderación y bitácoras.
+  \item \textbf{9. Procedimientos para las eliminaciones físicas.} Los \bdNumProcedimientos{} procedimientos con los que el usuario de conexión borra, sin tener permiso \at{DELETE}, las pocas filas que los casos de uso eliminan físicamente.
+\end{reglas}
+
+\textbf{Orden de creación.} Las tablas van en orden de dependencias: cuando una tabla declara una llave foránea, la tabla a la que apunta ya existe. Por eso todas las llaves se declaran dentro de su \at{CREATE TABLE} y el script no necesita ningún \at{ALTER TABLE}. La única referencia de una tabla a sí misma, la sanción que sustituye a otra (\mbox{CU-44} \mbox{RN-09}), también se declara dentro de su tabla.
+
+\textbf{Opciones de la sesión.} El script empieza con \at{SET ANSI\_NULLS ON} y \at{SET QUOTED\_IDENTIFIER ON}. SQL Server las exige para crear índices filtrados y columnas calculadas y para modificar después las tablas que los tienen, y algunos clientes, como \at{sqlcmd}, las traen apagadas.
+
+\textbf{Convenciones.}
+
+\begin{reglas}
+  \item \textbf{Nombres.} Tablas en singular y en \textit{PascalCase}; columnas en \textit{snake\_case}, sin acentos ni eñes, igual que en los casos de uso. Cada restricción lleva el prefijo de su clase y el nombre de su tabla: \at{PK\_} llave primaria, \at{FK\_} llave foránea, \at{UQ\_} única, \at{CK\_} comprobación, \at{UX\_} índice único filtrado e \at{IX\_} índice. Así, un error de SQL Server nombra la regla que se incumplió.
+  \item \textbf{Tipos.} Llaves sustitutas con \at{INT IDENTITY(1,1)}, o \at{BIGINT} en las tablas que más crecen: \textit{Mensaje}, \textit{MovimientoMoneda} y las dos bitácoras. Los catálogos usan \at{TINYINT} con valores que fija la carga. Las fechas se guardan en UTC con \at{DATETIME2(0)}, y con milisegundos, \at{DATETIME2(3)}, en las jugadas y los mensajes, que se ordenan por ellas. El texto que escribe o lee una persona va en \at{NVARCHAR} (\mbox{CON-05}); los códigos y los estados, en \at{VARCHAR}, que con la intercalación UTF-8 de la base también admite cualquier carácter (\mbox{D-21}); los resúmenes criptográficos, en \at{VARBINARY}.
+  \item \textbf{Comentarios.} Cada tabla lleva su descripción y su justificación de forma normal, y cada columna su comentario. \at{bd/generar\_tablas.ps1} convierte esos comentarios en las tablas del modelo de datos, de modo que el documento y el script no pueden contradecirse.
+\end{reglas}

@@ -91,7 +91,7 @@
       \item El Servidor de partidas la marca \texttt{EN\_\allowbreak{}REVISION} con el \texttt{id\_\allowbreak{}moderador}, igual que un reporte, y recupera la \textit{Sancion} apelada con su motivo, el \textit{Reporte} que la originó con sus pruebas y el texto de la apelación.
       \item El SJM despliega la revisión de la apelación con las opciones ``Mantener la sanción'' y ``Retirar la sanción'', ambas con nota obligatoria.
       \item Si el Moderador mantiene la sanción, el Servidor de partidas marca la \textit{Apelacion} como \texttt{RECHAZADA} con la nota y la \texttt{fecha\_\allowbreak{}resolucion}.
-      \item Si la retira, el Servidor de partidas marca la \textit{Apelacion} como \texttt{ACEPTADA} y, en la misma transacción, pone la \textit{Sancion} con \texttt{activa} en falso y \texttt{fecha\_\allowbreak{}retiro}; si era de ámbito de cuenta, devuelve el \texttt{estado\_\allowbreak{}cuenta} a \texttt{ACTIVA} (\mbox{RN-06}).
+      \item Si la retira, el Servidor de partidas marca la \textit{Apelacion} como \texttt{ACEPTADA} y, en la misma transacción, escribe la \texttt{fecha\_\allowbreak{}retiro} de la \textit{Sancion}, con lo que deja de estar \texttt{activa}; si era de ámbito de cuenta, devuelve el \texttt{estado\_\allowbreak{}cuenta} a \texttt{ACTIVA} (\mbox{RN-06}).
       \item El Servidor de partidas registra la resolución en la \textit{BitacoraModeracion} y notifica al jugador sancionado del resultado, a diferencia de lo que ocurre con un reporte (\mbox{RN-05}).
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline

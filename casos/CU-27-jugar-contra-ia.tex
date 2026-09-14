@@ -20,7 +20,7 @@
       \item El jugador elige los ajustes y da click en ``Jugar''.
       \item El SJM envía el mensaje \texttt{START\_\allowbreak{}AI\_\allowbreak{}MATCH\_\allowbreak{}REQUEST} con el nivel, el \textit{Modo}, el reloj y las opciones. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y que no se cumplan las exclusiones de \mbox{PRE-02}. \textit{(Ver \mbox{FA-02})}
-      \item El Servidor de partidas cierra, con la forma de término \texttt{ABANDONO} y sin consecuencias, cualquier \textit{Partida} de \texttt{tipo} \texttt{IA} que el jugador tenga sin terminar (\mbox{RN-07}). \textit{(Ver \mbox{FA-03}, \mbox{FA-07})}
+      \item El Servidor de partidas cierra, con la forma de término \texttt{ABANDONO} y sin consecuencias, cualquier \textit{Partida} de \texttt{tipo} \texttt{IA} que el jugador tenga sin terminar, y escribe en su \textit{Participacion} el resultado perdido (\mbox{RN-07}). \textit{(Ver \mbox{FA-03}, \mbox{FA-07})}
       \item El Servidor de partidas inicia una transacción y crea la \textit{Partida} con \texttt{tipo} igual a \texttt{IA}, el \texttt{id\_\allowbreak{}modo}, el \texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}, los \texttt{minutos\_\allowbreak{}reloj} —nulo si es sin reloj—, \texttt{permite\_\allowbreak{}deshacer}, \texttt{permite\_\allowbreak{}sugerencias}, \texttt{estado} igual a \texttt{EN\_\allowbreak{}CURSO} y la \texttt{fecha\_\allowbreak{}inicio}. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas crea la \textit{Participacion} del jugador con su orden de turno, su casilla inicial, sus muros y su reloj, y su \textit{ParticipacionObjeto}. La IA no tiene \textit{Participacion}: no es un \textit{Usuario} (\mbox{RN-03}). Confirma la transacción. \textit{(Ver \mbox{EX-02})}
       \item El Servidor de partidas responde con \texttt{AI\_\allowbreak{}MATCH\_\allowbreak{}STARTED} y el estado inicial.
@@ -136,7 +136,7 @@
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 4)}
       \item \textbf{\textit{ColaEmparejamiento}, \textit{SalaParticipante}, \textit{Participacion}:} lee, para las exclusiones \textit{(pasos 4, \mbox{FA-03})}
-      \item \textbf{\textit{NivelIA}, \textit{Modo}:} lee \textit{(pasos 1, 6)}
+      \item \textbf{\textit{NivelIA}, \textit{Modo}:} lee; del nivel, también su \texttt{elo\_\allowbreak{}aproximado}, que es la fuerza que se muestra \textit{(pasos 1, 6)}
       \item \textbf{\textit{Partida}:} cierra la de IA pendiente; crea con \texttt{tipo} \texttt{IA}, \texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}, \texttt{permite\_\allowbreak{}deshacer}, \texttt{permite\_\allowbreak{}sugerencias}; escribe \texttt{deshacer\_\allowbreak{}usados} y \texttt{sugerencias\_\allowbreak{}usadas} \textit{(pasos 5, 6, \mbox{FA-04}, \mbox{FA-05})}
       \item \textbf{\textit{Participacion}, \textit{ParticipacionObjeto}:} crea la del jugador \textit{(paso 7)}
       \item \textbf{\textit{Jugada}:} crea las de la IA con \texttt{id\_\allowbreak{}usuario} nulo; marca \texttt{deshecha} \textit{(pasos 11, \mbox{FA-04})}

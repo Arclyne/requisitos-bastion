@@ -1,0 +1,24 @@
+%=====================================================================
+% Modelo de datos · Normalización: redundancias controladas
+%=====================================================================
+\subsubsection*{Redundancias controladas}
+\addcontentsline{toc}{subsubsection}{Redundancias controladas}
+
+Estos datos pueden obtenerse de otras tablas. No violan la 3FN, porque la dependencia no está dentro de la tabla, pero son redundancias y cada una tiene un motivo y un control. El control común es que un solo caso de uso escribe el dato, en la misma transacción que el dato del que se deriva.
+
+\begin{center}\small
+\begin{longtable}{|L{0.19\textwidth}|L{0.20\textwidth}|L{0.24\textwidth}|L{0.25\textwidth}|}
+\hline
+\textbf{Dato} & \textbf{Se obtiene de} & \textbf{Por qué se guarda} & \textbf{Cómo se controla} \\ \hline
+\endfirsthead
+\hline
+\textbf{Dato} & \textbf{Se obtiene de} & \textbf{Por qué se guarda} & \textbf{Cómo se controla} \\ \hline
+\endhead
+\at{saldo\_monedas} de \textit{Usuario} & La suma de los \textit{MovimientoMoneda} del usuario & Se muestra en la tienda, en la personalización y en cada compra; sumar el historial en cada una es caro & Todo caso que mueve monedas escribe el movimiento y el saldo en la misma transacción, y el \mbox{CU-40} comprueba que coincidan cada vez que se consulta; si discrepan, manda la suma (\mbox{CU-40} \mbox{RN-02}). \\ \hline
+Contadores, \at{puntos\_elo} y \at{elo\_maximo} de \textit{EstadisticaModo} & Las \textit{Participacion} clasificatorias terminadas del usuario en el modo y sus \textit{Jugada} & El ranking ordena a todos los jugadores de un modo por elo; con el dato guardado basta un índice & Solo los escribe el cierre de una partida clasificatoria (\mbox{CU-25} \mbox{RN-14}), en la misma transacción que los resultados (\mbox{CU-25} \mbox{RN-12}); \at{abandonos}, el \mbox{CU-24}. \\ \hline
+\at{id\_division} y \at{fecha\_ultima\_partida} de \textit{EstadisticaModo} & El último \textit{HistorialDivision} y la fecha de fin de la última partida clasificatoria & La vista por divisiones y el desempate del ranking (\mbox{CU-35} \mbox{RN-06}) & Los escribe el \mbox{CU-25} junto con el \textit{HistorialDivision} y el elo. \\ \hline
+\at{casilla\_actual}, \at{muros\_restantes} y \at{reloj\_restante} de \textit{Participacion}; \at{turno\_actual} de \textit{Partida} & Las \textit{Jugada} de la partida, aplicadas en orden, con los muros iniciales de la sala o del modo y el reloj de la partida; el reloj de quien pierde por tiempo queda en cero (\mbox{CU-20} \mbox{FA-06}) & Son el estado vigente de la partida, que se consulta en cada jugada, en cada reconexión y en la pantalla de fin; con él, la partida no depende de la sala una vez creada (\mbox{CU-18}, observación) & La jugada y el estado se escriben en una sola transacción (\mbox{CU-20} \mbox{RN-12}, \mbox{CU-21} \mbox{RN-12}). Si discrepan, mandan las \textit{Jugada}: el servidor reconstruye el tablero desde ellas antes de validar cada jugada (\mbox{CU-20}, \mbox{CU-21}). \\ \hline
+\end{longtable}
+\end{center}
+
+Son las únicas. Otros datos que también podían obtenerse de otras tablas se descartaron en la revisión de atributos, más abajo, porque derivarlos cuesta una sola consulta y guardarlos no aportaba nada.

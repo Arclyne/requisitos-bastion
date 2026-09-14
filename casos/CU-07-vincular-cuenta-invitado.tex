@@ -21,11 +21,11 @@
       \item El SJM valida que la contraseña cumpla la política de \mbox{RN-03} y que coincida con su confirmación. \textit{(Ver \mbox{FA-03})}
       \item El SJM valida que la casilla de los términos esté marcada. \textit{(Ver \mbox{FA-04})}
       \item El SJM calcula la edad a partir de la \texttt{fecha\_\allowbreak{}nacimiento} y verifica que sea de ocho años o más. \textit{(Ver \mbox{FA-05})}
-      \item El SJM envía el mensaje \texttt{LINK\_\allowbreak{}ACCOUNT\_\allowbreak{}REQUEST} con los datos capturados, la contraseña, la versión de los términos aceptada y el token de la sesión de invitado. \textit{(Ver \mbox{EX-05}, \mbox{EX-06}, \mbox{EX-02})}
+      \item El SJM envía el mensaje \texttt{LINK\_\allowbreak{}ACCOUNT\_\allowbreak{}REQUEST} con los datos capturados, la contraseña, la versión de los términos aceptada, el idioma en que se mostró su texto y el token de la sesión de invitado. \textit{(Ver \mbox{EX-05}, \mbox{EX-06}, \mbox{EX-02})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta de un \textit{Usuario} con \texttt{tipo\_\allowbreak{}cuenta} en \texttt{INVITADO}. \textit{(Ver \mbox{FA-06})}
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=9]
-      \item El Servidor de partidas vuelve a aplicar sobre los datos recibidos todas las validaciones de los pasos 3 a 6, sin dar por buena la validación del cliente (\mbox{RN-09}). \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas vuelve a aplicar sobre los datos recibidos todas las validaciones de los pasos 3 a 6, y verifica que el idioma de los términos sea uno de los admitidos, \texttt{es-MX} o \texttt{en} (\mbox{D-21}), sin dar por buena la validación del cliente (\mbox{RN-09}). \textit{(Ver \mbox{FA-07})}
       \item El Servidor de partidas verifica que el \texttt{nickname} no contenga términos del catálogo de \textit{PalabraProhibida}. \textit{(Ver \mbox{FA-08})}
       \item El Servidor de partidas verifica que el \texttt{nickname} no esté en uso por otro \textit{Usuario}. \textit{(Ver \mbox{FA-09})}
       \item El Servidor de partidas normaliza el \texttt{correo} a minúsculas y verifica que no esté registrado por otro \textit{Usuario}. \textit{(Ver \mbox{FA-10})}
@@ -35,7 +35,7 @@
       \item El Servidor de partidas actualiza el \textit{Usuario} existente: cambia \texttt{tipo\_\allowbreak{}cuenta} a \texttt{REGISTRADA}, \texttt{estado\_\allowbreak{}cuenta} a \texttt{PENDIENTE}, y escribe el \texttt{nickname} definitivo, el \texttt{correo}, la \texttt{contrasena\_\allowbreak{}hash}, la \texttt{contrasena\_\allowbreak{}sal}, la \texttt{fecha\_\allowbreak{}nacimiento} y un \texttt{codigo\_\allowbreak{}amigo} único, que la cuenta de invitado no tenía porque no podía tener amigos (\mbox{RN-01}). \textit{(Ver \mbox{EX-03})}
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=17]
-      \item El Servidor de partidas registra la \textit{AceptacionTerminos} con la versión aceptada, la fecha y la dirección de red de origen. \textit{(Ver \mbox{EX-03})}
+      \item El Servidor de partidas registra la \textit{AceptacionTerminos} con la versión aceptada, el idioma en que se mostró su texto (\mbox{D-21}), la fecha y la dirección de red de origen. \textit{(Ver \mbox{EX-03})}
       \item El Servidor de partidas genera un \textit{TokenVerificacionCorreo} para el \textit{Usuario}, con su fecha de expiración. \textit{(Ver \mbox{EX-03})}
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-04})}
       \item El Servidor de partidas solicita al Servicio de correo el envío del mensaje de verificación, en el \texttt{idioma\_\allowbreak{}preferido} del \textit{Usuario} (\mbox{RN-07}). \textit{(Ver \mbox{EX-07})}
@@ -169,7 +169,7 @@
   \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} conserva el mismo \texttt{id\_\allowbreak{}usuario} y tiene \texttt{tipo\_\allowbreak{}cuenta} en \texttt{REGISTRADA} y \texttt{estado\_\allowbreak{}cuenta} en \texttt{PENDIENTE}.
       \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, todo el progreso anterior sigue intacto: las mismas \textit{EstadisticaModo}, los mismos \textit{UsuarioObjeto}, el mismo \textit{Equipamiento}, las mismas monedas y las mismas \textit{Participacion} en partidas pasadas. No se copió ni se movió ninguna fila.
-      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, existe un registro de \textit{AceptacionTerminos} con la versión aceptada, su fecha y la dirección de red de origen.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, existe un registro de \textit{AceptacionTerminos} con la versión aceptada, su idioma, su fecha y la dirección de red de origen.
       \item \textbf{\mbox{POST-04}} Si el caso termina por el FN, existe un \textit{TokenVerificacionCorreo} vigente y se solicitó su envío.
       \item \textbf{\mbox{POST-05}} Si el caso termina por el FN, el \texttt{nickname} definitivo y el \texttt{correo} quedan ocupados y ningún otro \textit{Usuario} puede tomarlos. El \texttt{nickname} provisional de invitado queda libre.
       \item \textbf{\mbox{POST-06}} Si el caso termina por el FN, la \textit{Sesion} de invitado está cerrada y el Invitado no puede seguir jugando hasta verificar su correo con el \mbox{CU-04} e iniciar sesión con el \mbox{CU-01}.

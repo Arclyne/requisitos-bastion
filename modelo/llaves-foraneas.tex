@@ -1,0 +1,19 @@
+%=====================================================================
+% Modelo de datos · Llaves foráneas
+%=====================================================================
+\subsection*{Llaves foráneas}
+\addcontentsline{toc}{subsection}{Llaves foráneas}
+
+La columna \emph{Obligatoria} indica si la llave foránea admite nulo. Ninguna llave foránea borra ni actualiza en cascada: la fila de \textit{Usuario} nunca se elimina (\mbox{D-07}), y las pocas filas que se eliminan físicamente no tienen filas que dependan de ellas.
+
+Algunas llaves foráneas son compuestas porque, además de exigir que la fila referida exista, hacen cumplir una regla de negocio:
+
+\begin{reglas}
+  \item \textbf{Solo se equipa lo que se posee.} \textit{Equipamiento} apunta a \textit{UsuarioObjeto} con (\at{id\_usuario}, \at{id\_objeto}), no a \textit{ObjetoCosmetico} (\mbox{CU-14} \mbox{RN-02}).
+  \item \textbf{El objeto es de su ranura.} \textit{Equipamiento} y \textit{ParticipacionObjeto} apuntan a \textit{ObjetoCosmetico} con (\at{id\_objeto}, \at{id\_ranura}), así que no puede equiparse un marco en la ranura del peón.
+  \item \textbf{Solo los participantes actúan en la partida.} \textit{Jugada}, \textit{OfertaTablas} y \textit{EnlaceEspectador} apuntan a \textit{Participacion} con (\at{id\_partida}, \at{id\_usuario}): solo quien juega la partida mueve, ofrece tablas o comparte el enlace. En \textit{Jugada}, un \at{id\_usuario} nulo, que es la IA, no se comprueba.
+  \item \textbf{Las pruebas de un reporte son de una partida que jugaron los dos.} \textit{Reporte} apunta dos veces a \textit{Participacion}: con (\at{id\_partida}, \at{id\_denunciante}) y con (\at{id\_partida}, \at{id\_reportado}). Si se adjunta una partida, el denunciante y el reportado tuvieron que jugarla (\mbox{CU-42} \mbox{RN-09}); si no se adjunta, \at{id\_partida} es nula y ninguna de las dos se comprueba.
+  \item \textbf{El historial de división pertenece a unas estadísticas.} \textit{HistorialDivision} apunta a \textit{EstadisticaModo} con (\at{id\_usuario}, \at{id\_modo}), no por separado a \textit{Usuario} y a \textit{Modo}.
+\end{reglas}
+
+\input{bd/tex/llaves-foraneas}

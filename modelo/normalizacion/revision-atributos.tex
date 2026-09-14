@@ -1,0 +1,41 @@
+%=====================================================================
+% Modelo de datos · Normalización: revisión de atributos
+%=====================================================================
+\subsubsection*{Revisión de atributos}
+\addcontentsline{toc}{subsubsection}{Revisión de atributos}
+
+Cada columna del esquema se contrastó con el documento completo: los flujos de los casos de uso y sus datos que toca, los prototipos del análisis CRUD y las decisiones de diseño. Una columna se conserva si algún caso la lee, si una regla o una decisión la exige, o si forma parte de una llave. No se conserva si repite un dato que ya está en otra columna, de la misma tabla o de otra, o si cumple la misma función que otra. Las \bdNumColumnas{} columnas del esquema pasan esa prueba, salvo las redundancias controladas de la tabla anterior, que se conservan justificadas. Estas otras se descartaron:
+
+\begin{center}\small
+\begin{longtable}{|L{0.22\textwidth}|L{0.41\textwidth}|L{0.27\textwidth}|}
+\hline
+\textbf{Atributo descartado} & \textbf{Por qué} & \textbf{Dónde está el dato} \\ \hline
+\endfirsthead
+\hline
+\textbf{Atributo descartado} & \textbf{Por qué} & \textbf{Dónde está el dato} \\ \hline
+\endhead
+\at{orden} de \textit{Division} & Ningún caso lo usa, y ordenaba las divisiones igual que el elo de ascenso, con el riesgo de contradecirlo. & \at{elo\_minimo}, que ahora es único. \\ \hline
+\at{activo} de \textit{PalabraProhibida} & Ningún caso lo escribe, y ninguna tabla referencia el catálogo, así que un término que deja de filtrarse se borra por SQL (\mbox{D-09}). & La existencia de la fila. \\ \hline
+\at{fecha\_verificacion} de \textit{Usuario} & Se escribía y ningún caso la leía. & \at{estado\_cuenta}, que pasa de \at{PENDIENTE} a \at{ACTIVA}; el momento queda en la \textit{BitacoraAcceso} con \at{CUENTA\_VERIFICADA}. \\ \hline
+\at{fecha\_ultimo\_acceso} de \textit{Usuario} & Se escribía y ningún caso la leía. & La \at{fecha\_inicio} de la \textit{Sesion} más reciente. \\ \hline
+\at{nickname\_nuevo} de \textit{HistorialNickname} & El nombre se cambia una sola vez, así que era siempre igual al \at{nickname} de \textit{Usuario}. El historial guarda solo lo que ya no está (\mbox{CU-13}, observación). & \at{nickname} de \textit{Usuario}. \\ \hline
+\at{elo} de \textit{ColaEmparejamiento} & Copiaba el elo del modo, que no puede cambiar mientras el jugador espera, porque solo lo escribe el cierre de una partida (\mbox{CU-25}). & \at{puntos\_elo} de su \textit{EstadisticaModo}. \\ \hline
+\at{id\_ganador} de \textit{Partida} & Cumplía la misma función que el \at{resultado} de las participaciones, y obligaba a una llave foránea circular entre \textit{Partida} y \textit{Participacion}. & La \textit{Participacion} con resultado \at{GANADA}; si no la hay, fueron tablas o ganó la IA. \\ \hline
+\at{fecha\_clasificacion} de \textit{Participacion} & Ningún caso la leía, y era el momento de la jugada que llegó a meta. & La \at{fecha\_jugada} de esa \textit{Jugada}. \\ \hline
+\at{activo} de \textit{EnlaceEspectador} & Solo pasaba a falso al terminar la partida, así que repetía su estado (\mbox{CU-34} \mbox{RN-06}). & El \at{estado} de la \textit{Partida}: el enlace vale mientras está \at{EN\_CURSO}. \\ \hline
+\at{terminada} de \textit{Participacion}, como dato guardado & Se escribía siempre junto con el \at{resultado}. Ahora es calculada, como \at{diferencia\_elo}, \at{convertido}, \at{completada} y \at{activa}. & Que \at{resultado} no sea nulo. El índice de la regla \mbox{D-11} filtra por \at{resultado}. \\ \hline
+\end{longtable}
+\end{center}
+
+Otros atributos se parecen entre sí, pero cada uno cumple una función que el otro no cubre:
+
+\begin{reglas}
+  \item \textbf{Fechas del último correo y fechas de los tokens.} \at{fecha\_ultimo\_envio\_verificacion} y \at{fecha\_ultimo\_envio\_recuperacion} de \textit{Usuario} registran el último correo que sí salió. No se deducen de la \at{fecha\_generacion} de los tokens: si el envío falla, el token existe y la fecha del usuario no cambia, para que el jugador pueda reintentar enseguida (\mbox{CU-02} \mbox{EX-06}, \mbox{CU-03}, \mbox{CU-09}).
+  \item \textbf{\at{conectado} y \at{fecha\_desconexion}.} El primero es el estado actual; la segunda, el inicio de la última desconexión, que no se borra al reconectar (\mbox{CU-26}). Ninguno se deduce del otro.
+  \item \textbf{\at{permite\_espectadores} en \textit{Usuario} y en \textit{Sala}.} Son dos decisiones de personas distintas: una partida admite espectadores solo si lo permiten todos sus participantes y, si viene de una sala, también la sala (\mbox{CU-34} \mbox{RN-02}).
+  \item \textbf{\at{minutos\_reloj} en \textit{ColaEmparejamiento}, \textit{Sala} y \textit{Partida}, y \at{muros\_por\_jugador} en \textit{Modo} y \textit{Sala}.} La cola guarda el reloj que busca el jugador; la sala, los ajustes que elige el anfitrión antes de empezar; la partida, con qué reloj se jugó, porque la fila de la cola se borra al emparejar y la partida no depende de la sala una vez creada. El modo fija los muros de una partida clasificatoria y la sala, los de una privada (\mbox{CU-18} \mbox{RN-04}).
+  \item \textbf{\at{a\_la\_venta} y \at{activo} en \textit{ObjetoCosmetico}.} El primero dice si la tienda lo ofrece; el segundo, si sigue en el catálogo. Un objeto activo puede no venderse, como los iniciales o los que solo salen en cajas. Uno retirado no se vende, y una restricción \at{CHECK} impide esa combinación.
+  \item \textbf{\at{resultado} y \at{posicion} en \textit{Participacion}.} La posición solo se escribe en el modo de cuatro jugadores (\mbox{CU-25} \mbox{RN-02}). En las partidas de dos jugadores y en las de la IA sería una copia del resultado, así que queda nula.
+  \item \textbf{Estado y fecha del cambio.} \at{estado\_cuenta} y \at{fecha\_baja}, el \at{estado} de \textit{Caja} y su \at{fecha\_apertura}, el de \textit{OfertaTablas} y su \at{fecha\_respuesta}, el de \textit{Reporte} y \textit{Apelacion} y su \at{fecha\_resolucion}. El estado dice en qué situación está la fila y la fecha, cuándo llegó a ella. Ninguno se deduce del otro, porque el estado tiene valores que comparten la misma fecha nula o no nula, y una restricción \at{CHECK} obliga a que concuerden.
+  \item \textbf{Fechas de expiración.} \at{fecha\_expiracion} de sesiones, códigos, tokens e invitaciones, y \at{fecha\_caducidad} de \textit{Caja}, se calculan al emitir con la vigencia de la regla correspondiente, por ejemplo veinticuatro horas para el enlace de verificación (\mbox{CU-04} \mbox{RN-02}). Esa vigencia es un parámetro del servidor, no un dato de la base: si cambia, lo ya emitido conserva su plazo.
+\end{reglas}

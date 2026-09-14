@@ -1,0 +1,19 @@
+%=====================================================================
+% Datos · Casos que la base rechaza
+%=====================================================================
+\subsection*{Casos que la base rechaza}
+\addcontentsline{toc}{subsection}{Casos que la base rechaza}
+
+Unos datos de prueba solo sirven si la base también rechaza los que no deberían existir. \at{bd/pruebas\_rechazo.sql} intenta, sobre los registros cargados, \dnNumPruebasRechazo{} operaciones que el documento prohíbe, cada una en su propia transacción, que se revierte siempre: el script no cambia ningún dato. De cada intento anota el número de error de SQL Server y la restricción que lo impidió, que sale del propio mensaje de error.
+
+\input{bd/tex/datos/rechazos}
+
+\captura{06-rechazos}{Captura 6. Las pruebas de rechazo en la consola.}
+
+La base rechazó las \dnNumPruebasRechazadas{} operaciones, y cada una con la restricción que corresponde a su regla. El error 547 es el de una restricción \at{CHECK} o de una llave foránea; el 2627, el de una restricción \at{UNIQUE}; el 2601, el de un índice único filtrado, y el 229, el de un permiso denegado. Tres resultados merecen un comentario:
+
+\begin{reglas}
+  \item \textbf{Prueba 2.} \at{LUIS\_QUÓ} se considera el mismo nickname que \at{luis\_quo}, porque la columna compara sin distinguir mayúsculas ni acentos (\mbox{CU-02} \mbox{RN-01}).
+  \item \textbf{Pruebas 6 y 7.} Las dos las rechazan las llaves foráneas compuestas de \textit{Equipamiento}: la primera, porque pedro no posee el objeto; la segunda, porque el objeto es un muro y la ranura es la del peón.
+  \item \textbf{Prueba 13.} El usuario de conexión del servidor no puede borrar, ni siquiera un silencio, que es de las pocas filas que los casos de uso eliminan: para eso tiene los procedimientos almacenados.
+\end{reglas}

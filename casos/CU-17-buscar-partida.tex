@@ -24,7 +24,7 @@
       \item El Servidor de partidas verifica que el \textit{Usuario} no tenga ninguna \textit{Participacion} sin terminar en una partida en línea (\mbox{RN-01}). Una partida contra la IA sin terminar no lo impide: se cierra en la transacción del paso 14, conforme al \mbox{RN-07} del \mbox{CU-27}. \textit{(Ver \mbox{FA-01})}
       \item El Servidor de partidas verifica que el \textit{Usuario} no tenga una \textit{Sancion} activa de ámbito de cuenta. \textit{(Ver \mbox{FA-05})}
       \item El Servidor de partidas recupera la \textit{EstadisticaModo} del \textit{Usuario} para el \textit{Modo} elegido y toma su \texttt{puntos\_\allowbreak{}elo}. \textit{(Ver \mbox{EX-01})}
-      \item El Servidor de partidas inserta al \textit{Usuario} en la \textit{ColaEmparejamiento} del modo y reloj elegidos, con su elo y la fecha de entrada. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas inserta al \textit{Usuario} en la \textit{ColaEmparejamiento} del modo y reloj elegidos, con la fecha de entrada; su elo no se copia, porque ya está en su \textit{EstadisticaModo} y no cambia mientras espera. \textit{(Ver \mbox{EX-01})}
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=9]
       \item El Servidor de partidas responde con \texttt{MATCHMAKING\_\allowbreak{}JOINED} y la posición estimada.

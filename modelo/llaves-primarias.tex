@@ -1,0 +1,23 @@
+%=====================================================================
+% Modelo de datos · Llaves primarias y restricciones de unicidad
+%=====================================================================
+\subsection*{Llaves primarias}
+\addcontentsline{toc}{subsection}{Llaves primarias}
+
+La llave primaria de cada entidad se eligió con cuatro criterios:
+
+\begin{reglas}
+  \item \textbf{Sustituta.} Un entero \at{IDENTITY} para las entidades con identidad propia, que se crean desde la aplicación y a las que otras tablas apuntan. Donde además existe un dato natural único —el \at{nickname}, el resumen de un token, la versión de términos de un usuario— se declara como llave candidata con \at{UNIQUE}.
+  \item \textbf{Compuesta.} Las entidades asociativas y las débiles se identifican por las llaves que relacionan. La llave compuesta hace cumplir una regla sin código adicional: (\at{id\_usuario}, \at{id\_ranura}) en \textit{Equipamiento} garantiza un solo objeto por ranura (\mbox{CU-14} \mbox{RN-01}), y (\at{id\_usuario}, \at{id\_objeto}) en \textit{UsuarioObjeto} impide poseer dos veces el mismo objeto (\mbox{CU-38} \mbox{RN-02}).
+  \item \textbf{Igual a la llave foránea.} Cuando solo puede haber una fila por usuario, la llave es el propio \at{id\_usuario}: un solo cambio de nombre (\mbox{CU-13} \mbox{RN-01}), un solo lugar en la cola y una sola sala a la vez (\mbox{CU-18} \mbox{RN-02}).
+  \item \textbf{Asignada en la carga.} Los catálogos usan identificadores fijos, porque se cargan por SQL y la aplicación puede referirse a ellos por su valor.
+\end{reglas}
+
+\input{bd/tex/llaves-primarias}
+
+\subsubsection*{Restricciones de unicidad}
+\addcontentsline{toc}{subsubsection}{Restricciones de unicidad}
+
+Varias reglas de negocio dicen ``a lo sumo uno'' solo para las filas en cierto estado: un token vigente por cuenta, un avatar vigente, una participación sin terminar. No son llaves candidatas, porque las filas antiguas se conservan, así que se declaran como índices únicos filtrados: la unicidad se exige únicamente entre las filas que cumplen la condición. La tabla reúne todas las restricciones de unicidad del esquema, con la regla que cada una hace cumplir.
+
+\input{bd/tex/unicidad}

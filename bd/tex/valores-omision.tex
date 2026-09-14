@@ -1,0 +1,47 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
+\begin{center}\small
+\begin{longtable}{|L{0.22\textwidth}|L{0.68\textwidth}|}
+\hline
+\textbf{Entidad} & \textbf{Columna y valor por omisión} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad} & \textbf{Columna y valor por omisión} \\ \hline
+\endhead
+\textit{Objeto\-Cosmetico} & \texttt{precio} = \texttt{0}; \texttt{nivel\_\allowbreak{}requerido} = \texttt{1}; \texttt{a\_\allowbreak{}la\_\allowbreak{}venta} = \texttt{0}; \texttt{activo} = \texttt{1}; \texttt{es\_\allowbreak{}inicial} = \texttt{0}; \texttt{es\_\allowbreak{}predeterminado} = \texttt{0} \\ \hline
+\textit{Modo} & \texttt{activo} = \texttt{1} \\ \hline
+\textit{Tipo\-Caja} & \texttt{activo} = \texttt{1} \\ \hline
+\textit{Usuario} & \texttt{estado\_\allowbreak{}cuenta} = \texttt{\textquotesingle{}PENDIENTE\textquotesingle{}}; \texttt{rol} = \texttt{\textquotesingle{}JUGADOR\textquotesingle{}}; \texttt{idioma\_\allowbreak{}preferido} = \texttt{\textquotesingle{}es-MX\textquotesingle{}}; \texttt{id\_\allowbreak{}icono} = \texttt{1}; \texttt{permite\_\allowbreak{}espectadores} = \texttt{1}; \texttt{nivel} = \texttt{1}; \texttt{experiencia} = \texttt{0}; \texttt{saldo\_\allowbreak{}monedas} = \texttt{0}; \texttt{cajas\_\allowbreak{}sin\_\allowbreak{}raro} = \texttt{0}; \texttt{intentos\_\allowbreak{}fallidos} = \texttt{0}; \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} = \texttt{0}; \texttt{fecha\_\allowbreak{}registro} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Sesion} & \texttt{fecha\_\allowbreak{}inicio} = \texttt{SYSUTCDATETIME()}; \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}uso} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Codigo\-Segundo\-Factor} & \texttt{fecha\_\allowbreak{}generacion} = \texttt{SYSUTCDATETIME()}; \texttt{intentos} = \texttt{0}; \texttt{estado} = \texttt{\textquotesingle{}PENDIENTE\textquotesingle{}} \\ \hline
+\textit{Token\-Verificacion\-Correo} & \texttt{fecha\_\allowbreak{}generacion} = \texttt{SYSUTCDATETIME()}; \texttt{estado} = \texttt{\textquotesingle{}PENDIENTE\textquotesingle{}} \\ \hline
+\textit{Token\-Recuperacion} & \texttt{fecha\_\allowbreak{}generacion} = \texttt{SYSUTCDATETIME()}; \texttt{intentos} = \texttt{0}; \texttt{estado} = \texttt{\textquotesingle{}PENDIENTE\textquotesingle{}} \\ \hline
+\textit{Aceptacion\-Terminos} & \texttt{fecha\_\allowbreak{}aceptacion} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Historial\-Nickname} & \texttt{fecha\_\allowbreak{}cambio} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Avatar} & \texttt{fecha\_\allowbreak{}subida} = \texttt{SYSUTCDATETIME()}; \texttt{vigente} = \texttt{1} \\ \hline
+\textit{Usuario\-Objeto} & \texttt{fecha\_\allowbreak{}obtencion} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Partida} & \texttt{estado} = \texttt{\textquotesingle{}EN\_\allowbreak{}CURSO\textquotesingle{}}; \texttt{fecha\_\allowbreak{}inicio} = \texttt{SYSUTCDATETIME()}; \texttt{turno\_\allowbreak{}actual} = \texttt{1} \\ \hline
+\textit{Participacion} & \texttt{conectado} = \texttt{1} \\ \hline
+\textit{Jugada} & \texttt{fecha\_\allowbreak{}jugada} = \texttt{SYSUTCDATETIME()}; \texttt{deshecha} = \texttt{0} \\ \hline
+\textit{Oferta\-Tablas} & \texttt{fecha\_\allowbreak{}oferta} = \texttt{SYSUTCDATETIME()}; \texttt{estado} = \texttt{\textquotesingle{}PENDIENTE\textquotesingle{}} \\ \hline
+\textit{Enlace\-Espectador} & \texttt{fecha\_\allowbreak{}creacion} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Cola\-Emparejamiento} & \texttt{fecha\_\allowbreak{}entrada} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Sala} & \texttt{permite\_\allowbreak{}espectadores} = \texttt{1}; \texttt{estado} = \texttt{\textquotesingle{}ABIERTA\textquotesingle{}}; \texttt{fecha\_\allowbreak{}creacion} = \texttt{SYSUTCDATETIME()}; \texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}actividad} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Sala\-Participante} & \texttt{listo} = \texttt{0}; \texttt{fecha\_\allowbreak{}union} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Invitacion} & \texttt{fecha\_\allowbreak{}invitacion} = \texttt{SYSUTCDATETIME()}; \texttt{estado} = \texttt{\textquotesingle{}PENDIENTE\textquotesingle{}} \\ \hline
+\textit{Mensaje} & \texttt{fecha\_\allowbreak{}envio} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Estadistica\-Modo} & \texttt{puntos\_\allowbreak{}elo} = \texttt{1000}; \texttt{elo\_\allowbreak{}maximo} = \texttt{1000}; \texttt{partidas\_\allowbreak{}jugadas} = \texttt{0}; \texttt{partidas\_\allowbreak{}ganadas} = \texttt{0}; \texttt{partidas\_\allowbreak{}perdidas} = \texttt{0}; \texttt{racha\_\allowbreak{}actual} = \texttt{0}; \texttt{mejor\_\allowbreak{}racha} = \texttt{0}; \texttt{tiempo\_\allowbreak{}total\_\allowbreak{}jugado} = \texttt{0}; \texttt{barreras\_\allowbreak{}colocadas} = \texttt{0}; \texttt{abandonos} = \texttt{0} \\ \hline
+\textit{Historial\-Division} & \texttt{fecha\_\allowbreak{}cambio} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Caja} & \texttt{estado} = \texttt{\textquotesingle{}SIN\_\allowbreak{}ABRIR\textquotesingle{}}; \texttt{fecha\_\allowbreak{}obtencion} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Movimiento\-Moneda} & \texttt{fecha\_\allowbreak{}movimiento} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Amistad} & \texttt{fecha\_\allowbreak{}amistad} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Solicitud} & \texttt{fecha\_\allowbreak{}solicitud} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Silencio} & \texttt{fecha\_\allowbreak{}silencio} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Bloqueo} & \texttt{fecha\_\allowbreak{}bloqueo} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Progreso\-Tutorial} & \texttt{fecha\_\allowbreak{}actualizacion} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Reporte} & \texttt{fecha\_\allowbreak{}reporte} = \texttt{SYSUTCDATETIME()}; \texttt{estado} = \texttt{\textquotesingle{}PENDIENTE\textquotesingle{}} \\ \hline
+\textit{Sancion} & \texttt{fecha\_\allowbreak{}inicio} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Apelacion} & \texttt{marca\_\allowbreak{}lenguaje} = \texttt{0}; \texttt{fecha\_\allowbreak{}apelacion} = \texttt{SYSUTCDATETIME()}; \texttt{estado} = \texttt{\textquotesingle{}PENDIENTE\textquotesingle{}} \\ \hline
+\textit{Bitacora\-Moderacion} & \texttt{fecha\_\allowbreak{}hora} = \texttt{SYSUTCDATETIME()} \\ \hline
+\textit{Bitacora\-Acceso} & \texttt{fecha\_\allowbreak{}hora} = \texttt{SYSUTCDATETIME()} \\ \hline
+\end{longtable}
+\end{center}

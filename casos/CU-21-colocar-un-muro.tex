@@ -173,16 +173,16 @@
       \item \textbf{\mbox{RN-13}} Ante una respuesta que no llega, el cliente pide el estado en lugar de reenviar.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre dónde se guardan los muros.}\par
-    Los muros no tienen tabla propia: son \textit{Jugada} de tipo \texttt{MURO}. Se consideró una tabla \textit{Muro} aparte, con su surco y su dueño, que haría más directa la consulta del tablero actual. Se descartó porque obligaría a mantener dos fuentes de verdad —la jugada que lo colocó y el muro resultante— que pueden contradecirse, y porque la repetición del \mbox{CU-37} necesita de todos modos la secuencia completa de jugadas en orden. El tablero actual se reconstruye leyendo las jugadas de la partida, que en el caso más largo son unas pocas decenas de filas.} \\ \hline
+    Los muros no tienen tabla propia: son \textit{Jugada} de tipo \texttt{MURO}. Se consideró una tabla \textit{Muro} aparte, con su surco y su dueño, que haría más directa la consulta del tablero actual. Se descartó porque obligaría a mantener dos fuentes de verdad —la jugada que lo colocó y el muro resultante— que pueden contradecirse, y porque la repetición del \mbox{CU-37} necesita de todos modos la secuencia completa de jugadas en orden. El tablero actual se reconstruye leyendo las jugadas de la partida, que en el caso más largo son unas pocas decenas de filas. La casilla, los muros restantes y el reloj que guarda la \textit{Participacion} no son una segunda fuente de verdad: son el estado vigente, que se escribe en la misma transacción que la jugada y que el servidor contrasta con el tablero reconstruido antes de validar. Si alguna vez discreparan, mandan las jugadas.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 8)}
-      \item \textit{Partida}: lee estado y turno; escribe el turno siguiente \textit{(pasos 9, 18)}
-      \item \textit{Participacion}: lee muros restantes y reloj \textit{(paso 11)}
-      \item \textit{Participacion}: escribe muros restantes y reloj \textit{(paso 17)}
-      \item \textit{Jugada}: lee todas las de la partida, para reconstruir el tablero \textit{(paso 12)}
-      \item \textit{Jugada}: crea una de tipo \texttt{MURO} \textit{(paso 16)}
-      \item \textit{OfertaTablas}: marca como \texttt{CADUCADA} la pendiente \textit{(paso 18)}
-      \item \textit{Modo}: lee el número de muros por jugador \textit{(paso \mbox{PRE-03})}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 8)}
+      \item \textbf{\textit{Partida}:} lee estado y turno; escribe el turno siguiente \textit{(pasos 9, 18)}
+      \item \textbf{\textit{Participacion}:} lee muros restantes y reloj \textit{(paso 11)}
+      \item \textbf{\textit{Participacion}:} escribe muros restantes y reloj \textit{(paso 17)}
+      \item \textbf{\textit{Jugada}:} lee todas las de la partida, para reconstruir el tablero \textit{(paso 12)}
+      \item \textbf{\textit{Jugada}:} crea una de tipo \texttt{MURO} \textit{(paso 16)}
+      \item \textbf{\textit{OfertaTablas}:} marca como \texttt{CADUCADA} la pendiente \textit{(paso 18)}
+      \item \textbf{\textit{Modo}:} lee el número de muros por jugador \textit{(paso \mbox{PRE-03})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

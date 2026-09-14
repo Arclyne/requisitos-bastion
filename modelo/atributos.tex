@@ -1,0 +1,11 @@
+%=====================================================================
+% Modelo de datos · Atributos de cada entidad
+%=====================================================================
+\subsection*{Atributos de cada entidad}
+\addcontentsline{toc}{subsection}{Atributos de cada entidad}
+
+Cada tabla lista los atributos de una entidad con su tipo en SQL Server, si admiten nulo y si forman parte de una llave: \textbf{PK} para la llave primaria, \textbf{FK} para una llave foránea y \textbf{UQ} para un atributo único por sí solo. Las llaves compuestas y las restricciones de unicidad con condición se detallan en las secciones siguientes.
+
+Un atributo sin tipo de almacenamiento, marcado como \emph{calculada}, es una columna calculada no persistida: la base la obtiene de otras columnas de la misma fila cada vez que se lee y no la guarda. Se usa para los cuatro atributos que los casos de uso nombran pero que dependen de otros atributos de la fila; así la aplicación los lee con el nombre de siempre y la tabla sigue en tercera forma normal.
+
+\input{bd/tex/atributos}
