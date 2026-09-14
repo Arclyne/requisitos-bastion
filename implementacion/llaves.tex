@@ -1,0 +1,31 @@
+%=====================================================================
+% Implementación · Definición de llaves primarias y foráneas
+%=====================================================================
+\subsection*{Definición de llaves primarias y foráneas}
+\addcontentsline{toc}{subsection}{Definición de llaves primarias y foráneas}
+
+Todas las llaves se declaran como restricciones con nombre dentro del \at{CREATE TABLE} de su tabla. La lista completa, con sus columnas y a qué apunta cada una, está en las subsecciones \textit{Llaves primarias} y \textit{Llaves foráneas} del modelo de datos, generadas a partir del mismo script.
+
+\begin{reglas}
+  \item \textbf{Llaves primarias.} Las \bdNumTablas{} tablas tienen llave primaria, declarada como \at{CONSTRAINT PK\_Tabla PRIMARY KEY (...)}; SQL Server crea con ella el índice agrupado de la tabla. \bdNumPkCompuestas{} son compuestas: las de las entidades asociativas y débiles, como \textit{Participacion} (\at{id\_partida}, \at{id\_usuario}) o \textit{Jugada} (\at{id\_partida}, \at{numero\_jugada}). Las demás son simples: un identificador \at{IDENTITY} en las entidades que crean los casos de uso, un valor asignado en la carga en los catálogos, o la propia llave foránea en las dependientes 1:0..1, como \textit{HistorialNickname} o \textit{ColaEmparejamiento}, donde la llave impide una segunda fila por usuario.
+  \item \textbf{Llaves foráneas.} Las \bdNumForaneas{} relaciones del modelo son \at{CONSTRAINT FK\_Hija\_Papel FOREIGN KEY (...) REFERENCES dbo.Padre (...)}. \bdNumFkCompuestas{} son compuestas porque, además de exigir que la fila referida exista, hacen cumplir una regla: que solo se equipe lo que se posee, que el objeto sea de su ranura, que solo los participantes jueguen, ofrezcan tablas o compartan la partida, o que la partida adjunta a un reporte la hayan jugado el denunciante y el reportado (\mbox{CU-42} \mbox{RN-09}). Una llave compuesta necesita en la tabla referida una llave primaria o única con esas mismas columnas; por eso \textit{ObjetoCosmetico} declara la única (\at{id\_objeto}, \at{id\_ranura}).
+  \item \textbf{Sin cascadas.} Ninguna llave foránea declara \at{ON DELETE} ni \at{ON UPDATE}, así que SQL Server aplica \at{NO ACTION}: no se puede borrar una fila de la que otras dependen. La fila de \textit{Usuario} nunca se borra (\mbox{D-07}), las llaves no cambian una vez asignadas, y las pocas filas que se eliminan físicamente, siempre mediante un procedimiento, no tienen filas que dependan de ellas.
+\end{reglas}
+
+El extracto siguiente, sin los comentarios de las columnas, muestra las dos clases de llave en \textit{Equipamiento}: una llave primaria compuesta, una llave candidata única y tres llaves foráneas, dos de ellas compuestas.
+
+\begin{lstlisting}[style=sql, basicstyle=\ttfamily\footnotesize]
+CREATE TABLE dbo.Equipamiento (
+    id_usuario  INT      NOT NULL,
+    id_ranura   TINYINT  NOT NULL,
+    id_objeto   INT      NOT NULL,
+    CONSTRAINT PK_Equipamiento PRIMARY KEY (id_usuario, id_ranura),
+    CONSTRAINT UQ_Equipamiento_objeto UNIQUE (id_usuario, id_objeto),
+    CONSTRAINT FK_Equipamiento_UsuarioObjeto FOREIGN KEY (id_usuario, id_objeto)
+        REFERENCES dbo.UsuarioObjeto (id_usuario, id_objeto),
+    CONSTRAINT FK_Equipamiento_ObjetoCosmetico FOREIGN KEY (id_objeto, id_ranura)
+        REFERENCES dbo.ObjetoCosmetico (id_objeto, id_ranura),
+    CONSTRAINT FK_Equipamiento_Ranura FOREIGN KEY (id_ranura)
+        REFERENCES dbo.Ranura (id_ranura)
+);
+\end{lstlisting}

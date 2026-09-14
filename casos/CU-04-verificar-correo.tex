@@ -25,7 +25,7 @@
       \item El Servidor de partidas inicia una transacción sobre la Base de datos.
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=9]
-      \item El Servidor de partidas cambia el \texttt{estado\_\allowbreak{}cuenta} del \textit{Usuario} a \texttt{ACTIVA} y registra \texttt{fecha\_\allowbreak{}verificacion}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas cambia el \texttt{estado\_\allowbreak{}cuenta} del \textit{Usuario} a \texttt{ACTIVA}. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas marca el \textit{TokenVerificacionCorreo} como usado (\mbox{RN-01}).
       \item El Servidor de partidas invalida los demás \textit{TokenVerificacionCorreo} pendientes del \textit{Usuario}, si los hubiera (\mbox{RN-03}).
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
@@ -99,7 +99,7 @@
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
-      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene \texttt{estado\_\allowbreak{}cuenta} en \texttt{ACTIVA} y una \texttt{fecha\_\allowbreak{}verificacion}, y el \mbox{CU-01} ya no lo rechaza por su \mbox{FA-09}.
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene \texttt{estado\_\allowbreak{}cuenta} en \texttt{ACTIVA}, y el \mbox{CU-01} ya no lo rechaza por su \mbox{FA-09}.
       \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, el \textit{TokenVerificacionCorreo} queda marcado como usado y ningún otro token del mismo \textit{Usuario} sigue vigente.
       \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-03} o el \mbox{FA-05}, no queda ningún token vigente, pero la cuenta sigue en \texttt{PENDIENTE} y puede pedirse un enlace nuevo.
       \item \textbf{\mbox{POST-04}} Si el caso termina por el \mbox{FA-04}, la cuenta sigue en \texttt{PENDIENTE} y la sanción sigue vigente: ninguna de las dos cosas cambia por haber verificado el correo.
@@ -117,10 +117,10 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué este caso no abre sesión.}\par
     Sería cómodo que verificar el correo dejara al Jugador dentro del juego, pero el enlace se abre en un navegador y la sesión vive en el cliente de escritorio: no hay forma de pasar el token de sesión de uno a otro sin inventar un mecanismo que no existe en el resto del sistema. El Jugador verifica, vuelve al juego e inicia sesión con el \mbox{CU-01}, que es el único lugar donde se crea una \textit{Sesion}.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textbf{\textit{TokenVerificacionCorreo}:} lee \texttt{token\_\allowbreak{}hash}, \texttt{usado}, \texttt{fecha\_\allowbreak{}expiracion} \textit{(pasos 3, 5, 6)}
+      \item \textbf{\textit{TokenVerificacionCorreo}:} lee \texttt{token\_\allowbreak{}hash}, \texttt{estado}, \texttt{fecha\_\allowbreak{}expiracion} \textit{(pasos 3, 5, 6)}
       \item \textbf{\textit{TokenVerificacionCorreo}:} marca como usado e invalida los demás \textit{(pasos 10, 11)}
       \item \textbf{\textit{Usuario}:} lee \texttt{estado\_\allowbreak{}cuenta}, \texttt{idioma\_\allowbreak{}preferido} \textit{(pasos 7, 14)}
-      \item \textbf{\textit{Usuario}:} escribe \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}verificacion} \textit{(paso 9)}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{estado\_\allowbreak{}cuenta} \textit{(paso 9)}
       \item \textbf{\textit{Sancion}:} lee, para el \mbox{FA-04} \textit{(paso 7)}
       \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(paso 13)}
     \end{cudatos}} \\ \hline

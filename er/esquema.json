@@ -1,0 +1,3340 @@
+[
+    {
+        "nombre":  "Ranura",
+        "area":  "Catálogos precargados (D-09)",
+        "clase":  "Catálogo",
+        "pk":  [
+                   "id_ranura"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_ranura",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "codigo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+
+                ]
+    },
+    {
+        "nombre":  "ObjetoCosmetico",
+        "area":  "Catálogos precargados (D-09)",
+        "clase":  "Catálogo",
+        "pk":  [
+                   "id_objeto"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_objeto",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_ranura",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "codigo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "rareza",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "precio",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "nivel_requerido",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "a_la_venta",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "activo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "es_inicial",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "es_predeterminado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_ObjetoCosmetico_Ranura",
+                        "cols":  [
+                                     "id_ranura"
+                                 ],
+                        "ref":  "Ranura",
+                        "card":  "1:N",
+                        "texto":  "Una ranura agrupa muchos objetos; cada objeto pertenece a una ranura.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "Modo",
+        "area":  "Catálogos precargados (D-09)",
+        "clase":  "Catálogo",
+        "pk":  [
+                   "id_modo"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_modo",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "codigo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "tamano_tablero",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "num_jugadores",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "muros_por_jugador",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "activo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+
+                ]
+    },
+    {
+        "nombre":  "Division",
+        "area":  "Catálogos precargados (D-09)",
+        "clase":  "Catálogo",
+        "pk":  [
+                   "id_division"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_division",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "codigo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "elo_minimo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "elo_descenso",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+
+                ]
+    },
+    {
+        "nombre":  "NivelIA",
+        "area":  "Catálogos precargados (D-09)",
+        "clase":  "Catálogo",
+        "pk":  [
+                   "id_nivel_ia"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_nivel_ia",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "codigo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "elo_aproximado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+
+                ]
+    },
+    {
+        "nombre":  "Leccion",
+        "area":  "Catálogos precargados (D-09)",
+        "clase":  "Catálogo",
+        "pk":  [
+                   "id_leccion"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_leccion",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "codigo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "orden",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "num_pasos",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+
+                ]
+    },
+    {
+        "nombre":  "TipoCaja",
+        "area":  "Catálogos precargados (D-09)",
+        "clase":  "Catálogo",
+        "pk":  [
+                   "id_tipo_caja"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_tipo_caja",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "codigo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "precio",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "activo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+
+                ]
+    },
+    {
+        "nombre":  "TipoCajaObjeto",
+        "area":  "Catálogos precargados (D-09)",
+        "clase":  "Catálogo asociativo",
+        "pk":  [
+                   "id_tipo_caja",
+                   "id_objeto"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_tipo_caja",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_objeto",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "probabilidad",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_TipoCajaObjeto_TipoCaja",
+                        "cols":  [
+                                     "id_tipo_caja"
+                                 ],
+                        "ref":  "TipoCaja",
+                        "card":  "1:N",
+                        "texto":  "Un tipo de caja tiene muchos objetos posibles.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_TipoCajaObjeto_ObjetoCosmetico",
+                        "cols":  [
+                                     "id_objeto"
+                                 ],
+                        "ref":  "ObjetoCosmetico",
+                        "card":  "1:N",
+                        "texto":  "Un objeto puede salir en muchos tipos de caja.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "PalabraProhibida",
+        "area":  "Catálogos precargados (D-09)",
+        "clase":  "Catálogo",
+        "pk":  [
+                   "id_palabra"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_palabra",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "termino",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "idioma",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "ambito",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+
+                ]
+    },
+    {
+        "nombre":  "MotivoReporte",
+        "area":  "Catálogos precargados (D-09)",
+        "clase":  "Catálogo",
+        "pk":  [
+                   "id_motivo"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_motivo",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "codigo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+
+                ]
+    },
+    {
+        "nombre":  "Usuario",
+        "area":  "Cuenta y acceso",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_usuario"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "tipo_cuenta",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "estado_cuenta",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "rol",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "nickname",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "correo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "contrasena_hash",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "contrasena_sal",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_nacimiento",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "idioma_preferido",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "codigo_amigo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_icono",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "permite_espectadores",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "nivel",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "experiencia",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "saldo_monedas",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "cajas_sin_raro",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "intentos_fallidos",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_ultimo_intento_fallido",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "bloqueada_hasta",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "doble_factor_habilitado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_registro",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_configuracion_inicial",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_ultimo_envio_verificacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_ultimo_envio_recuperacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_baja",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+
+                ]
+    },
+    {
+        "nombre":  "Sesion",
+        "area":  "Cuenta y acceso",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_sesion"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_sesion",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "token_hash",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_inicio",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_expiracion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_ultimo_uso",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_fin",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "motivo_cierre",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "direccion_ip",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "huella_dispositivo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "nombre_dispositivo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "version_cliente",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Sesion_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario abre muchas sesiones; cada sesión es de un usuario.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "CodigoSegundoFactor",
+        "area":  "Cuenta y acceso",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_codigo"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_codigo",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "codigo_hash",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "canal",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_generacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_expiracion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "intentos",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "estado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_CodigoSegundoFactor_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario recibe muchos códigos a lo largo del tiempo.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "TokenVerificacionCorreo",
+        "area":  "Cuenta y acceso",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_token"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_token",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "token_hash",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "proposito",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "correo_destino",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_generacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_expiracion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "estado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_TokenVerificacionCorreo_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario recibe muchos tokens de verificación.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "TokenRecuperacion",
+        "area":  "Cuenta y acceso",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_token"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_token",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "token_hash",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_generacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_expiracion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "intentos",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "estado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_TokenRecuperacion_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario solicita muchas recuperaciones a lo largo del tiempo.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "AceptacionTerminos",
+        "area":  "Cuenta y acceso",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_aceptacion"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_aceptacion",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "version_terminos",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "idioma",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_aceptacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "direccion_ip",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_AceptacionTerminos_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario acepta una o más versiones de los términos.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "HistorialNickname",
+        "area":  "Perfil y personalización",
+        "clase":  "Dependiente (1:0..1)",
+        "pk":  [
+                   "id_usuario"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "nickname_anterior",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_cambio",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_HistorialNickname_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:1",
+                        "texto":  "Un usuario tiene a lo sumo un cambio de nombre registrado.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "Avatar",
+        "area":  "Perfil y personalización",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_avatar"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_avatar",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "ruta_imagen",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "formato",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "tamano_bytes",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_subida",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "vigente",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Avatar_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario sube muchos avatares; solo uno está vigente.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "EnlaceRed",
+        "area":  "Perfil y personalización",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_enlace"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_enlace",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "orden",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "url",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_EnlaceRed_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario publica hasta cuatro enlaces.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "UsuarioObjeto",
+        "area":  "Perfil y personalización",
+        "clase":  "Asociativa (N:M)",
+        "pk":  [
+                   "id_usuario",
+                   "id_objeto"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_objeto",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_obtencion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "origen",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_UsuarioObjeto_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario posee muchos objetos.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_UsuarioObjeto_ObjetoCosmetico",
+                        "cols":  [
+                                     "id_objeto"
+                                 ],
+                        "ref":  "ObjetoCosmetico",
+                        "card":  "1:N",
+                        "texto":  "Un objeto lo poseen muchos usuarios.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "Equipamiento",
+        "area":  "Perfil y personalización",
+        "clase":  "Asociativa (N:M)",
+        "pk":  [
+                   "id_usuario",
+                   "id_ranura"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_ranura",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_objeto",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Equipamiento_UsuarioObjeto",
+                        "cols":  [
+                                     "id_usuario",
+                                     "id_objeto"
+                                 ],
+                        "ref":  "UsuarioObjeto",
+                        "card":  "1:0..1",
+                        "texto":  "Solo se equipa lo que se posee (CU-14 RN-02); un objeto poseído está equipado a lo sumo en una ranura.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Equipamiento_ObjetoCosmetico",
+                        "cols":  [
+                                     "id_objeto",
+                                     "id_ranura"
+                                 ],
+                        "ref":  "ObjetoCosmetico",
+                        "card":  "1:N",
+                        "texto":  "El objeto equipado pertenece a la ranura de la fila.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Equipamiento_Ranura",
+                        "cols":  [
+                                     "id_ranura"
+                                 ],
+                        "ref":  "Ranura",
+                        "card":  "1:N",
+                        "texto":  "Cada usuario tiene una fila por ranura del catálogo.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "Partida",
+        "area":  "Partida",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_partida"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_partida",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_modo",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "tipo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "estado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "minutos_reloj",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_inicio",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_fin",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "forma_termino",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "turno_actual",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_nivel_ia",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "permite_deshacer",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "permite_sugerencias",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "deshacer_usados",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "sugerencias_usadas",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Partida_Modo",
+                        "cols":  [
+                                     "id_modo"
+                                 ],
+                        "ref":  "Modo",
+                        "card":  "1:N",
+                        "texto":  "Un modo se juega en muchas partidas; cada partida es de un modo.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Partida_NivelIA",
+                        "cols":  [
+                                     "id_nivel_ia"
+                                 ],
+                        "ref":  "NivelIA",
+                        "card":  "1:N",
+                        "texto":  "Un nivel de IA se enfrenta en muchas partidas; solo las de tipo IA lo tienen.",
+                        "opcional":  true
+                    }
+                ]
+    },
+    {
+        "nombre":  "Participacion",
+        "area":  "Partida",
+        "clase":  "Asociativa (N:M)",
+        "pk":  [
+                   "id_partida",
+                   "id_usuario"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_partida",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "orden_turno",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "simbolo_peon",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "casilla_actual",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "muros_restantes",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "reloj_restante",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "elo_inicial",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "elo_final",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "diferencia_elo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  true
+                         },
+                         {
+                             "nombre":  "resultado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "posicion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "forma_termino",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "conectado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_desconexion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "terminada",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  true
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Participacion_Partida",
+                        "cols":  [
+                                     "id_partida"
+                                 ],
+                        "ref":  "Partida",
+                        "card":  "1:N",
+                        "texto":  "Una partida tiene de 1 a 4 participaciones (1 contra la IA).",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Participacion_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario participa en muchas partidas.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "ParticipacionObjeto",
+        "area":  "Partida",
+        "clase":  "Asociativa (N:M)",
+        "pk":  [
+                   "id_partida",
+                   "id_usuario",
+                   "id_ranura"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_partida",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_ranura",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_objeto",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_ParticipacionObjeto_Participacion",
+                        "cols":  [
+                                     "id_partida",
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Participacion",
+                        "card":  "1:N",
+                        "texto":  "Una participación fija un objeto por cada ranura.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_ParticipacionObjeto_ObjetoCosmetico",
+                        "cols":  [
+                                     "id_objeto",
+                                     "id_ranura"
+                                 ],
+                        "ref":  "ObjetoCosmetico",
+                        "card":  "1:N",
+                        "texto":  "Un objeto aparece en muchas participaciones, siempre en su ranura.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "Jugada",
+        "area":  "Partida",
+        "clase":  "Débil",
+        "pk":  [
+                   "id_partida",
+                   "numero_jugada"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_partida",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "numero_jugada",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "tipo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "casilla_origen",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "casilla_destino",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "surco",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "orientacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "tiempo_consumido",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_jugada",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "deshecha",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Jugada_Partida",
+                        "cols":  [
+                                     "id_partida"
+                                 ],
+                        "ref":  "Partida",
+                        "card":  "1:N",
+                        "texto":  "Una partida tiene muchas jugadas.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Jugada_Participacion",
+                        "cols":  [
+                                     "id_partida",
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Participacion",
+                        "card":  "1:N",
+                        "texto":  "Un participante hace muchas jugadas; las de la IA no tienen participante.",
+                        "opcional":  true
+                    }
+                ]
+    },
+    {
+        "nombre":  "OfertaTablas",
+        "area":  "Partida",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_oferta"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_oferta",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_partida",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_ofertante",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "numero_jugada",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_oferta",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "estado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_respuesta",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_OfertaTablas_Participacion",
+                        "cols":  [
+                                     "id_partida",
+                                     "id_ofertante"
+                                 ],
+                        "ref":  "Participacion",
+                        "card":  "1:N",
+                        "texto":  "Un participante hace muchas ofertas en su partida.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "EnlaceEspectador",
+        "area":  "Partida",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_enlace"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_enlace",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_partida",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_creador",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "token_hash",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_creacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_EnlaceEspectador_Participacion",
+                        "cols":  [
+                                     "id_partida",
+                                     "id_creador"
+                                 ],
+                        "ref":  "Participacion",
+                        "card":  "1:N",
+                        "texto":  "Un participante comparte uno o más enlaces de su partida.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "ColaEmparejamiento",
+        "area":  "Emparejamiento, salas y chat",
+        "clase":  "Dependiente (1:0..1)",
+        "pk":  [
+                   "id_usuario"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_modo",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "minutos_reloj",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_entrada",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_ColaEmparejamiento_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:0..1",
+                        "texto":  "Un usuario ocupa a lo sumo un lugar en la cola.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_ColaEmparejamiento_Modo",
+                        "cols":  [
+                                     "id_modo"
+                                 ],
+                        "ref":  "Modo",
+                        "card":  "1:N",
+                        "texto":  "En la cola de un modo esperan muchos jugadores.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "Sala",
+        "area":  "Emparejamiento, salas y chat",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_sala"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_sala",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "codigo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_anfitrion",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_modo",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "muros_por_jugador",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "minutos_reloj",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "permite_espectadores",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "estado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_partida",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_creacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_ultima_actividad",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Sala_Anfitrion",
+                        "cols":  [
+                                     "id_anfitrion"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario es anfitrión de muchas salas a lo largo del tiempo.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Sala_Modo",
+                        "cols":  [
+                                     "id_modo"
+                                 ],
+                        "ref":  "Modo",
+                        "card":  "1:N",
+                        "texto":  "Un modo se juega en muchas salas.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Sala_Partida",
+                        "cols":  [
+                                     "id_partida"
+                                 ],
+                        "ref":  "Partida",
+                        "card":  "1:0..1",
+                        "texto":  "Una sala inicia a lo sumo una partida; una partida privada viene de una sala.",
+                        "opcional":  true
+                    }
+                ]
+    },
+    {
+        "nombre":  "SalaParticipante",
+        "area":  "Emparejamiento, salas y chat",
+        "clase":  "Dependiente (1:0..1)",
+        "pk":  [
+                   "id_usuario"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_sala",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "plaza",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "listo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_union",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_SalaParticipante_Sala",
+                        "cols":  [
+                                     "id_sala"
+                                 ],
+                        "ref":  "Sala",
+                        "card":  "1:N",
+                        "texto":  "Una sala tiene de 1 a 4 miembros.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_SalaParticipante_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:0..1",
+                        "texto":  "Un usuario ocupa a lo sumo una plaza.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "Invitacion",
+        "area":  "Emparejamiento, salas y chat",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_invitacion"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_invitacion",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_sala",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_emisor",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_destinatario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_invitacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_expiracion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "estado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Invitacion_Sala",
+                        "cols":  [
+                                     "id_sala"
+                                 ],
+                        "ref":  "Sala",
+                        "card":  "1:N",
+                        "texto":  "Una sala recibe muchas invitaciones.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Invitacion_Emisor",
+                        "cols":  [
+                                     "id_emisor"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario envía muchas invitaciones (rol emisor).",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Invitacion_Destinatario",
+                        "cols":  [
+                                     "id_destinatario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario recibe muchas invitaciones (rol destinatario).",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "Mensaje",
+        "area":  "Emparejamiento, salas y chat",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_mensaje"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_mensaje",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_autor",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "canal",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_partida",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_sala",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "texto",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_envio",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Mensaje_Autor",
+                        "cols":  [
+                                     "id_autor"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario escribe muchos mensajes.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Mensaje_Partida",
+                        "cols":  [
+                                     "id_partida"
+                                 ],
+                        "ref":  "Partida",
+                        "card":  "1:N",
+                        "texto":  "Una partida tiene muchos mensajes de jugadores y de espectadores.",
+                        "opcional":  true
+                    },
+                    {
+                        "nombre":  "FK_Mensaje_Sala",
+                        "cols":  [
+                                     "id_sala"
+                                 ],
+                        "ref":  "Sala",
+                        "card":  "1:N",
+                        "texto":  "Una sala tiene muchos mensajes de espera.",
+                        "opcional":  true
+                    }
+                ]
+    },
+    {
+        "nombre":  "EstadisticaModo",
+        "area":  "Clasificación y economía",
+        "clase":  "Asociativa (N:M)",
+        "pk":  [
+                   "id_usuario",
+                   "id_modo"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_modo",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "puntos_elo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_ultima_partida",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "elo_maximo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "partidas_jugadas",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "partidas_ganadas",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "partidas_perdidas",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "racha_actual",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "mejor_racha",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "tiempo_total_jugado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "barreras_colocadas",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "abandonos",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_division",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_EstadisticaModo_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario tiene una fila de estadísticas por cada modo.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_EstadisticaModo_Modo",
+                        "cols":  [
+                                     "id_modo"
+                                 ],
+                        "ref":  "Modo",
+                        "card":  "1:N",
+                        "texto":  "Un modo tiene estadísticas de muchos usuarios.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_EstadisticaModo_Division",
+                        "cols":  [
+                                     "id_division"
+                                 ],
+                        "ref":  "Division",
+                        "card":  "1:N",
+                        "texto":  "En una división hay muchos jugadores de cada modo.",
+                        "opcional":  true
+                    }
+                ]
+    },
+    {
+        "nombre":  "HistorialDivision",
+        "area":  "Clasificación y economía",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_historial_division"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_historial_division",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_modo",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_division_anterior",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_division_nueva",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_cambio",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_HistorialDivision_EstadisticaModo",
+                        "cols":  [
+                                     "id_usuario",
+                                     "id_modo"
+                                 ],
+                        "ref":  "EstadisticaModo",
+                        "card":  "1:N",
+                        "texto":  "Las estadísticas de un modo acumulan muchos cambios de división.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_HistorialDivision_Anterior",
+                        "cols":  [
+                                     "id_division_anterior"
+                                 ],
+                        "ref":  "Division",
+                        "card":  "1:N",
+                        "texto":  "Una división es el origen de muchos cambios (rol anterior).",
+                        "opcional":  true
+                    },
+                    {
+                        "nombre":  "FK_HistorialDivision_Nueva",
+                        "cols":  [
+                                     "id_division_nueva"
+                                 ],
+                        "ref":  "Division",
+                        "card":  "1:N",
+                        "texto":  "Una división es el destino de muchos cambios (rol nueva).",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "Caja",
+        "area":  "Clasificación y economía",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_caja"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_caja",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_tipo_caja",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "origen",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "estado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_obtencion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_apertura",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_caducidad",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Caja_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario tiene muchas cajas.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Caja_TipoCaja",
+                        "cols":  [
+                                     "id_tipo_caja"
+                                 ],
+                        "ref":  "TipoCaja",
+                        "card":  "1:N",
+                        "texto":  "Un tipo de caja se concreta en muchas cajas.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "CajaContenido",
+        "area":  "Clasificación y economía",
+        "clase":  "Débil",
+        "pk":  [
+                   "id_caja",
+                   "numero"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_caja",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "numero",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_objeto",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "monedas_conversion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "convertido",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  true
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_CajaContenido_Caja",
+                        "cols":  [
+                                     "id_caja"
+                                 ],
+                        "ref":  "Caja",
+                        "card":  "1:N",
+                        "texto":  "Una caja abierta tiene tres objetos.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_CajaContenido_ObjetoCosmetico",
+                        "cols":  [
+                                     "id_objeto"
+                                 ],
+                        "ref":  "ObjetoCosmetico",
+                        "card":  "1:N",
+                        "texto":  "Un objeto sale en muchas cajas.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "MovimientoMoneda",
+        "area":  "Clasificación y economía",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_movimiento"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_movimiento",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "tipo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "importe",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_movimiento",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_partida",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_objeto",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_caja",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_MovimientoMoneda_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario acumula muchos movimientos.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_MovimientoMoneda_Partida",
+                        "cols":  [
+                                     "id_partida"
+                                 ],
+                        "ref":  "Partida",
+                        "card":  "1:N",
+                        "texto":  "Una partida clasificatoria genera un movimiento por participante.",
+                        "opcional":  true
+                    },
+                    {
+                        "nombre":  "FK_MovimientoMoneda_ObjetoCosmetico",
+                        "cols":  [
+                                     "id_objeto"
+                                 ],
+                        "ref":  "ObjetoCosmetico",
+                        "card":  "1:N",
+                        "texto":  "Un objeto aparece en muchos movimientos de compra o conversión.",
+                        "opcional":  true
+                    },
+                    {
+                        "nombre":  "FK_MovimientoMoneda_Caja",
+                        "cols":  [
+                                     "id_caja"
+                                 ],
+                        "ref":  "Caja",
+                        "card":  "1:N",
+                        "texto":  "Una caja genera su cobro y sus conversiones.",
+                        "opcional":  true
+                    }
+                ]
+    },
+    {
+        "nombre":  "Amistad",
+        "area":  "Relaciones entre jugadores y tutorial",
+        "clase":  "Asociativa (N:M)",
+        "pk":  [
+                   "id_usuario_a",
+                   "id_usuario_b"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_usuario_a",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario_b",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_amistad",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Amistad_UsuarioA",
+                        "cols":  [
+                                     "id_usuario_a"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario es amigo de muchos (como el menor del par).",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Amistad_UsuarioB",
+                        "cols":  [
+                                     "id_usuario_b"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario es amigo de muchos (como el mayor del par).",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "Solicitud",
+        "area":  "Relaciones entre jugadores y tutorial",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_solicitud"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_solicitud",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_solicitante",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_destinatario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_solicitud",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Solicitud_Solicitante",
+                        "cols":  [
+                                     "id_solicitante"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario envía muchas solicitudes (rol solicitante).",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Solicitud_Destinatario",
+                        "cols":  [
+                                     "id_destinatario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario recibe muchas solicitudes (rol destinatario).",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "Silencio",
+        "area":  "Relaciones entre jugadores y tutorial",
+        "clase":  "Asociativa (N:M)",
+        "pk":  [
+                   "id_usuario",
+                   "id_silenciado"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_silenciado",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_silencio",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Silencio_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario silencia a muchos (rol quien silencia).",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Silencio_Silenciado",
+                        "cols":  [
+                                     "id_silenciado"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario es silenciado por muchos (rol silenciado).",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "Bloqueo",
+        "area":  "Relaciones entre jugadores y tutorial",
+        "clase":  "Asociativa (N:M)",
+        "pk":  [
+                   "id_bloqueador",
+                   "id_bloqueado"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_bloqueador",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_bloqueado",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_bloqueo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Bloqueo_Bloqueador",
+                        "cols":  [
+                                     "id_bloqueador"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario bloquea a muchos (rol bloqueador).",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Bloqueo_Bloqueado",
+                        "cols":  [
+                                     "id_bloqueado"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario es bloqueado por muchos (rol bloqueado).",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "ProgresoTutorial",
+        "area":  "Relaciones entre jugadores y tutorial",
+        "clase":  "Asociativa (N:M)",
+        "pk":  [
+                   "id_usuario",
+                   "id_leccion"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_leccion",
+                             "pk":  true,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "paso_actual",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_actualizacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_completada",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "completada",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  true
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_ProgresoTutorial_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario avanza en muchas lecciones.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_ProgresoTutorial_Leccion",
+                        "cols":  [
+                                     "id_leccion"
+                                 ],
+                        "ref":  "Leccion",
+                        "card":  "1:N",
+                        "texto":  "Una lección la cursan muchos usuarios.",
+                        "opcional":  false
+                    }
+                ]
+    },
+    {
+        "nombre":  "Reporte",
+        "area":  "Moderación y bitácoras",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_reporte"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_reporte",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_denunciante",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_reportado",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_motivo",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "descripcion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_partida",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_reporte",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "estado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_moderador",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_asignacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "nota_resolucion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_resolucion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Reporte_Denunciante",
+                        "cols":  [
+                                     "id_denunciante"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario emite muchos reportes (relación Emite del diagrama).",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Reporte_Reportado",
+                        "cols":  [
+                                     "id_reportado"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario recibe muchos reportes (relación Señala del diagrama).",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Reporte_MotivoReporte",
+                        "cols":  [
+                                     "id_motivo"
+                                 ],
+                        "ref":  "MotivoReporte",
+                        "card":  "1:N",
+                        "texto":  "Un motivo clasifica muchos reportes.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Reporte_ParticipacionDenunciante",
+                        "cols":  [
+                                     "id_partida",
+                                     "id_denunciante"
+                                 ],
+                        "ref":  "Participacion",
+                        "card":  "1:N",
+                        "texto":  "La partida adjunta es una que jugó el denunciante (CU-42 RN-09; relación Sobre del diagrama).",
+                        "opcional":  true
+                    },
+                    {
+                        "nombre":  "FK_Reporte_ParticipacionReportado",
+                        "cols":  [
+                                     "id_partida",
+                                     "id_reportado"
+                                 ],
+                        "ref":  "Participacion",
+                        "card":  "1:N",
+                        "texto":  "La partida adjunta es una que jugó el reportado (CU-42 RN-09).",
+                        "opcional":  true
+                    },
+                    {
+                        "nombre":  "FK_Reporte_Moderador",
+                        "cols":  [
+                                     "id_moderador"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un moderador revisa muchos reportes.",
+                        "opcional":  true
+                    }
+                ]
+    },
+    {
+        "nombre":  "Sancion",
+        "area":  "Moderación y bitácoras",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_sancion"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_sancion",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_moderador",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_reporte",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "ambito",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "tipo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "motivo",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_inicio",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_fin",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_retiro",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_sancion_sustituta",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "activa",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  true
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Sancion_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario recibe muchas sanciones (relación Recibe del diagrama).",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Sancion_Moderador",
+                        "cols":  [
+                                     "id_moderador"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un moderador aplica muchas sanciones.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Sancion_Reporte",
+                        "cols":  [
+                                     "id_reporte"
+                                 ],
+                        "ref":  "Reporte",
+                        "card":  "1:N",
+                        "texto":  "Un reporte origina ninguna, una o varias sanciones (relación Origina del diagrama).",
+                        "opcional":  true
+                    },
+                    {
+                        "nombre":  "FK_Sancion_Sustituta",
+                        "cols":  [
+                                     "id_sancion_sustituta"
+                                 ],
+                        "ref":  "Sancion",
+                        "card":  "1:0..1",
+                        "texto":  "Una sanción puede ser sustituida por otra posterior.",
+                        "opcional":  true
+                    }
+                ]
+    },
+    {
+        "nombre":  "Apelacion",
+        "area":  "Moderación y bitácoras",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_apelacion"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_apelacion",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_sancion",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "texto",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "marca_lenguaje",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_apelacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "estado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_moderador",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_asignacion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "nota_resolucion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_resolucion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_Apelacion_Sancion",
+                        "cols":  [
+                                     "id_sancion"
+                                 ],
+                        "ref":  "Sancion",
+                        "card":  "1:0..1",
+                        "texto":  "Una sanción tiene a lo sumo una apelación.",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_Apelacion_Moderador",
+                        "cols":  [
+                                     "id_moderador"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un moderador resuelve muchas apelaciones.",
+                        "opcional":  true
+                    }
+                ]
+    },
+    {
+        "nombre":  "BitacoraModeracion",
+        "area":  "Moderación y bitácoras",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_bitacora"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_bitacora",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_moderador",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "accion",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario_afectado",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "detalle",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_hora",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_BitacoraModeracion_Moderador",
+                        "cols":  [
+                                     "id_moderador"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario realiza muchas acciones registradas (rol autor).",
+                        "opcional":  false
+                    },
+                    {
+                        "nombre":  "FK_BitacoraModeracion_Afectado",
+                        "cols":  [
+                                     "id_usuario_afectado"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Un usuario es objeto de muchas acciones (rol afectado).",
+                        "opcional":  true
+                    }
+                ]
+    },
+    {
+        "nombre":  "BitacoraAcceso",
+        "area":  "Moderación y bitácoras",
+        "clase":  "Fuerte",
+        "pk":  [
+                   "id_bitacora"
+               ],
+        "columnas":  [
+                         {
+                             "nombre":  "id_bitacora",
+                             "pk":  true,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "id_usuario",
+                             "pk":  false,
+                             "fk":  true,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "identificador_capturado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "resultado",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "direccion_ip",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         },
+                         {
+                             "nombre":  "fecha_hora",
+                             "pk":  false,
+                             "fk":  false,
+                             "calculada":  false
+                         }
+                     ],
+        "fks":  [
+                    {
+                        "nombre":  "FK_BitacoraAcceso_Usuario",
+                        "cols":  [
+                                     "id_usuario"
+                                 ],
+                        "ref":  "Usuario",
+                        "card":  "1:N",
+                        "texto":  "Una cuenta acumula muchos registros de acceso.",
+                        "opcional":  true
+                    }
+                ]
+    }
+]

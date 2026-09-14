@@ -1,0 +1,18 @@
+%=====================================================================
+% Modelo de datos · Normalización: tablas de partida
+%=====================================================================
+\subsubsection*{Tablas de partida}
+\addcontentsline{toc}{subsubsection}{Tablas de partida}
+
+La transformación parte de las tablas que resultan de traducir el diagrama entidad-relación tal como se dibujó: una tabla por entidad, una por cada relación de muchos a muchos, y las relaciones de uno a muchos como llaves foráneas. La llave primaria va subrayada.
+
+{\raggedright\setlength{\parskip}{3pt}
+\noindent\hangindent=1.5em\hangafter=1 \textit{Usuario}(\underline{\at{id\_usuario}}, \at{nickname}, \at{correo}, \at{contraseña}, \at{estado\_cuenta}, \at{fecha\_registro}, \at{idioma\_preferido}, \at{region}, \at{nombre\_completo}\{\at{nombre}, \at{apellido\_paterno}, \at{apellido\_materno}\}, \at{fecha\_nacimiento}, \at{edad}, \at{id\_skin\_equipada})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Skin}(\underline{\at{id\_skin}}, \at{nombre\_skin}, \at{tipo}, \at{rareza}, \at{costo})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Posee}(\underline{\at{id\_usuario}, \at{id\_skin}}, \at{fecha\_obtencion})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Estadisticas}(\underline{\at{id\_usuario}}, \at{partidas\_jugadas}, \at{partidas\_ganadas}, \at{partidas\_perdidas}, \at{porcentaje\_victorias}, \at{barreras\_colocadas}, \at{tiempo\_total\_jugado}, \at{puntos\_elo}, \at{racha\_actual})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Partida}(\underline{\at{id\_partida}}, \at{estado\_partida}, \at{fecha\_hora\_inicio}, \at{fecha\_hora\_fin}, \at{duracion}, \at{num\_jugadores})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Participa}(\underline{\at{id\_usuario}, \at{id\_partida}}, \at{resultado}, \at{color\_ficha}, \at{orden\_turno}, \at{barreras\_restantes})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Reporte}(\underline{\at{id\_reporte}}, \at{id\_reportante}, \at{id\_reportado}, \at{id\_partida}, \at{motivo}, \at{descripcion}, \at{fecha\_reporte}, \at{estado\_reporte})\par
+\noindent\hangindent=1.5em\hangafter=1 \textit{Baneo}(\underline{\at{id\_baneo}}, \at{id\_usuario}, \at{id\_reporte}, \at{tipo\_baneo}, \at{fecha\_inicio}, \at{fecha\_fin}, \at{activo}, \at{num\_reportes})\par
+}

@@ -29,16 +29,16 @@
    & \cuCelda{\begin{cuenum}[start=9]
       \item El Servidor de partidas deriva el resumen criptográfico de la contraseña recibida utilizando la \texttt{contrasena\_\allowbreak{}sal} almacenada del \textit{Usuario} y lo compara contra \texttt{contrasena\_\allowbreak{}hash}. \textit{(Ver \mbox{FA-08})}
       \item El Servidor de partidas restablece \texttt{intentos\_\allowbreak{}fallidos} a cero y deja \texttt{bloqueada\_\allowbreak{}hasta} en nulo.
-      \item El Servidor de partidas verifica que el \texttt{estado\_\allowbreak{}cuenta} del \textit{Usuario} sea \texttt{ACTIVA}. \textit{(Ver \mbox{FA-09}, \mbox{FA-10}, \mbox{FA-17}, \mbox{FA-20})}
+      \item El Servidor de partidas verifica que el \texttt{estado\_\allowbreak{}cuenta} del \textit{Usuario} sea \texttt{ACTIVA}. \textit{(Ver \mbox{FA-09}, \mbox{FA-10}, \mbox{FA-19})}
       \item El Servidor de partidas consulta si existe una \textit{Sancion} del \textit{Usuario} con \texttt{ambito} igual a \texttt{CUENTA}, \texttt{activa} verdadero y \texttt{fecha\_\allowbreak{}fin} nula o posterior a la fecha actual. \textit{(Ver \mbox{FA-10})}
       \item El Servidor de partidas consulta el valor de \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} del \textit{Usuario} y confirma que está desactivado. \textit{(Ver \mbox{FA-11})}
       \item El Servidor de partidas genera un token de sesión y registra una nueva \textit{Sesion} asociada al \textit{Usuario}, con su \texttt{fecha\_\allowbreak{}inicio}, su \texttt{fecha\_\allowbreak{}expiracion}, la \texttt{direccion\_\allowbreak{}ip} de origen, la \texttt{huella\_\allowbreak{}dispositivo}, el \texttt{nombre\_\allowbreak{}dispositivo} y la \texttt{version\_\allowbreak{}cliente}. \textit{(Ver \mbox{EX-05})}
-      \item El Servidor de partidas actualiza \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}acceso} del \textit{Usuario}.
-      \item El Servidor de partidas registra el acceso exitoso en la \textit{BitacoraAcceso} con el resultado \texttt{EXITO}.
+      \item El Servidor de partidas registra el acceso exitoso en la \textit{BitacoraAcceso} con el resultado \texttt{EXITO}, en la misma transacción que la \textit{Sesion}.
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-05})}
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=17]
       \item El Servidor de partidas responde con el mensaje \texttt{LOGIN\_\allowbreak{}OK}, que contiene el token de sesión, el perfil del \textit{Usuario} (\texttt{nickname}, \texttt{id\_\allowbreak{}icono}, \texttt{idioma\_\allowbreak{}preferido}), su \textit{Equipamiento}, sus \textit{EstadisticaModo} y, si la tiene, la \textit{Participacion} sin terminar.
-      \item El SJM aplica el \texttt{idioma\_\allowbreak{}preferido} recibido a los textos de la interfaz. \textit{(Ver \mbox{FA-18}, \mbox{FA-19})}
+      \item El SJM aplica el \texttt{idioma\_\allowbreak{}preferido} recibido a los textos de la interfaz. \textit{(Ver \mbox{FA-17}, \mbox{FA-18})}
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}MainMenu} con el \texttt{nickname}, el peón equipado y el elo del modo clásico 9×9.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
@@ -162,31 +162,22 @@
       \item El Servidor de partidas responde con \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}INVALID} y el número de intentos restantes, que el SJM muestra en la \texttt{GUI\_\allowbreak{}MessageWarning}.
       \item Si se agotaron los intentos, el flujo continúa en el paso 2 del FN. En caso contrario, continúa en el paso 5 del \mbox{FA-11}.
     \end{cuenum}} \\
-   & \cuCelda{\textbf{\mbox{FA-17}: La cuenta fue eliminada y sigue dentro del periodo de recuperación}\par
-    \begin{cuenum}[start=1]
-      \item El Servidor de partidas comprueba que no hayan transcurrido catorce días desde \texttt{fecha\_\allowbreak{}baja} (\mbox{RN-15}). Si ya transcurrieron, trata la cuenta como inexistente y el flujo continúa en el \mbox{FA-06}.
-      \item El Servidor de partidas responde con \texttt{ACCOUNT\_\allowbreak{}DELETED\_\allowbreak{}RECOVERABLE} y los días que faltan para que la eliminación sea definitiva.
-      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} indicando que la cuenta está programada para eliminarse, con las opciones ``Recuperar mi cuenta'' y ``Cancelar''.
-      \item El Jugador selecciona ``Recuperar mi cuenta'' y el SJM envía el mensaje \texttt{RECOVER\_\allowbreak{}ACCOUNT\_\allowbreak{}REQUEST}. Si selecciona ``Cancelar'', fin del caso de uso.
-      \item El Servidor de partidas cambia \texttt{estado\_\allowbreak{}cuenta} a \texttt{ACTIVA}, deja \texttt{fecha\_\allowbreak{}baja} en nulo y registra la recuperación en la \textit{BitacoraAcceso} con el resultado \texttt{CUENTA\_\allowbreak{}RECUPERADA}. \textit{(Ver \mbox{EX-04})}
-      \item El flujo continúa en el paso 12 del FN.
-    \end{cuenum}} \\
-   & \cuCelda{\textbf{\mbox{FA-18}: Es el primer acceso de la cuenta}\par
+   & \cuCelda{\textbf{\mbox{FA-17}: Es el primer acceso de la cuenta}\par
     \begin{cuenum}[start=1]
       \item El SJM detecta en el perfil recibido que \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} es nula.
       \item El flujo continúa en el \mbox{CU-08} Configurar la cuenta la primera vez, que al terminar despliega la \texttt{GUI\_\allowbreak{}MainMenu}.
       \item Fin del caso de uso.
     \end{cuenum}} \\
-   & \cuCelda{\textbf{\mbox{FA-19}: El Jugador tiene una partida sin terminar}\par
+   & \cuCelda{\textbf{\mbox{FA-18}: El Jugador tiene una partida sin terminar}\par
     \begin{cuenum}[start=1]
       \item El SJM detecta en el mensaje \texttt{LOGIN\_\allowbreak{}OK} una \textit{Participacion} sin terminar en una partida en línea.
       \item El flujo continúa en el \mbox{CU-26} Reconectar a una partida en curso.
       \item Fin del caso de uso.
     \end{cuenum}} \\
-   & \cuCelda{\textbf{\mbox{FA-20}: La suspensión temporal de la cuenta ya venció}\par
+   & \cuCelda{\textbf{\mbox{FA-19}: La suspensión temporal de la cuenta ya venció}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas encuentra el \texttt{estado\_\allowbreak{}cuenta} en \texttt{SUSPENDIDA} y ninguna \textit{Sancion} de ámbito \texttt{CUENTA} con \texttt{activa} verdadero y \texttt{fecha\_\allowbreak{}fin} posterior a la fecha actual.
-      \item El Servidor de partidas devuelve el \texttt{estado\_\allowbreak{}cuenta} a \texttt{ACTIVA} y registra el cambio en la \textit{BitacoraAcceso} con el resultado \texttt{SUSPENSION\_\allowbreak{}VENCIDA} (\mbox{RN-17}). \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas devuelve el \texttt{estado\_\allowbreak{}cuenta} a \texttt{ACTIVA} y registra el cambio en la \textit{BitacoraAcceso} con el resultado \texttt{SUSPENSION\_\allowbreak{}VENCIDA} (\mbox{RN-16}). \textit{(Ver \mbox{EX-04})}
       \item El flujo continúa en el paso 13 del FN. Si la sanción sigue vigente, el flujo es el del \mbox{FA-10}.
     \end{cuenum}} \\ \hline
   \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: No se puede establecer la conexión con el servidor}\par
@@ -218,7 +209,7 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{EX-05}: Fallo al registrar la sesión}\par
     \begin{cuenum}[start=1]
-      \item El Servidor de partidas revierte la transacción que abarca el registro de la \textit{Sesion} y la actualización de \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}acceso}, de modo que no quede un acceso registrado sin sesión.
+      \item El Servidor de partidas revierte la transacción que abarca el registro de la \textit{Sesion} y el del acceso exitoso en la \textit{BitacoraAcceso}, de modo que no quede un acceso registrado sin sesión.
       \item El Servidor de partidas registra la excepción en la bitácora del servidor y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
       \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que no fue posible abrir la sesión.
       \item Fin del caso de uso. El Jugador queda sin sesión activa.
@@ -248,20 +239,17 @@
   \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe una \textit{Sesion} activa asociada al \textit{Usuario}, con su token, su \texttt{fecha\_\allowbreak{}inicio}, la dirección de red de origen y la huella del dispositivo. Las demás sesiones abiertas de la cuenta, si las hay, siguen abiertas (\mbox{D-01}).
       \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, \texttt{intentos\_\allowbreak{}fallidos} del \textit{Usuario} vale cero y \texttt{bloqueada\_\allowbreak{}hasta} es nulo.
-      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}acceso} del \textit{Usuario} contiene la fecha y hora del acceso.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, el último acceso de la cuenta es la \texttt{fecha\_\allowbreak{}inicio} de la nueva \textit{Sesion}; no se copia en el \textit{Usuario}.
       \item \textbf{\mbox{POST-04}} Si el caso termina por el FN, el cliente conserva el token de sesión y muestra la \texttt{GUI\_\allowbreak{}MainMenu} con la interfaz en el \texttt{idioma\_\allowbreak{}preferido} del \textit{Usuario}.
       \item \textbf{\mbox{POST-05}} Si el caso termina por el \mbox{FA-08}, \texttt{intentos\_\allowbreak{}fallidos} quedó incrementado, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido} actualizado y, de haberse alcanzado un umbral, \texttt{bloqueada\_\allowbreak{}hasta} contiene el instante en que expira el bloqueo.
       \item \textbf{\mbox{POST-06}} Si el caso termina por cualquier flujo alterno o excepción distinta del FN, del \mbox{FA-17} o del \mbox{FA-18}, no existe ninguna \textit{Sesion} nueva y el Jugador permanece en la \texttt{GUI\_\allowbreak{}Login} o en la pantalla informativa correspondiente.
       \item \textbf{\mbox{POST-07}} En todos los casos que llegan al servidor, exitosos o fallidos, el intento quedó registrado en la \textit{BitacoraAcceso} con su resultado, su fecha y hora y la dirección de red de origen.
-    \end{cureglas}} \\
-   & \cuCelda{\begin{cureglas}
-      \item \textbf{\mbox{POST-08}} Si el caso termina por el \mbox{FA-17} con la recuperación aceptada, el \textit{Usuario} vuelve a tener \texttt{estado\_\allowbreak{}cuenta} en \texttt{ACTIVA} y \texttt{fecha\_\allowbreak{}baja} nula.
     \end{cureglas}} \\ \hline
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} Ante credenciales inválidas, el sistema responde siempre con el mismo mensaje genérico y en un tiempo equivalente, sin revelar si el fallo fue el identificador o la contraseña, ni si la cuenta existe.
       \item \textbf{\mbox{RN-02}} Las contraseñas y los códigos del segundo factor no se almacenan, transmiten ni registran en claro. En la base de datos se guarda únicamente su resumen criptográfico con sal, y ninguna bitácora puede contener su valor.
       \item \textbf{\mbox{RN-03}} El bloqueo por intentos fallidos es escalonado: al tercer intento fallido consecutivo la cuenta se bloquea cinco minutos; al sexto, treinta minutos; a partir del noveno, sesenta minutos. El contador se restablece con un acceso exitoso, o bien cuando transcurren veinticuatro horas desde \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido} sin nuevos intentos.
-      \item \textbf{\mbox{RN-04}} Solo puede iniciar sesión un \textit{Usuario} cuyo \texttt{estado\_\allowbreak{}cuenta} sea \texttt{ACTIVA}. Los valores \texttt{PENDIENTE}, \texttt{SUSPENDIDA}, \texttt{BANEADA} y \texttt{ELIMINADA} impiden el acceso, cada uno con su propio mensaje.
+      \item \textbf{\mbox{RN-04}} Solo puede iniciar sesión un \textit{Usuario} cuyo \texttt{estado\_\allowbreak{}cuenta} sea \texttt{ACTIVA}. Los valores \texttt{PENDIENTE}, \texttt{SUSPENDIDA} y \texttt{BANEADA} impiden el acceso, cada uno con su propio mensaje. Una cuenta \texttt{ELIMINADA} tiene el \texttt{nickname} y el \texttt{correo} anonimizados, por lo que nunca coincide con el identificador recibido y se trata como inexistente (\mbox{FA-06}).
       \item \textbf{\mbox{RN-05}} Una \textit{Sancion} activa de ámbito \texttt{CUENTA} impide iniciar sesión hasta su \texttt{fecha\_\allowbreak{}fin}. Si la sanción es permanente, \texttt{fecha\_\allowbreak{}fin} es nula y el impedimento no caduca. Una sanción de ámbito \texttt{CHAT} no afecta al inicio de sesión (\mbox{D-05}).
       \item \textbf{\mbox{RN-06}} Una cuenta puede tener varias \textit{Sesion} abiertas a la vez, una por dispositivo. Lo que no puede duplicarse es la participación en una partida, que se controla al entrar a ella y no aquí (\mbox{D-01}).
       \item \textbf{\mbox{RN-07}} El token de sesión tiene una vigencia máxima de veinticuatro horas y se invalida al cerrar sesión, al cambiar las credenciales o al aplicarse una sanción de ámbito de cuenta.
@@ -276,9 +264,8 @@
       \item \textbf{\mbox{RN-14}} El \texttt{nickname} y el \texttt{correo} son únicos entre todos los \textit{Usuario}, ya que ambos sirven como identificador de acceso.
     \end{cureglas}} \\
    & \cuCelda{\begin{cureglas}
-      \item \textbf{\mbox{RN-15}} Una cuenta eliminada puede recuperarse iniciando sesión dentro de los catorce días siguientes a su \texttt{fecha\_\allowbreak{}baja}. Pasado ese plazo, la eliminación es definitiva (\mbox{D-07}).
-      \item \textbf{\mbox{RN-16}} Las cuentas de invitado no inician sesión por este caso: no tienen \texttt{correo} ni contraseña y se recuperan con el token guardado en el dispositivo (\mbox{CU-06}).
-          \item \textbf{\mbox{RN-17}} Una sanción temporal de cuenta no necesita un proceso que la levante: el \texttt{estado\_\allowbreak{}cuenta} vuelve a \texttt{ACTIVA} en el primer inicio de sesión posterior a su \texttt{fecha\_\allowbreak{}fin} (\mbox{FA-20}). El valor \texttt{SUSPENDIDA} indica que hubo una suspensión, pero la vigencia la decide siempre la \textit{Sancion}.
+      \item \textbf{\mbox{RN-15}} Las cuentas de invitado no inician sesión por este caso: no tienen \texttt{correo} ni contraseña y se recuperan con el token guardado en el dispositivo (\mbox{CU-06}).
+      \item \textbf{\mbox{RN-16}} Una sanción temporal de cuenta no necesita un proceso que la levante: el \texttt{estado\_\allowbreak{}cuenta} vuelve a \texttt{ACTIVA} en el primer inicio de sesión posterior a su \texttt{fecha\_\allowbreak{}fin} (\mbox{FA-19}). El valor \texttt{SUSPENDIDA} indica que hubo una suspensión, pero la vigencia la decide siempre la \textit{Sancion}.
     \end{cureglas}} \\ \hline
   \textbf{Trazabilidad} & \cuCelda{Restricciones \mbox{CON-01} (C\#), \mbox{CON-02} y \mbox{CON-03} (TCP sin WebSockets), \mbox{CON-04} (SQL Server), \mbox{CON-05} (Unicode), \mbox{CON-07} (respuesta menor a un segundo), \mbox{CON-08} (segundo factor), \mbox{CON-11} (cambio de idioma) y \mbox{CON-12} (comprensible a los ocho años). Concerns \mbox{CRN-05}, \mbox{CRN-21}, \mbox{CRN-22} y \mbox{CRN-26}. Características de calidad \mbox{QA-01}, \mbox{QA-02}, \mbox{QA-03}, \mbox{QA-04}, \mbox{QA-05}, \mbox{QA-06} y \mbox{QA-08}. Preguntas abiertas \mbox{Q-03} y \mbox{Q-04}, resueltas para este caso como se indica en las observaciones.} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre el segundo factor opcional por cuenta (\mbox{Q-03}).}\par
@@ -290,14 +277,14 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre las sesiones simultáneas (\mbox{D-01}).}\par
     La versión anterior de este caso limitaba cada cuenta a una sola sesión activa y obligaba a cerrar la del otro dispositivo para poder entrar. La restricción existía para que dos clientes no enviaran jugadas en nombre del mismo jugador, pero ese riesgo está en la partida y no en el inicio de sesión. Se trasladó al emparejamiento como regla de una sola participación sin terminar por jugador, y con ella desaparecieron el flujo alterno de sesión ya abierta y el motivo de cierre por desplazamiento.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textbf{\textit{Usuario}:} lee \texttt{nickname}, \texttt{correo}, \texttt{tipo\_\allowbreak{}cuenta}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}baja}, \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}, \texttt{idioma\_\allowbreak{}preferido}, \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} \textit{(pasos 6, 7, 8, 9, 11, 13, 17)}
-      \item \textbf{\textit{Usuario}:} escribe \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}acceso}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}; y \texttt{estado\_\allowbreak{}cuenta} y \texttt{fecha\_\allowbreak{}baja} en el \mbox{FA-17} \textit{(pasos 10, 15, \mbox{FA-08}, \mbox{FA-09}, \mbox{FA-17})}
+      \item \textbf{\textit{Usuario}:} lee \texttt{nickname}, \texttt{correo}, \texttt{tipo\_\allowbreak{}cuenta}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}, \texttt{idioma\_\allowbreak{}preferido}, \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} \textit{(pasos 6, 7, 8, 9, 11, 13, 17)}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}; \texttt{estado\_\allowbreak{}cuenta} en el \mbox{FA-19} \textit{(pasos 10, \mbox{FA-08}, \mbox{FA-09}, \mbox{FA-19})}
       \item \textbf{\textit{Sancion}:} lee las activas de ámbito \texttt{CUENTA} \textit{(pasos 12, \mbox{FA-10})}
       \item \textbf{\textit{Sesion}:} crea \textit{(paso 14)}
       \item \textbf{\textit{CodigoSegundoFactor}:} crea, marca como consumido o invalidado, incrementa \texttt{intentos} \textit{(pasos \mbox{FA-11}, \mbox{FA-13} a \mbox{FA-16})}
       \item \textbf{\textit{TokenVerificacionCorreo}:} invalida los pendientes y crea uno nuevo \textit{(paso \mbox{FA-09})}
       \item \textbf{\textit{EstadisticaModo}, \textit{Equipamiento}, \textit{Participacion}:} lee, para el mensaje \texttt{LOGIN\_\allowbreak{}OK} \textit{(paso 17)}
-      \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(pasos 16, \mbox{FA-06} a \mbox{FA-10}, \mbox{FA-13}, \mbox{FA-16}, \mbox{FA-17})}
+      \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(pasos 15, \mbox{FA-06} a \mbox{FA-10}, \mbox{FA-13}, \mbox{FA-16}, \mbox{FA-19})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

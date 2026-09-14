@@ -1,60 +1,76 @@
 ﻿/*=====================================================================
-  Bastion - Esquema de la base de datos
-  Motor: SQL Server 2019 o posterior (CON-04)
+  Bastion - Creación de tablas (2 de 3)
+  Motor: SQL Server 2019 o posterior (CON-04); probado en SQL Server 2025.
 
-  Orden del script:
-     1. Base de datos
-     2. Catálogos precargados (D-09)
-     3. Cuenta y acceso
-     4. Perfil y personalización
-     5. Partida
-     6. Emparejamiento, salas y chat
-     7. Clasificación y economía
-     8. Relaciones entre jugadores y tutorial
-     9. Moderación y bitácoras
-    10. Procedimientos para las eliminaciones físicas
-    11. Usuario de conexión del servidor
+  Orden de ejecución:
+     1. crear_base_datos.sql
+     2. crear_tablas.sql          <- este archivo
+     3. insertar_datos_prueba.sql
+
+  Crea, en la base Bastion vacía, las tablas con sus llaves primarias y
+  foráneas, sus restricciones NOT NULL, UNIQUE, CHECK y DEFAULT, los
+  índices y los procedimientos almacenados. Las tablas van en orden de
+  dependencias: ninguna llave foránea apunta a una tabla que aún no
+  exista.
+
+  Contenido:
+     1. Catálogos precargados (D-09)
+     2. Cuenta y acceso
+     3. Perfil y personalización
+     4. Partida
+     5. Emparejamiento, salas y chat
+     6. Clasificación y economía
+     7. Relaciones entre jugadores y tutorial
+     8. Moderación y bitácoras
+     9. Procedimientos para las eliminaciones físicas
 
   Convenciones:
     - Tablas en singular y PascalCase; columnas en snake_case, sin
       acentos ni eñes, igual que en los casos de uso.
+    - Restricciones con prefijo de su clase: PK_ llave primaria,
+      FK_ llave foránea, UQ_ única, CK_ comprobación; UX_ índice único
+      filtrado, IX_ índice.
     - Fechas en UTC con DATETIME2(0).
-    - Texto que escribe o lee una persona en NVARCHAR (CON-05).
+    - Texto que escribe o lee una persona en NVARCHAR (CON-05). La base
+      usa la intercalación Modern_Spanish_100_CI_AS_SC_UTF8, así que
+      todo texto admite la ñ, los acentos y cualquier carácter Unicode.
+    - Nada se guarda traducido: los catálogos guardan un `codigo` que
+      es la clave de su nombre en los diccionarios de recursos (D-21).
     - Cada columna lleva un comentario. Las tablas de atributos del
       documento se generan a partir de este archivo con
       bd/generar_tablas.ps1, así que el comentario es la descripción
       que aparece en el documento.
 =====================================================================*/
 
-USE master;
-GO
-IF DB_ID(N'Bastion') IS NULL
-    CREATE DATABASE Bastion COLLATE Modern_Spanish_CI_AS;
-GO
 USE Bastion;
+GO
+-- Los índices filtrados y las columnas calculadas exigen estas opciones al
+-- crear las tablas y al modificarlas; sqlcmd las trae apagadas por omisión.
+SET ANSI_NULLS ON;
+SET QUOTED_IDENTIFIER ON;
 GO
 
 /*---------------------------------------------------------------------
-  2. Catálogos precargados (D-09)
+  1. Catálogos precargados (D-09)
   Ningún caso de uso los escribe: se cargan por SQL.
 ---------------------------------------------------------------------*/
 
 -- @entidad Ranura | Catálogo de las seis ranuras de personalización: peón, muro, tablero, título, marco y emotes (D-03).
--- @fn Llave simple; `nombre` depende solo de ella y es llave candidata.
+-- @fn Llave simple; `codigo` depende solo de ella y es llave candidata.
 CREATE TABLE dbo.Ranura (
     id_ranura          TINYINT        NOT NULL,  -- Identificador de la ranura.
-    nombre             VARCHAR(20)    NOT NULL,  -- `PEON`, `MURO`, `TABLERO`, `TITULO`, `MARCO` o `EMOTES`. Sin CHECK: añadir una ranura es insertar una fila (CU-14).
+    codigo             VARCHAR(20)    NOT NULL,  -- Clave de la ranura en los diccionarios de recursos (D-21): `PEON`, `MURO`, `TABLERO`, `TITULO`, `MARCO` o `EMOTES`. Sin CHECK: añadir una ranura es insertar una fila (CU-14).
     CONSTRAINT PK_Ranura PRIMARY KEY (id_ranura),
-    CONSTRAINT UQ_Ranura_nombre UNIQUE (nombre)  -- Dos ranuras no se llaman igual.
+    CONSTRAINT UQ_Ranura_codigo UNIQUE (codigo)  -- Dos ranuras no tienen la misma clave.
 );
 GO
 
 -- @entidad ObjetoCosmetico | Catálogo de objetos cosméticos. Cada objeto pertenece a una sola ranura (D-03).
--- @fn Llave simple. De la ranura se guarda solo su llave, no sus datos. (id_objeto, id_ranura) es superllave, no llave candidata: existe para las llaves foráneas compuestas.
+-- @fn Llave simple; `codigo` es llave candidata. De la ranura se guarda solo su llave, no sus datos. (id_objeto, id_ranura) es superllave, no llave candidata: existe para las llaves foráneas compuestas.
 CREATE TABLE dbo.ObjetoCosmetico (
     id_objeto          INT            NOT NULL,  -- Identificador del objeto.
     id_ranura          TINYINT        NOT NULL,  -- Ranura en la que se equipa.
-    nombre             NVARCHAR(60)   NOT NULL,  -- Nombre visible.
+    codigo             VARCHAR(40)    NOT NULL,  -- Clave del objeto en los diccionarios de recursos, como `PEON_CLASICO`; con ella el cliente muestra su nombre en el idioma del usuario (D-21).
     rareza             VARCHAR(10)    NOT NULL,  -- `COMUN`, `RARO`, `EPICO` o `LEGENDARIO`.
     precio             INT            NOT NULL DEFAULT (0),  -- Precio en monedas del juego; el válido es este y no el del cliente (CU-38 RN-03).
     nivel_requerido    SMALLINT       NOT NULL DEFAULT (1),  -- Nivel mínimo para comprarlo (CU-38 RN-04).
@@ -63,79 +79,81 @@ CREATE TABLE dbo.ObjetoCosmetico (
     es_inicial         BIT            NOT NULL DEFAULT (0),  -- Se otorga al dar de alta la cuenta.
     es_predeterminado  BIT            NOT NULL DEFAULT (0),  -- Se equipa al dar de alta; exactamente uno por ranura.
     CONSTRAINT PK_ObjetoCosmetico PRIMARY KEY (id_objeto),
+    CONSTRAINT UQ_ObjetoCosmetico_codigo UNIQUE (codigo),  -- Dos objetos no tienen la misma clave.
     CONSTRAINT UQ_ObjetoCosmetico_objeto_ranura UNIQUE (id_objeto, id_ranura),  -- Superclave que usan Equipamiento y ParticipacionObjeto para exigir que el objeto sea de la ranura.
     CONSTRAINT FK_ObjetoCosmetico_Ranura FOREIGN KEY (id_ranura) REFERENCES dbo.Ranura (id_ranura),  -- 1:N | Una ranura agrupa muchos objetos; cada objeto pertenece a una ranura.
     CONSTRAINT CK_ObjetoCosmetico_rareza CHECK (rareza IN ('COMUN','RARO','EPICO','LEGENDARIO')),
     CONSTRAINT CK_ObjetoCosmetico_rangos CHECK (precio >= 0 AND nivel_requerido >= 1),
-    CONSTRAINT CK_ObjetoCosmetico_predeterminado CHECK (es_predeterminado = 0 OR es_inicial = 1)
+    CONSTRAINT CK_ObjetoCosmetico_predeterminado CHECK (es_predeterminado = 0 OR es_inicial = 1),
+    CONSTRAINT CK_ObjetoCosmetico_venta CHECK (a_la_venta = 0 OR activo = 1)  -- Un objeto retirado no se vende: los dos indicadores no pueden contradecirse.
 );
 GO
 CREATE UNIQUE INDEX UX_ObjetoCosmetico_predeterminado ON dbo.ObjetoCosmetico (id_ranura) WHERE es_predeterminado = 1;  -- Un solo objeto predeterminado por ranura (CU-02 PRE-05).
 GO
 
 -- @entidad Modo | Catálogo de modos de juego; cada modo fija tablero, jugadores y muros (D-04).
--- @fn Llave simple. Recoge num_jugadores, que en el diagrama estaba en *Partida* y dependía de ella a través del modo.
+-- @fn Llave simple; `codigo` es llave candidata. Recoge num_jugadores, que en el diagrama estaba en *Partida* y dependía de ella a través del modo.
 CREATE TABLE dbo.Modo (
     id_modo            TINYINT        NOT NULL,  -- Identificador del modo.
-    nombre             NVARCHAR(40)   NOT NULL,  -- Clásico 9×9, cuatro jugadores o rápida 7×7.
+    codigo             VARCHAR(40)    NOT NULL,  -- Clave del modo en los diccionarios de recursos (D-21): `CLASICO`, `CUATRO_JUGADORES` o `RAPIDA`.
     tamano_tablero     TINYINT        NOT NULL,  -- Casillas por lado: 7 o 9.
     num_jugadores      TINYINT        NOT NULL,  -- Plazas de la partida: 2 o 4 (CU-17 RN-02).
     muros_por_jugador  TINYINT        NOT NULL,  -- Muros de cada jugador: 10, 5 o 6 (CU-21 RN-02).
     activo             BIT            NOT NULL DEFAULT (1),  -- Solo los modos activos reciben estadísticas al dar de alta (CU-02).
     CONSTRAINT PK_Modo PRIMARY KEY (id_modo),
-    CONSTRAINT UQ_Modo_nombre UNIQUE (nombre),  -- Dos modos no se llaman igual.
+    CONSTRAINT UQ_Modo_codigo UNIQUE (codigo),  -- Dos modos no tienen la misma clave.
     CONSTRAINT CK_Modo_parametros CHECK (tamano_tablero IN (7, 9) AND num_jugadores IN (2, 4) AND muros_por_jugador BETWEEN 1 AND 20)
 );
 GO
 
 -- @entidad Division | Catálogo de divisiones del ranking con sus umbrales de ascenso y descenso.
--- @fn Llave simple; `nombre` y `orden` son llaves candidatas.
+-- @fn Llave simple; `codigo` y `elo_minimo` son llaves candidatas. El orden de las divisiones es el de `elo_minimo`; guardar además una posición repetiría ese dato.
 CREATE TABLE dbo.Division (
     id_division        TINYINT        NOT NULL,  -- Identificador de la división.
-    nombre             NVARCHAR(30)   NOT NULL,  -- Nombre visible.
-    orden              TINYINT        NOT NULL,  -- Posición de la división, de la más baja a la más alta.
-    elo_minimo         SMALLINT       NOT NULL,  -- Elo con el que se asciende a esta división.
+    codigo             VARCHAR(40)    NOT NULL,  -- Clave de la división en los diccionarios de recursos (D-21), como `BRONCE` o `MURO_PIEDRA`.
+    elo_minimo         SMALLINT       NOT NULL,  -- Elo con el que se asciende a esta división; ordena las divisiones de la más baja a la más alta.
     elo_descenso       SMALLINT       NOT NULL,  -- Elo por debajo del cual se desciende; es el umbral visible (CU-25 RN-07).
     CONSTRAINT PK_Division PRIMARY KEY (id_division),
-    CONSTRAINT UQ_Division_nombre UNIQUE (nombre),  -- Dos divisiones no se llaman igual.
-    CONSTRAINT UQ_Division_orden UNIQUE (orden),  -- Dos divisiones no ocupan la misma posición.
+    CONSTRAINT UQ_Division_codigo UNIQUE (codigo),  -- Dos divisiones no tienen la misma clave.
+    CONSTRAINT UQ_Division_elo_minimo UNIQUE (elo_minimo),  -- Dos divisiones no empiezan en el mismo elo, así que el orden no tiene empates.
     CONSTRAINT CK_Division_umbral CHECK (elo_descenso <= elo_minimo)
 );
 GO
 
 -- @entidad NivelIA | Catálogo de los cuatro niveles de la IA (CU-27 RN-02).
--- @fn Llave simple; `nombre` es llave candidata.
+-- @fn Llave simple; `codigo` es llave candidata.
 CREATE TABLE dbo.NivelIA (
     id_nivel_ia        TINYINT        NOT NULL,  -- Identificador del nivel.
-    nombre             NVARCHAR(20)   NOT NULL,  -- Aprendiz, constructor, arquitecto o bastión.
+    codigo             VARCHAR(40)    NOT NULL,  -- Clave del nivel en los diccionarios de recursos (D-21): `APRENDIZ`, `CONSTRUCTOR`, `ARQUITECTO` o `BASTION`.
     elo_aproximado     SMALLINT       NOT NULL,  -- Fuerza aproximada: 1000, 1500, 1900 o 2300.
     CONSTRAINT PK_NivelIA PRIMARY KEY (id_nivel_ia),
-    CONSTRAINT UQ_NivelIA_nombre UNIQUE (nombre)  -- Dos niveles no se llaman igual.
+    CONSTRAINT UQ_NivelIA_codigo UNIQUE (codigo)  -- Dos niveles no tienen la misma clave.
 );
 GO
 
 -- @entidad Leccion | Catálogo de las siete lecciones del tutorial (CU-41 RN-01).
--- @fn Llave simple; `orden` es llave candidata.
+-- @fn Llave simple; `codigo` y `orden` son llaves candidatas.
 CREATE TABLE dbo.Leccion (
     id_leccion         TINYINT        NOT NULL,  -- Identificador de la lección.
+    codigo             VARCHAR(40)    NOT NULL,  -- Clave de la lección en los diccionarios de recursos (D-21), como `MOVER_PEON`; los textos de sus pasos también están en ellos.
     orden              TINYINT        NOT NULL,  -- Posición en el índice del tutorial.
-    nombre             NVARCHAR(60)   NOT NULL,  -- Nombre visible.
     num_pasos          TINYINT        NOT NULL,  -- Pasos de la lección.
     CONSTRAINT PK_Leccion PRIMARY KEY (id_leccion),
+    CONSTRAINT UQ_Leccion_codigo UNIQUE (codigo),  -- Dos lecciones no tienen la misma clave.
     CONSTRAINT UQ_Leccion_orden UNIQUE (orden),  -- Dos lecciones no ocupan la misma posición.
     CONSTRAINT CK_Leccion_pasos CHECK (num_pasos > 0)
 );
 GO
 
 -- @entidad TipoCaja | Catálogo de tipos de caja que se venden o se otorgan (CU-39).
--- @fn Llave simple; `nombre` es llave candidata.
+-- @fn Llave simple; `codigo` es llave candidata.
 CREATE TABLE dbo.TipoCaja (
     id_tipo_caja       TINYINT        NOT NULL,  -- Identificador del tipo de caja.
-    nombre             NVARCHAR(40)   NOT NULL,  -- Nombre visible.
+    codigo             VARCHAR(40)    NOT NULL,  -- Clave del tipo de caja en los diccionarios de recursos (D-21), como `CAJA_MADERA`.
     precio             INT            NOT NULL,  -- Precio en monedas del juego.
     activo             BIT            NOT NULL DEFAULT (1),  -- En falso, ya no se vende.
     CONSTRAINT PK_TipoCaja PRIMARY KEY (id_tipo_caja),
-    CONSTRAINT UQ_TipoCaja_nombre UNIQUE (nombre),  -- Dos tipos de caja no se llaman igual.
+    CONSTRAINT UQ_TipoCaja_codigo UNIQUE (codigo),  -- Dos tipos de caja no tienen la misma clave.
     CONSTRAINT CK_TipoCaja_precio CHECK (precio >= 0)
 );
 GO
@@ -154,31 +172,31 @@ CREATE TABLE dbo.TipoCajaObjeto (
 GO
 
 -- @entidad PalabraProhibida | Catálogo del filtro de palabras que se aplica en el servidor al nickname y al chat (CON-09).
--- @fn Llave sustituta; la natural (`termino`, `idioma`, `ambito`) se declara única.
+-- @fn Llave sustituta; la natural (`termino`, `idioma`, `ambito`) se declara única. Sin indicador de activo: ninguna tabla referencia el catálogo, así que un término que deja de filtrarse se borra por SQL (D-09).
 CREATE TABLE dbo.PalabraProhibida (
     id_palabra         INT IDENTITY(1,1) NOT NULL,  -- Identificador del término.
-    termino            NVARCHAR(100) COLLATE Latin1_General_100_CI_AI NOT NULL,  -- Término prohibido; se compara sin mayúsculas ni acentos.
-    idioma             VARCHAR(10)    NOT NULL,  -- Código de cultura del término.
-    ambito             VARCHAR(10)    NOT NULL,  -- `NICKNAME` o `CHAT`.
-    activo             BIT            NOT NULL DEFAULT (1),  -- En falso, el término deja de filtrarse.
+    termino            NVARCHAR(100) COLLATE Latin1_General_100_CI_AI_SC_UTF8 NOT NULL,  -- Término prohibido, con sus eñes y acentos; se compara sin mayúsculas ni acentos.
+    idioma             VARCHAR(10)    NULL,  -- Idioma del término: `es-MX` o `en`; nulo si se filtra en todos los idiomas (CU-28 RN-01).
+    ambito             VARCHAR(10)    NOT NULL,  -- `NICKNAME`, `CHAT` o `AMBOS`.
     CONSTRAINT PK_PalabraProhibida PRIMARY KEY (id_palabra),
     CONSTRAINT UQ_PalabraProhibida_termino UNIQUE (termino, idioma, ambito),  -- Un término no se repite en el mismo idioma y ámbito.
-    CONSTRAINT CK_PalabraProhibida_ambito CHECK (ambito IN ('NICKNAME','CHAT'))
+    CONSTRAINT CK_PalabraProhibida_idioma CHECK (idioma IN ('es-MX','en')),  -- Idiomas admitidos (D-21); un nulo pasa la comprobación.
+    CONSTRAINT CK_PalabraProhibida_ambito CHECK (ambito IN ('NICKNAME','CHAT','AMBOS'))
 );
 GO
 
 -- @entidad MotivoReporte | Catálogo de los cinco motivos de reporte (CU-42 RN-08).
--- @fn Llave simple. Sustituye al texto `motivo` del *Reporte* del diagrama, que repetía la misma descripción en cada reporte.
+-- @fn Llave simple; `codigo` es llave candidata. Sustituye al texto `motivo` del *Reporte* del diagrama, que repetía la misma descripción en cada reporte.
 CREATE TABLE dbo.MotivoReporte (
     id_motivo          TINYINT        NOT NULL,  -- Identificador del motivo.
-    nombre             NVARCHAR(60)   NOT NULL,  -- Descripción visible del motivo.
+    codigo             VARCHAR(40)    NOT NULL,  -- Clave del motivo en los diccionarios de recursos (D-21), como `LENGUAJE_OFENSIVO`; con ella el cliente muestra su descripción.
     CONSTRAINT PK_MotivoReporte PRIMARY KEY (id_motivo),
-    CONSTRAINT UQ_MotivoReporte_nombre UNIQUE (nombre)  -- Dos motivos no se llaman igual.
+    CONSTRAINT UQ_MotivoReporte_codigo UNIQUE (codigo)  -- Dos motivos no tienen la misma clave.
 );
 GO
 
 /*---------------------------------------------------------------------
-  3. Cuenta y acceso
+  2. Cuenta y acceso
 ---------------------------------------------------------------------*/
 
 -- @entidad Usuario | Cuenta de un jugador, invitado, moderador o administrador. Es la entidad central: casi todas las demás dependen de ella y su fila nunca se borra (D-07, D-17).
@@ -188,12 +206,12 @@ CREATE TABLE dbo.Usuario (
     tipo_cuenta                      VARCHAR(10)    NOT NULL,  -- `INVITADO` o `REGISTRADA`. Discrimina qué credenciales aplican.
     estado_cuenta                    VARCHAR(10)    NOT NULL DEFAULT ('PENDIENTE'),  -- `PENDIENTE`, `ACTIVA`, `SUSPENDIDA`, `BANEADA` o `ELIMINADA` (CU-01 RN-04).
     rol                              VARCHAR(13)    NOT NULL DEFAULT ('JUGADOR'),  -- `JUGADOR`, `MODERADOR` o `ADMINISTRADOR`; exactamente uno (CU-46 RN-03).
-    nickname                         NVARCHAR(30) COLLATE Latin1_General_100_CI_AI NOT NULL,  -- Nombre visible, de 3 a 30 caracteres; único sin distinguir mayúsculas ni acentos (CU-02 RN-01).
+    nickname                         NVARCHAR(30) COLLATE Latin1_General_100_CI_AI_SC_UTF8 NOT NULL,  -- Nombre visible, de 3 a 30 caracteres; único sin distinguir mayúsculas ni acentos (CU-02 RN-01).
     correo                           NVARCHAR(254)  NULL,  -- Correo normalizado a minúsculas; nulo solo en invitados (CU-02 RN-02).
     contrasena_hash                  VARBINARY(64)  NULL,  -- Resumen criptográfico de la contraseña; nunca en claro (CU-01 RN-02).
     contrasena_sal                   VARBINARY(32)  NULL,  -- Sal del resumen.
     fecha_nacimiento                 DATE           NULL,  -- Para comprobar la edad mínima de ocho años; la edad no se guarda (CU-02).
-    idioma_preferido                 VARCHAR(10)    NOT NULL DEFAULT ('es-MX'),  -- Código de cultura; viaja con el jugador a cualquier dispositivo (CU-12 RN-08).
+    idioma_preferido                 VARCHAR(10)    NOT NULL DEFAULT ('es-MX'),  -- Idioma de la interfaz y de los correos, `es-MX` o `en` (D-21); viaja con el jugador a cualquier dispositivo (CU-12 RN-08).
     codigo_amigo                     CHAR(8)        NULL,  -- Código para encontrar al jugador sin su nickname (CU-30 RN-06).
     id_icono                         TINYINT        NOT NULL DEFAULT (1),  -- Icono predefinido, de 1 a 32 (CU-08 RN-03).
     permite_espectadores             BIT            NOT NULL DEFAULT (1),  -- Si admite espectadores en sus partidas (CU-34 RN-02).
@@ -206,17 +224,16 @@ CREATE TABLE dbo.Usuario (
     bloqueada_hasta                  DATETIME2(0)   NULL,  -- Fin del bloqueo escalonado vigente.
     doble_factor_habilitado          BIT            NOT NULL DEFAULT (0),  -- Si la cuenta pide segundo factor (CU-01 RN-08).
     fecha_registro                   DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Alta de la cuenta.
-    fecha_verificacion               DATETIME2(0)   NULL,  -- Verificación del correo (CU-04).
     fecha_configuracion_inicial      DATETIME2(0)   NULL,  -- Marca de la configuración de primera vez (CU-08 RN-01).
-    fecha_ultimo_acceso              DATETIME2(0)   NULL,  -- Último inicio de sesión exitoso.
-    fecha_ultimo_envio_verificacion  DATETIME2(0)   NULL,  -- Limita el reenvío del correo de verificación (CU-01 RN-10).
-    fecha_ultimo_envio_recuperacion  DATETIME2(0)   NULL,  -- Limita el envío del correo de recuperación (CU-03 RN-06).
-    fecha_baja                       DATETIME2(0)   NULL,  -- Inicio del plazo de recuperación de catorce días (D-07).
+    fecha_ultimo_envio_verificacion  DATETIME2(0)   NULL,  -- Último correo de verificación que sí se envió; limita el reenvío (CU-01 RN-10). No sale del token: si el envío falla, el token existe y esta fecha no cambia.
+    fecha_ultimo_envio_recuperacion  DATETIME2(0)   NULL,  -- Último correo de recuperación que sí se envió; limita el envío (CU-03 RN-06).
+    fecha_baja                       DATETIME2(0)   NULL,  -- Momento de la baja, que es definitiva: la cuenta se anonimiza en la misma transacción (D-07, D-17).
     CONSTRAINT PK_Usuario PRIMARY KEY (id_usuario),
     CONSTRAINT UQ_Usuario_nickname UNIQUE (nickname),  -- El nickname es identificador de acceso (CU-01 RN-14).
     CONSTRAINT CK_Usuario_tipo_cuenta CHECK (tipo_cuenta IN ('INVITADO','REGISTRADA')),
     CONSTRAINT CK_Usuario_estado_cuenta CHECK (estado_cuenta IN ('PENDIENTE','ACTIVA','SUSPENDIDA','BANEADA','ELIMINADA')),
     CONSTRAINT CK_Usuario_rol CHECK (rol IN ('JUGADOR','MODERADOR','ADMINISTRADOR')),
+    CONSTRAINT CK_Usuario_idioma CHECK (idioma_preferido IN ('es-MX','en')),  -- Idiomas admitidos (D-21); otro se rechaza (CU-12 FA-07).
     CONSTRAINT CK_Usuario_credenciales CHECK (
         (tipo_cuenta = 'INVITADO' AND correo IS NULL AND contrasena_hash IS NULL AND contrasena_sal IS NULL)
         OR (tipo_cuenta = 'REGISTRADA' AND correo IS NOT NULL)),
@@ -326,25 +343,26 @@ CREATE TABLE dbo.AceptacionTerminos (
     id_aceptacion      INT IDENTITY(1,1) NOT NULL,  -- Identificador de la aceptación.
     id_usuario         INT            NOT NULL,  -- Cuenta que aceptó.
     version_terminos   VARCHAR(20)    NOT NULL,  -- Versión del texto aceptado.
+    idioma             VARCHAR(10)    NOT NULL,  -- Idioma en que se mostró el texto, `es-MX` o `en`: cada versión existe en los dos, y lo que se aceptó es esa versión en ese idioma (CU-02 RN-12, D-21).
     fecha_aceptacion   DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Momento de la aceptación.
     direccion_ip       VARCHAR(45)    NOT NULL,  -- Dirección de red desde la que se aceptó.
     CONSTRAINT PK_AceptacionTerminos PRIMARY KEY (id_aceptacion),
     CONSTRAINT UQ_AceptacionTerminos_version UNIQUE (id_usuario, version_terminos),  -- Una cuenta acepta cada versión una sola vez.
-    CONSTRAINT FK_AceptacionTerminos_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario (id_usuario)  -- 1:N | Un usuario acepta una o más versiones de los términos.
+    CONSTRAINT FK_AceptacionTerminos_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario acepta una o más versiones de los términos.
+    CONSTRAINT CK_AceptacionTerminos_idioma CHECK (idioma IN ('es-MX','en'))  -- Idiomas admitidos (D-21).
 );
 GO
 
 /*---------------------------------------------------------------------
-  4. Perfil y personalización
+  3. Perfil y personalización
 ---------------------------------------------------------------------*/
 
--- @entidad HistorialNickname | Cambio de nombre de una cuenta, para que un jugador reportado no se vuelva irreconocible (CU-13 RN-03).
--- @fn La llave es la llave foránea: relación 1:0..1 con *Usuario*. El nombre vigente se lee de *Usuario*; aquí queda el que ya no está (CU-13).
+-- @entidad HistorialNickname | Cambio de nombre de una cuenta, para que un jugador reportado no se vuelva irreconocible (CU-13 RN-03). Se borra al dar de baja la cuenta (CU-11).
+-- @fn La llave es la llave foránea: relación 1:0..1 con *Usuario*. El nombre vigente se lee de *Usuario*; aquí queda solo el que ya no está (CU-13). No guarda el nombre nuevo: como el cambio es único, sería siempre una copia del `nickname` de *Usuario*.
 CREATE TABLE dbo.HistorialNickname (
     id_usuario         INT            NOT NULL,  -- Cuenta que cambió su nombre. Como llave primaria, impide un segundo cambio (CU-13 RN-01).
     nickname_anterior  NVARCHAR(30)   NOT NULL,  -- Nombre antes del cambio.
-    nickname_nuevo     NVARCHAR(30)   NOT NULL,  -- Nombre elegido en el cambio.
-    fecha_cambio       DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Momento del cambio.
+    fecha_cambio      DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Momento del cambio.
     CONSTRAINT PK_HistorialNickname PRIMARY KEY (id_usuario),
     CONSTRAINT FK_HistorialNickname_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario (id_usuario)  -- 1:1 | Un usuario tiene a lo sumo un cambio de nombre registrado.
 );
@@ -389,11 +407,11 @@ CREATE TABLE dbo.UsuarioObjeto (
     id_usuario         INT            NOT NULL,  -- Cuenta que posee el objeto.
     id_objeto          INT            NOT NULL,  -- Objeto poseído.
     fecha_obtencion    DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Momento en que se obtuvo.
-    origen             VARCHAR(10)    NOT NULL,  -- `INICIAL`, `COMPRA`, `CAJA` o `PARTIDA`.
+    origen             VARCHAR(10)    NOT NULL,  -- `INICIAL`, `COMPRA`, `CAJA` o `NIVEL`.
     CONSTRAINT PK_UsuarioObjeto PRIMARY KEY (id_usuario, id_objeto),
     CONSTRAINT FK_UsuarioObjeto_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario posee muchos objetos.
     CONSTRAINT FK_UsuarioObjeto_ObjetoCosmetico FOREIGN KEY (id_objeto) REFERENCES dbo.ObjetoCosmetico (id_objeto),  -- 1:N | Un objeto lo poseen muchos usuarios.
-    CONSTRAINT CK_UsuarioObjeto_origen CHECK (origen IN ('INICIAL','COMPRA','CAJA','PARTIDA'))
+    CONSTRAINT CK_UsuarioObjeto_origen CHECK (origen IN ('INICIAL','COMPRA','CAJA','NIVEL'))
 );
 GO
 
@@ -412,11 +430,11 @@ CREATE TABLE dbo.Equipamiento (
 GO
 
 /*---------------------------------------------------------------------
-  5. Partida
+  4. Partida
 ---------------------------------------------------------------------*/
 
 -- @entidad Partida | Partida clasificatoria, privada o contra la IA. Se guarda completa porque de ella dependen el historial, la repetición, la reconexión y los reportes.
--- @fn Llave simple. Sin num_jugadores ni la duración del diagrama (dependencia transitiva y dato derivado). `tipo` es discriminador; `id_ganador` es redundancia controlada.
+-- @fn Llave simple. Sin num_jugadores ni la duración del diagrama (dependencia transitiva y dato derivado). `tipo` es discriminador. Sin ganador: es la participación con resultado `GANADA`. `turno_actual` es redundancia controlada del estado vigente; mandan las *Jugada*.
 CREATE TABLE dbo.Partida (
     id_partida           INT IDENTITY(1,1) NOT NULL,  -- Identificador de la partida.
     id_modo              TINYINT        NOT NULL,  -- Modo; de él salen tablero, plazas y muros, que no se repiten aquí.
@@ -426,8 +444,7 @@ CREATE TABLE dbo.Partida (
     fecha_inicio         DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Inicio. La duración se calcula y no se guarda (CU-36 RN-02).
     fecha_fin            DATETIME2(0)   NULL,  -- Cierre de la partida.
     forma_termino        VARCHAR(15)    NULL,  -- `META`, `TIEMPO_AGOTADO`, `RENDICION`, `TABLAS` o `ABANDONO` (CU-25 RN-01).
-    id_ganador           INT            NULL,  -- Participante que ganó; nulo en tablas o si ganó la IA. Redundancia controlada.
-    turno_actual         TINYINT        NOT NULL DEFAULT (1),  -- `orden_turno` del participante que tiene el turno.
+    turno_actual         TINYINT        NOT NULL DEFAULT (1),  -- `orden_turno` del participante que tiene el turno. Redundancia controlada: se deduce de las *Jugada*, que mandan si discrepan.
     id_nivel_ia          TINYINT        NULL,  -- Nivel de la IA; solo en partidas `IA` (D-12).
     permite_deshacer     BIT            NULL,  -- Opción elegida al empezar; solo en partidas `IA`.
     permite_sugerencias  BIT            NULL,  -- Opción elegida al empezar; solo en partidas `IA`.
@@ -448,45 +465,40 @@ CREATE TABLE dbo.Partida (
     CONSTRAINT CK_Partida_cierre CHECK (
         (estado = 'EN_CURSO' AND fecha_fin IS NULL AND forma_termino IS NULL)
         OR (estado = 'PENDIENTE_DE_CIERRE' AND fecha_fin IS NULL AND forma_termino IS NOT NULL)
-        OR (estado = 'FINALIZADA' AND fecha_fin IS NOT NULL AND forma_termino IS NOT NULL)),
-    CONSTRAINT CK_Partida_ganador CHECK (forma_termino <> 'TABLAS' OR id_ganador IS NULL)
+        OR (estado = 'FINALIZADA' AND fecha_fin IS NOT NULL AND forma_termino IS NOT NULL))
 );
 GO
 
 -- @entidad Participacion | Participación de un jugador en una partida; es la relación N:M entre Usuario y Partida (relación Participa del diagrama). La IA no tiene participación (D-12).
--- @fn Llaves candidatas (id_partida, id_usuario) e (id_partida, orden_turno). `diferencia_elo` pasó a calculada porque dependía de `elo_inicial` y `elo_final`.
+-- @fn Llaves candidatas (id_partida, id_usuario) e (id_partida, orden_turno). `diferencia_elo` y `terminada` son calculadas: dependían de otras columnas de la fila. `casilla_actual`, `muros_restantes` y `reloj_restante` son redundancia controlada del estado vigente; mandan las *Jugada*.
 CREATE TABLE dbo.Participacion (
     id_partida           INT            NOT NULL,  -- Partida.
     id_usuario           INT            NOT NULL,  -- Jugador.
     orden_turno          TINYINT        NOT NULL,  -- Orden en que juega, de 1 a 4.
     simbolo_peon         VARCHAR(10)    NOT NULL,  -- Símbolo y color que distinguen su peón (color_ficha en el diagrama).
-    casilla_actual       VARCHAR(3)     NOT NULL,  -- Casilla que ocupa el peón, en notación de tablero.
-    muros_restantes      TINYINT        NOT NULL,  -- Muros que le quedan; nace con los del modo o de la sala (CU-18).
-    reloj_restante       INT            NULL,  -- Milisegundos que le quedan; nulo si la partida no tiene reloj.
+    casilla_actual       VARCHAR(3)     NOT NULL,  -- Casilla que ocupa el peón, en notación de tablero. Redundancia controlada: es la de su última jugada.
+    muros_restantes      TINYINT        NOT NULL,  -- Muros que le quedan; nace con los del modo o de la sala (CU-18). Redundancia controlada: los iniciales menos sus jugadas de tipo `MURO`.
+    reloj_restante       INT            NULL,  -- Milisegundos que le quedan; nulo si la partida no tiene reloj. Redundancia controlada: el reloj inicial menos el tiempo consumido en sus jugadas, o cero para quien pierde por tiempo, porque la jugada que llegó tarde no se guarda (CU-20 FA-06).
     elo_inicial          SMALLINT       NULL,  -- Elo con el que entró; base del cálculo (CU-17 RN-04, CU-25 RN-04).
     elo_final            SMALLINT       NULL,  -- Elo resultante; solo en partidas clasificatorias.
     diferencia_elo       AS (elo_final - elo_inicial),  -- Cambio de elo que muestra el historial (CU-36 RN-03). Calculada y no almacenada: depende de otras dos columnas de la fila.
-    resultado            VARCHAR(10)    NULL,  -- `VICTORIA`, `DERROTA` o `EMPATE`.
-    posicion             TINYINT        NULL,  -- Posición final o de clasificación, de 1 a 4.
-    fecha_clasificacion  DATETIME2(0)   NULL,  -- Momento en que quedó clasificado o fuera antes del cierre (CU-20 FA-08).
+    resultado            VARCHAR(10)    NULL,  -- `GANADA`, `PERDIDA` o `TABLAS`; nulo mientras no termina.
+    posicion             TINYINT        NULL,  -- Posición en el modo de cuatro jugadores, de 1 a 4 (CU-25 RN-02); nula en las de dos jugadores y contra la IA, donde el resultado ya la dice.
     forma_termino        VARCHAR(15)    NULL,  -- Forma en que salió antes que la partida, en cuatro jugadores: `META`, `RENDICION`, `ABANDONO` o `TIEMPO_AGOTADO`.
     conectado            BIT            NOT NULL DEFAULT (1),  -- Estado de conexión; se guarda para sobrevivir a un reinicio (CU-26).
-    fecha_desconexion    DATETIME2(0)   NULL,  -- Inicio de la desconexión, para el plazo de sesenta segundos (CU-24 RN-06).
-    terminada            BIT            NOT NULL DEFAULT (0),  -- Si la participación está cerrada; base de la regla de una sola participación sin terminar (D-11).
+    fecha_desconexion    DATETIME2(0)   NULL,  -- Inicio de la última desconexión, para el plazo de sesenta segundos (CU-24 RN-06); no se borra al reconectar, así que no sustituye a `conectado`.
+    terminada            AS (CASE WHEN resultado IS NULL THEN CAST(0 AS BIT) ELSE CAST(1 AS BIT) END),  -- Si la participación está cerrada (D-11). Calculada: es exactamente que `resultado` no sea nulo.
     CONSTRAINT PK_Participacion PRIMARY KEY (id_partida, id_usuario),
     CONSTRAINT UQ_Participacion_turno UNIQUE (id_partida, orden_turno),  -- Dos jugadores no comparten turno en la misma partida.
     CONSTRAINT FK_Participacion_Partida FOREIGN KEY (id_partida) REFERENCES dbo.Partida (id_partida),  -- 1:N | Una partida tiene de 1 a 4 participaciones (1 contra la IA).
     CONSTRAINT FK_Participacion_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario participa en muchas partidas.
-    CONSTRAINT CK_Participacion_resultado CHECK (resultado IN ('VICTORIA','DERROTA','EMPATE')),
+    CONSTRAINT CK_Participacion_resultado CHECK (resultado IN ('GANADA','PERDIDA','TABLAS')),
     CONSTRAINT CK_Participacion_forma CHECK (forma_termino IN ('META','TIEMPO_AGOTADO','RENDICION','ABANDONO')),
     CONSTRAINT CK_Participacion_rangos CHECK (orden_turno BETWEEN 1 AND 4 AND posicion BETWEEN 1 AND 4 AND muros_restantes <= 20),
     CONSTRAINT CK_Participacion_conexion CHECK (conectado = 1 OR fecha_desconexion IS NOT NULL)
 );
 GO
-CREATE UNIQUE INDEX UX_Participacion_sin_terminar ON dbo.Participacion (id_usuario) WHERE terminada = 0;  -- Una sola participación sin terminar por jugador, incluidas las de la IA (D-11).
-GO
-
-ALTER TABLE dbo.Partida ADD CONSTRAINT FK_Partida_Ganador FOREIGN KEY (id_partida, id_ganador) REFERENCES dbo.Participacion (id_partida, id_usuario);  -- 1:0..1 | El ganador, si lo hay, es uno de los participantes de la misma partida.
+CREATE UNIQUE INDEX UX_Participacion_sin_terminar ON dbo.Participacion (id_usuario) WHERE resultado IS NULL;  -- Una sola participación sin terminar por jugador, incluidas las de la IA (D-11). Filtra por `resultado` porque un índice filtrado no admite columnas calculadas.
 GO
 
 -- @entidad ParticipacionObjeto | Aspecto con el que cada jugador entró a la partida, una fila por ranura; no cambia aunque el jugador equipe otra cosa (CU-14 RN-03, CU-37 RN-03).
@@ -513,7 +525,7 @@ CREATE TABLE dbo.Jugada (
     casilla_origen       VARCHAR(3)     NULL,  -- Casilla de salida del peón; solo en `MOVIMIENTO`.
     casilla_destino      VARCHAR(3)     NULL,  -- Casilla de llegada del peón; solo en `MOVIMIENTO`.
     surco                VARCHAR(3)     NULL,  -- Surco donde se colocó el muro; solo en `MURO`.
-    orientacion          CHAR(1)        NULL,  -- `H` horizontal o `V` vertical; solo en `MURO`.
+    orientacion          VARCHAR(10)    NULL,  -- `HORIZONTAL` o `VERTICAL`; solo en `MURO`.
     tiempo_consumido     INT            NOT NULL,  -- Milisegundos que tardó el jugador.
     fecha_jugada         DATETIME2(3)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Momento en que se registró.
     deshecha             BIT            NOT NULL DEFAULT (0),  -- Marca de deshacer contra la IA; la jugada no se borra (CU-27 RN-05).
@@ -522,7 +534,7 @@ CREATE TABLE dbo.Jugada (
     CONSTRAINT FK_Jugada_Participacion FOREIGN KEY (id_partida, id_usuario) REFERENCES dbo.Participacion (id_partida, id_usuario),  -- 1:N | Un participante hace muchas jugadas; las de la IA no tienen participante.
     CONSTRAINT CK_Jugada_tipo CHECK (
         (tipo = 'MOVIMIENTO' AND casilla_origen IS NOT NULL AND casilla_destino IS NOT NULL AND surco IS NULL AND orientacion IS NULL)
-        OR (tipo = 'MURO' AND surco IS NOT NULL AND orientacion IN ('H','V') AND casilla_origen IS NULL AND casilla_destino IS NULL)),
+        OR (tipo = 'MURO' AND surco IS NOT NULL AND orientacion IN ('HORIZONTAL','VERTICAL') AND casilla_origen IS NULL AND casilla_destino IS NULL)),
     CONSTRAINT CK_Jugada_rangos CHECK (numero_jugada >= 1 AND tiempo_consumido >= 0)
 );
 GO
@@ -547,14 +559,13 @@ CREATE UNIQUE INDEX UX_OfertaTablas_pendiente ON dbo.OfertaTablas (id_partida) W
 GO
 
 -- @entidad EnlaceEspectador | Enlace compartido para ver una partida desde fuera del juego. Es lo único que se guarda de los espectadores (D-19).
--- @fn Llave simple; `token_hash` es llave candidata.
+-- @fn Llave simple; `token_hash` es llave candidata. Sin indicador de activo: el enlace vale mientras su *Partida* está `EN_CURSO` (CU-34 RN-06), y un indicador repetiría ese estado.
 CREATE TABLE dbo.EnlaceEspectador (
     id_enlace            INT IDENTITY(1,1) NOT NULL,  -- Identificador del enlace.
-    id_partida           INT            NOT NULL,  -- Partida que se comparte.
+    id_partida           INT            NOT NULL,  -- Partida que se comparte; el enlace deja de valer cuando termina.
     id_creador           INT            NOT NULL,  -- Participante que lo compartió.
     token_hash           VARBINARY(32)  NOT NULL,  -- Resumen del token del enlace.
     fecha_creacion       DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Momento en que se compartió.
-    activo               BIT            NOT NULL DEFAULT (1),  -- Pasa a falso al terminar la partida (CU-34 RN-06).
     CONSTRAINT PK_EnlaceEspectador PRIMARY KEY (id_enlace),
     CONSTRAINT UQ_EnlaceEspectador_token UNIQUE (token_hash),  -- El token identifica un solo enlace.
     CONSTRAINT FK_EnlaceEspectador_Participacion FOREIGN KEY (id_partida, id_creador) REFERENCES dbo.Participacion (id_partida, id_usuario)  -- 1:N | Un participante comparte uno o más enlaces de su partida.
@@ -562,24 +573,23 @@ CREATE TABLE dbo.EnlaceEspectador (
 GO
 
 /*---------------------------------------------------------------------
-  6. Emparejamiento, salas y chat
+  5. Emparejamiento, salas y chat
 ---------------------------------------------------------------------*/
 
 -- @entidad ColaEmparejamiento | Jugadores que esperan partida clasificatoria. Se persiste para poder vaciarla y avisar si el servidor se reinicia (CU-17).
--- @fn La llave es la llave foránea: relación 1:0..1 con *Usuario*. `elo` es el valor al entrar, no una copia viva de *EstadisticaModo*.
+-- @fn La llave es la llave foránea: relación 1:0..1 con *Usuario*. Sin elo: el del modo se lee de *EstadisticaModo*, y mientras el jugador espera no puede cambiar, porque solo lo escribe el cierre de una partida (CU-25).
 CREATE TABLE dbo.ColaEmparejamiento (
     id_usuario           INT            NOT NULL,  -- Jugador en espera; como llave, impide que esté dos veces en la cola.
     id_modo              TINYINT        NOT NULL,  -- Modo buscado.
     minutos_reloj        TINYINT        NOT NULL,  -- Reloj buscado: 3, 5 o 10.
-    elo                  SMALLINT       NOT NULL,  -- Elo del modo al entrar; la ventana de búsqueda se amplía con la espera (CU-17 RN-03).
-    fecha_entrada        DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Inicio de la espera.
+    fecha_entrada        DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Inicio de la espera; con ella se amplía la ventana de elo (CU-17 RN-03).
     CONSTRAINT PK_ColaEmparejamiento PRIMARY KEY (id_usuario),
     CONSTRAINT FK_ColaEmparejamiento_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario (id_usuario),  -- 1:0..1 | Un usuario ocupa a lo sumo un lugar en la cola.
     CONSTRAINT FK_ColaEmparejamiento_Modo FOREIGN KEY (id_modo) REFERENCES dbo.Modo (id_modo),  -- 1:N | En la cola de un modo esperan muchos jugadores.
     CONSTRAINT CK_ColaEmparejamiento_reloj CHECK (minutos_reloj IN (3, 5, 10))
 );
 GO
-CREATE INDEX IX_ColaEmparejamiento_busqueda ON dbo.ColaEmparejamiento (id_modo, minutos_reloj, elo);
+CREATE INDEX IX_ColaEmparejamiento_busqueda ON dbo.ColaEmparejamiento (id_modo, minutos_reloj, fecha_entrada);
 GO
 
 -- @entidad Sala | Sala privada con código, con los ajustes que elige el anfitrión (CU-18).
@@ -672,23 +682,23 @@ CREATE INDEX IX_Mensaje_canal ON dbo.Mensaje (canal, id_partida, id_sala, fecha_
 GO
 
 /*---------------------------------------------------------------------
-  7. Clasificación y economía
+  6. Clasificación y economía
 ---------------------------------------------------------------------*/
 
--- @entidad EstadisticaModo | Estadísticas y elo de cada cuenta en cada modo; es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, D-04).
+-- @entidad EstadisticaModo | Estadísticas y elo de cada cuenta en cada modo, solo de partidas clasificatorias (CU-25 RN-14); es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, D-04).
 -- @fn Llave compuesta usuario-modo; cada contador depende de los dos. Sustituye a la entidad Estadísticas 1:1 del diagrama, que habría obligado a repetir los contadores de cada modo. Sin el derivado porcentaje_victorias. Los contadores son redundancia controlada.
 CREATE TABLE dbo.EstadisticaModo (
     id_usuario           INT            NOT NULL,  -- Cuenta.
     id_modo              TINYINT        NOT NULL,  -- Modo.
     puntos_elo           SMALLINT       NOT NULL DEFAULT (1000),  -- Elo actual en el modo; lo escribe solo el CU-25.
-    fecha_elo            DATETIME2(0)   NULL,  -- Momento en que se alcanzó el elo actual; desempata el ranking (CU-35 RN-06).
+    fecha_ultima_partida DATETIME2(0)   NULL,  -- Fin de la última partida clasificatoria del modo: cuándo se alcanzó el elo actual; desempata el ranking (CU-35 RN-06).
     elo_maximo           SMALLINT       NOT NULL DEFAULT (1000),  -- Elo más alto alcanzado.
-    partidas_jugadas     INT            NOT NULL DEFAULT (0),  -- Incluye las tablas, que no son victoria ni derrota (CU-25 FA-05).
+    partidas_jugadas     INT            NOT NULL DEFAULT (0),  -- Partidas clasificatorias, incluidas las tablas, que no son victoria ni derrota (CU-25 FA-05).
     partidas_ganadas     INT            NOT NULL DEFAULT (0),  -- Victorias. El porcentaje se calcula y no se guarda (CU-15 RN-01).
     partidas_perdidas    INT            NOT NULL DEFAULT (0),  -- Derrotas, incluidas rendiciones y abandonos.
     racha_actual         SMALLINT       NOT NULL DEFAULT (0),  -- Victorias seguidas por llegada a meta (CU-25 RN-11).
     mejor_racha          SMALLINT       NOT NULL DEFAULT (0),  -- Racha más larga.
-    tiempo_total_jugado  INT            NOT NULL DEFAULT (0),  -- Segundos jugados en el modo.
+    tiempo_total_jugado  INT            NOT NULL DEFAULT (0),  -- Segundos jugados en partidas clasificatorias del modo.
     barreras_colocadas   INT            NOT NULL DEFAULT (0),  -- Muros colocados, contados desde *Jugada* al cerrar cada partida.
     abandonos            INT            NOT NULL DEFAULT (0),  -- Abandonos en partidas en línea, para la moderación (CU-24 RN-05).
     id_division          TINYINT        NULL,  -- División actual; nula hasta jugar cinco partidas en el modo (CU-25 RN-14).
@@ -701,7 +711,7 @@ CREATE TABLE dbo.EstadisticaModo (
         AND barreras_colocadas >= 0 AND racha_actual >= 0 AND mejor_racha >= racha_actual AND elo_maximo >= puntos_elo)
 );
 GO
-CREATE INDEX IX_EstadisticaModo_ranking ON dbo.EstadisticaModo (id_modo, puntos_elo DESC, fecha_elo) INCLUDE (partidas_jugadas, id_division);
+CREATE INDEX IX_EstadisticaModo_ranking ON dbo.EstadisticaModo (id_modo, puntos_elo DESC, fecha_ultima_partida) INCLUDE (partidas_jugadas, id_division);
 GO
 
 -- @entidad HistorialDivision | Cambio de división de una cuenta en un modo. No se deduce de una sola partida por las partidas de margen, así que se guarda (CU-15).
@@ -790,7 +800,7 @@ CREATE INDEX IX_MovimientoMoneda_usuario ON dbo.MovimientoMoneda (id_usuario, fe
 GO
 
 /*---------------------------------------------------------------------
-  8. Relaciones entre jugadores y tutorial
+  7. Relaciones entre jugadores y tutorial
 ---------------------------------------------------------------------*/
 
 -- @entidad Amistad | Amistad recíproca entre dos cuentas, guardada una sola vez por par ordenado (CU-31 RN-03).
@@ -868,19 +878,19 @@ CREATE TABLE dbo.ProgresoTutorial (
 GO
 
 /*---------------------------------------------------------------------
-  9. Moderación y bitácoras
+  8. Moderación y bitácoras
   Nada de lo que produce la moderación se elimina.
 ---------------------------------------------------------------------*/
 
 -- @entidad Reporte | Denuncia de un jugador contra otro. Las pruebas se adjuntan por referencia a la partida, no por copia (CU-42 RN-01).
--- @fn Llave simple. El motivo pasó a catálogo (*MotivoReporte*).
+-- @fn Llave simple. El motivo pasó a catálogo (*MotivoReporte*). La partida adjunta se valida con llaves foráneas compuestas hacia *Participacion* (CU-42 RN-09).
 CREATE TABLE dbo.Reporte (
     id_reporte           INT IDENTITY(1,1) NOT NULL,  -- Identificador del reporte.
     id_denunciante       INT            NOT NULL,  -- Jugador que reporta (rol reportante del diagrama).
     id_reportado         INT            NOT NULL,  -- Jugador reportado.
     id_motivo            TINYINT        NOT NULL,  -- Motivo del catálogo.
     descripcion          NVARCHAR(500)  NULL,  -- Texto opcional del denunciante.
-    id_partida           INT            NULL,  -- Partida de la que salen las pruebas, si se reportó desde una.
+    id_partida           INT            NULL,  -- Partida de la que salen las pruebas, si se adjunta; la jugaron el denunciante y el reportado (CU-42 RN-09).
     fecha_reporte        DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Envío.
     estado               VARCHAR(20)    NOT NULL DEFAULT ('PENDIENTE'),  -- `PENDIENTE`, `EN_REVISION`, `RESUELTO_SIN_SANCION` o `RESUELTO_CON_SANCION`.
     id_moderador         INT            NULL,  -- Moderador que lo tiene en revisión o lo resolvió.
@@ -891,7 +901,8 @@ CREATE TABLE dbo.Reporte (
     CONSTRAINT FK_Reporte_Denunciante FOREIGN KEY (id_denunciante) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario emite muchos reportes (relación Emite del diagrama).
     CONSTRAINT FK_Reporte_Reportado FOREIGN KEY (id_reportado) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario recibe muchos reportes (relación Señala del diagrama).
     CONSTRAINT FK_Reporte_MotivoReporte FOREIGN KEY (id_motivo) REFERENCES dbo.MotivoReporte (id_motivo),  -- 1:N | Un motivo clasifica muchos reportes.
-    CONSTRAINT FK_Reporte_Partida FOREIGN KEY (id_partida) REFERENCES dbo.Partida (id_partida),  -- 1:N | Una partida es prueba de muchos reportes (relación Sobre del diagrama).
+    CONSTRAINT FK_Reporte_ParticipacionDenunciante FOREIGN KEY (id_partida, id_denunciante) REFERENCES dbo.Participacion (id_partida, id_usuario),  -- 1:N | La partida adjunta es una que jugó el denunciante (CU-42 RN-09; relación Sobre del diagrama).
+    CONSTRAINT FK_Reporte_ParticipacionReportado FOREIGN KEY (id_partida, id_reportado) REFERENCES dbo.Participacion (id_partida, id_usuario),  -- 1:N | La partida adjunta es una que jugó el reportado (CU-42 RN-09).
     CONSTRAINT FK_Reporte_Moderador FOREIGN KEY (id_moderador) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un moderador revisa muchos reportes.
     CONSTRAINT CK_Reporte_distintos CHECK (id_denunciante <> id_reportado),
     CONSTRAINT CK_Reporte_estado CHECK (
@@ -965,13 +976,15 @@ GO
 CREATE TABLE dbo.BitacoraModeracion (
     id_bitacora          BIGINT IDENTITY(1,1) NOT NULL,  -- Identificador del registro.
     id_moderador         INT            NOT NULL,  -- Usuario que actuó: moderador, administrador o quien intentó actuar sin rol.
-    accion               VARCHAR(30)    NOT NULL,  -- Acción, por ejemplo `ROL_OTORGADO`, `ROL_RETIRADO` o `CONSULTA_BITACORA`.
+    accion               VARCHAR(30)    NOT NULL,  -- `REPORTE_TOMADO`, `REPORTE_LIBERADO`, `REPORTE_RESUELTO`, `SANCION_APLICADA`, `APELACION_RESUELTA`, `ROL_OTORGADO`, `ROL_RETIRADO`, `CONSULTA_BITACORA` o `INTENTO_SIN_PERMISO`.
     id_usuario_afectado  INT            NULL,  -- Usuario sobre el que se actuó, si lo hay.
     detalle              NVARCHAR(1000) NULL,  -- Motivo, reporte, sanción o filtros de la acción.
     fecha_hora           DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Momento de la acción.
     CONSTRAINT PK_BitacoraModeracion PRIMARY KEY (id_bitacora),
     CONSTRAINT FK_BitacoraModeracion_Moderador FOREIGN KEY (id_moderador) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario realiza muchas acciones registradas (rol autor).
-    CONSTRAINT FK_BitacoraModeracion_Afectado FOREIGN KEY (id_usuario_afectado) REFERENCES dbo.Usuario (id_usuario)  -- 1:N | Un usuario es objeto de muchas acciones (rol afectado).
+    CONSTRAINT FK_BitacoraModeracion_Afectado FOREIGN KEY (id_usuario_afectado) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario es objeto de muchas acciones (rol afectado).
+    CONSTRAINT CK_BitacoraModeracion_accion CHECK (accion IN ('REPORTE_TOMADO','REPORTE_LIBERADO','REPORTE_RESUELTO','SANCION_APLICADA',
+        'APELACION_RESUELTA','ROL_OTORGADO','ROL_RETIRADO','CONSULTA_BITACORA','INTENTO_SIN_PERMISO'))
 );
 GO
 
@@ -981,18 +994,23 @@ CREATE TABLE dbo.BitacoraAcceso (
     id_bitacora             BIGINT IDENTITY(1,1) NOT NULL,  -- Identificador del registro.
     id_usuario              INT            NULL,  -- Cuenta, si se identificó; nula en intentos contra cuentas inexistentes.
     identificador_capturado NVARCHAR(254)  NULL,  -- Nickname o correo tecleado; único rastro de un intento contra una cuenta inexistente (CU-48 RN-06).
-    resultado               VARCHAR(40)    NOT NULL,  -- Resultado, por ejemplo `EXITO`, `CONTRASENA_INCORRECTA` o `REGISTRO_EXITOSO`.
+    resultado               VARCHAR(40)    NOT NULL,  -- Uno de los 26 resultados de la tabla de dominios del análisis CRUD, por ejemplo `EXITO`, `CONTRASENA_INCORRECTA` o `CUENTA_ELIMINADA`.
     direccion_ip            VARCHAR(45)    NOT NULL,  -- Dirección de red de origen.
     fecha_hora              DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Momento del intento.
     CONSTRAINT PK_BitacoraAcceso PRIMARY KEY (id_bitacora),
-    CONSTRAINT FK_BitacoraAcceso_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario (id_usuario)  -- 1:N | Una cuenta acumula muchos registros de acceso.
+    CONSTRAINT FK_BitacoraAcceso_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Una cuenta acumula muchos registros de acceso.
+    CONSTRAINT CK_BitacoraAcceso_resultado CHECK (resultado IN ('EXITO','USUARIO_INEXISTENTE','BLOQUEO_VIGENTE','CONTRASENA_INCORRECTA','CUENTA_PENDIENTE','CUENTA_SANCIONADA',
+        'SEGUNDO_FACTOR_FALLIDO','ABANDONADO','SUSPENSION_VENCIDA','REGISTRO_EXITOSO','REGISTRO_RECHAZADO','REGISTRO_SIN_CORREO',
+        'ALTA_INVITADO','VINCULACION_EXITOSA','CUENTA_VERIFICADA','RECUPERACION_SOLICITADA','RECUPERACION_CORREO_INEXISTENTE',
+        'RECUPERACION_EXITOSA','CIERRE_VOLUNTARIO','CIERRE_REMOTO','CAMBIO_CONTRASENA','CAMBIO_CORREO_SOLICITADO',
+        'CAMBIO_CORREO_CONFIRMADO','SEGUNDO_FACTOR_ACTIVADO','SEGUNDO_FACTOR_DESACTIVADO','CUENTA_ELIMINADA'))
 );
 GO
 CREATE INDEX IX_BitacoraAcceso_fecha ON dbo.BitacoraAcceso (fecha_hora, direccion_ip);
 GO
 
 /*---------------------------------------------------------------------
-  10. Procedimientos para las eliminaciones físicas
+  9. Procedimientos para las eliminaciones físicas
   El usuario de conexión no tiene permiso DELETE. Las únicas filas que
   la aplicación borra (cola, plazas de sala, solicitudes, amistades,
   silencios, bloqueos y enlaces del perfil) se borran con estos
@@ -1152,7 +1170,9 @@ BEGIN
 END;
 GO
 
--- CU-11 pasos 13 a 16: baja lógica de la cuenta. La fila de Usuario se conserva (D-07).
+-- CU-11 pasos 13 a 18: baja definitiva de la cuenta, con la anonimización en la misma transacción
+-- (D-07, D-17). La fila de Usuario se conserva porque otros registros dependen de ella.
+-- El servidor comprueba antes la contraseña y que no haya partida en línea sin terminar (pasos 9 y 10).
 CREATE PROCEDURE dbo.usp_Usuario_DarDeBaja
     @id_usuario INT
 AS
@@ -1162,16 +1182,34 @@ BEGIN
     DECLARE @id_sala_propia INT;
 
     BEGIN TRANSACTION;
-        UPDATE dbo.Usuario SET estado_cuenta = 'ELIMINADA', fecha_baja = SYSUTCDATETIME()
-        WHERE id_usuario = @id_usuario AND rol <> 'ADMINISTRADOR';
+        -- Paso 13. El prefijo anonimo_ es un formato reservado que ningún jugador puede elegir,
+        -- como el del invitado (CU-06 RN-02), así que los valores anónimos son únicos.
+        UPDATE dbo.Usuario
+        SET estado_cuenta    = 'ELIMINADA',
+            fecha_baja       = SYSUTCDATETIME(),
+            nickname         = CONCAT(N'anonimo_', id_usuario),
+            correo           = CONCAT(N'anonimo_', id_usuario, N'@bastion.invalid'),
+            contrasena_hash  = NULL,
+            contrasena_sal   = NULL,
+            fecha_nacimiento = NULL,
+            codigo_amigo     = NULL
+        WHERE id_usuario = @id_usuario
+          AND tipo_cuenta = 'REGISTRADA'
+          AND rol <> 'ADMINISTRADOR'
+          AND estado_cuenta <> 'ELIMINADA';
         IF @@ROWCOUNT = 0
-            THROW 50001, N'La cuenta no existe o es de administración (CU-11 RN-06).', 1;
+            THROW 50001, N'La cuenta no existe, ya fue dada de baja, es de invitado o es de administración (CU-11 RN-06, RN-07).', 1;
 
-        UPDATE dbo.Sesion SET fecha_fin = SYSUTCDATETIME(), motivo_cierre = 'BAJA_CUENTA'
-        WHERE id_usuario = @id_usuario AND fecha_fin IS NULL;
+        -- Paso 14
+        DELETE FROM dbo.EnlaceRed         WHERE id_usuario = @id_usuario;
+        DELETE FROM dbo.HistorialNickname WHERE id_usuario = @id_usuario;
+        DELETE FROM dbo.Amistad           WHERE id_usuario_a = @id_usuario OR id_usuario_b = @id_usuario;
+        DELETE FROM dbo.Silencio          WHERE id_usuario = @id_usuario OR id_silenciado = @id_usuario;
+        DELETE FROM dbo.Bloqueo           WHERE id_bloqueador = @id_usuario OR id_bloqueado = @id_usuario;
+        UPDATE dbo.Avatar SET vigente = 0 WHERE id_usuario = @id_usuario AND vigente = 1;
 
+        -- Paso 15. Si era anfitrión de una sala abierta, la sala se cierra (CU-18 RN-07).
         DELETE FROM dbo.ColaEmparejamiento WHERE id_usuario = @id_usuario;
-
         SELECT @id_sala_propia = id_sala FROM dbo.Sala WHERE id_anfitrion = @id_usuario AND estado = 'ABIERTA';
         IF @id_sala_propia IS NOT NULL
         BEGIN
@@ -1180,87 +1218,18 @@ BEGIN
         END
         DELETE FROM dbo.SalaParticipante WHERE id_usuario = @id_usuario;
 
+        -- Paso 16
         DELETE FROM dbo.Solicitud WHERE id_solicitante = @id_usuario OR id_destinatario = @id_usuario;
-
         UPDATE dbo.Invitacion SET estado = 'EXPIRADA'
         WHERE estado = 'PENDIENTE' AND (id_emisor = @id_usuario OR id_destinatario = @id_usuario);
 
+        -- Paso 17
         UPDATE dbo.Reporte SET estado = 'PENDIENTE', id_moderador = NULL, fecha_asignacion = NULL
         WHERE estado = 'EN_REVISION' AND id_moderador = @id_usuario;
+
+        -- Paso 18
+        UPDATE dbo.Sesion SET fecha_fin = SYSUTCDATETIME(), motivo_cierre = 'BAJA_CUENTA'
+        WHERE id_usuario = @id_usuario AND fecha_fin IS NULL;
     COMMIT TRANSACTION;
 END;
-GO
-
--- CU-11 FA-08: pasados los catorce días, la cuenta se anonimiza en lugar de borrarse (D-17).
-CREATE PROCEDURE dbo.usp_Usuario_Anonimizar
-    @id_usuario INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-    SET XACT_ABORT ON;
-
-    IF NOT EXISTS (SELECT 1 FROM dbo.Usuario
-                   WHERE id_usuario = @id_usuario AND estado_cuenta = 'ELIMINADA'
-                     AND fecha_baja <= DATEADD(DAY, -14, SYSUTCDATETIME()))
-        THROW 50002, N'La cuenta no está eliminada o sigue dentro del plazo de recuperación (D-07).', 1;
-
-    BEGIN TRANSACTION;
-        DELETE FROM dbo.EnlaceRed WHERE id_usuario = @id_usuario;
-        DELETE FROM dbo.Amistad   WHERE id_usuario_a = @id_usuario OR id_usuario_b = @id_usuario;
-        DELETE FROM dbo.Silencio  WHERE id_usuario = @id_usuario OR id_silenciado = @id_usuario;
-        DELETE FROM dbo.Bloqueo   WHERE id_bloqueador = @id_usuario OR id_bloqueado = @id_usuario;
-
-        UPDATE dbo.Avatar SET vigente = 0 WHERE id_usuario = @id_usuario AND vigente = 1;
-
-        -- El prefijo anonimo_ es un formato reservado que ningún jugador puede elegir, como el de invitado (CU-06 RN-02).
-        UPDATE dbo.Usuario
-        SET nickname         = CONCAT(N'anonimo_', id_usuario),
-            correo           = CONCAT(N'anonimo_', id_usuario, N'@bastion.invalid'),
-            contrasena_hash  = NULL,
-            contrasena_sal   = NULL,
-            fecha_nacimiento = NULL,
-            codigo_amigo     = NULL
-        WHERE id_usuario = @id_usuario;
-    COMMIT TRANSACTION;
-END;
-GO
-
-/*---------------------------------------------------------------------
-  11. Usuario de conexión del servidor
-  El Servidor de partidas se conecta con este usuario. Solo puede leer,
-  insertar, modificar y ejecutar procedimientos en toda la base:
-  no puede borrar filas, crear ni alterar objetos, ni conceder permisos.
----------------------------------------------------------------------*/
-
-USE master;
-GO
-IF SUSER_ID(N'BastionServerConnection') IS NULL
-    CREATE LOGIN BastionServerConnection
-        WITH PASSWORD = N'B4sT10nCONnecti0n',
-             DEFAULT_DATABASE = Bastion,
-             CHECK_POLICY = ON,
-             CHECK_EXPIRATION = OFF;
-GO
-
-USE Bastion;
-GO
-IF USER_ID(N'BastionServerConnection') IS NULL
-    CREATE USER BastionServerConnection FOR LOGIN BastionServerConnection WITH DEFAULT_SCHEMA = dbo;
-GO
-
--- Permisos a nivel de base de datos: alcanzan a todas las tablas, vistas y
--- procedimientos, presentes y futuros, de todos los esquemas.
-GRANT SELECT, INSERT, UPDATE, EXECUTE ON DATABASE::Bastion TO BastionServerConnection;
-GO
-
--- Comprobación: debe listar CONNECT (implícito al crear el usuario),
--- SELECT, INSERT, UPDATE y EXECUTE, todos con alcance DATABASE y estado GRANT.
-SELECT pr.name            AS usuario,
-       pe.permission_name AS permiso,
-       pe.state_desc      AS estado,
-       pe.class_desc      AS alcance
-FROM sys.database_permissions AS pe
-JOIN sys.database_principals  AS pr ON pr.principal_id = pe.grantee_principal_id
-WHERE pr.name = N'BastionServerConnection'
-ORDER BY pe.permission_name;
 GO

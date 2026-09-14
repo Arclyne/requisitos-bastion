@@ -1,0 +1,47 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
+\subsubsection*{
+Relaciones entre jugadores y tutorial
+}
+\addcontentsline{toc}{subsubsection}{
+Relaciones entre jugadores y tutorial
+}
+
+\atributosde{Amistad}{Amistad recíproca entre dos cuentas, guardada una sola vez por par ordenado (\mbox{CU-31} \mbox{RN-03}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario\_\allowbreak{}a} & \texttt{INT} & No & PK, FK & El menor de los dos identificadores. \\ \hline
+\texttt{id\_\allowbreak{}usuario\_\allowbreak{}b} & \texttt{INT} & No & PK, FK & El mayor de los dos identificadores. \\ \hline
+\texttt{fecha\_\allowbreak{}amistad} & \texttt{DATETIME2(0)} & No &  & Momento en que se aceptó la solicitud. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Solicitud}{Solicitud de amistad pendiente. Tiene dirección, a diferencia de la amistad, y se borra al responderse (\mbox{CU-30}, \mbox{CU-31}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}solicitud} & \texttt{INT}, identidad & No & PK & Identificador de la solicitud. \\ \hline
+\texttt{id\_\allowbreak{}solicitante} & \texttt{INT} & No & FK & Jugador que la envía. \\ \hline
+\texttt{id\_\allowbreak{}destinatario} & \texttt{INT} & No & FK & Jugador que la recibe. \\ \hline
+\texttt{fecha\_\allowbreak{}solicitud} & \texttt{DATETIME2(0)} & No &  & Envío; caduca a los treinta días (\mbox{CU-31} \mbox{RN-05}). Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Silencio}{Jugador silenciado por otro; solo lo consulta quien silenció (\mbox{CU-33}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Jugador que silencia. \\ \hline
+\texttt{id\_\allowbreak{}silenciado} & \texttt{INT} & No & PK, FK & Jugador silenciado. \\ \hline
+\texttt{fecha\_\allowbreak{}silencio} & \texttt{DATETIME2(0)} & No &  & Momento del silencio. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Bloqueo}{Bloqueo entre dos jugadores; impide emparejar, invitar, buscar, solicitar y compartir sala (\mbox{CU-33} \mbox{RN-05}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}bloqueador} & \texttt{INT} & No & PK, FK & Jugador que bloquea. \\ \hline
+\texttt{id\_\allowbreak{}bloqueado} & \texttt{INT} & No & PK, FK & Jugador bloqueado. \\ \hline
+\texttt{fecha\_\allowbreak{}bloqueo} & \texttt{DATETIME2(0)} & No &  & Momento del bloqueo. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{ProgresoTutorial}{Avance de cada cuenta en cada lección del tutorial; es la relación N:M entre Usuario y Leccion (\mbox{CU-41}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Cuenta. \\ \hline
+\texttt{id\_\allowbreak{}leccion} & \texttt{TINYINT} & No & PK, FK & Lección. \\ \hline
+\texttt{paso\_\allowbreak{}actual} & \texttt{TINYINT} & No &  & Último paso completado. \\ \hline
+\texttt{fecha\_\allowbreak{}actualizacion} & \texttt{DATETIME2(0)} & No &  & Último avance. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}completada} & \texttt{DATETIME2(0)} & Sí &  & Momento en que se terminó la lección. \\ \hline
+\texttt{completada} & calculada & --- &  & Si la lección está terminada. Calculada: es exactamente que \texttt{fecha\_\allowbreak{}completada} no sea nula. \\ \hline
+\end{tablaatributos}
+

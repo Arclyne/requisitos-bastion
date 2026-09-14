@@ -1,0 +1,89 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
+\subsubsection*{
+Partida
+}
+\addcontentsline{toc}{subsubsection}{
+Partida
+}
+
+\atributosde{Partida}{Partida clasificatoria, privada o contra la IA. Se guarda completa porque de ella dependen el historial, la repetición, la reconexión y los reportes.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}partida} & \texttt{INT}, identidad & No & PK & Identificador de la partida. \\ \hline
+\texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & FK & Modo; de él salen tablero, plazas y muros, que no se repiten aquí. \\ \hline
+\texttt{tipo} & \texttt{VARCHAR(15)} & No &  & \texttt{CLASIFICATORIA}, \texttt{PRIVADA} o \texttt{IA}. Discrimina qué atributos aplican. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(20)} & No &  & \texttt{EN\_\allowbreak{}CURSO}, \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} o \texttt{FINALIZADA} (\mbox{CU-25} \mbox{RN-13}). Por omisión, \texttt{EN\_\allowbreak{}CURSO}. \\ \hline
+\texttt{minutos\_\allowbreak{}reloj} & \texttt{TINYINT} & Sí &  & 3, 5 o 10; nulo solo en partidas contra la IA sin reloj (\mbox{CU-27} \mbox{RN-06}). \\ \hline
+\texttt{fecha\_\allowbreak{}inicio} & \texttt{DATETIME2(0)} & No &  & Inicio. La duración se calcula y no se guarda (\mbox{CU-36} \mbox{RN-02}). Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}fin} & \texttt{DATETIME2(0)} & Sí &  & Cierre de la partida. \\ \hline
+\texttt{forma\_\allowbreak{}termino} & \texttt{VARCHAR(15)} & Sí &  & \texttt{META}, \texttt{TIEMPO\_\allowbreak{}AGOTADO}, \texttt{RENDICION}, \texttt{TABLAS} o \texttt{ABANDONO} (\mbox{CU-25} \mbox{RN-01}). \\ \hline
+\texttt{turno\_\allowbreak{}actual} & \texttt{TINYINT} & No &  & \texttt{orden\_\allowbreak{}turno} del participante que tiene el turno. Redundancia controlada: se deduce de las \textit{Jugada}, que mandan si discrepan. Por omisión, \texttt{1}. \\ \hline
+\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia} & \texttt{TINYINT} & Sí & FK & Nivel de la IA; solo en partidas \texttt{IA} (\mbox{D-12}). \\ \hline
+\texttt{permite\_\allowbreak{}deshacer} & \texttt{BIT} & Sí &  & Opción elegida al empezar; solo en partidas \texttt{IA}. \\ \hline
+\texttt{permite\_\allowbreak{}sugerencias} & \texttt{BIT} & Sí &  & Opción elegida al empezar; solo en partidas \texttt{IA}. \\ \hline
+\texttt{deshacer\_\allowbreak{}usados} & \texttt{TINYINT} & Sí &  & Veces que se usó deshacer; solo en partidas \texttt{IA}. \\ \hline
+\texttt{sugerencias\_\allowbreak{}usadas} & \texttt{TINYINT} & Sí &  & Sugerencias pedidas; solo en partidas \texttt{IA}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Participacion}{Participación de un jugador en una partida; es la relación N:M entre Usuario y Partida (relación Participa del diagrama). La IA no tiene participación (\mbox{D-12}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & No & PK, FK & Partida. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Jugador. \\ \hline
+\texttt{orden\_\allowbreak{}turno} & \texttt{TINYINT} & No &  & Orden en que juega, de 1 a 4. \\ \hline
+\texttt{simbolo\_\allowbreak{}peon} & \texttt{VARCHAR(10)} & No &  & Símbolo y color que distinguen su peón (\texttt{color\_\allowbreak{}ficha} en el diagrama). \\ \hline
+\texttt{casilla\_\allowbreak{}actual} & \texttt{VARCHAR(3)} & No &  & Casilla que ocupa el peón, en notación de tablero. Redundancia controlada: es la de su última jugada. \\ \hline
+\texttt{muros\_\allowbreak{}restantes} & \texttt{TINYINT} & No &  & Muros que le quedan; nace con los del modo o de la sala (\mbox{CU-18}). Redundancia controlada: los iniciales menos sus jugadas de tipo \texttt{MURO}. \\ \hline
+\texttt{reloj\_\allowbreak{}restante} & \texttt{INT} & Sí &  & Milisegundos que le quedan; nulo si la partida no tiene reloj. Redundancia controlada: el reloj inicial menos el tiempo consumido en sus jugadas, o cero para quien pierde por tiempo, porque la jugada que llegó tarde no se guarda (\mbox{CU-20} \mbox{FA-06}). \\ \hline
+\texttt{elo\_\allowbreak{}inicial} & \texttt{SMALLINT} & Sí &  & Elo con el que entró; base del cálculo (\mbox{CU-17} \mbox{RN-04}, \mbox{CU-25} \mbox{RN-04}). \\ \hline
+\texttt{elo\_\allowbreak{}final} & \texttt{SMALLINT} & Sí &  & Elo resultante; solo en partidas clasificatorias. \\ \hline
+\texttt{diferencia\_\allowbreak{}elo} & calculada & --- &  & Cambio de elo que muestra el historial (\mbox{CU-36} \mbox{RN-03}). Calculada y no almacenada: depende de otras dos columnas de la fila. \\ \hline
+\texttt{resultado} & \texttt{VARCHAR(10)} & Sí &  & \texttt{GANADA}, \texttt{PERDIDA} o \texttt{TABLAS}; nulo mientras no termina. \\ \hline
+\texttt{posicion} & \texttt{TINYINT} & Sí &  & Posición en el modo de cuatro jugadores, de 1 a 4 (\mbox{CU-25} \mbox{RN-02}); nula en las de dos jugadores y contra la IA, donde el resultado ya la dice. \\ \hline
+\texttt{forma\_\allowbreak{}termino} & \texttt{VARCHAR(15)} & Sí &  & Forma en que salió antes que la partida, en cuatro jugadores: \texttt{META}, \texttt{RENDICION}, \texttt{ABANDONO} o \texttt{TIEMPO\_\allowbreak{}AGOTADO}. \\ \hline
+\texttt{conectado} & \texttt{BIT} & No &  & Estado de conexión; se guarda para sobrevivir a un reinicio (\mbox{CU-26}). Por omisión, \texttt{1}. \\ \hline
+\texttt{fecha\_\allowbreak{}desconexion} & \texttt{DATETIME2(0)} & Sí &  & Inicio de la última desconexión, para el plazo de sesenta segundos (\mbox{CU-24} \mbox{RN-06}); no se borra al reconectar, así que no sustituye a \texttt{conectado}. \\ \hline
+\texttt{terminada} & calculada & --- &  & Si la participación está cerrada (\mbox{D-11}). Calculada: es exactamente que \texttt{resultado} no sea nulo. \\ \hline
+\end{tablaatributos}
+
+\atributosde{ParticipacionObjeto}{Aspecto con el que cada jugador entró a la partida, una fila por ranura; no cambia aunque el jugador equipe otra cosa (\mbox{CU-14} \mbox{RN-03}, \mbox{CU-37} \mbox{RN-03}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & No & PK, FK & Partida. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Jugador. \\ \hline
+\texttt{id\_\allowbreak{}ranura} & \texttt{TINYINT} & No & PK, FK & Ranura. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & FK & Objeto que tenía equipado en esa ranura al empezar. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Jugada}{Movimiento de peón o colocación de muro, en orden. El tablero se reconstruye sumando las jugadas; los muros no tienen tabla propia (\mbox{CU-21}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & No & PK, FK & Partida. \\ \hline
+\texttt{numero\_\allowbreak{}jugada} & \texttt{SMALLINT} & No & PK & Número consecutivo dentro de la partida (\mbox{CU-20} \mbox{RN-06}). \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & Sí & FK & Jugador que la hizo; nulo si la hizo la IA (\mbox{CU-27} \mbox{RN-03}). \\ \hline
+\texttt{tipo} & \texttt{VARCHAR(10)} & No &  & \texttt{MOVIMIENTO} o \texttt{MURO}. Discrimina qué casillas aplican. \\ \hline
+\texttt{casilla\_\allowbreak{}origen} & \texttt{VARCHAR(3)} & Sí &  & Casilla de salida del peón; solo en \texttt{MOVIMIENTO}. \\ \hline
+\texttt{casilla\_\allowbreak{}destino} & \texttt{VARCHAR(3)} & Sí &  & Casilla de llegada del peón; solo en \texttt{MOVIMIENTO}. \\ \hline
+\texttt{surco} & \texttt{VARCHAR(3)} & Sí &  & Surco donde se colocó el muro; solo en \texttt{MURO}. \\ \hline
+\texttt{orientacion} & \texttt{VARCHAR(10)} & Sí &  & \texttt{HORIZONTAL} o \texttt{VERTICAL}; solo en \texttt{MURO}. \\ \hline
+\texttt{tiempo\_\allowbreak{}consumido} & \texttt{INT} & No &  & Milisegundos que tardó el jugador. \\ \hline
+\texttt{fecha\_\allowbreak{}jugada} & \texttt{DATETIME2(3)} & No &  & Momento en que se registró. Por omisión, la fecha actual. \\ \hline
+\texttt{deshecha} & \texttt{BIT} & No &  & Marca de deshacer contra la IA; la jugada no se borra (\mbox{CU-27} \mbox{RN-05}). Por omisión, \texttt{0}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{OfertaTablas}{Oferta de tablas en una partida de dos jugadores (\mbox{CU-22}). Se guarda para la reconexión y como prueba de acoso.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}oferta} & \texttt{INT}, identidad & No & PK & Identificador de la oferta. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & No & FK & Partida. \\ \hline
+\texttt{id\_\allowbreak{}ofertante} & \texttt{INT} & No & FK & Participante que la ofrece. \\ \hline
+\texttt{numero\_\allowbreak{}jugada} & \texttt{SMALLINT} & No &  & Jugada tras la que se ofreció; limita una oferta cada cinco jugadas (\mbox{CU-22} \mbox{RN-03}). \\ \hline
+\texttt{fecha\_\allowbreak{}oferta} & \texttt{DATETIME2(0)} & No &  & Momento de la oferta. Por omisión, la fecha actual. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{PENDIENTE}, \texttt{ACEPTADA}, \texttt{RECHAZADA} o \texttt{CADUCADA}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\texttt{fecha\_\allowbreak{}respuesta} & \texttt{DATETIME2(0)} & Sí &  & Momento en que se aceptó, rechazó o caducó. \\ \hline
+\end{tablaatributos}
+
+\atributosde{EnlaceEspectador}{Enlace compartido para ver una partida desde fuera del juego. Es lo único que se guarda de los espectadores (\mbox{D-19}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}enlace} & \texttt{INT}, identidad & No & PK & Identificador del enlace. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & No & FK & Partida que se comparte; el enlace deja de valer cuando termina. \\ \hline
+\texttt{id\_\allowbreak{}creador} & \texttt{INT} & No & FK & Participante que lo compartió. \\ \hline
+\texttt{token\_\allowbreak{}hash} & \texttt{VARBINARY(32)} & No & UQ & Resumen del token del enlace. \\ \hline
+\texttt{fecha\_\allowbreak{}creacion} & \texttt{DATETIME2(0)} & No &  & Momento en que se compartió. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+

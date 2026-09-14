@@ -1,0 +1,15 @@
+%=====================================================================
+% Modelo de datos · Normalización: atributos que parecen derivados
+%=====================================================================
+\subsubsection*{Atributos que parecen derivados y no lo son}
+\addcontentsline{toc}{subsubsection}{Atributos que parecen derivados y no lo son}
+
+Hay atributos que a primera vista se calculan a partir de otros de la misma fila, pero no forman una dependencia funcional, porque dos filas con los mismos valores de origen pueden tener valores distintos. Se conservan:
+
+\begin{reglas}
+  \item \textbf{\at{nivel} y \at{experiencia} en \textit{Usuario}.} El nivel se sube al cruzar un umbral de experiencia, pero al subir se otorgan recompensas, y se otorgan una sola vez (\mbox{CU-25} \mbox{FA-03}). \at{nivel} registra hasta qué nivel se pagaron recompensas, que es un hecho: si los umbrales se ajustan, dos jugadores con la misma experiencia pueden tener niveles distintos, y ninguno debe perder un nivel ya alcanzado.
+  \item \textbf{\at{id\_division} y \at{puntos\_elo} en \textit{EstadisticaModo}.} La división no es función del elo: el umbral de descenso está por debajo del de ascenso y hay partidas de margen (\mbox{CU-25} \mbox{RN-07}), así que dos jugadores con el mismo elo pueden estar en divisiones distintas. Es la misma razón por la que existe \textit{HistorialDivision} (\mbox{CU-15}).
+  \item \textbf{\at{bloqueada\_hasta} en \textit{Usuario}.} Se calcula con la política de bloqueo escalonado vigente en el momento del intento (\mbox{CU-01} \mbox{RN-03}). Si la política cambia, los bloqueos ya impuestos no cambian.
+  \item \textbf{Valores fijados en un momento.} \at{elo\_inicial} en \textit{Participacion}, las filas de \textit{ParticipacionObjeto} y \at{fecha\_caducidad} en \textit{Caja} copian un valor en el instante en que ocurre algo. Después de ese instante el origen puede cambiar y la copia no debe seguirlo: son hechos, no duplicados.
+  \item \textbf{Discriminadores.} \at{tipo\_cuenta} en \textit{Usuario}, \at{tipo} en \textit{Partida}, \textit{Sancion}, \textit{Jugada} y \textit{MovimientoMoneda}, \at{canal} en \textit{Mensaje} y \at{proposito} en \textit{TokenVerificacionCorreo} deciden qué atributos opcionales aplican. Como se explicó en el criterio, no dependen de esos atributos; una restricción \at{CHECK} en cada tabla impide las combinaciones incoherentes.
+\end{reglas}

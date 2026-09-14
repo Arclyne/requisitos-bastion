@@ -87,7 +87,7 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-08}: El peón llega a la fila de meta}\par
     \begin{cuenum}[start=1]
-      \item El Servidor de partidas marca la \textit{Participacion} como clasificada, con su posición y la fecha.
+      \item El Servidor de partidas marca la \textit{Participacion} como clasificada, con su posición.
       \item Si el \textit{Modo} es de dos jugadores, o si en el de cuatro solo queda un jugador sin clasificar, el flujo continúa en el \mbox{CU-25} Finalizar la partida.
       \item Si el \textit{Modo} es de cuatro jugadores y quedan al menos dos sin clasificar, la partida sigue: el flujo continúa en el paso 16 del FN, y el jugador clasificado deja de recibir turno (\mbox{RN-08}).
     \end{cuenum}} \\
@@ -157,13 +157,13 @@
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué se guarda cada jugada.}\par
     Se consideró guardar solo el resultado de la partida y no las jugadas, que es mucho más barato. Se descartó porque el documento de diseño del juego promete repetición jugada a jugada con línea de tiempo y notación exportable, porque la reconexión del \mbox{CU-26} necesita reconstruir el tablero, y porque el reporte del \mbox{CU-42} adjunta la repetición automáticamente. Las tres funciones se apoyan en la misma tabla. Guardar la jugada como origen y destino, y no como una fotografía del tablero, mantiene la fila pequeña: el tablero completo siempre puede reconstruirse sumando las jugadas desde el inicio.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textit{Sesion}: lee por token \textit{(paso 6)}
-      \item \textit{Partida}: lee estado y turno; escribe el turno siguiente \textit{(pasos 7, 8, 16)}
-      \item \textit{Participacion}: lee la del jugador y las de los rivales \textit{(pasos 6, 10)}
-      \item \textit{Participacion}: escribe casilla actual, reloj restante y, en el \mbox{FA-08}, la clasificación \textit{(pasos 14, \mbox{FA-08})}
-      \item \textit{Jugada}: lee todas las de la partida, para reconstruir el tablero \textit{(paso 10)}
-      \item \textit{Jugada}: crea \textit{(paso 13)}
-      \item \textit{OfertaTablas}: marca como \texttt{CADUCADA} la pendiente \textit{(paso 16)}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 6)}
+      \item \textbf{\textit{Partida}:} lee estado y turno; escribe el turno siguiente \textit{(pasos 7, 8, 16)}
+      \item \textbf{\textit{Participacion}:} lee la del jugador y las de los rivales \textit{(pasos 6, 10)}
+      \item \textbf{\textit{Participacion}:} escribe casilla actual, reloj restante y, en el \mbox{FA-08}, la clasificación \textit{(pasos 14, \mbox{FA-08})}
+      \item \textbf{\textit{Jugada}:} lee todas las de la partida, para reconstruir el tablero \textit{(paso 10)}
+      \item \textbf{\textit{Jugada}:} crea \textit{(paso 13)}
+      \item \textbf{\textit{OfertaTablas}:} marca como \texttt{CADUCADA} la pendiente \textit{(paso 16)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

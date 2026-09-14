@@ -1,0 +1,24 @@
+% Archivo generado por bd/exportar_datos.py. No editar a mano.
+\begin{center}\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{|L{0.029\linewidth}|L{0.377\linewidth}|L{0.184\linewidth}|L{0.037\linewidth}|L{0.285\linewidth}|}
+\hline
+\textbf{Núm.} & \textbf{Operación que se intenta} & \textbf{Regla} & \textbf{Error} & \textbf{Rechazada por} \\ \hline
+\endfirsthead
+\hline
+\textbf{Núm.} & \textbf{Operación que se intenta} & \textbf{Regla} & \textbf{Error} & \textbf{Rechazada por} \\ \hline
+\endhead
+1 & Estado de cuenta fuera del dominio & CRUD, dominios & 547 & CK\_\allowbreak{}Usuario\_\allowbreak{}estado\_\allowbreak{}cuenta \\ \hline
+2 & Nickname igual salvo mayúsculas y acentos & CU-02 RN-01 & 2627 & UQ\_\allowbreak{}Usuario\_\allowbreak{}nickname \\ \hline
+3 & Idioma no admitido & CU-12 FA-07, D-21 & 547 & CK\_\allowbreak{}Usuario\_\allowbreak{}idioma \\ \hline
+4 & Saldo de monedas negativo & CU-40 RN-02 & 547 & CK\_\allowbreak{}Usuario\_\allowbreak{}rangos \\ \hline
+5 & Amistad con una cuenta que no existe & Llave foránea & 547 & FK\_\allowbreak{}Amistad\_\allowbreak{}UsuarioB \\ \hline
+6 & Equipar un objeto que no se posee & CU-14 RN-02 & 547 & FK\_\allowbreak{}Equipamiento\_\allowbreak{}UsuarioObjeto \\ \hline
+7 & Equipar un objeto en otra ranura & D-03, CU-14 RN-01 & 547 & FK\_\allowbreak{}Equipamiento\_\allowbreak{}ObjetoCosmetico \\ \hline
+8 & Segunda partida sin terminar & D-11 & 2601 & UX\_\allowbreak{}Participacion\_\allowbreak{}sin\_\allowbreak{}terminar \\ \hline
+9 & Segundo código de recuperación vigente & CU-03 RN-05 & 2601 & UX\_\allowbreak{}TokenRecuperacion\_\allowbreak{}vigente \\ \hline
+10 & Reportarse a sí mismo & CU-42 FA-06 & 547 & CK\_\allowbreak{}Reporte\_\allowbreak{}distintos \\ \hline
+11 & Sanción temporal sin fecha de fin & CU-44 RN-04 & 547 & CK\_\allowbreak{}Sancion\_\allowbreak{}tipo \\ \hline
+12 & Compra que no dice qué objeto & CU-38 RN-08 & 547 & CK\_\allowbreak{}MovimientoMoneda\_\allowbreak{}origen \\ \hline
+13 & Borrar con el usuario de conexión & Permisos de conexión & 229 & permiso DELETE denegado \\ \hline
+\end{longtable}
+\end{center}

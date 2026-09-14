@@ -1,0 +1,74 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
+\subsubsection*{
+Moderación y bitácoras
+}
+\addcontentsline{toc}{subsubsection}{
+Moderación y bitácoras
+}
+
+\atributosde{Reporte}{Denuncia de un jugador contra otro. Las pruebas se adjuntan por referencia a la partida, no por copia (\mbox{CU-42} \mbox{RN-01}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}reporte} & \texttt{INT}, identidad & No & PK & Identificador del reporte. \\ \hline
+\texttt{id\_\allowbreak{}denunciante} & \texttt{INT} & No & FK & Jugador que reporta (rol reportante del diagrama). \\ \hline
+\texttt{id\_\allowbreak{}reportado} & \texttt{INT} & No & FK & Jugador reportado. \\ \hline
+\texttt{id\_\allowbreak{}motivo} & \texttt{TINYINT} & No & FK & Motivo del catálogo. \\ \hline
+\texttt{descripcion} & \texttt{NVARCHAR(500)} & Sí &  & Texto opcional del denunciante. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & Sí & FK & Partida de la que salen las pruebas, si se adjunta; la jugaron el denunciante y el reportado (\mbox{CU-42} \mbox{RN-09}). \\ \hline
+\texttt{fecha\_\allowbreak{}reporte} & \texttt{DATETIME2(0)} & No &  & Envío. Por omisión, la fecha actual. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(20)} & No &  & \texttt{PENDIENTE}, \texttt{EN\_\allowbreak{}REVISION}, \texttt{RESUELTO\_\allowbreak{}SIN\_\allowbreak{}SANCION} o \texttt{RESUELTO\_\allowbreak{}CON\_\allowbreak{}SANCION}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\texttt{id\_\allowbreak{}moderador} & \texttt{INT} & Sí & FK & Moderador que lo tiene en revisión o lo resolvió. \\ \hline
+\texttt{fecha\_\allowbreak{}asignacion} & \texttt{DATETIME2(0)} & Sí &  & Momento en que se tomó; a los treinta minutos vuelve a la cola (\mbox{CU-43} \mbox{RN-03}). \\ \hline
+\texttt{nota\_\allowbreak{}resolucion} & \texttt{NVARCHAR(1000)} & Sí &  & Nota obligatoria al resolver (\mbox{CU-43} \mbox{RN-07}). \\ \hline
+\texttt{fecha\_\allowbreak{}resolucion} & \texttt{DATETIME2(0)} & Sí &  & Momento de la resolución. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Sancion}{Sanción aplicada por un moderador, de ámbito de cuenta o de chat (\mbox{D-05}). Sustituye al Baneo del diagrama; al retirarse se desactiva, no se borra.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}sancion} & \texttt{INT}, identidad & No & PK & Identificador de la sanción. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Jugador sancionado. \\ \hline
+\texttt{id\_\allowbreak{}moderador} & \texttt{INT} & No & FK & Moderador que la aplicó; la conserva aunque se le retire el rol (\mbox{CU-47} \mbox{RN-03}). \\ \hline
+\texttt{id\_\allowbreak{}reporte} & \texttt{INT} & Sí & FK & Reporte que la originó, si lo hay. \\ \hline
+\texttt{ambito} & \texttt{VARCHAR(10)} & No &  & \texttt{CUENTA} o \texttt{CHAT} (\mbox{CU-44} \mbox{RN-03}). \\ \hline
+\texttt{tipo} & \texttt{VARCHAR(10)} & No &  & \texttt{TEMPORAL} o \texttt{PERMANENTE}. Discrimina si aplica \texttt{fecha\_\allowbreak{}fin}. \\ \hline
+\texttt{motivo} & \texttt{NVARCHAR(500)} & No &  & Lo que comprobó el moderador (\mbox{CU-44} \mbox{RN-06}). \\ \hline
+\texttt{fecha\_\allowbreak{}inicio} & \texttt{DATETIME2(0)} & No &  & Inicio de la sanción. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}fin} & \texttt{DATETIME2(0)} & Sí &  & Fin de una sanción temporal; nula si es permanente (\mbox{CU-44} \mbox{RN-04}). \\ \hline
+\texttt{fecha\_\allowbreak{}retiro} & \texttt{DATETIME2(0)} & Sí &  & Retiro manual por apelación o por sustitución (\mbox{CU-43} \mbox{RN-06}). \\ \hline
+\texttt{id\_\allowbreak{}sancion\_\allowbreak{}sustituta} & \texttt{INT} & Sí & FK & Sanción del mismo ámbito que la sustituyó (\mbox{CU-44} \mbox{RN-09}). \\ \hline
+\texttt{activa} & calculada & --- &  & Si no fue retirada. Calculada: es exactamente que \texttt{fecha\_\allowbreak{}retiro} sea nula. Que surta efecto hoy depende además de \texttt{fecha\_\allowbreak{}fin}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Apelacion}{Apelación de una sanción por parte del sancionado; hay a lo sumo una por sanción (\mbox{CU-45} \mbox{RN-01}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}apelacion} & \texttt{INT}, identidad & No & PK & Identificador de la apelación. \\ \hline
+\texttt{id\_\allowbreak{}sancion} & \texttt{INT} & No & FK, UQ & Sanción apelada. \\ \hline
+\texttt{texto} & \texttt{NVARCHAR(1000)} & No &  & Texto del sancionado; no se rechaza por lenguaje (\mbox{CU-45} \mbox{RN-04}). \\ \hline
+\texttt{marca\_\allowbreak{}lenguaje} & \texttt{BIT} & No &  & Si el filtro de palabras encontró un término, como aviso al moderador. Por omisión, \texttt{0}. \\ \hline
+\texttt{fecha\_\allowbreak{}apelacion} & \texttt{DATETIME2(0)} & No &  & Envío. Por omisión, la fecha actual. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(12)} & No &  & \texttt{PENDIENTE}, \texttt{EN\_\allowbreak{}REVISION}, \texttt{ACEPTADA} o \texttt{RECHAZADA}. Por omisión, \texttt{PENDIENTE}. \\ \hline
+\texttt{id\_\allowbreak{}moderador} & \texttt{INT} & Sí & FK & Moderador que la revisa; distinto del que aplicó la sanción (\mbox{CU-45} \mbox{RN-06}). \\ \hline
+\texttt{fecha\_\allowbreak{}asignacion} & \texttt{DATETIME2(0)} & Sí &  & Momento en que se tomó; a los treinta minutos vuelve a la cola (\mbox{CU-43} \mbox{RN-03}). \\ \hline
+\texttt{nota\_\allowbreak{}resolucion} & \texttt{NVARCHAR(1000)} & Sí &  & Nota obligatoria al resolver. \\ \hline
+\texttt{fecha\_\allowbreak{}resolucion} & \texttt{DATETIME2(0)} & Sí &  & Momento de la resolución. \\ \hline
+\end{tablaatributos}
+
+\atributosde{BitacoraModeracion}{Registro de cada acción de moderación y administración, incluida la consulta de las bitácoras (\mbox{CU-48} \mbox{RN-04}). Solo admite inserción.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}bitacora} & \texttt{BIGINT}, identidad & No & PK & Identificador del registro. \\ \hline
+\texttt{id\_\allowbreak{}moderador} & \texttt{INT} & No & FK & Usuario que actuó: moderador, administrador o quien intentó actuar sin rol. \\ \hline
+\texttt{accion} & \texttt{VARCHAR(30)} & No &  & \texttt{REPORTE\_\allowbreak{}TOMADO}, \texttt{REPORTE\_\allowbreak{}LIBERADO}, \texttt{REPORTE\_\allowbreak{}RESUELTO}, \texttt{SANCION\_\allowbreak{}APLICADA}, \texttt{APELACION\_\allowbreak{}RESUELTA}, \texttt{ROL\_\allowbreak{}OTORGADO}, \texttt{ROL\_\allowbreak{}RETIRADO}, \texttt{CONSULTA\_\allowbreak{}BITACORA} o \texttt{INTENTO\_\allowbreak{}SIN\_\allowbreak{}PERMISO}. \\ \hline
+\texttt{id\_\allowbreak{}usuario\_\allowbreak{}afectado} & \texttt{INT} & Sí & FK & Usuario sobre el que se actuó, si lo hay. \\ \hline
+\texttt{detalle} & \texttt{NVARCHAR(1000)} & Sí &  & Motivo, reporte, sanción o filtros de la acción. \\ \hline
+\texttt{fecha\_\allowbreak{}hora} & \texttt{DATETIME2(0)} & No &  & Momento de la acción. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{BitacoraAcceso}{Registro de cada intento de acceso y de cada cambio de credenciales, exitoso o no. Nunca contiene contraseñas ni códigos (\mbox{CU-48} \mbox{RN-05}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}bitacora} & \texttt{BIGINT}, identidad & No & PK & Identificador del registro. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & Sí & FK & Cuenta, si se identificó; nula en intentos contra cuentas inexistentes. \\ \hline
+\texttt{identificador\_\allowbreak{}capturado} & \texttt{NVARCHAR(254)} & Sí &  & Nickname o correo tecleado; único rastro de un intento contra una cuenta inexistente (\mbox{CU-48} \mbox{RN-06}). \\ \hline
+\texttt{resultado} & \texttt{VARCHAR(40)} & No &  & Uno de los 26 resultados de la tabla de dominios del análisis CRUD, por ejemplo \texttt{EXITO}, \texttt{CONTRASENA\_\allowbreak{}INCORRECTA} o \texttt{CUENTA\_\allowbreak{}ELIMINADA}. \\ \hline
+\texttt{direccion\_\allowbreak{}ip} & \texttt{VARCHAR(45)} & No &  & Dirección de red de origen. \\ \hline
+\texttt{fecha\_\allowbreak{}hora} & \texttt{DATETIME2(0)} & No &  & Momento del intento. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+

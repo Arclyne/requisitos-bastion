@@ -1,0 +1,27 @@
+%=====================================================================
+% Datos · Variaciones
+%=====================================================================
+\subsection*{Variaciones}
+\addcontentsline{toc}{subsection}{Variaciones}
+
+Además de los estados, los datos incluyen registros que se salen del caso normal en la forma de su información: columnas que quedan nulas según el tipo de fila, textos que no están en español o que llevan emojis, partidas sin reloj o de cuatro jugadores, registros que no se borran aunque dejen de valer. La consulta siguiente los reúne con una etiqueta que dice qué variación representa cada uno:
+
+\consulta{variaciones}
+\input{bd/tex/datos/variaciones}
+
+\captura{05-variaciones}{Captura 5. Las mismas variaciones en la consola. La consola dibuja el emoji del mensaje 7 como un recuadro porque su fuente no lo tiene.}
+
+Lo que cada grupo permite probar:
+
+\begin{reglas}
+  \item \textbf{Nulos que dependen del tipo de fila.} El invitado no tiene correo ni contraseña, y la cuenta eliminada conserva su fila con los datos personales anonimizados (\mbox{D-07}, \mbox{D-17}). Las restricciones \at{CHECK} de subtipo los exigen o los prohíben según el tipo de cuenta.
+  \item \textbf{Sanciones permanentes.} La sanción permanente no tiene fecha de fin; la temporal debe tenerla (\mbox{CU-44} \mbox{RN-04}), como comprueba la prueba 11 de los casos que la base rechaza.
+  \item \textbf{Idioma y codificación.} \at{sofia\_salto} aceptó los términos en inglés y escribe en inglés; el mensaje 7 lleva una eñe y un emoji. La última comprobación del script de datos verifica que esos textos se guardaron sin pérdida (\mbox{D-21}).
+  \item \textbf{Partidas fuera de lo común.} La partida contra la IA no tiene reloj y conserva las dos jugadas que se deshicieron; la de cuatro jugadores guarda la posición de cada uno y la forma en que salió; la perdida por tiempo deja el reloj del perdedor en cero.
+  \item \textbf{Lo que deja de valer sin borrarse.} El objeto retirado sigue en el catálogo, sin venderse, porque hay quien lo tiene; las sesiones que expiraron sin cerrarse siguen en su tabla, y el término prohibido sin idioma se filtra en todos.
+\end{reglas}
+
+Las jugadas de la partida contra la IA muestran cómo se guarda un deshacer: las jugadas 5 y 6 quedan marcadas como deshechas y la partida sigue desde la posición anterior a ellas, así que en la 7 pedro mueve a otra casilla y en la 8 la IA repite su movimiento (\mbox{D-12}). Las jugadas de la IA no tienen usuario.
+
+\consulta{variaia}
+\input{bd/tex/datos/variaia}

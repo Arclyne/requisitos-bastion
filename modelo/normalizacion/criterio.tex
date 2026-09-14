@@ -1,0 +1,16 @@
+%=====================================================================
+% Modelo de datos · Normalización: criterio
+%=====================================================================
+\subsubsection*{Criterio}
+\addcontentsline{toc}{subsubsection}{Criterio}
+
+Se usan las definiciones habituales, en términos de dependencias funcionales. Una dependencia $X \rightarrow A$ significa que dos filas con el mismo valor en $X$ tienen siempre el mismo valor en $A$. Un atributo es \emph{primo} si forma parte de alguna llave candidata.
+
+\begin{reglas}
+  \item \textbf{Primera forma normal (1FN).} Todos los atributos son atómicos, no hay grupos repetidos y cada fila se identifica por una llave.
+  \item \textbf{Segunda forma normal (2FN).} Está en 1FN y ningún atributo no primo depende de solo una parte de una llave candidata. Solo puede fallar en tablas con llave compuesta.
+  \item \textbf{Tercera forma normal (3FN).} Está en 2FN y, para toda dependencia no trivial $X \rightarrow A$, $X$ es superllave o $A$ es primo. Dicho de otro modo: ningún atributo no primo depende de otro atributo no primo.
+  \item \textbf{Forma normal de Boyce-Codd (FNBC).} Para toda dependencia no trivial $X \rightarrow A$, $X$ es superllave.
+\end{reglas}
+
+Dos precisiones sobre cómo se aplican. La primera: las dependencias se definen entre valores, y un nulo no es un valor. Un atributo que solo aplica a un subtipo —el correo, que no tiene el invitado; la fecha de fin, que no tiene una sanción permanente— queda nulo en las filas del otro subtipo, y la columna que discrimina el subtipo no depende de él: es al revés, el discriminador decide si el atributo aplica, y una restricción \at{CHECK} mantiene los dos coherentes. La segunda: la 3FN se refiere a las dependencias dentro de una misma tabla. Un dato que puede calcularse a partir de otras tablas, como un saldo que es la suma de unos movimientos, no viola la 3FN, pero sí es una redundancia, y el modelo solo la admite si está justificada y controlada.

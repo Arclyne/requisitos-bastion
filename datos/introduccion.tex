@@ -1,0 +1,42 @@
+%=====================================================================
+% Datos · Registros cargados
+%=====================================================================
+\subsection*{Registros cargados}
+\addcontentsline{toc}{subsection}{Registros cargados}
+
+Los registros con que se probó la base de datos son los que carga \at{bd/insertar\_datos\_prueba.sql}, el script de la sección anterior: \dpNumFilas{} registros repartidos en las \dpNumTablasConDatos{} tablas del modelo, muchos más que los veinte que se piden como mínimo. No son filas de relleno. Forman un escenario del juego, fotografiado el \dpFecha{} a las 18:00 UTC, en el que cada registro representa una situación que describen los casos de uso: cuentas en cada estado, partidas de los tres tipos terminadas de las cinco formas, compras, cajas, reportes y sanciones. Cada cosa que los datos deben permitir probar tiene su subsección:
+
+\begin{center}\small
+\begin{longtable}{|L{0.22\textwidth}|L{0.2\textwidth}|L{0.48\textwidth}|}
+\hline
+\textbf{Qué se prueba} & \textbf{Dónde} & \textbf{Con qué registros} \\ \hline
+\endfirsthead
+\hline
+\textbf{Qué se prueba} & \textbf{Dónde} & \textbf{Con qué registros} \\ \hline
+\endhead
+Casos normales & \textit{Casos normales} & Una partida clasificatoria de principio a fin y las compras en la tienda, con todo lo que dejan escrito en otras tablas. \\ \hline
+Relaciones entre tablas & \textit{Relaciones entre tablas} & Consultas que recorren las llaves foráneas: de la partida a sus jugadores, de la cuenta a lo que lleva equipado, del reporte a la sanción y a la apelación, de la caja a su contenido, y de una sanción a la que la sustituye. \\ \hline
+Diferentes estados o categorías & \textit{Estados y categorías} & \dnNumValoresConFilas{} de los \dnNumValores{} valores posibles de las \dnNumDominios{} columnas de estado o de categoría tienen al menos un registro; los que faltan se explican uno por uno. \\ \hline
+Variaciones de la información & \textit{Variaciones} & Nulos que dependen del tipo de fila, cuentas eliminadas y baneadas, textos en inglés y con emojis, partidas sin reloj, de cuatro jugadores y perdidas por tiempo, jugadas deshechas, objetos retirados. \\ \hline
+Que la base cumple sus reglas & \textit{Casos que la base rechaza} & \dnNumPruebasRechazo{} operaciones que el documento prohíbe, intentadas sobre estos registros; la base rechaza las \dnNumPruebasRechazadas{}. \\ \hline
+Todos los registros & \textit{Registros por tabla} & El contenido de cada tabla, al final de la sección. \\ \hline
+\end{longtable}
+\end{center}
+
+\textbf{De dónde salen las tablas.} Ninguna tabla de registros de esta sección se copió a mano: son el resultado de las consultas de \at{bd/consultas\_datos.sql} sobre la base cargada, que \at{bd/exportar\_datos.py} ejecuta y convierte en tablas del documento. Las mismas consultas pueden abrirse en SQL Server Management Studio y ejecutarse una a una. Para regenerar las tablas después de cambiar el escenario:
+
+\begin{lstlisting}[style=sql]
+python bd\generar_datos_prueba.py
+sqlcmd -S localhost -E -b -I -f 65001 -i bd\insertar_datos_prueba.sql
+python bd\exportar_datos.py
+\end{lstlisting}
+
+\textbf{Las capturas.} Se tomaron el 13 de septiembre de 2026 en la consola de Windows, ejecutando \at{sqlcmd} sobre SQL Server 2025 (17.0.4065.4). Cada una muestra el comando y su salida tal como aparecieron; la consola no tiene fuente para el emoji de un mensaje de chat y lo dibuja como un recuadro, aunque la base lo guarda completo. La captura 1 es la carga: los tres scripts, en orden, sobre la instancia, y las \dpNumComprobaciones{} comprobaciones del final de \at{insertar\_datos\_prueba.sql}, todas con cero incoherencias.
+
+\captura{01-carga}{Captura 1. Creación de la base y de las tablas, carga de los registros y comprobaciones de coherencia.}
+
+\textbf{Registros por tabla.} La tabla siguiente, que genera el script de datos, cuenta los registros de cada tabla por área; la captura 2 los cuenta en la propia base, consultando el catálogo del sistema, y da las mismas cifras.
+
+\input{bd/tex/datos-prueba}
+
+\captura{02-conteo}{Captura 2. Registros de cada tabla según SQL Server.}

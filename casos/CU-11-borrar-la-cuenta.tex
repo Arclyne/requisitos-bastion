@@ -7,7 +7,7 @@
   \crudFila{Actor principal}{Jugador}
   \crudFila{Actores de sistema}{Servidor de partidas, Servicio de correo, Base de datos}
   \crudFila{Prototipos}{9f, 9g}
-  \crudFila{Objetivo}{Permitir al Jugador dar de baja su cuenta con una confirmación en dos pasos, conservando durante catorce días la posibilidad de recuperarla y sin romper el historial de las partidas que compartió con otros jugadores.}
+  \crudFila{Objetivo}{Permitir al Jugador dar de baja su cuenta con una confirmación en dos pasos, anonimizando sus datos personales en el mismo acto y sin romper el historial de las partidas que compartió con otros jugadores.}
   \crudFila{Disparador}{El Jugador selecciona ``borrar cuenta'' en la \texttt{GUI\_\allowbreak{}AccountSettings}.}
   \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
@@ -16,7 +16,7 @@
     \end{cureglas}} \\ \hline
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
       \item El Jugador selecciona ``borrar cuenta'' en la \texttt{GUI\_\allowbreak{}AccountSettings}. \textit{(Ver \mbox{FA-07})}
-      \item El SJM despliega el primer paso de la \texttt{GUI\_\allowbreak{}DeleteAccount}: una lista de lo que se pierde —elo, monedas, objetos, amigos y posición en el ranking—, el aviso de que la cuenta se puede recuperar durante catorce días y un campo para la contraseña actual, con las opciones ``Continuar'' y ``Cancelar''. \textit{(Ver \mbox{FA-01})}
+      \item El SJM despliega el primer paso de la \texttt{GUI\_\allowbreak{}DeleteAccount}: una lista de lo que se pierde —elo, monedas, objetos, amigos y posición en el ranking—, el aviso de que la baja es definitiva y no puede deshacerse, y un campo para la contraseña actual, con las opciones ``Continuar'' y ``Cancelar''. \textit{(Ver \mbox{FA-01})}
       \item El Jugador captura su contraseña y da click en ``Continuar''.
       \item El SJM despliega el segundo paso, que pide escribir la palabra de confirmación indicada en pantalla, con las opciones ``Borrar mi cuenta'' y ``Cancelar'' (\mbox{RN-01}).
       \item El Jugador escribe la palabra y da click en ``Borrar mi cuenta''.
@@ -29,18 +29,19 @@
       \item El Servidor de partidas verifica que el \textit{Usuario} no tenga ninguna \textit{Participacion} sin terminar en una partida en línea (\mbox{RN-04}). \textit{(Ver \mbox{FA-05})}
       \item El Servidor de partidas verifica que el \texttt{rol} del \textit{Usuario} no sea \texttt{ADMINISTRADOR} (\mbox{RN-06}). \textit{(Ver \mbox{FA-06})}
       \item El Servidor de partidas inicia una transacción sobre la Base de datos.
-      \item El Servidor de partidas cambia el \texttt{estado\_\allowbreak{}cuenta} del \textit{Usuario} a \texttt{ELIMINADA} y escribe \texttt{fecha\_\allowbreak{}baja} con la fecha y hora actuales (\mbox{RN-02}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas cambia el \texttt{estado\_\allowbreak{}cuenta} del \textit{Usuario} a \texttt{ELIMINADA}, escribe \texttt{fecha\_\allowbreak{}baja} con la fecha y hora actuales y anonimiza la cuenta: sustituye \texttt{nickname} y \texttt{correo} por valores anónimos únicos y deja \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal} en nulo (\mbox{RN-02}, \mbox{RN-03}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas elimina los \textit{EnlaceRed}, el \textit{HistorialNickname}, las \textit{Amistad}, los \textit{Silencio} y los \textit{Bloqueo} del \textit{Usuario}, e invalida su \textit{Avatar} (\mbox{RN-03}).
       \item El Servidor de partidas retira al \textit{Usuario} de la \textit{ColaEmparejamiento} y de cualquier \textit{SalaParticipante}, si estuviera.
       \item El Servidor de partidas elimina las \textit{Solicitud} de amistad pendientes, enviadas y recibidas, y marca como expiradas las \textit{Invitacion} pendientes del \textit{Usuario}.
-      \item Si el \texttt{rol} del \textit{Usuario} es \texttt{MODERADOR}, el Servidor de partidas devuelve a \texttt{PENDIENTE} los \textit{Reporte} que tuviera \texttt{EN\_\allowbreak{}REVISION}.
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=17]
+      \item Si el \texttt{rol} del \textit{Usuario} es \texttt{MODERADOR}, el Servidor de partidas devuelve a \texttt{PENDIENTE} los \textit{Reporte} que tuviera \texttt{EN\_\allowbreak{}REVISION}.
       \item El Servidor de partidas cierra todas las \textit{Sesion} abiertas del \textit{Usuario}, con \texttt{motivo\_\allowbreak{}cierre} igual a \texttt{BAJA\_\allowbreak{}CUENTA}.
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
       \item El Servidor de partidas registra la baja en la \textit{BitacoraAcceso} con el resultado \texttt{CUENTA\_\allowbreak{}ELIMINADA}.
-      \item El Servidor de partidas solicita al Servicio de correo un aviso al \texttt{correo} del \textit{Usuario} con la fecha límite de recuperación, fuera de la transacción. \textit{(Ver \mbox{EX-06})}
-      \item El Servidor de partidas responde con \texttt{DELETE\_\allowbreak{}ACCOUNT\_\allowbreak{}OK} y la fecha límite de recuperación.
-      \item El SJM descarta el token y todos los datos del perfil guardados en memoria, y despliega la \texttt{GUI\_\allowbreak{}Login} con un aviso que indica hasta qué fecha puede recuperar la cuenta iniciando sesión.
+      \item El Servidor de partidas solicita al Servicio de correo un aviso de baja al correo que la cuenta tenía antes de anonimizarse, fuera de la transacción. \textit{(Ver \mbox{EX-06})}
+      \item El Servidor de partidas responde con \texttt{DELETE\_\allowbreak{}ACCOUNT\_\allowbreak{}OK}.
+      \item El SJM descarta el token y todos los datos del perfil guardados en memoria, y despliega la \texttt{GUI\_\allowbreak{}Login} con un aviso de que la cuenta se eliminó.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador cancela en cualquiera de los dos pasos}\par
@@ -86,14 +87,6 @@
       \item El SJM no muestra la opción ``borrar cuenta'' a una cuenta de invitado, que no tiene contraseña con la que confirmar.
       \item En su lugar, el SJM ofrece ``olvidar este invitado'', que descarta el token guardado en el dispositivo sin tocar la base de datos: la cuenta de invitado caducará por inactividad conforme al \mbox{RN-10} del \mbox{CU-06}.
       \item Fin del caso de uso.
-    \end{cuenum}} \\
-   & \cuCelda{\textbf{\mbox{FA-08}: Transcurren los catorce días sin recuperar la cuenta}\par
-    \begin{cuenum}[start=1]
-      \item El proceso programado del Servidor de partidas encuentra el \textit{Usuario} con \texttt{estado\_\allowbreak{}cuenta} en \texttt{ELIMINADA} y \texttt{fecha\_\allowbreak{}baja} anterior a catorce días.
-      \item El Servidor de partidas sustituye \texttt{nickname} y \texttt{correo} por valores anónimos únicos, deja \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal} en nulo, elimina sus \textit{EnlaceRed} y su \textit{HistorialNickname}, invalida su \textit{Avatar} y elimina sus \textit{Amistad}, \textit{Silencio} y \textit{Bloqueo} (\mbox{RN-03}).
-      \item El Servidor de partidas conserva el \textit{Usuario} anonimizado y todo lo que otros jugadores comparten con él: \textit{Participacion}, \textit{Jugada}, \textit{Mensaje}, \textit{Reporte} y \textit{Sancion}.
-      \item El Servidor de partidas registra la anonimización en la \textit{BitacoraAcceso} con el resultado \texttt{CUENTA\_\allowbreak{}ANONIMIZADA}.
-      \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
     \begin{cuenum}[start=1]
@@ -106,7 +99,7 @@
     \begin{cuenum}[start=1]
       \item El Servidor de partidas trata la transacción como fallida y registra la excepción señalando que el estado de la baja es indeterminado.
       \item El Servidor de partidas responde con \texttt{SERVER\_\allowbreak{}ERROR}.
-      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que no fue posible confirmar la baja y que, si al volver a entrar se le ofrece recuperar la cuenta, la baja sí se aplicó.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que no fue posible confirmar la baja y que, si al volver a entrar sus credenciales ya no existen, la baja sí se aplicó.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{EX-03}: Se agota el tiempo de espera de la respuesta}\par
@@ -129,44 +122,43 @@
     \begin{cuenum}[start=1]
       \item El Servidor de partidas agota los reintentos previstos hacia el Servicio de correo.
       \item El Servidor de partidas conserva la baja, que ya está confirmada, y registra el fallo del aviso en la bitácora del servidor.
-      \item El flujo continúa en el paso 21 del FN. El aviso en pantalla del paso 22 sigue informando la fecha límite de recuperación.
+      \item El flujo continúa en el paso 22 del FN.
     \end{cuenum}} \\ \hline
   \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
-      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene \texttt{estado\_\allowbreak{}cuenta} en \texttt{ELIMINADA} y \texttt{fecha\_\allowbreak{}baja} con la fecha de la baja.
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene \texttt{estado\_\allowbreak{}cuenta} en \texttt{ELIMINADA}, \texttt{fecha\_\allowbreak{}baja} con la fecha de la baja, \texttt{nickname} y \texttt{correo} anónimos y contraseña en nulo.
       \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, ninguna \textit{Sesion} de la cuenta sigue abierta y el Jugador no está en ninguna cola ni sala.
       \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, no queda ninguna \textit{Solicitud} de amistad pendiente del \textit{Usuario}.
       \item \textbf{\mbox{POST-04}} Si el caso termina por el FN, la cuenta no aparece en el ranking, en las búsquedas ni en las listas de amigos de otros jugadores, pero sus partidas pasadas siguen visibles en el historial de sus rivales.
-      \item \textbf{\mbox{POST-05}} Durante los catorce días siguientes, el \texttt{nickname} y el \texttt{correo} siguen ocupados y la cuenta puede recuperarse con el \mbox{FA-17} del \mbox{CU-01}.
-      \item \textbf{\mbox{POST-06}} Si el caso termina por el \mbox{FA-08}, el \textit{Usuario} está anonimizado: su \texttt{nickname} y su \texttt{correo} quedan libres y ya no puede recuperarse.
-      \item \textbf{\mbox{POST-07}} Ninguna fila de \textit{Usuario} se elimina físicamente en ningún flujo.
+      \item \textbf{\mbox{POST-05}} Si el caso termina por el FN, el \texttt{nickname} y el \texttt{correo} quedan libres para otro registro y la cuenta no puede recuperarse: ningún flujo devuelve una cuenta \texttt{ELIMINADA} a \texttt{ACTIVA}.
+      \item \textbf{\mbox{POST-06}} Ninguna fila de \textit{Usuario} se elimina físicamente en ningún flujo.
     \end{cureglas}} \\ \hline
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} Borrar la cuenta exige confirmación en dos pasos: la contraseña actual y la palabra de confirmación escrita. Es la confirmación más fuerte del sistema, junto con la del cambio de nombre.
-      \item \textbf{\mbox{RN-02}} El borrado es lógico: la cuenta pasa a \texttt{ELIMINADA} y se conserva durante catorce días desde \texttt{fecha\_\allowbreak{}baja}, durante los cuales puede recuperarse iniciando sesión (\mbox{D-07}).
-      \item \textbf{\mbox{RN-03}} Transcurridos los catorce días, la cuenta se anonimiza en lugar de eliminarse. Los datos personales desaparecen y los identificadores quedan libres, pero la fila se conserva porque otros registros dependen de ella.
+      \item \textbf{\mbox{RN-02}} El borrado es lógico y definitivo: la cuenta pasa a \texttt{ELIMINADA} con \texttt{fecha\_\allowbreak{}baja} y no existe ningún periodo de recuperación (\mbox{D-07}).
+      \item \textbf{\mbox{RN-03}} La cuenta se anonimiza en el mismo acto de la baja en lugar de eliminarse: los datos personales desaparecen y los identificadores quedan libres, pero la fila se conserva porque otros registros dependen de ella (\mbox{D-17}).
       \item \textbf{\mbox{RN-04}} No puede borrarse una cuenta con una partida en línea sin terminar: la partida pertenece también a los demás jugadores y debe cerrarse primero.
       \item \textbf{\mbox{RN-05}} Las partidas, jugadas, mensajes, reportes y sanciones del \textit{Usuario} no se eliminan en ningún momento. Borrarlos alteraría el historial y las pruebas de otros jugadores.
       \item \textbf{\mbox{RN-06}} Una cuenta con rol de administrador no puede borrarse desde el juego.
       \item \textbf{\mbox{RN-07}} Las cuentas de invitado no usan este caso: no tienen contraseña, y su baja equivale a olvidar el token del dispositivo.
     \end{cureglas}} \\ \hline
-  \textbf{Observación} & \cuCelda{\textit{Sobre la contradicción con el prototipo.}\par
-    El prototipo 9f dice, bajo el botón de borrar cuenta, que ``no hay vuelta atrás'', mientras que \texttt{descripcion.md} promete catorce días de recuperación. Se resolvió a favor del documento de diseño (\mbox{D-07}), y el texto del prototipo debe corregirse para que diga la verdad: es precisamente el aviso que el jugador lee antes de decidir. La recuperación no necesita un caso de uso propio, porque ocurre al iniciar sesión dentro del plazo y se describe en el \mbox{FA-17} del \mbox{CU-01}.} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre el periodo de recuperación descartado.}\par
+    \texttt{descripcion.md} preveía que la cuenta fuera recuperable durante catorce días, y el prototipo 9f dice, bajo el botón de borrar cuenta, que ``no hay vuelta atrás''. El equipo decidió prescindir del periodo de recuperación (\mbox{D-07}): un plazo de gracia obligaba a un flujo de recuperación en el inicio de sesión, a un proceso programado que anonimizara las cuentas vencidas y a mantener ocupados el \texttt{nickname} y el \texttt{correo} mientras tanto, a cambio de cubrir un arrepentimiento que la confirmación en dos pasos ya previene. Con la baja definitiva, el texto del prototipo 9f es correcto y la anonimización ocurre en la misma transacción que la baja.} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué se anonimiza en lugar de eliminar.}\par
     Eliminar físicamente la fila de \textit{Usuario} arrastraría por clave foránea sus participaciones, sus jugadas y sus mensajes, que son también el historial, las repeticiones y las pruebas de reportes de otros jugadores. Poner esas claves en nulo evitaría el arrastre, pero dejaría partidas con un participante inexistente. Anonimizar conserva la integridad referencial y cumple el propósito de la baja: que ya no quede nada que identifique a la persona.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
-      \item \textbf{\textit{Sesion}:} lee por token; cierra todas \textit{(pasos 8, 17)}
+      \item \textbf{\textit{Sesion}:} lee por token; cierra todas \textit{(pasos 8, 18)}
       \item \textbf{\textit{Usuario}:} lee \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{rol} \textit{(pasos 9, 11)}
-      \item \textbf{\textit{Usuario}:} escribe \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}baja}; en el \mbox{FA-08} anonimiza \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal} \textit{(pasos 13, \mbox{FA-08})}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{estado\_\allowbreak{}cuenta}, \texttt{fecha\_\allowbreak{}baja}; anonimiza \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal} \textit{(paso 13)}
       \item \textbf{\textit{Participacion}:} lee, para comprobar que no haya partida en curso \textit{(paso 10)}
-      \item \textbf{\textit{ColaEmparejamiento}, \textit{SalaParticipante}:} elimina la del usuario \textit{(paso 14)}
-      \item \textbf{\textit{Solicitud}:} elimina las pendientes \textit{(paso 15)}
-      \item \textbf{\textit{Invitacion}:} marca como expiradas las pendientes \textit{(paso 15)}
-      \item \textbf{\textit{Reporte}:} devuelve a \texttt{PENDIENTE} los que tenía en revisión \textit{(paso 16)}
+      \item \textbf{\textit{ColaEmparejamiento}, \textit{SalaParticipante}:} elimina la del usuario \textit{(paso 15)}
+      \item \textbf{\textit{Solicitud}:} elimina las pendientes \textit{(paso 16)}
+      \item \textbf{\textit{Invitacion}:} marca como expiradas las pendientes \textit{(paso 16)}
+      \item \textbf{\textit{Reporte}:} devuelve a \texttt{PENDIENTE} los que tenía en revisión \textit{(paso 17)}
     \end{cudatos}} \\
    & \cuCelda{\begin{cudatos}
-      \item \textbf{\textit{EnlaceRed}, \textit{Amistad}, \textit{Silencio}, \textit{Bloqueo}:} elimina, en el \mbox{FA-08} \textit{(paso \mbox{FA-08})}
-      \item \textbf{\textit{Avatar}:} invalida, en el \mbox{FA-08} \textit{(paso \mbox{FA-08})}
-      \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(pasos 19, \mbox{FA-08})}
+      \item \textbf{\textit{EnlaceRed}, \textit{HistorialNickname}, \textit{Amistad}, \textit{Silencio}, \textit{Bloqueo}:} elimina \textit{(paso 14)}
+      \item \textbf{\textit{Avatar}:} invalida \textit{(paso 14)}
+      \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(paso 20)}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

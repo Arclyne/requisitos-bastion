@@ -1,0 +1,67 @@
+%=====================================================================
+% Modelo de datos · Usuario de conexión del servidor
+%=====================================================================
+\subsection*{Usuario de conexión del servidor}
+\addcontentsline{toc}{subsection}{Usuario de conexión del servidor}
+
+El Servidor de partidas es el único que se conecta a la base de datos: el cliente de escritorio habla con el servidor y nunca con la base. El servidor se conecta con un usuario propio, \at{BastionServerConnection}, que solo puede hacer lo que los casos de uso necesitan: leer, insertar, modificar y ejecutar procedimientos almacenados, en toda la base de datos.
+
+\begin{lstlisting}[style=sql]
+USE master;
+GO
+IF SUSER_ID(N'BastionServerConnection') IS NULL
+    CREATE LOGIN BastionServerConnection
+        WITH PASSWORD = N'B4sT10nCONnecti0n',
+             DEFAULT_DATABASE = Bastion,
+             CHECK_POLICY = ON,
+             CHECK_EXPIRATION = OFF;
+GO
+
+USE Bastion;
+GO
+IF USER_ID(N'BastionServerConnection') IS NULL
+    CREATE USER BastionServerConnection
+        FOR LOGIN BastionServerConnection
+        WITH DEFAULT_SCHEMA = dbo;
+GO
+
+GRANT SELECT, INSERT, UPDATE, EXECUTE
+    ON DATABASE::Bastion TO BastionServerConnection;
+GO
+\end{lstlisting}
+
+El inicio de sesión se crea en el servidor de SQL Server y el usuario, dentro de la base \at{Bastion}. Los permisos se conceden con alcance de base de datos (\at{ON DATABASE::Bastion}), así que alcanzan a todas las tablas, vistas y procedimientos de todos los esquemas, incluidos los que se creen después, sin tener que concederlos objeto por objeto. No se usan los roles fijos \at{db\_datareader} y \at{db\_datawriter}: el segundo incluye \at{DELETE}, que este usuario no debe tener.
+
+\begin{center}\small
+\begin{longtable}{|L{0.30\textwidth}|L{0.12\textwidth}|L{0.48\textwidth}|}
+\hline
+\textbf{Operación} & \textbf{Permitida} & \textbf{Motivo} \\ \hline
+\endfirsthead
+\hline
+\textbf{Operación} & \textbf{Permitida} & \textbf{Motivo} \\ \hline
+\endhead
+Leer (\at{SELECT}) & Sí & Todas las consultas de los casos de uso. \\ \hline
+Insertar (\at{INSERT}) & Sí & Altas, jugadas, mensajes, movimientos, bitácoras. \\ \hline
+Modificar (\at{UPDATE}) & Sí & Cambios de estado: la baja lógica, los cierres, las resoluciones. \\ \hline
+Ejecutar procedimientos (\at{EXECUTE}) & Sí & Las eliminaciones físicas y las operaciones compuestas que se describen abajo. \\ \hline
+Eliminar (\at{DELETE}) & No & Casi nada se borra en este sistema (\mbox{D-07}); lo poco que se borra pasa por procedimientos. Un error o una inyección en el servidor no puede borrar filas directamente. \\ \hline
+Crear, alterar o eliminar objetos & No & El esquema se cambia con el script, no desde la aplicación. \\ \hline
+Conceder permisos o administrar & No & El usuario no pertenece a \at{db\_owner} ni a ningún rol de administración. \\ \hline
+\end{longtable}
+\end{center}
+
+\textbf{Cómo se borra sin permiso de borrar.} Los casos de uso eliminan físicamente siete tipos de fila: la entrada en la cola, la plaza en una sala, la solicitud respondida, la amistad terminada, el silencio y el bloqueo retirados y el enlace quitado del perfil. Para cada uno, el script crea un procedimiento almacenado —\at{usp\_ColaEmparejamiento\_Salir}, \at{usp\_SalaParticipante\_Salir}, \at{usp\_Solicitud\_Eliminar}, \at{usp\_Amistad\_Eliminar}, \at{usp\_Silencio\_Eliminar}, \at{usp\_Bloqueo\_Eliminar} y \at{usp\_EnlaceRed\_Eliminar}—, y además los que borran como parte de una operación mayor: \at{usp\_Sala\_Cerrar}, \at{usp\_Bloqueo\_Aplicar} (\mbox{CU-33}) y \at{usp\_Usuario\_DarDeBaja}, que da de baja y anonimiza la cuenta en una sola transacción (\mbox{CU-11}, \mbox{D-17}). Los procedimientos y las tablas pertenecen al mismo dueño, \at{dbo}, y en ese caso SQL Server aplica el encadenamiento de propiedad: al ejecutar el procedimiento solo comprueba el permiso \at{EXECUTE} del usuario y no el \at{DELETE} sobre la tabla. El usuario puede borrar lo que un procedimiento borra, en las condiciones que el procedimiento impone, y nada más.
+
+\textbf{Comprobación.} La consulta siguiente, incluida al final de \at{bd/crear\_base\_datos.sql}, lista los permisos del usuario. Debe devolver \at{CONNECT}, que se concede al crear el usuario, y \at{SELECT}, \at{INSERT}, \at{UPDATE} y \at{EXECUTE}, todos con alcance \at{DATABASE} y estado \at{GRANT}.
+
+\begin{lstlisting}[style=sql]
+SELECT pr.name AS usuario, pe.permission_name AS permiso,
+       pe.state_desc AS estado, pe.class_desc AS alcance
+FROM sys.database_permissions AS pe
+JOIN sys.database_principals  AS pr
+     ON pr.principal_id = pe.grantee_principal_id
+WHERE pr.name = N'BastionServerConnection'
+ORDER BY pe.permission_name;
+\end{lstlisting}
+
+La contraseña cumple la política de complejidad de SQL Server: diecisiete caracteres con mayúsculas, minúsculas y dígitos. \at{CHECK\_EXPIRATION} está desactivado porque es la cuenta de un servicio y su caducidad dejaría al servidor sin base de datos. Como la contraseña aparece en este documento y en el script, la cadena de conexión del servidor debe leerla de su configuración y no del código, y conviene cambiarla al desplegar en un entorno que no sea de desarrollo.

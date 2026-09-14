@@ -1,0 +1,11 @@
+%=====================================================================
+% Modelo de datos · Normalización: verificación tabla por tabla
+%=====================================================================
+\subsubsection*{Verificación tabla por tabla}
+\addcontentsline{toc}{subsubsection}{Verificación tabla por tabla}
+
+Con las transformaciones anteriores, cada tabla tiene sus atributos no primos dependiendo de la llave completa y de nada más. La tabla indica, para cada una, sus llaves candidatas, la forma normal más alta que alcanza y lo que la justifica.
+
+\input{bd/tex/normalizacion}
+
+\textbf{Por qué \textit{Equipamiento} y \textit{ParticipacionObjeto} se quedan en 3FN.} En las dos se cumple \at{id\_objeto} $\rightarrow$ \at{id\_ranura}, porque cada objeto pertenece a una sola ranura, e \at{id\_objeto} no es superllave. Como \at{id\_ranura} forma parte de la llave, la dependencia está permitida en 3FN, pero no en FNBC. Llevarlas a FNBC exigiría quitar \at{id\_ranura}, y con él la llave (\at{id\_usuario}, \at{id\_ranura}), que es justo lo que garantiza un solo objeto por ranura (\mbox{CU-14} \mbox{RN-01}): la regla dejaría de poder declararse en la base y pasaría a depender del código. Se prefiere la 3FN, que conserva la regla, y la redundancia que queda está controlada por la llave foránea compuesta hacia \textit{ObjetoCosmetico}, que impide que \at{id\_ranura} contradiga al objeto.

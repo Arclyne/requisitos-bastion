@@ -39,7 +39,7 @@
     \begin{cuenum}[start=1]
       \item El espectador abre un enlace de partida, con o sin sesión en el juego, incluso sin cuenta.
       \item El SJM envía \texttt{SPECTATE\_\allowbreak{}LINK\_\allowbreak{}REQUEST} con el token del enlace.
-      \item El Servidor de partidas deriva el resumen del token y busca el \textit{EnlaceEspectador} con ese \texttt{token\_\allowbreak{}hash}, \texttt{activo} en verdadero.
+      \item El Servidor de partidas deriva el resumen del token y busca el \textit{EnlaceEspectador} con ese \texttt{token\_\allowbreak{}hash} cuya \textit{Partida} siga \texttt{EN\_\allowbreak{}CURSO}.
       \item Si no existe o su partida terminó, el Servidor de partidas responde con \texttt{LINK\_\allowbreak{}EXPIRED} y, si la partida terminó, el SJM ofrece ver su repetición, que continúa en el \mbox{CU-37} (13d).
       \item Si existe, el flujo continúa en el paso 3 del FN con el \texttt{id\_\allowbreak{}partida} del enlace. Un espectador anónimo solo puede leer el chat de espectadores, no escribir (\mbox{RN-05}).
     \end{cuenum}} \\
@@ -82,9 +82,9 @@
    & \cuCelda{\textbf{\mbox{FA-09}: Un jugador comparte su partida}\par
     \begin{cuenum}[start=1]
       \item Un participante selecciona ``compartir partida'' en el menú de partida.
-      \item El Servidor de partidas verifica que la partida admita espectadores y crea el \textit{EnlaceEspectador} con el \texttt{id\_\allowbreak{}partida}, el \texttt{id\_\allowbreak{}creador}, el resumen del token, la \texttt{fecha\_\allowbreak{}creacion} y \texttt{activo} en verdadero, o devuelve el existente.
+      \item El Servidor de partidas verifica que la partida admita espectadores y crea el \textit{EnlaceEspectador} con el \texttt{id\_\allowbreak{}partida}, el \texttt{id\_\allowbreak{}creador}, el resumen del token y la \texttt{fecha\_\allowbreak{}creacion}, o devuelve el existente.
       \item El SJM copia el enlace al portapapeles y lo indica (13e).
-      \item Al finalizar la partida, el \mbox{CU-25} marca los \textit{EnlaceEspectador} de la partida con \texttt{activo} en falso (\mbox{RN-06}).
+      \item Al finalizar la partida, el enlace deja de funcionar sin que nada se escriba en él, porque la partida ya no está \texttt{EN\_\allowbreak{}CURSO} (\mbox{RN-06}).
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-10}: El espectador sale}\par
@@ -112,7 +112,7 @@
   \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el espectador vio la partida con ocho segundos de retraso y conoce su resultado.
       \item \textbf{\mbox{POST-02}} Ninguna \textit{Participacion}, \textit{Jugada} ni \textit{Partida} se modificó por la presencia de espectadores.
-      \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-09}, existe un \textit{EnlaceEspectador} activo para la partida, que dejará de funcionar al terminar.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-09}, existe un \textit{EnlaceEspectador} para la partida, que dejará de funcionar al terminar.
       \item \textbf{\mbox{POST-04}} El número de espectadores de una partida nunca supera doscientos.
       \item \textbf{\mbox{POST-05}} Los espectadores no quedan registrados individualmente en la base de datos.
     \end{cureglas}} \\ \hline
@@ -137,7 +137,7 @@
       \item \textbf{\textit{Sala}:} lee \texttt{permite\_\allowbreak{}espectadores}, si la partida viene de una sala \textit{(paso 4)}
       \item \textbf{\textit{Bloqueo}:} lee entre el espectador y los participantes \textit{(paso 5)}
       \item \textbf{\textit{Jugada}, \textit{ParticipacionObjeto}:} lee \textit{(paso 8)}
-      \item \textbf{\textit{EnlaceEspectador}:} lee por \texttt{token\_\allowbreak{}hash}; crea; marca \texttt{activo} en falso al terminar \textit{(pasos \mbox{FA-02}, \mbox{FA-09})}
+      \item \textbf{\textit{EnlaceEspectador}:} lee por \texttt{token\_\allowbreak{}hash}, con el estado de su \textit{Partida}; crea \textit{(pasos \mbox{FA-02}, \mbox{FA-09})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

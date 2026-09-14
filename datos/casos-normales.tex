@@ -1,0 +1,32 @@
+%=====================================================================
+% Datos · Casos normales
+%=====================================================================
+\subsection*{Casos normales}
+\addcontentsline{toc}{subsection}{Casos normales}
+
+Un caso normal es el que un caso de uso describe en su flujo normal, sin alternativas ni excepciones. La mayoría de los registros lo son: cuentas registradas y activas que juegan partidas clasificatorias y compran objetos. Dos ejemplos bastan para ver todo lo que un caso normal deja escrito.
+
+\subsubsection*{Una partida clasificatoria completa}
+\addcontentsline{toc}{subsubsection}{Una partida clasificatoria completa}
+
+La partida 1 enfrenta a \at{luis\_quo} y \at{marta\_muros} en el modo clásico, con reloj de cinco minutos. Esta consulta reúne la partida, sus dos participaciones y las monedas que cada uno recibió al terminar:
+
+\consulta{normalpartida}
+\input{bd/tex/datos/normalpartida}
+
+Los dos empezaron con el elo inicial de 1000 (\mbox{CU-02} \mbox{RN-06}). Con elos iguales, la victoria vale 16 puntos y la derrota los mismos 16 en contra, y la diferencia la calcula la columna \at{diferencia\_elo}. Cada participante recibe un movimiento de monedas de tipo \at{PARTIDA}: 100 el ganador y 25 el perdedor (\mbox{CU-25} \mbox{RN-08}). Las quince jugadas de la partida alternan los turnos, mezclan movimientos y muros y terminan con luis en la fila 9, la meta del jugador que sale de la fila 1:
+
+\consulta{normaljugadas}
+\input{bd/tex/datos/normaljugadas}
+
+En un movimiento, la jugada tiene casilla de origen y de destino y no tiene surco; en un muro, al revés. Es la regla de subtipo que hace cumplir la restricción \at{CK\_Jugada\_tipo}. La fecha de cada jugada lleva milisegundos, y el tiempo consumido es el que se descuenta del reloj del jugador.
+
+\subsubsection*{Compras en la tienda}
+\addcontentsline{toc}{subsubsection}{Compras en la tienda}
+
+Una compra deja dos registros en la misma transacción: un movimiento de monedas de tipo \at{COMPRA}, con importe negativo, y el objeto en el inventario de la cuenta, con origen \at{COMPRA} (\mbox{CU-38} \mbox{RN-08}). La consulta los une y comprueba además si el objeto quedó equipado:
+
+\consulta{normalcompra}
+\input{bd/tex/datos/normalcompra}
+
+El importe de cada compra es el precio del objeto en el catálogo, y no el que envía el cliente (\mbox{CU-38} \mbox{RN-03}). Los cuatro objetos comprados quedaron equipados en su ranura (\mbox{CU-14}).

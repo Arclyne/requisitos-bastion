@@ -1,0 +1,51 @@
+%=====================================================================
+% Implementación · Restricciones
+%   Las tablas de CHECK y de valores por omisión las genera
+%   bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql.
+%=====================================================================
+\subsection*{Restricciones}
+\addcontentsline{toc}{subsection}{Restricciones}
+
+Además de las llaves, el script declara las reglas que la base puede hacer cumplir por sí misma, para que no dependan de que el servidor de partidas las recuerde. Las cifras de esta subsección se cuentan sobre \at{crear\_tablas.sql} al generar el documento.
+
+\subsubsection*{\texttt{NOT NULL}}
+\addcontentsline{toc}{subsubsection}{NOT NULL}
+
+\bdNumNoNulas{} de las \bdNumColumnas{} columnas son \at{NOT NULL}; \bdNumCalculadas{} más son calculadas y no admiten la restricción. Una columna admite nulo solo por una de tres razones, y la columna \emph{Nulo} de las tablas de atributos lo indica en cada caso:
+
+\begin{reglas}
+  \item \textbf{Aplica a un subtipo.} El correo y la contraseña, que no tiene el invitado; la fecha de fin, que no tiene una sanción permanente; las casillas de una jugada, que no tiene un muro. Un \at{CHECK} con el discriminador exige el valor en el subtipo al que aplica y lo prohíbe en el otro.
+  \item \textbf{Todavía no ocurre.} El resultado de una participación en curso, la fecha de fin de una sesión abierta, el moderador de un reporte pendiente. Un \at{CHECK} ata la columna al estado de la fila.
+  \item \textbf{Es opcional.} La descripción de un reporte, la partida que adjunta, el nombre del dispositivo.
+\end{reglas}
+
+\subsubsection*{\texttt{UNIQUE}}
+\addcontentsline{toc}{subsubsection}{UNIQUE}
+
+\bdNumUnicas{} restricciones \at{UNIQUE} declaran las otras llaves candidatas, como el \at{nickname} o el \at{token\_hash} de una sesión. Hay reglas de unicidad que solo valen para parte de las filas: un correo único entre las cuentas que lo tienen, un solo token vigente por cuenta, un código de sala único entre las salas no cerradas. Una restricción \at{UNIQUE} no puede expresarlas, porque trata todas las filas por igual y en SQL Server admite un solo nulo; por eso se declaran como \bdNumIndicesUnicos{} índices únicos filtrados, \at{CREATE UNIQUE INDEX ... WHERE ...}. Las dos clases están en la tabla \textit{Restricciones de unicidad} del modelo de datos.
+
+\subsubsection*{\texttt{CHECK}}
+\addcontentsline{toc}{subsubsection}{CHECK}
+
+Las \bdNumChecks{} restricciones \at{CHECK} son de cuatro clases:
+
+\begin{reglas}
+  \item \textbf{Dominios cerrados.} Cada estado, tipo, ámbito u origen admite solo los valores de la tabla de dominios del análisis CRUD, por ejemplo \at{estado\_cuenta IN ('PENDIENTE', 'ACTIVA', ...)}. Los catálogos que pueden crecer, como las ranuras, no llevan \at{CHECK}: añadir un valor es insertar una fila.
+  \item \textbf{Rangos.} Contadores no negativos, el icono entre 1 y 32, de 1 a 20 muros por jugador, relojes de 3, 5 o 10 minutos, probabilidades entre 0 y 100.
+  \item \textbf{Coherencia entre columnas.} Qué columnas aplican a cada valor de un discriminador o de un estado: una partida contra la IA tiene nivel y opciones y las demás no; un reporte en revisión tiene moderador y un reporte pendiente no.
+  \item \textbf{Reglas de la fila.} Que nadie se reporte, se invite o se bloquee a sí mismo, que una amistad se guarde una sola vez por par ordenado, o que el elo máximo no sea menor que el actual.
+\end{reglas}
+
+\input{bd/tex/restricciones-check}
+
+\subsubsection*{\texttt{DEFAULT}}
+\addcontentsline{toc}{subsubsection}{DEFAULT}
+
+\bdNumOmision{} columnas tienen un valor por omisión: el estado inicial de la fila, como \at{PENDIENTE} o \at{SIN\_ABRIR}; los contadores en cero y el elo en 1000, con los que nace una cuenta (\mbox{CU-02} \mbox{RN-06}); los indicadores en su valor habitual; y la fecha actual, \at{SYSUTCDATETIME()}, en las fechas que registran cuándo se creó la fila. Así, un \at{INSERT} solo tiene que dar lo que depende del caso.
+
+\input{bd/tex/valores-omision}
+
+\subsubsection*{Columnas calculadas e índices}
+\addcontentsline{toc}{subsubsection}{Columnas calculadas e índices}
+
+Las \bdNumCalculadas{} columnas calculadas, \at{diferencia\_elo}, \at{terminada}, \at{convertido}, \at{completada} y \at{activa}, se declaran con \at{AS (expresión)} y no se almacenan: se obtienen de otras columnas de la misma fila cada vez que se leen, así que no pueden contradecirlas. Por último, \bdNumIndices{} índices no únicos aceleran las consultas frecuentes que no siguen la llave primaria: el ranking por modo, la búsqueda en la cola de emparejamiento, el chat de cada canal, las sesiones abiertas de una cuenta, la cola de reportes, las sanciones vigentes y la bitácora por fecha.

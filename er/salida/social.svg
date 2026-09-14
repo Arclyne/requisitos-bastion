@@ -1,0 +1,225 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3199 3160" width="3199" height="3160" font-family="Segoe UI, Arial, sans-serif">
+<defs><marker id="arw" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 1 L11 6 L0 11 z" fill="#12263f"/></marker></defs>
+<rect width="3199" height="3160" fill="#ffffff"/>
+<g transform="translate(1571.6,1225)">
+<line x1="341.7" y1="744.9" x2="121.2" y2="845.0" stroke="#12263f" stroke-width="1.8"/>
+<line x1="330.3" y1="850.6" x2="154.5" y2="876.9" stroke="#12263f" stroke-width="1.8"/>
+<line x1="339.8" y1="933.4" x2="154.5" y2="915.2" stroke="#12263f" stroke-width="1.8"/>
+<line x1="350.0" y1="1030.8" x2="147.1" y2="955.0" stroke="#12263f" stroke-width="1.8"/>
+<line x1="1192.3" y1="-1007.2" x2="1000.3" y2="-745.0" stroke="#12263f" stroke-width="1.8"/>
+<line x1="1280.3" y1="-888.7" x2="1048.7" y2="-745.0" stroke="#12263f" stroke-width="1.8"/>
+<line x1="-1287.8" y1="-875.7" x2="-1057.1" y2="-745.0" stroke="#12263f" stroke-width="1.8"/>
+<line x1="-1239.2" y1="959.5" x2="-1017.0" y2="745.0" stroke="#12263f" stroke-width="1.8"/>
+<line x1="1311.2" y1="711.6" x2="1105.0" y2="698.9" stroke="#12263f" stroke-width="1.8"/>
+<line x1="-353.6" y1="-421.2" x2="-46.2" y2="-55.0" stroke="#12263f" stroke-width="2.6" marker-end="url(#arw)"/>
+<text x="-138.8" y="-198.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-138.8" y="-198.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="-178.6" y="-165.3" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-178.6" y="-165.3" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="-222.5" y="-355.5" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle" font-style="italic">rol: menor</text>
+<text x="-222.5" y="-355.5" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#5b6b7c" text-anchor="middle" font-style="italic">rol: menor</text>
+<line x1="-462.8" y1="-500.7" x2="-817.9" y2="-640.1" stroke="#12263f" stroke-width="2.6"/>
+<line x1="-466.8" y1="-490.5" x2="-821.9" y2="-629.9" stroke="#12263f" stroke-width="2.6"/>
+<text x="-666.5" y="-539.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">N</text>
+<text x="-666.5" y="-539.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">N</text>
+<text x="-647.5" y="-588.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-647.5" y="-588.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<line x1="-495.2" y1="-194.4" x2="-140.1" y2="-55.0" stroke="#12263f" stroke-width="2.6" marker-end="url(#arw)"/>
+<text x="-293.5" y="-136.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-293.5" y="-136.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="-312.5" y="-87.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-312.5" y="-87.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="-351.5" y="-198.6" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle" font-style="italic">rol: mayor</text>
+<text x="-351.5" y="-198.6" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#5b6b7c" text-anchor="middle" font-style="italic">rol: mayor</text>
+<line x1="-602.2" y1="-272.3" x2="-909.6" y2="-638.5" stroke="#12263f" stroke-width="2.6"/>
+<line x1="-610.6" y1="-265.2" x2="-918.0" y2="-631.5" stroke="#12263f" stroke-width="2.6"/>
+<text x="-821.2" y="-477.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">N</text>
+<text x="-821.2" y="-477.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">N</text>
+<text x="-781.4" y="-510.7" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-781.4" y="-510.7" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<line x1="495.2" y1="-194.4" x2="140.1" y2="-55.0" stroke="#12263f" stroke-width="2.6" marker-end="url(#arw)"/>
+<text x="312.5" y="-87.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="312.5" y="-87.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="293.5" y="-136.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="293.5" y="-136.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="396.8" y="-83.2" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle" font-style="italic">rol: solicitante</text>
+<text x="396.8" y="-83.2" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#5b6b7c" text-anchor="middle" font-style="italic">rol: solicitante</text>
+<line x1="610.6" y1="-265.2" x2="918.0" y2="-631.5" stroke="#12263f" stroke-width="2.6"/>
+<line x1="602.2" y1="-272.3" x2="909.6" y2="-638.5" stroke="#12263f" stroke-width="2.6"/>
+<text x="781.4" y="-510.7" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">N</text>
+<text x="781.4" y="-510.7" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">N</text>
+<text x="821.2" y="-477.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="821.2" y="-477.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<line x1="353.6" y1="-421.2" x2="46.2" y2="-55.0" stroke="#12263f" stroke-width="2.6" marker-end="url(#arw)"/>
+<text x="178.6" y="-165.3" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="178.6" y="-165.3" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="138.8" y="-198.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="138.8" y="-198.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="317.5" y="-275.8" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle" font-style="italic">rol: destinatario</text>
+<text x="317.5" y="-275.8" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#5b6b7c" text-anchor="middle" font-style="italic">rol: destinatario</text>
+<line x1="466.8" y1="-490.5" x2="821.9" y2="-629.9" stroke="#12263f" stroke-width="2.6"/>
+<line x1="462.8" y1="-500.7" x2="817.9" y2="-640.1" stroke="#12263f" stroke-width="2.6"/>
+<text x="647.5" y="-588.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">N</text>
+<text x="647.5" y="-588.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">N</text>
+<text x="666.5" y="-539.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="666.5" y="-539.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<line x1="-495.2" y1="194.4" x2="-140.1" y2="55.0" stroke="#12263f" stroke-width="2.6" marker-end="url(#arw)"/>
+<text x="-312.5" y="101.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-312.5" y="101.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="-293.5" y="150.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-293.5" y="150.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="-396.8" y="95.2" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle" font-style="italic">rol: quien silencia</text>
+<text x="-396.8" y="95.2" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#5b6b7c" text-anchor="middle" font-style="italic">rol: quien silencia</text>
+<line x1="-610.6" y1="265.2" x2="-918.0" y2="631.5" stroke="#12263f" stroke-width="2.6"/>
+<line x1="-602.2" y1="272.3" x2="-909.6" y2="638.5" stroke="#12263f" stroke-width="2.6"/>
+<text x="-781.4" y="524.7" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">N</text>
+<text x="-781.4" y="524.7" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">N</text>
+<text x="-821.2" y="491.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-821.2" y="491.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<line x1="-353.6" y1="421.2" x2="-46.2" y2="55.0" stroke="#12263f" stroke-width="2.6" marker-end="url(#arw)"/>
+<text x="-178.6" y="179.3" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-178.6" y="179.3" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="-138.8" y="212.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-138.8" y="212.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="-317.5" y="287.8" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle" font-style="italic">rol: silenciado</text>
+<text x="-317.5" y="287.8" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#5b6b7c" text-anchor="middle" font-style="italic">rol: silenciado</text>
+<line x1="-466.8" y1="490.5" x2="-821.9" y2="629.9" stroke="#12263f" stroke-width="2.6"/>
+<line x1="-462.8" y1="500.7" x2="-817.9" y2="640.1" stroke="#12263f" stroke-width="2.6"/>
+<text x="-647.5" y="602.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">N</text>
+<text x="-647.5" y="602.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">N</text>
+<text x="-666.5" y="553.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-666.5" y="553.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<line x1="353.6" y1="421.2" x2="46.2" y2="55.0" stroke="#12263f" stroke-width="2.6" marker-end="url(#arw)"/>
+<text x="138.8" y="212.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="138.8" y="212.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="178.6" y="179.3" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="178.6" y="179.3" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="222.5" y="367.5" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle" font-style="italic">rol: bloqueador</text>
+<text x="222.5" y="367.5" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#5b6b7c" text-anchor="middle" font-style="italic">rol: bloqueador</text>
+<line x1="462.8" y1="500.7" x2="817.9" y2="640.1" stroke="#12263f" stroke-width="2.6"/>
+<line x1="466.8" y1="490.5" x2="821.9" y2="629.9" stroke="#12263f" stroke-width="2.6"/>
+<text x="666.5" y="553.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">N</text>
+<text x="666.5" y="553.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">N</text>
+<text x="647.5" y="602.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="647.5" y="602.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<line x1="495.2" y1="194.4" x2="140.1" y2="55.0" stroke="#12263f" stroke-width="2.6" marker-end="url(#arw)"/>
+<text x="293.5" y="150.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="293.5" y="150.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="312.5" y="101.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="312.5" y="101.8" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="351.5" y="210.6" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle" font-style="italic">rol: bloqueado</text>
+<text x="351.5" y="210.6" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="400" fill="#5b6b7c" text-anchor="middle" font-style="italic">rol: bloqueado</text>
+<line x1="602.2" y1="272.3" x2="909.6" y2="638.5" stroke="#12263f" stroke-width="2.6"/>
+<line x1="610.6" y1="265.2" x2="918.0" y2="631.5" stroke="#12263f" stroke-width="2.6"/>
+<text x="821.2" y="491.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">N</text>
+<text x="821.2" y="491.2" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">N</text>
+<text x="781.4" y="524.7" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="781.4" y="524.7" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<line x1="0.0" y1="385.0" x2="0.0" y2="55.0" stroke="#12263f" stroke-width="2.6" marker-end="url(#arw)"/>
+<text x="-26.0" y="237.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-26.0" y="237.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="26.0" y="237.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="26.0" y="237.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<line x1="-5.5" y1="515.0" x2="-5.5" y2="845.0" stroke="#12263f" stroke-width="2.6"/>
+<line x1="5.5" y1="515.0" x2="5.5" y2="845.0" stroke="#12263f" stroke-width="2.6"/>
+<text x="26.0" y="677.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">N</text>
+<text x="26.0" y="677.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">N</text>
+<text x="-26.0" y="677.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-26.0" y="677.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<line x1="5.5" y1="1255.0" x2="5.5" y2="955.0" stroke="#12263f" stroke-width="2.6"/>
+<line x1="-5.5" y1="1255.0" x2="-5.5" y2="955.0" stroke="#12263f" stroke-width="2.6"/>
+<text x="-26.0" y="1137.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-26.0" y="1137.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="26.0" y="1137.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">N</text>
+<text x="26.0" y="1137.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">N</text>
+<line x1="0.0" y1="1385.0" x2="0.0" y2="1685.0" stroke="#12263f" stroke-width="2.6" marker-end="url(#arw)"/>
+<text x="26.0" y="1517.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="26.0" y="1517.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<text x="-26.0" y="1517.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1</text>
+<text x="-26.0" y="1517.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#b3261e" text-anchor="middle">1</text>
+<ellipse cx="401" cy="718" rx="80.2" ry="40" fill="#ffffff" stroke="#12263f" stroke-width="2.4"/>
+<text x="401.0" y="724.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#12263f" text-anchor="middle">paso_actual</text>
+<ellipse cx="435" cy="835" rx="113.8" ry="40" fill="#ffffff" stroke="#12263f" stroke-width="2.4"/>
+<text x="435.0" y="841.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#12263f" text-anchor="middle">fecha_actualizacion</text>
+<ellipse cx="438" cy="943" rx="101.2" ry="40" fill="#ffffff" stroke="#12263f" stroke-width="2.4"/>
+<text x="438.0" y="949.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#12263f" text-anchor="middle">fecha_completada</text>
+<ellipse cx="412" cy="1054" rx="76.0" ry="40" fill="#ffffff" stroke="#12263f" stroke-width="2.4" stroke-dasharray="11 8"/>
+<text x="412.0" y="1060.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#12263f" text-anchor="middle" font-style="italic">completada</text>
+<ellipse cx="1220" cy="-1045" rx="84.4" ry="40" fill="#ffffff" stroke="#12263f" stroke-width="2.4"/>
+<text x="1220.0" y="-1039.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#12263f" text-anchor="middle" text-decoration="underline">id_solicitud</text>
+<ellipse cx="1334" cy="-922" rx="97.0" ry="40" fill="#ffffff" stroke="#12263f" stroke-width="2.4"/>
+<text x="1334.0" y="-916.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#12263f" text-anchor="middle">fecha_solicitud</text>
+<ellipse cx="-1343" cy="-907" rx="88.6" ry="40" fill="#ffffff" stroke="#12263f" stroke-width="2.4"/>
+<text x="-1343.0" y="-901.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#12263f" text-anchor="middle">fecha_amistad</text>
+<ellipse cx="-1277" cy="996" rx="92.8" ry="40" fill="#ffffff" stroke="#12263f" stroke-width="2.4"/>
+<text x="-1277.0" y="1002.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#12263f" text-anchor="middle">fecha_silencio</text>
+<ellipse cx="1399" cy="717" rx="88.6" ry="40" fill="#ffffff" stroke="#12263f" stroke-width="2.4"/>
+<text x="1399.0" y="723.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#12263f" text-anchor="middle">fecha_bloqueo</text>
+<polygon points="-392,-532.0 -262.0,-467 -392,-402.0 -522.0,-467" fill="#ffffff" stroke="#12263f" stroke-width="2.6"/>
+<polygon points="-392,-519.0 -275.0,-467 -392,-415.0 -509.0,-467" fill="none" stroke="#12263f" stroke-width="2.2"/>
+<text x="-392.0" y="-460.0" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#12263f" text-anchor="middle">Es amigo</text>
+<text x="-392.0" y="-548.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1:N</text>
+<text x="-392.0" y="-548.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#0b5fa5" text-anchor="middle">1:N</text>
+<polygon points="-568,-288.0 -438.0,-223 -568,-158.0 -698.0,-223" fill="#ffffff" stroke="#12263f" stroke-width="2.6"/>
+<polygon points="-568,-275.0 -451.0,-223 -568,-171.0 -685.0,-223" fill="none" stroke="#12263f" stroke-width="2.2"/>
+<text x="-568.0" y="-216.0" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#12263f" text-anchor="middle">Es amigo</text>
+<text x="-568.0" y="-304.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1:N</text>
+<text x="-568.0" y="-304.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#0b5fa5" text-anchor="middle">1:N</text>
+<polygon points="568,-288.0 698.0,-223 568,-158.0 438.0,-223" fill="#ffffff" stroke="#12263f" stroke-width="2.6"/>
+<text x="568.0" y="-216.0" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#12263f" text-anchor="middle">Envía</text>
+<text x="568.0" y="-304.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1:N</text>
+<text x="568.0" y="-304.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#0b5fa5" text-anchor="middle">1:N</text>
+<polygon points="392,-532.0 522.0,-467 392,-402.0 262.0,-467" fill="#ffffff" stroke="#12263f" stroke-width="2.6"/>
+<text x="392.0" y="-460.0" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#12263f" text-anchor="middle">Recibe</text>
+<text x="392.0" y="-548.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1:N</text>
+<text x="392.0" y="-548.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#0b5fa5" text-anchor="middle">1:N</text>
+<polygon points="-568,158.0 -438.0,223 -568,288.0 -698.0,223" fill="#ffffff" stroke="#12263f" stroke-width="2.6"/>
+<polygon points="-568,171.0 -451.0,223 -568,275.0 -685.0,223" fill="none" stroke="#12263f" stroke-width="2.2"/>
+<text x="-568.0" y="230.0" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#12263f" text-anchor="middle">Silencia</text>
+<text x="-568.0" y="142.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1:N</text>
+<text x="-568.0" y="142.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#0b5fa5" text-anchor="middle">1:N</text>
+<polygon points="-392,402.0 -262.0,467 -392,532.0 -522.0,467" fill="#ffffff" stroke="#12263f" stroke-width="2.6"/>
+<polygon points="-392,415.0 -275.0,467 -392,519.0 -509.0,467" fill="none" stroke="#12263f" stroke-width="2.2"/>
+<text x="-392.0" y="474.0" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#12263f" text-anchor="middle">Es silenciado</text>
+<text x="-392.0" y="386.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1:N</text>
+<text x="-392.0" y="386.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#0b5fa5" text-anchor="middle">1:N</text>
+<polygon points="392,402.0 522.0,467 392,532.0 262.0,467" fill="#ffffff" stroke="#12263f" stroke-width="2.6"/>
+<polygon points="392,415.0 509.0,467 392,519.0 275.0,467" fill="none" stroke="#12263f" stroke-width="2.2"/>
+<text x="392.0" y="474.0" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#12263f" text-anchor="middle">Bloquea</text>
+<text x="392.0" y="386.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1:N</text>
+<text x="392.0" y="386.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#0b5fa5" text-anchor="middle">1:N</text>
+<polygon points="568,158.0 698.0,223 568,288.0 438.0,223" fill="#ffffff" stroke="#12263f" stroke-width="2.6"/>
+<polygon points="568,171.0 685.0,223 568,275.0 451.0,223" fill="none" stroke="#12263f" stroke-width="2.2"/>
+<text x="568.0" y="230.0" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#12263f" text-anchor="middle">Es bloqueado</text>
+<text x="568.0" y="142.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1:N</text>
+<text x="568.0" y="142.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#0b5fa5" text-anchor="middle">1:N</text>
+<polygon points="0,385.0 130.0,450 0,515.0 -130.0,450" fill="#ffffff" stroke="#12263f" stroke-width="2.6"/>
+<polygon points="0,398.0 117.0,450 0,502.0 -117.0,450" fill="none" stroke="#12263f" stroke-width="2.2"/>
+<text x="0.0" y="457.0" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#12263f" text-anchor="middle">Avanza</text>
+<text x="0.0" y="369.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">1:N</text>
+<text x="0.0" y="369.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#0b5fa5" text-anchor="middle">1:N</text>
+<polygon points="0,1255.0 130.0,1320 0,1385.0 -130.0,1320" fill="#ffffff" stroke="#12263f" stroke-width="2.6"/>
+<polygon points="0,1268.0 117.0,1320 0,1372.0 -117.0,1320" fill="none" stroke="#12263f" stroke-width="2.2"/>
+<text x="0.0" y="1327.0" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#12263f" text-anchor="middle">Cubre</text>
+<text x="0.0" y="1239.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" text-anchor="middle">N:1</text>
+<text x="0.0" y="1239.0" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#0b5fa5" text-anchor="middle">N:1</text>
+<rect x="-1105.0" y="-745.0" width="290" height="110" fill="#ffffff" stroke="#12263f" stroke-width="3"/>
+<rect x="-1094.0" y="-734.0" width="268" height="88" fill="none" stroke="#12263f" stroke-width="2.4"/>
+<text x="-960.0" y="-681.0" font-family="Segoe UI, Arial, sans-serif" font-size="27" font-weight="700" fill="#12263f" text-anchor="middle">Amistad</text>
+<rect x="815.0" y="-745.0" width="290" height="110" fill="#ffffff" stroke="#12263f" stroke-width="3"/>
+<text x="960.0" y="-681.0" font-family="Segoe UI, Arial, sans-serif" font-size="27" font-weight="700" fill="#12263f" text-anchor="middle">Solicitud</text>
+<rect x="-1105.0" y="635.0" width="290" height="110" fill="#ffffff" stroke="#12263f" stroke-width="3"/>
+<rect x="-1094.0" y="646.0" width="268" height="88" fill="none" stroke="#12263f" stroke-width="2.4"/>
+<text x="-960.0" y="699.0" font-family="Segoe UI, Arial, sans-serif" font-size="27" font-weight="700" fill="#12263f" text-anchor="middle">Silencio</text>
+<rect x="815.0" y="635.0" width="290" height="110" fill="#ffffff" stroke="#12263f" stroke-width="3"/>
+<rect x="826.0" y="646.0" width="268" height="88" fill="none" stroke="#12263f" stroke-width="2.4"/>
+<text x="960.0" y="699.0" font-family="Segoe UI, Arial, sans-serif" font-size="27" font-weight="700" fill="#12263f" text-anchor="middle">Bloqueo</text>
+<rect x="-154.5" y="845.0" width="309" height="110" fill="#ffffff" stroke="#12263f" stroke-width="3"/>
+<rect x="-143.5" y="856.0" width="287" height="88" fill="none" stroke="#12263f" stroke-width="2.4"/>
+<text x="0.0" y="909.0" font-family="Segoe UI, Arial, sans-serif" font-size="27" font-weight="700" fill="#12263f" text-anchor="middle">ProgresoTutorial</text>
+<rect x="-145.0" y="1685.0" width="290" height="110" fill="#ffffff" stroke="#12263f" stroke-width="3"/>
+<text x="0.0" y="1749.0" font-family="Segoe UI, Arial, sans-serif" font-size="27" font-weight="700" fill="#12263f" text-anchor="middle">Leccion</text>
+<rect x="-145.0" y="-55.0" width="290" height="110" fill="#ffffff" stroke="#12263f" stroke-width="3"/>
+<text x="0.0" y="9.0" font-family="Segoe UI, Arial, sans-serif" font-size="27" font-weight="700" fill="#12263f" text-anchor="middle">Usuario</text>
+</g>
+</svg>

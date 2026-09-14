@@ -1,0 +1,41 @@
+%=====================================================================
+% Modelo de datos · Relaciones y cardinalidades
+%=====================================================================
+\subsection*{Relaciones y cardinalidades}
+\addcontentsline{toc}{subsection}{Relaciones y cardinalidades}
+
+\subsubsection*{Relaciones de muchos a muchos}
+\addcontentsline{toc}{subsubsection}{Relaciones de muchos a muchos}
+
+El modelo relacional no admite relaciones de muchos a muchos directas: cada una se resuelve con una entidad asociativa que tiene una llave foránea hacia cada lado, y que guarda los atributos que pertenecen a la relación y no a ninguna de las dos entidades.
+
+\begin{center}\small
+\begin{longtable}{|L{0.19\textwidth}|L{0.25\textwidth}|L{0.46\textwidth}|}
+\hline
+\textbf{Entidad asociativa} & \textbf{Relaciona} & \textbf{Qué guarda y cardinalidad de cada lado} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad asociativa} & \textbf{Relaciona} & \textbf{Qué guarda y cardinalidad de cada lado} \\ \hline
+\endhead
+\textit{UsuarioObjeto} & \textit{Usuario} y \textit{ObjetoCosmetico} & Relación Posee del diagrama: fecha y origen de la posesión. Un usuario posee de 6 a N objetos, porque el alta otorga uno por ranura; un objeto lo poseen de 0 a N usuarios. \\ \hline
+\textit{Equipamiento} & \textit{Usuario} y \textit{Ranura} & El objeto equipado en cada ranura. Cada usuario tiene exactamente 6 filas, una por ranura; cada ranura, una fila por usuario. \\ \hline
+\textit{Participacion} & \textit{Usuario} y \textit{Partida} & Relación Participa del diagrama: turno, posición del peón, muros, reloj, elo y resultado. Una partida tiene de 1 a 4 participantes; un usuario, de 0 a N partidas, con a lo sumo una sin terminar (\mbox{D-11}). \\ \hline
+\textit{ParticipacionObjeto} & \textit{Participacion} y \textit{Ranura} & El aspecto fijado al empezar la partida. Cada participación tiene exactamente 6 filas. \\ \hline
+\textit{EstadisticaModo} & \textit{Usuario} y \textit{Modo} & Relación Tiene del diagrama, ahora por modo: contadores, elo y división. Cada usuario tiene una fila por cada modo activo desde el alta (\mbox{CU-02} \mbox{RN-06}). \\ \hline
+\textit{TipoCajaObjeto} & \textit{TipoCaja} y \textit{ObjetoCosmetico} & La probabilidad de cada objeto en cada tipo de caja. Un tipo de caja tiene de 1 a N objetos posibles. \\ \hline
+\textit{ProgresoTutorial} & \textit{Usuario} y \textit{Leccion} & El paso alcanzado en cada lección. Un usuario tiene de 0 a 7 filas, que se crean al completar el primer paso de cada lección. \\ \hline
+\textit{Amistad} & \textit{Usuario} y \textit{Usuario} & Relación reflexiva y simétrica: se guarda una sola vez por par ordenado. Un usuario tiene de 0 a 100 amigos (\mbox{CU-30} \mbox{RN-02}). \\ \hline
+\textit{Silencio}, \textit{Bloqueo} & \textit{Usuario} y \textit{Usuario} & Relaciones reflexivas con dirección: quién silencia o bloquea a quién. De 0 a N en cada sentido. \\ \hline
+\end{longtable}
+\end{center}
+
+\textit{Solicitud} también relaciona a dos usuarios, pero tiene llave sustituta porque la acción de responder la identifica por su número (\mbox{F-39}); su par (\at{id\_solicitante}, \at{id\_destinatario}) es llave candidata. \textit{SalaParticipante} relaciona usuarios con salas, pero en un momento dado cada usuario está en una sola sala: la relación es 1:N y su llave es \at{id\_usuario}.
+
+\subsubsection*{Relaciones de uno a muchos y de uno a uno}
+\addcontentsline{toc}{subsubsection}{Relaciones de uno a muchos y de uno a uno}
+
+Cada llave foránea es una relación. La tabla da la cardinalidad en la forma \emph{padre:hija}: \textbf{1:N} significa que cada fila hija tiene exactamente un padre y cada padre puede tener muchas hijas; \textbf{0..1:N}, que la llave foránea admite nulo y la hija puede no tener padre; \textbf{1:0..1}, que cada padre tiene a lo sumo una hija. Las relaciones con roles —denunciante y reportado, emisor y destinatario— aparecen una vez por rol.
+
+Las cardinalidades mínimas mayores que cero del lado de la hija —las seis filas de \textit{Equipamiento} de cada usuario, la estadística de cada modo, al menos una \textit{Participacion} por partida— no pueden declararse con una llave foránea. Las garantiza la transacción que crea la fila padre, que crea también las hijas: el alta de la cuenta (\mbox{CU-02} \mbox{RN-06}, \mbox{CU-06} \mbox{RN-09}) y la creación de la partida (\mbox{CU-17} \mbox{RN-10}).
+
+\input{bd/tex/relaciones}

@@ -1,0 +1,61 @@
+%=====================================================================
+% Datos · Escenario
+%   Qué representa cada cuenta y cada partida de los datos de prueba.
+%=====================================================================
+\subsection*{Escenario}
+\addcontentsline{toc}{subsection}{Escenario}
+
+Los registros cuentan una historia coherente: cada cuenta y cada partida está ahí para representar una situación de los casos de uso, y todo lo que el modelo guarda como consecuencia ---el elo, las estadísticas, el saldo, el estado del tablero--- se calculó a partir de ellas, como se explica en la sección de implementación.
+
+\subsubsection*{Cuentas}
+\addcontentsline{toc}{subsubsection}{Cuentas}
+
+Las \dpNumUsuarios{} cuentas cubren todos los tipos, estados y roles de \textit{Usuario}:
+
+\begin{center}\small
+\begin{longtable}{|L{0.04\textwidth}|L{0.18\textwidth}|L{0.2\textwidth}|L{0.48\textwidth}|}
+\hline
+\textbf{Id} & \textbf{Nickname} & \textbf{Tipo, estado y rol} & \textbf{Qué representa} \\ \hline
+\endfirsthead
+\hline
+\textbf{Id} & \textbf{Nickname} & \textbf{Tipo, estado y rol} & \textbf{Qué representa} \\ \hline
+\endhead
+1 & \at{admin\_bastion} & Registrada, activa, administrador & Otorgó el rol de moderadora y resolvió dos apelaciones, una aceptada y otra rechazada. Tres contraseñas incorrectas le bloquearon el acceso cinco minutos (\mbox{CU-01} \mbox{RN-03}); después pidió dos veces el código de recuperación y el segundo invalidó al primero (\mbox{CU-03} \mbox{RN-05}). \\ \hline
+2 & \at{ana\_modera} & Registrada, activa, moderadora & Resolvió reportes con sanción y sin ella, baneó una cuenta y sustituyó una sanción por otra. Dejó que un reporte volviera a la cola y tiene otro en revisión. \\ \hline
+3 & \at{luis\_quo} & Registrada, activa, jugador & Seis partidas clasificatorias en el modo clásico, división plata y racha de tres; compró objetos y una caja; tiene un cambio de correo pendiente y juega la partida en curso. \\ \hline
+4 & \at{marta\_muros} & Registrada, activa, jugador & Segundo factor activado, con un código pendiente porque entra desde otro dispositivo (\mbox{D-01}); ganó por tiempo una partida rápida; espera en la cola; una caja de recompensa caducó sin abrirse. \\ \hline
+5 & \at{pedro\_peon} & Registrada, activa, jugador & Partida contra la IA con un deshacer; perdió por tiempo una partida rápida; anfitrión de la sala abierta; una sanción de chat vencida, cuya apelación se rechazó. \\ \hline
+6 & \at{sofia\_salto} & Registrada, activa, jugador & Usa la interfaz en inglés, aceptó los términos en ese idioma y escribe en inglés en el chat. Cambió su nickname una vez, recuperó su contraseña y una apelación aceptada le retiró una sanción. \\ \hline
+7 & \at{Invitado\_4821} & Invitado, activa, jugador & Sin correo ni contraseña; aceptó una invitación, jugó una partida privada y está en la sala abierta. \\ \hline
+8 & \at{nico\_nuevo} & Registrada, pendiente, jugador & No verificó su correo: tiene un token vigente y otro invalidado por el reenvío. \\ \hline
+9 & \at{rayo\_veloz} & Registrada, suspendida, jugador & Reportado y suspendido; su suspensión se amplió con una segunda sanción y apeló. \\ \hline
+10 & \at{anonimo\_10} & Registrada, eliminada, jugador & Dada de baja y anonimizada en la misma transacción (\mbox{D-17}). \\ \hline
+11 & \at{4dm1n\_oficial} & Registrada, baneada, jugador & Su nickname esquivó el filtro de palabras imitando al administrador; un reporte terminó en una sanción permanente de cuenta (\mbox{CU-44}), y su intento de volver a entrar quedó en la bitácora. \\ \hline
+\end{longtable}
+\end{center}
+
+\subsubsection*{Partidas}
+\addcontentsline{toc}{subsubsection}{Partidas}
+
+Las \dpNumPartidas{} partidas, con \dpNumJugadas{} jugadas, recorren los tres tipos y las cinco formas de término (\mbox{CU-25} \mbox{RN-01}):
+
+\begin{center}\small
+\begin{longtable}{|L{0.05\textwidth}|L{0.25\textwidth}|L{0.19\textwidth}|L{0.40\textwidth}|}
+\hline
+\textbf{Id} & \textbf{Tipo y modo} & \textbf{Jugadores} & \textbf{Cómo termina} \\ \hline
+\endfirsthead
+\hline
+\textbf{Id} & \textbf{Tipo y modo} & \textbf{Jugadores} & \textbf{Cómo termina} \\ \hline
+\endhead
+1 a 5 & Clasificatorias, clásico & luis y marta & Cuatro a la meta y una rendición. Tras la quinta, los dos entran en una división (\mbox{CU-25} \mbox{RN-14}). \\ \hline
+6 & Clasificatoria, rápida & pedro y sofía & Tablas aceptadas, tras una oferta rechazada (\mbox{CU-22}). \\ \hline
+7 & Clasificatoria, cuatro jugadores & luis, marta, pedro y sofía & Tres abandonan uno tras otro y gana el que queda (\mbox{CU-25} \mbox{FA-04}). \\ \hline
+8 & Contra la IA, clásico, sin reloj & pedro & Se rinde; antes deshizo una jugada, que queda marcada y no se borra (\mbox{D-12}). \\ \hline
+9 & Clasificatoria, clásico & luis y rayo & Luis llega a la meta; rayo lo insulta en el chat y es reportado. \\ \hline
+10 & Privada, rápida, desde una sala & sofía e invitado & Llegada a la meta. La anfitriona eligió ocho muros (\mbox{CU-18} \mbox{RN-04}) y el invitado entró aceptando su invitación (\mbox{CU-32} \mbox{RN-05}). \\ \hline
+11 & Clasificatoria, rápida & marta y pedro & Pedro pierde por tiempo: su reloj llega a cero en su turno, antes de jugar (\mbox{CU-20} \mbox{FA-06}). \\ \hline
+12 & Clasificatoria, clásico & luis y sofía & En curso, con una oferta de tablas pendiente y un enlace de espectador. \\ \hline
+\end{longtable}
+\end{center}
+
+Las jugadas usan la notación del tablero: columnas de la \at{a} a la \at{i} y filas del 1 al 9 (de la \at{a} a la \at{g} y del 1 al 7 en el modo rápido). Un muro se nombra por el surco cuya esquina superior derecha es su centro, más su orientación.

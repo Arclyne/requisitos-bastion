@@ -1,0 +1,31 @@
+%=====================================================================
+% Modelo de datos · Normalización: tercera forma normal
+%=====================================================================
+\subsubsection*{Paso a tercera forma normal}
+\addcontentsline{toc}{subsubsection}{Paso a tercera forma normal}
+
+La tabla recoge las dependencias transitivas encontradas —un atributo no primo que depende de otro atributo no primo— y los datos derivados que las acompañaban, y cómo se resolvió cada uno. Los del diagrama se eliminan; los que aparecen en el análisis CRUD se convierten en columnas calculadas, para no cambiar el vocabulario de los casos de uso.
+
+\begin{center}\small
+\begin{longtable}{|L{0.18\textwidth}|L{0.34\textwidth}|L{0.38\textwidth}|}
+\hline
+\textbf{Tabla} & \textbf{Dependencia o dato derivado} & \textbf{Transformación} \\ \hline
+\endfirsthead
+\hline
+\textbf{Tabla} & \textbf{Dependencia o dato derivado} & \textbf{Transformación} \\ \hline
+\endhead
+\textit{Partida} & \at{id\_partida} $\rightarrow$ \at{id\_modo} $\rightarrow$ \at{num\_jugadores} & \at{num\_jugadores}, \at{tamano\_tablero} y \at{muros\_por\_jugador} pasan a \textit{Modo}. \\ \hline
+\textit{Partida} & (\at{fecha\_inicio}, \at{fecha\_fin}) $\rightarrow$ \at{duracion} & Se elimina \at{duracion}; se calcula al consultar (\mbox{CU-36} \mbox{RN-02}). \\ \hline
+\textit{Usuario} & \at{fecha\_nacimiento} $\rightarrow$ \at{edad} & Se elimina \at{edad}; guardarla obligaría a actualizarla en cada cumpleaños (\mbox{CU-02}). \\ \hline
+\textit{Estadisticas} & (\at{partidas\_ganadas}, \at{partidas\_jugadas}) $\rightarrow$ \at{porcentaje\_victorias} & Se elimina; se calcula al mostrar el perfil (\mbox{CU-15} \mbox{RN-01}). \\ \hline
+\textit{Skin} & \at{id\_skin} $\rightarrow$ \at{tipo} $\rightarrow$ datos del tipo & El tipo pasa a ser la entidad \textit{Ranura}; \textit{ObjetoCosmetico} guarda solo \at{id\_ranura}. \\ \hline
+\textit{Reporte} & \at{id\_reporte} $\rightarrow$ motivo elegido $\rightarrow$ descripción del motivo & El motivo pasa al catálogo \textit{MotivoReporte}; el reporte guarda \at{id\_motivo}. La descripción libre del denunciante sigue en \at{descripcion}. \\ \hline
+\textit{Baneo} & \at{num\_reportes} es un conteo de los \textit{Reporte} del usuario; \at{activo} se deduce de \at{fecha\_fin} y la fecha actual & Se eliminan los dos. En \textit{Sancion}, el retiro manual se registra en \at{fecha\_retiro}. \\ \hline
+\textit{Participacion} & (\at{elo\_inicial}, \at{elo\_final}) $\rightarrow$ \at{diferencia\_elo} & \at{diferencia\_elo} pasa a columna calculada. \\ \hline
+\textit{Sancion} & \at{fecha\_retiro} $\rightarrow$ \at{activa} & \at{activa} pasa a columna calculada: vale verdadero cuando \at{fecha\_retiro} es nula. \\ \hline
+\textit{ProgresoTutorial} & \at{fecha\_completada} $\rightarrow$ \at{completada} & \at{completada} pasa a columna calculada. \\ \hline
+\textit{CajaContenido} & \at{monedas\_conversion} $\rightarrow$ \at{convertido} & \at{convertido} pasa a columna calculada. \\ \hline
+\textit{CodigoSegundo\-Factor} & Dos indicadores, consumido e invalidado, que nunca pueden ser verdaderos a la vez & Se sustituyen por un solo \at{estado}. Lo mismo en \textit{TokenVerificacionCorreo} y \textit{TokenRecuperacion}, cuyo indicador \at{usado} no distinguía un token usado de uno invalidado. \\ \hline
+\textit{TokenVerificacion\-Correo} & En los tokens de alta, \at{id\_usuario} $\rightarrow$ \at{correo} de \textit{Usuario} $=$ \at{correo\_destino} & \at{correo\_destino} solo se guarda en los cambios de correo; en el alta es nulo. \\ \hline
+\end{longtable}
+\end{center}

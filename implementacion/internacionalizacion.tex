@@ -1,0 +1,90 @@
+%=====================================================================
+% Implementación · Codificación e internacionalización
+%   Cómo guarda la base el texto en cualquier idioma y qué deja a los
+%   diccionarios de recursos (D-21).
+%=====================================================================
+\subsection*{Codificación e internacionalización}
+\addcontentsline{toc}{subsection}{Codificación e internacionalización}
+
+El juego se ofrece en español de México, \at{es-MX}, que es el idioma por omisión, y en inglés, \at{en} (\mbox{CON-11}, \mbox{D-21}). La traducción no pasa por la base de datos: todo texto que se muestra sale de diccionarios de recursos. A la base le tocan dos cosas: guardar sin pérdida lo que escriben las personas, con sus eñes, sus acentos y sus emojis, y guardar los códigos que los diccionarios traducen.
+
+\subsubsection*{Codificación del texto}
+\addcontentsline{toc}{subsubsection}{Codificación del texto}
+
+\at{crear\_base\_datos.sql} crea la base con la intercalación \at{Modern\_Spanish\_100\_CI\_AS\_SC\_UTF8}, disponible desde SQL Server 2019. La intercalación fija cómo se codifica, se compara y se ordena el texto, y cada parte de su nombre fija una cosa:
+
+\begin{center}\small
+\begin{longtable}{|L{0.25\textwidth}|L{0.65\textwidth}|}
+\hline
+\textbf{Parte} & \textbf{Qué fija} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parte} & \textbf{Qué fija} \\ \hline
+\endhead
+\at{Modern\_Spanish\_100} & Las reglas del español para comparar y ordenar, en su versión más reciente: la \textit{ñ} es una letra, entre la \textit{n} y la \textit{o}. \\ \hline
+\at{CI\_AS} & No distingue mayúsculas y sí acentos: \textit{Luis} y \textit{LUIS} son iguales; \textit{pena} y \textit{peña}, no. \\ \hline
+\at{SC} & Admite caracteres suplementarios, los que están fuera del plano básico de Unicode, como los emojis: cada uno cuenta como un solo carácter en \at{LEN}, en \at{SUBSTRING} y en los límites de longitud de las restricciones \at{CHECK}. \\ \hline
+\at{UTF8} & Codifica en UTF-8 las columnas \at{VARCHAR} y los literales sin prefijo \at{N}. Sin esta parte usarían la página de códigos 1252, que tiene la \textit{ñ} y los acentos pero convierte en \at{?} cualquier otro carácter, como un emoji. Las columnas \at{NVARCHAR} guardan UTF-16 con cualquier intercalación. \\ \hline
+\end{longtable}
+\end{center}
+
+Todo lo que escribe o lee una persona va en \at{NVARCHAR} (\mbox{CON-05}), y los códigos y estados en \at{VARCHAR}; con esta intercalación, ninguna de las dos pierde caracteres. Las dos columnas que se comparan también sin acentos, el \at{nickname} y el \at{termino} de \textit{PalabraProhibida}, declaran su propia intercalación, \at{Latin1\_General\_100\_CI\_AI\_SC\_UTF8}: así, \textit{Peña} y \textit{PENA} son el mismo nickname (\mbox{CU-02} \mbox{RN-01}), y el filtro reconoce \textit{ESTUPIDO} aunque el término guardado sea \textit{estúpido}.
+
+Para que una \textit{ñ} llegue intacta del teclado a la base, cada paso del camino tiene que conservarla:
+
+\begin{reglas}
+  \item \textbf{El protocolo.} El cliente y el servidor de partidas intercambian el texto de sus mensajes TCP en UTF-8.
+  \item \textbf{El servidor de partidas.} Las cadenas de C\# son UTF-16. Envía el texto a SQL Server como parámetros \at{NVARCHAR} (\at{SqlDbType.NVarChar}), nunca concatenado en la consulta: así no pasa por ninguna página de códigos y, de paso, no admite inyección de SQL.
+  \item \textbf{Los scripts.} Los tres están en UTF-8 con marca de orden de bytes, que SQL Server Management Studio y \at{sqlcmd} reconocen; aun así, se ejecutan con \at{-f 65001}. Los textos van como literales \at{N'...'}, y la última comprobación de \at{insertar\_datos\_prueba.sql} verifica que se guardaron sin pérdida.
+\end{reglas}
+
+\subsubsection*{Traducción con diccionarios de recursos}
+\addcontentsline{toc}{subsubsection}{Traducción con diccionarios de recursos}
+
+La base no tiene tablas de traducciones ni columnas por idioma. Cada texto visible se resuelve así:
+
+\begin{center}\small
+\begin{longtable}{|L{0.3\textwidth}|L{0.6\textwidth}|}
+\hline
+\textbf{Texto} & \textbf{Dónde está en cada idioma} \\ \hline
+\endfirsthead
+\hline
+\textbf{Texto} & \textbf{Dónde está en cada idioma} \\ \hline
+\endhead
+Textos de la interfaz y de los términos de uso & En los diccionarios de recursos del cliente, uno por idioma (\mbox{CU-02} \mbox{FA-02}). La base guarda la versión de los términos que se aceptó y en qué idioma, no su texto. \\ \hline
+Valores de dominio: estados, tipos, rarezas, ámbitos & En los mismos diccionarios. La base guarda el código, como \at{ACTIVA} o \at{LEGENDARIO}, que no cambia con el idioma y es el que validan las restricciones \at{CHECK}. \\ \hline
+Nombres de las ranuras, los objetos, los modos, las divisiones, los niveles de la IA, las lecciones, los tipos de caja y los motivos de reporte & En los mismos diccionarios. Cada fila de catálogo guarda un \at{codigo} único, que es la clave de su nombre. \\ \hline
+Correos de verificación, recuperación, cambio de correo y avisos & En los diccionarios o plantillas del servidor de partidas, que elige los del \at{idioma\_preferido} de la cuenta (\mbox{CU-02}, \mbox{CU-03}, \mbox{CU-04}, \mbox{CU-07}, \mbox{CU-09}). \\ \hline
+Lo que escriben las personas: nickname, chat, descripciones de reportes y apelaciones & En la base, en \at{NVARCHAR}, tal como se escribió. No se traduce (\mbox{CU-28} \mbox{RN-12}). \\ \hline
+Fechas y números & En la base, sin formato: las fechas en UTC. El cliente las pasa a la hora local y les da el formato de su idioma. \\ \hline
+\end{longtable}
+\end{center}
+
+\textbf{Claves de los diccionarios.} La clave del nombre de una fila de catálogo es el nombre de su tabla, un punto y su código. Por ejemplo:
+
+\begin{center}\small
+\begin{longtable}{|L{0.34\textwidth}|L{0.28\textwidth}|L{0.28\textwidth}|}
+\hline
+\textbf{Clave} & \textbf{\at{es-MX}} & \textbf{\at{en}} \\ \hline
+\endfirsthead
+\hline
+\textbf{Clave} & \textbf{\at{es-MX}} & \textbf{\at{en}} \\ \hline
+\endhead
+\at{Modo.CLASICO} & Clásico 9×9 & Classic 9×9 \\ \hline
+\at{Division.MURO\_PIEDRA} & Muro de piedra & Stone wall \\ \hline
+\at{ObjetoCosmetico.PEON\_DORADO} & Peón dorado & Golden pawn \\ \hline
+\at{MotivoReporte.ACOSO} & Acoso & Harassment \\ \hline
+\end{longtable}
+\end{center}
+
+El código no cambia nunca: corregir o traducir un nombre es editar los diccionarios, sin tocar la base. Añadir una fila a un catálogo, en cambio, exige añadir su clave a los diccionarios de cada idioma. Si a un diccionario le falta una clave, el cliente usa la de \at{es-MX}.
+
+\textbf{Lo que la base sí guarda del idioma.} Tres columnas guardan un código de idioma, y una restricción \at{CHECK} admite en cada una solo \at{es-MX} y \at{en}:
+
+\begin{reglas}
+  \item \textbf{\at{idioma\_preferido} de \textit{Usuario}.} Vale \at{es-MX} por omisión y viaja con la cuenta a cualquier dispositivo (\mbox{CU-12} \mbox{RN-08}): con él, el cliente elige sus diccionarios al iniciar sesión y el servidor, los de los correos. Un idioma no admitido se rechaza (\mbox{CU-12} \mbox{FA-07}). El idioma que se elige en la \at{GUI\_Login}, antes de saber quién juega, es configuración local del cliente y no llega a la base (\mbox{CU-05} \mbox{RN-03}).
+  \item \textbf{\at{idioma} de \textit{AceptacionTerminos}.} Cada versión de los términos existe en los dos idiomas, y lo que una cuenta aceptó es una versión en un idioma (\mbox{CU-02} \mbox{RN-12}).
+  \item \textbf{\at{idioma} de \textit{PalabraProhibida}.} Es el idioma del término, o nulo si se filtra en todos. El servidor toma los del idioma del canal más los que no tienen idioma, \at{WHERE idioma = @idioma OR idioma IS NULL} (\mbox{CU-28} \mbox{RN-01}).
+\end{reglas}
+
+Los idiomas admitidos son una lista cerrada, como los demás dominios, y no un catálogo: un idioma nuevo no es solo un dato, porque exige sus diccionarios, y llega con la versión del cliente que los trae. Admitirlo es añadirlo a esos tres \at{CHECK}; ninguna tabla cambia de forma.

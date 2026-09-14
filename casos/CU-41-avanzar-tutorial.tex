@@ -29,7 +29,7 @@
       \item El SJM muestra la confirmación del paso y envía el mensaje \texttt{TUTORIAL\_\allowbreak{}STEP\_\allowbreak{}DONE} con la lección y el número de paso. \textit{(Ver \mbox{EX-04})}
       \item El Servidor de partidas actualiza el \texttt{paso\_\allowbreak{}actual} del \textit{ProgresoTutorial} del jugador para esa lección, creándolo si es el primer paso, y escribe \texttt{fecha\_\allowbreak{}actualizacion} (\mbox{RN-03}). \textit{(Ver \mbox{FA-04}, \mbox{EX-01})}
       \item Los pasos 7 a 11 se repiten hasta el último paso de la lección.
-      \item Al completar el último paso, el Servidor de partidas marca el \textit{ProgresoTutorial} como \texttt{completada} con su \texttt{fecha\_\allowbreak{}completada}.
+      \item Al completar el último paso, el Servidor de partidas escribe la \texttt{fecha\_\allowbreak{}completada} del \textit{ProgresoTutorial}, que lo deja \texttt{completada}.
       \item El SJM muestra el cierre de la lección con las opciones ``siguiente lección'', ``practicar contra la IA'' y ``volver al índice''. \textit{(Ver \mbox{FA-05}, \mbox{FA-06})}
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
@@ -113,7 +113,7 @@
       \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 2)}
       \item \textbf{\textit{Leccion}:} lee el catálogo con su número de pasos \textit{(pasos 3, 7)}
       \item \textbf{\textit{ProgresoTutorial}:} lee \textit{(paso 3)}
-      \item \textbf{\textit{ProgresoTutorial}:} crea; escribe \texttt{paso\_\allowbreak{}actual}, \texttt{fecha\_\allowbreak{}actualizacion}, \texttt{completada}, \texttt{fecha\_\allowbreak{}completada} \textit{(pasos 11, 13, \mbox{FA-04})}
+      \item \textbf{\textit{ProgresoTutorial}:} crea; escribe \texttt{paso\_\allowbreak{}actual}, \texttt{fecha\_\allowbreak{}actualizacion}, \texttt{fecha\_\allowbreak{}completada} \textit{(pasos 11, 13, \mbox{FA-04})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

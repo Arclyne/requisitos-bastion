@@ -1,0 +1,19 @@
+%=====================================================================
+% Modelo de datos · Identificación de entidades
+%=====================================================================
+\subsection*{Identificación de entidades}
+\addcontentsline{toc}{subsection}{Identificación de entidades}
+
+Una estructura es entidad del modelo si algún caso de uso la escribe, o si es un catálogo que los casos de uso leen y que se carga por SQL (\mbox{D-09}). Es el mismo criterio de la Matriz 1: ninguna tabla queda sin un caso que la justifique. Tampoco al revés: los datos que se calculan al consultarse —el historial de elo, el marcador entre dos jugadores, la duración de una partida— y los que viven solo en la memoria del servidor —los espectadores y los emotes (\mbox{D-10}, \mbox{D-19})— no son entidades.
+
+Cada entidad se clasifica según cómo se identifica:
+
+\begin{reglas}
+  \item \textbf{Fuerte.} Tiene identidad propia, con una llave sustituta, aunque dependa de otra entidad por una llave foránea obligatoria.
+  \item \textbf{Débil.} Se identifica por la llave de la entidad de la que depende más un discriminador propio, como el número de jugada dentro de la partida.
+  \item \textbf{Dependiente (1:0..1).} Su llave es la misma llave foránea: existe a lo sumo una por cada fila de la entidad de la que depende.
+  \item \textbf{Asociativa (N:M).} Resuelve una relación de muchos a muchos; su llave está formada por las llaves de las entidades que relaciona.
+  \item \textbf{Catálogo.} Datos de referencia que se cargan por SQL y que ningún caso de uso modifica.
+\end{reglas}
+
+\input{bd/tex/entidades}
