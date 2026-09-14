@@ -143,9 +143,9 @@ SELECT 'EnlaceRed', u.nickname, CONCAT(e.orden, ': ', e.url), NULL
 FROM dbo.EnlaceRed AS e JOIN dbo.Usuario AS u ON u.id_usuario = e.id_usuario;
 
 -- @consulta partida | Partida
--- @columnas Id | Tipo | Modo | Estado | Forma de término | Reloj (min) | Inicio | Fin | Nivel IA | Turno
-SELECT p.id_partida, p.tipo, m.codigo, p.estado, p.forma_termino, p.minutos_reloj,
-       CONVERT(VARCHAR(16), p.fecha_inicio, 120), CONVERT(VARCHAR(16), p.fecha_fin, 120), n.codigo, p.turno_actual
+-- @columnas Id | Tipo | Modo | Estado | Forma de término | Reloj (min) | Inicio | Fin
+SELECT p.id_partida, CONCAT(p.tipo, ' ' + n.codigo), m.codigo, p.estado, p.forma_termino, p.minutos_reloj,
+       CONVERT(VARCHAR(16), p.fecha_inicio, 120), CONVERT(VARCHAR(16), p.fecha_fin, 120)
 FROM dbo.Partida AS p
 JOIN dbo.Modo AS m ON m.id_modo = p.id_modo
 LEFT JOIN dbo.NivelIA AS n ON n.id_nivel_ia = p.id_nivel_ia
@@ -398,8 +398,9 @@ WHERE u.nickname = N'luis_quo'
 ORDER BY r.id_ranura;
 
 -- @consulta relmoderacion | Reporte, sanción y apelación
--- @columnas Reporte | Motivo | Denunciante | Reportado | Estado del reporte | Sanción | Tipo | Apelación | Estado de la apelación
-SELECT r.id_reporte, m.codigo, d.nickname, x.nickname, r.estado, s.id_sancion, s.ambito + ' ' + s.tipo, a.id_apelacion, a.estado
+-- @columnas Reporte | Motivo | Denunciante | Reportado | Estado del reporte | Sanción | Apelación
+SELECT r.id_reporte, m.codigo, d.nickname, x.nickname, r.estado,
+       CAST(s.id_sancion AS VARCHAR(5)) + ': ' + s.ambito + ' ' + s.tipo, CAST(a.id_apelacion AS VARCHAR(5)) + ': ' + a.estado
 FROM dbo.Reporte AS r
 JOIN dbo.MotivoReporte AS m ON m.id_motivo = r.id_motivo
 JOIN dbo.Usuario AS d ON d.id_usuario = r.id_denunciante

@@ -82,22 +82,76 @@ def tex(valor):
     return s
 
 
+# Anchos aproximados de Computer Modern, en em, para repartir el ancho de la
+# página entre las columnas sin que ninguna quede más estrecha que su palabra
+# más larga.
+ANCHO_TEXTO = 472.0          # \textwidth, en pt: carta con márgenes de 2.5 cm
+SEPARACION = 2 * 2.0 + 0.4   # \tabcolsep a cada lado y la raya de la columna
+EM = {**{c: 0.5 for c in "abcdeghknopquvxyz0123456789"}, **{c: 0.3 for c in "fijlrst"},
+      "m": 0.83, "w": 0.72, " ": 0.33, ".": 0.28, ",": 0.28, ":": 0.28, ";": 0.28, "-": 0.33,
+      "(": 0.39, ")": 0.39, "'": 0.28, "@": 0.75, "/": 0.5, "_": 0.5, "%": 0.83,
+      "I": 0.36, "J": 0.51, "L": 0.63, "S": 0.56, "E": 0.68, "F": 0.65, "P": 0.68, "M": 0.92, "W": 1.03}
+TAMANOS = [("\\footnotesize", 9.0), ("\\scriptsize", 8.0), ("\\tiny", 6.0)]
+
+
+def ancho(texto, pt, negrita=False):
+    """Ancho estimado en pt. Las fuentes pequeñas son proporcionalmente más anchas."""
+    base = sum(EM.get(c, 0.77 if c.isupper() else 0.5) for c in texto)
+    return base * pt * {9.0: 1.05, 8.0: 1.10, 6.0: 1.18}[pt] * (1.2 if negrita else 1.0)
+
+
+def trozos(valor):
+    """Partes de un valor que LaTeX no puede cortar."""
+    partes = []
+    for palabra in valor.split():
+        corte = r"[_@/.]" if ("@" in palabra or "/" in palabra) else r"_"
+        partes += re.findall(rf"[^_@/.]*{corte}|[^_@/.]+$", palabra) if re.search(corte, palabra) else [palabra]
+    return partes or [valor]
+
+
+def ancho_encabezado(palabra, pt):
+    """Una palabra larga del encabezado puede partirse con guion por la mitad."""
+    if len(palabra) <= 7:
+        return ancho(palabra, pt, True)
+    mitad = (len(palabra) + 1) // 2
+    return max(ancho(palabra[:mitad] + "-", pt, True), ancho(palabra[mitad:], pt, True))
+
+
+def anchos(encabezados, filas, pt):
+    """Ancho de cada columna en pt, o None si no caben las palabras más largas."""
+    n = len(encabezados)
+    disponible = ANCHO_TEXTO - n * SEPARACION - 1.0
+    minimo, natural = [], []
+    for i, h in enumerate(encabezados):
+        valores = [f[i] for f in filas]
+        minimo.append(max([ancho(t, pt) for v in valores for t in trozos(v)]
+                          + [ancho_encabezado(t, pt) for t in h.split()]) + 2.5)
+        natural.append(max(minimo[-1], min(max(ancho(v, pt) for v in valores), 0.45 * disponible)))
+    if sum(minimo) > disponible:
+        return None
+    sobra = disponible - sum(minimo)
+    faltan = [a - b for a, b in zip(natural, minimo)]
+    if sobra >= sum(faltan):
+        extra = sobra - sum(faltan)
+        return [a + extra * a / sum(natural) for a in natural]
+    return [b + sobra * f / sum(faltan) for b, f in zip(minimo, faltan)]
+
+
 def tabla_tex(encabezados, filas):
-    """Tabla larga con anchos proporcionales al contenido de cada columna."""
+    """Tabla larga con anchos calculados para el contenido de cada columna."""
     n = len(encabezados)
     if not filas:
         return AVISO + "\\textit{La consulta no devuelve filas.}\n"
-    necesidad = []
-    for i, h in enumerate(encabezados):
-        valores = [len(f[i]) if f[i] != "NULL" else 4 for f in filas]
-        palabra = max(len(p) for p in h.split())
-        necesidad.append(max(3, 0.8 * palabra, min(max(valores), 42)))
-    disponible = 0.985 - n * 0.0135 - (n + 1) * 0.001
-    anchos = [disponible * x / sum(necesidad) for x in necesidad]
-    columnas = "|" + "|".join(f"L{{{a:.3f}\\linewidth}}" for a in anchos) + "|"
-    tamano = "\\scriptsize" if n >= 7 else "\\footnotesize"
-    cabecera = " & ".join(f"\\textbf{{{tex(h)}}}" for h in encabezados) + " \\\\ \\hline"
-    lineas = [AVISO.rstrip(), f"\\begin{{center}}{tamano}\\setlength{{\\tabcolsep}}{{3pt}}",
+    for tamano, pt in TAMANOS[(0 if n <= 6 else 1):]:
+        medidas = anchos(encabezados, filas, pt)
+        if medidas:
+            break
+    else:
+        raise SystemExit(f"las columnas {encabezados} no caben en la página")
+    columnas = "|" + "|".join(f"L{{{a:.1f}pt}}" for a in medidas) + "|"
+    # \hspace{0pt} deja que LaTeX parta con guion también la primera palabra de la celda
+    cabecera = " & ".join(f"\\textbf{{\\hspace{{0pt}}{tex(h)}}}" for h in encabezados) + " \\\\ \\hline"
+    lineas = [AVISO.rstrip(), f"\\begin{{center}}{tamano}\\setlength{{\\tabcolsep}}{{2pt}}",
               f"\\begin{{longtable}}{{{columnas}}}", "\\hline", cabecera, "\\endfirsthead",
               "\\hline", cabecera, "\\endhead"]
     lineas += [" & ".join(tex(v) for v in f) + " \\\\ \\hline" for f in filas]

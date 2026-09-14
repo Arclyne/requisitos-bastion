@@ -1,4 +1,5 @@
-SELECT r.id_reporte, m.codigo, d.nickname, x.nickname, r.estado, s.id_sancion, s.ambito + ' ' + s.tipo, a.id_apelacion, a.estado
+SELECT r.id_reporte, m.codigo, d.nickname, x.nickname, r.estado,
+       CAST(s.id_sancion AS VARCHAR(5)) + ': ' + s.ambito + ' ' + s.tipo, CAST(a.id_apelacion AS VARCHAR(5)) + ': ' + a.estado
 FROM dbo.Reporte AS r
 JOIN dbo.MotivoReporte AS m ON m.id_motivo = r.id_motivo
 JOIN dbo.Usuario AS d ON d.id_usuario = r.id_denunciante

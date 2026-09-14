@@ -1,0 +1,88 @@
+%=====================================================================
+% Datos · Registros por tabla
+%   Cada tabla la genera bd/exportar_datos.py con la consulta del mismo
+%   nombre de bd/consultas_datos.sql.
+%=====================================================================
+\subsection*{Registros por tabla}
+\addcontentsline{toc}{subsection}{Registros por tabla}
+
+% \registros{consulta}{título}{comentario}
+\newcommand{\registros}[3]{\par\needspace{6\baselineskip}\noindent\textbf{#2.} #3\input{bd/tex/datos/#1}}
+
+El contenido de las tablas, agrupadas por área como en el modelo de datos. Las llaves foráneas se muestran con el nickname o el código de la fila a la que apuntan, y los resúmenes criptográficos de contraseñas y tokens se omiten. Cuatro tablas se resumen porque sus filas se deducen de otras: \textit{Jugada}, por partida, con las jugadas completas de las partidas 1 y 8 en las subsecciones anteriores; \textit{UsuarioObjeto}, por cuenta y origen; \textit{EstadisticaModo}, solo con las filas de los modos en que la cuenta ha jugado partidas clasificatorias; y \textit{ParticipacionObjeto}, que no se muestra: sus filas repiten, para cada participación, lo que el jugador llevaba equipado al empezar (\mbox{CU-14} \mbox{RN-03}). Todos los registros, sin resumir, están en el listado de \at{insertar\_datos\_prueba.sql} al final de la sección de implementación.
+
+\subsubsection*{Catálogos precargados}
+\addcontentsline{toc}{subsubsection}{Catálogos precargados}
+
+\registros{ranura}{\textit{Ranura}}{Las seis ranuras de personalización (\mbox{D-03}).}
+\registros{modo}{\textit{Modo}}{Los tres modos con su tablero, sus plazas y sus muros (\mbox{CU-21} \mbox{RN-02}).}
+\registros{division}{\textit{Division}}{En orden de \at{elo\_minimo}.}
+\registros{nivelia}{\textit{NivelIA}}{Los cuatro niveles de la IA con su fuerza (\mbox{CU-27} \mbox{RN-02}).}
+\registros{leccion}{\textit{Leccion}}{Las siete lecciones del tutorial (\mbox{CU-41} \mbox{RN-01}).}
+\registros{tipocaja}{\textit{TipoCaja}}{La de temporada ya no se vende.}
+\registros{motivo}{\textit{MotivoReporte}}{Los cinco motivos de reporte (\mbox{CU-42} \mbox{RN-08}).}
+\registros{objeto}{\textit{ObjetoCosmetico}}{Uno predeterminado por ranura; el de temporada, retirado.}
+\registros{tipocajaobjeto}{\textit{TipoCajaObjeto}}{Las probabilidades de cada tipo de caja suman 100 (\mbox{CU-39} \mbox{RN-01}).}
+\registros{palabra}{\textit{PalabraProhibida}}{Sin idioma, el término se filtra en todos (\mbox{CU-28} \mbox{RN-01}).}
+
+\subsubsection*{Cuenta y acceso}
+\addcontentsline{toc}{subsubsection}{Cuenta y acceso}
+
+\registros{usuario}{\textit{Usuario}}{Las once cuentas del escenario.}
+
+\captura{07-usuarios}{Captura 7. Las cuentas en la consola.}
+
+\registros{sesion}{\textit{Sesion}}{Las que tienen fin nulo siguen abiertas o expiraron sin cerrarse.}
+\registros{aceptacion}{\textit{AceptacionTerminos}}{Desde el 1 de agosto rige la versión 2026.2.}
+\registros{tokenverificacion}{\textit{TokenVerificacionCorreo}}{}
+\registros{tokenrecuperacion}{\textit{TokenRecuperacion}}{}
+\registros{codigo2fa}{\textit{CodigoSegundoFactor}}{}
+
+\subsubsection*{Perfil y personalización}
+\addcontentsline{toc}{subsubsection}{Perfil y personalización}
+
+\registros{perfil}{\textit{HistorialNickname}, \textit{Avatar} y \textit{EnlaceRed}}{}
+\registros{usuarioobjeto}{\textit{UsuarioObjeto}}{Objetos de cada cuenta según cómo los obtuvo.}
+\registros{equipamiento}{\textit{Equipamiento}}{Lo que cada cuenta lleva en cada ranura.}
+
+\subsubsection*{Partida}
+\addcontentsline{toc}{subsubsection}{Partida}
+
+\registros{partida}{\textit{Partida}}{En la partida contra la IA, el tipo va seguido del nivel de la IA.}
+\registros{participacion}{\textit{Participacion}}{El reloj restante está en milisegundos.}
+\registros{jugadasporpartida}{\textit{Jugada}}{Resumen por partida.}
+\registros{oferta}{\textit{OfertaTablas}}{}
+\registros{enlaceespectador}{\textit{EnlaceEspectador}}{}
+
+\subsubsection*{Emparejamiento, salas y chat}
+\addcontentsline{toc}{subsubsection}{Emparejamiento, salas y chat}
+
+\registros{cola}{\textit{ColaEmparejamiento}}{}
+\registros{sala}{\textit{Sala}}{}
+\registros{salaparticipante}{\textit{SalaParticipante}}{}
+\registros{invitacion}{\textit{Invitacion}}{}
+\registros{mensaje}{\textit{Mensaje}}{}
+
+\subsubsection*{Clasificación y economía}
+\addcontentsline{toc}{subsubsection}{Clasificación y economía}
+
+\registros{estadistica}{\textit{EstadisticaModo}}{Filas de los modos en que la cuenta ha jugado partidas clasificatorias.}
+\registros{historialdivision}{\textit{HistorialDivision}}{}
+\registros{caja}{\textit{Caja}}{}
+\registros{cajacontenido}{\textit{CajaContenido}}{}
+\registros{movimiento}{\textit{MovimientoMoneda}}{El saldo de cada cuenta es la suma de sus movimientos (\mbox{CU-40} \mbox{RN-02}).}
+
+\subsubsection*{Relaciones entre jugadores y tutorial}
+\addcontentsline{toc}{subsubsection}{Relaciones entre jugadores y tutorial}
+
+\registros{social}{\textit{Amistad}, \textit{Solicitud}, \textit{Silencio} y \textit{Bloqueo}}{}
+\registros{tutorial}{\textit{ProgresoTutorial}}{}
+
+\subsubsection*{Moderación y bitácoras}
+\addcontentsline{toc}{subsubsection}{Moderación y bitácoras}
+
+\registros{reporte}{\textit{Reporte}}{}
+\registros{sancion}{\textit{Sancion}}{}
+\registros{apelacion}{\textit{Apelacion}}{}
+\registros{bitacoramoderacion}{\textit{BitacoraModeracion}}{}
+\registros{bitacoraacceso}{\textit{BitacoraAcceso}}{}
