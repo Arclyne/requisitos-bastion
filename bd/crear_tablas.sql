@@ -65,8 +65,8 @@ CREATE TABLE dbo.Modo (
     id_modo            TINYINT        NOT NULL,  -- Identificador del modo.
     codigo             VARCHAR(40)    NOT NULL,  -- Clave del modo en los diccionarios de recursos (D-21): `CLASICO`, `CUATRO_JUGADORES` o `RAPIDA`.
     tamano_tablero     TINYINT        NOT NULL,  -- Casillas por lado: 7 o 9.
-    num_jugadores      TINYINT        NOT NULL,  -- Plazas de la partida: 2 o 4, nunca 3 (CU-07 RN-02).
-    muros_por_jugador  TINYINT        NOT NULL,  -- Muros de cada jugador: 10, 5 o 6 (CU-12 RN-02).
+    num_jugadores      TINYINT        NOT NULL,  -- Plazas de la partida: 2 o 4, nunca 3 (CU-09 RN-02).
+    muros_por_jugador  TINYINT        NOT NULL,  -- Muros de cada jugador: 10, 5 o 6 (CU-14 RN-02).
     activo             BIT            NOT NULL DEFAULT (1),  -- Solo los modos activos reciben estadísticas al dar de alta (CU-02).
     CONSTRAINT PK_Modo PRIMARY KEY (id_modo),
     CONSTRAINT UQ_Modo_codigo UNIQUE (codigo),  -- Dos modos no tienen la misma clave.
@@ -79,7 +79,7 @@ GO
 CREATE TABLE dbo.PalabraProhibida (
     id_palabra         INT IDENTITY(1,1) NOT NULL,  -- Identificador del término.
     termino            NVARCHAR(100) COLLATE Latin1_General_100_CI_AI_SC_UTF8 NOT NULL,  -- Término prohibido, con sus eñes y acentos; se compara sin mayúsculas ni acentos.
-    idioma             VARCHAR(10)    NULL,  -- Idioma del término: `es-MX` o `en`; nulo si se filtra en todos los idiomas (CU-18 RN-01).
+    idioma             VARCHAR(10)    NULL,  -- Idioma del término: `es-MX` o `en`; nulo si se filtra en todos los idiomas (CU-20 RN-01).
     ambito             VARCHAR(10)    NOT NULL,  -- `NICKNAME`, `CHAT` o `AMBOS`.
     CONSTRAINT PK_PalabraProhibida PRIMARY KEY (id_palabra),
     CONSTRAINT UQ_PalabraProhibida_termino UNIQUE (termino, idioma, ambito),  -- Un término no se repite en el mismo idioma y ámbito.
@@ -104,7 +104,7 @@ CREATE TABLE dbo.Usuario (
     contrasena_hash                  VARBINARY(64)  NULL,  -- Resumen criptográfico de la contraseña; nunca en claro (CU-01 RN-02).
     contrasena_sal                   VARBINARY(32)  NULL,  -- Sal del resumen.
     fecha_nacimiento                 DATE           NULL,  -- Para comprobar la edad mínima de ocho años; la edad no se guarda (CU-02).
-    idioma_preferido                 VARCHAR(10)    NOT NULL DEFAULT ('es-MX'),  -- Idioma de la interfaz y de los correos, `es-MX` o `en` (D-21); viaja con el jugador a cualquier dispositivo (CU-05 RN-05).
+    idioma_preferido                 VARCHAR(10)    NOT NULL DEFAULT ('es-MX'),  -- Idioma de la interfaz y de los correos, `es-MX` o `en` (D-21); viaja con el jugador a cualquier dispositivo (CU-07 RN-05).
     intentos_fallidos                TINYINT        NOT NULL DEFAULT (0),  -- Intentos fallidos consecutivos de inicio de sesión (CU-01 RN-03).
     fecha_ultimo_intento_fallido     DATETIME2(0)   NULL,  -- Para restablecer el contador a las 24 horas (CU-01 RN-03).
     bloqueada_hasta                  DATETIME2(0)   NULL,  -- Fin del bloqueo escalonado vigente.
@@ -121,7 +121,7 @@ CREATE TABLE dbo.Usuario (
     CONSTRAINT CK_Usuario_tipo_cuenta CHECK (tipo_cuenta IN ('INVITADO','REGISTRADA')),
     CONSTRAINT CK_Usuario_estado_cuenta CHECK (estado_cuenta IN ('PENDIENTE','ACTIVA','SUSPENDIDA','BANEADA','ELIMINADA')),
     CONSTRAINT CK_Usuario_rol CHECK (rol IN ('JUGADOR','MODERADOR','ADMINISTRADOR')),
-    CONSTRAINT CK_Usuario_idioma CHECK (idioma_preferido IN ('es-MX','en')),  -- Idiomas admitidos (D-21); otro se rechaza (CU-05 FA-05).
+    CONSTRAINT CK_Usuario_idioma CHECK (idioma_preferido IN ('es-MX','en')),  -- Idiomas admitidos (D-21); otro se rechaza (CU-07 FA-05).
     CONSTRAINT CK_Usuario_credenciales CHECK (
         (tipo_cuenta = 'INVITADO' AND correo IS NULL AND contrasena_hash IS NULL AND contrasena_sal IS NULL)
         OR (tipo_cuenta = 'REGISTRADA' AND correo IS NOT NULL)),
@@ -200,11 +200,11 @@ CREATE TABLE dbo.Partida (
     id_partida           INT IDENTITY(1,1) NOT NULL,  -- Identificador de la partida.
     id_modo              TINYINT        NOT NULL,  -- Modo; de él salen tablero, plazas y muros, que no se repiten aquí.
     tipo                 VARCHAR(15)    NOT NULL,  -- `CLASIFICATORIA` o `PRIVADA`; la fase posterior añade `IA` (DES-09).
-    estado               VARCHAR(20)    NOT NULL DEFAULT ('EN_CURSO'),  -- `EN_CURSO`, `PENDIENTE_DE_CIERRE` o `FINALIZADA` (CU-16 RN-11).
+    estado               VARCHAR(20)    NOT NULL DEFAULT ('EN_CURSO'),  -- `EN_CURSO`, `PENDIENTE_DE_CIERRE` o `FINALIZADA` (CU-18 RN-11).
     minutos_reloj        TINYINT        NOT NULL,  -- 3, 5 o 10. En la fase posterior admite nulo para la IA sin reloj (DES-09 RN-06).
-    fecha_inicio         DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Inicio. La duración se calcula y no se guarda (CU-24 RN-02).
+    fecha_inicio         DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Inicio. La duración se calcula y no se guarda (CU-26 RN-02).
     fecha_fin            DATETIME2(0)   NULL,  -- Cierre de la partida.
-    forma_termino        VARCHAR(15)    NULL,  -- `META`, `TIEMPO_AGOTADO`, `RENDICION`, `TABLAS` o `ABANDONO` (CU-16 RN-01).
+    forma_termino        VARCHAR(15)    NULL,  -- `META`, `TIEMPO_AGOTADO`, `RENDICION`, `TABLAS` o `ABANDONO` (CU-18 RN-01).
     turno_actual         TINYINT        NOT NULL DEFAULT (1),  -- `orden_turno` del participante que tiene el turno. Redundancia controlada: se deduce de las *Jugada*, que mandan si discrepan.
     CONSTRAINT PK_Partida PRIMARY KEY (id_partida),
     CONSTRAINT FK_Partida_Modo FOREIGN KEY (id_modo) REFERENCES dbo.Modo (id_modo),  -- 1:N | Un modo se juega en muchas partidas; cada partida es de un modo.
@@ -227,16 +227,16 @@ CREATE TABLE dbo.Participacion (
     orden_turno          TINYINT        NOT NULL,  -- Orden en que juega, de 1 a 4.
     simbolo_peon         VARCHAR(10)    NOT NULL,  -- Símbolo y color que distinguen su peón (color_ficha en el diagrama).
     casilla_actual       VARCHAR(3)     NOT NULL,  -- Casilla que ocupa el peón, en notación de tablero. Redundancia controlada: es la de su última jugada.
-    muros_restantes      TINYINT        NOT NULL,  -- Muros que le quedan; nace con los del modo o de la sala (CU-08). Redundancia controlada: los iniciales menos sus jugadas de tipo `MURO`.
-    reloj_restante       INT            NULL,  -- Milisegundos que le quedan; nulo solo en la fase posterior, en la IA sin reloj. Redundancia controlada: el reloj inicial menos el tiempo consumido en sus jugadas, o cero para quien pierde por tiempo, porque la jugada que llegó tarde no se guarda (CU-11 FA-06).
-    elo_inicial          SMALLINT       NULL,  -- Elo con el que entró; base del cálculo (CU-07 RN-04, CU-16 RN-04).
+    muros_restantes      TINYINT        NOT NULL,  -- Muros que le quedan; nace con los del modo o de la sala (CU-10). Redundancia controlada: los iniciales menos sus jugadas de tipo `MURO`.
+    reloj_restante       INT            NULL,  -- Milisegundos que le quedan; nulo solo en la fase posterior, en la IA sin reloj. Redundancia controlada: el reloj inicial menos el tiempo consumido en sus jugadas, o cero para quien pierde por tiempo, porque la jugada que llegó tarde no se guarda (CU-13 FA-06).
+    elo_inicial          SMALLINT       NULL,  -- Elo con el que entró; base del cálculo (CU-09 RN-04, CU-18 RN-04).
     elo_final            SMALLINT       NULL,  -- Elo resultante; solo en partidas clasificatorias.
-    diferencia_elo       AS (elo_final - elo_inicial),  -- Cambio de elo que muestra el historial (CU-24 RN-03). Calculada y no almacenada: depende de otras dos columnas de la fila.
+    diferencia_elo       AS (elo_final - elo_inicial),  -- Cambio de elo que muestra el historial (CU-26 RN-03). Calculada y no almacenada: depende de otras dos columnas de la fila.
     resultado            VARCHAR(10)    NULL,  -- `GANADA`, `PERDIDA` o `TABLAS`; nulo mientras no termina.
-    posicion             TINYINT        NULL,  -- Posición en el modo de cuatro jugadores, de 1 a 4 (CU-16 RN-02); nula en las de dos jugadores, donde el resultado ya la dice.
+    posicion             TINYINT        NULL,  -- Posición en el modo de cuatro jugadores, de 1 a 4 (CU-18 RN-02); nula en las de dos jugadores, donde el resultado ya la dice.
     forma_termino        VARCHAR(15)    NULL,  -- Forma en que salió antes que la partida, en cuatro jugadores: `META`, `RENDICION`, `ABANDONO` o `TIEMPO_AGOTADO`.
-    conectado            BIT            NOT NULL DEFAULT (1),  -- Estado de conexión; se guarda para sobrevivir a un reinicio (CU-17).
-    fecha_desconexion    DATETIME2(0)   NULL,  -- Inicio de la última desconexión, para el plazo de sesenta segundos (CU-15 RN-06); no se borra al reconectar, así que no sustituye a `conectado`.
+    conectado            BIT            NOT NULL DEFAULT (1),  -- Estado de conexión; se guarda para sobrevivir a un reinicio (CU-19).
+    fecha_desconexion    DATETIME2(0)   NULL,  -- Inicio de la última desconexión, para el plazo de sesenta segundos (CU-17 RN-06); no se borra al reconectar, así que no sustituye a `conectado`.
     terminada            AS (CASE WHEN resultado IS NULL THEN CAST(0 AS BIT) ELSE CAST(1 AS BIT) END),  -- Si la participación está cerrada (D-11). Calculada: es exactamente que `resultado` no sea nulo.
     CONSTRAINT PK_Participacion PRIMARY KEY (id_partida, id_usuario),
     CONSTRAINT UQ_Participacion_turno UNIQUE (id_partida, orden_turno),  -- Dos jugadores no comparten turno en la misma partida.
@@ -251,11 +251,11 @@ GO
 CREATE UNIQUE INDEX UX_Participacion_sin_terminar ON dbo.Participacion (id_usuario) WHERE resultado IS NULL;  -- Una sola participación sin terminar por jugador, (D-11). Filtra por `resultado` porque un índice filtrado no admite columnas calculadas.
 GO
 
--- @entidad Jugada | Movimiento de peón o colocación de muro, en orden. El tablero se reconstruye sumando las jugadas; los muros no tienen tabla propia (CU-12).
+-- @entidad Jugada | Movimiento de peón o colocación de muro, en orden. El tablero se reconstruye sumando las jugadas; los muros no tienen tabla propia (CU-14).
 -- @fn Llave compuesta; cada atributo describe la jugada entera. `tipo` discrimina qué casillas aplican.
 CREATE TABLE dbo.Jugada (
     id_partida           INT            NOT NULL,  -- Partida.
-    numero_jugada        SMALLINT       NOT NULL,  -- Número consecutivo dentro de la partida (CU-11 RN-06).
+    numero_jugada        SMALLINT       NOT NULL,  -- Número consecutivo dentro de la partida (CU-13 RN-06).
     id_usuario           INT            NOT NULL,  -- Jugador que la hizo. La fase posterior lo vuelve nulo para las jugadas de la IA (DES-09 RN-03).
     tipo                 VARCHAR(10)    NOT NULL,  -- `MOVIMIENTO` o `MURO`. Discrimina qué casillas aplican.
     casilla_origen       VARCHAR(3)     NULL,  -- Casilla de salida del peón; solo en `MOVIMIENTO`.
@@ -274,13 +274,13 @@ CREATE TABLE dbo.Jugada (
 );
 GO
 
--- @entidad OfertaTablas | Oferta de tablas en una partida de dos jugadores (CU-13). Se guarda para la reconexión y como prueba de acoso.
+-- @entidad OfertaTablas | Oferta de tablas en una partida de dos jugadores (CU-15). Se guarda para la reconexión y como prueba de acoso.
 -- @fn Llave simple.
 CREATE TABLE dbo.OfertaTablas (
     id_oferta            INT IDENTITY(1,1) NOT NULL,  -- Identificador de la oferta.
     id_partida           INT            NOT NULL,  -- Partida.
     id_ofertante         INT            NOT NULL,  -- Participante que la ofrece.
-    numero_jugada        SMALLINT       NOT NULL,  -- Jugada tras la que se ofreció; limita una oferta cada cinco jugadas (CU-13 RN-03).
+    numero_jugada        SMALLINT       NOT NULL,  -- Jugada tras la que se ofreció; limita una oferta cada cinco jugadas (CU-15 RN-03).
     fecha_oferta         DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Momento de la oferta.
     estado               VARCHAR(10)    NOT NULL DEFAULT ('PENDIENTE'),  -- `PENDIENTE`, `ACEPTADA`, `RECHAZADA` o `CADUCADA`.
     fecha_respuesta      DATETIME2(0)   NULL,  -- Momento en que se aceptó, rechazó o caducó.
@@ -290,7 +290,7 @@ CREATE TABLE dbo.OfertaTablas (
     CONSTRAINT CK_OfertaTablas_respuesta CHECK ((estado = 'PENDIENTE' AND fecha_respuesta IS NULL) OR (estado <> 'PENDIENTE' AND fecha_respuesta IS NOT NULL))
 );
 GO
-CREATE UNIQUE INDEX UX_OfertaTablas_pendiente ON dbo.OfertaTablas (id_partida) WHERE estado = 'PENDIENTE';  -- A lo sumo una oferta pendiente por partida; la segunda es aceptación (CU-13 RN-04).
+CREATE UNIQUE INDEX UX_OfertaTablas_pendiente ON dbo.OfertaTablas (id_partida) WHERE estado = 'PENDIENTE';  -- A lo sumo una oferta pendiente por partida; la segunda es aceptación (CU-15 RN-04).
 GO
 
 /*---------------------------------------------------------------------
@@ -299,19 +299,19 @@ GO
   del Servidor de partidas: mueren con las conexiones TCP (D-24).
 ---------------------------------------------------------------------*/
 
--- @entidad Sala | Sala privada con código, con los ajustes que elige el anfitrión (CU-08).
+-- @entidad Sala | Sala privada con código, con los ajustes que elige el anfitrión (CU-10).
 -- @fn Llave simple. `codigo` solo es único entre las salas no cerradas, así que no es llave candidata.
 CREATE TABLE dbo.Sala (
     id_sala                 INT IDENTITY(1,1) NOT NULL,  -- Identificador de la sala.
-    codigo                  CHAR(6)        NOT NULL,  -- Seis caracteres sin 0, O, 1 ni I; único entre las salas no cerradas (CU-08 RN-01).
+    codigo                  CHAR(6)        NOT NULL,  -- Seis caracteres sin 0, O, 1 ni I; único entre las salas no cerradas (CU-10 RN-01).
     id_anfitrion            INT            NOT NULL,  -- Jugador que creó la sala.
     id_modo                 TINYINT        NOT NULL,  -- Modo, que fija el tablero y las plazas.
-    muros_por_jugador       TINYINT        NOT NULL,  -- De 1 a 20, elegido por el anfitrión (CU-08 RN-04).
+    muros_por_jugador       TINYINT        NOT NULL,  -- De 1 a 20, elegido por el anfitrión (CU-10 RN-04).
     minutos_reloj           TINYINT        NOT NULL,  -- 3, 5 o 10.
     estado                  VARCHAR(10)    NOT NULL DEFAULT ('ABIERTA'),  -- `ABIERTA`, `EN_PARTIDA` o `CERRADA`.
     id_partida              INT            NULL,  -- Partida que se inició desde la sala.
     fecha_creacion          DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Creación de la sala.
-    fecha_ultima_actividad  DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Para cerrar la sala a los treinta minutos sin actividad (CU-08 RN-08).
+    fecha_ultima_actividad  DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Para cerrar la sala a los treinta minutos sin actividad (CU-10 RN-08).
     CONSTRAINT PK_Sala PRIMARY KEY (id_sala),
     CONSTRAINT FK_Sala_Anfitrion FOREIGN KEY (id_anfitrion) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario es anfitrión de muchas salas a lo largo del tiempo.
     CONSTRAINT FK_Sala_Modo FOREIGN KEY (id_modo) REFERENCES dbo.Modo (id_modo),  -- 1:N | Un modo se juega en muchas salas.
@@ -322,11 +322,11 @@ CREATE TABLE dbo.Sala (
     CONSTRAINT CK_Sala_partida CHECK (estado <> 'EN_PARTIDA' OR id_partida IS NOT NULL)
 );
 GO
-CREATE UNIQUE INDEX UX_Sala_codigo ON dbo.Sala (codigo) WHERE estado <> 'CERRADA';  -- El código es único entre las salas no cerradas y puede reutilizarse después (CU-08 RN-01).
+CREATE UNIQUE INDEX UX_Sala_codigo ON dbo.Sala (codigo) WHERE estado <> 'CERRADA';  -- El código es único entre las salas no cerradas y puede reutilizarse después (CU-10 RN-01).
 CREATE UNIQUE INDEX UX_Sala_partida ON dbo.Sala (id_partida) WHERE id_partida IS NOT NULL;  -- Una partida viene de una sola sala.
 GO
 
--- @entidad Mensaje | Mensaje de chat. Se guarda porque el reporte lo adjunta como prueba (CU-18, CU-25).
+-- @entidad Mensaje | Mensaje de chat. Se guarda porque el reporte lo adjunta como prueba (CU-20, CU-27).
 -- @fn Llave simple; `canal` discrimina si aplica partida o sala.
 CREATE TABLE dbo.Mensaje (
     id_mensaje           BIGINT IDENTITY(1,1) NOT NULL,  -- Identificador del mensaje.
@@ -334,7 +334,7 @@ CREATE TABLE dbo.Mensaje (
     canal                VARCHAR(12)    NOT NULL,  -- `PARTIDA` o `SALA` en el núcleo. El CHECK admite ya `ESPECTADORES`, `GLOBAL` y `AMIGOS`, de la fase posterior, porque no necesitan columnas nuevas. Discrimina a qué pertenece el mensaje.
     id_partida           INT            NULL,  -- Partida; solo en los canales `PARTIDA` y `ESPECTADORES`.
     id_sala              INT            NULL,  -- Sala; solo en el canal `SALA`.
-    texto                NVARCHAR(500)  NOT NULL,  -- Texto tal como se escribió, en Unicode y sin traducir (CU-18 RN-09).
+    texto                NVARCHAR(500)  NOT NULL,  -- Texto tal como se escribió, en Unicode y sin traducir (CU-20 RN-09).
     fecha_envio          DATETIME2(3)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Momento del envío.
     CONSTRAINT PK_Mensaje PRIMARY KEY (id_mensaje),
     CONSTRAINT FK_Mensaje_Autor FOREIGN KEY (id_autor) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario escribe muchos mensajes.
@@ -354,17 +354,17 @@ GO
   5. Clasificación
 ---------------------------------------------------------------------*/
 
--- @entidad EstadisticaModo | Estadísticas y elo de cada cuenta en cada modo, solo de partidas clasificatorias (CU-16 RN-12); es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, D-04).
+-- @entidad EstadisticaModo | Estadísticas y elo de cada cuenta en cada modo, solo de partidas clasificatorias (CU-18 RN-12); es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, D-04).
 -- @fn Llave compuesta usuario-modo; cada contador depende de los dos. Sustituye a la entidad Estadísticas 1:1 del diagrama, que habría obligado a repetir los contadores de cada modo. Sin el derivado porcentaje_victorias. Los contadores son redundancia controlada. En el núcleo guarda solo lo que usan el emparejamiento y la moderación; rachas, máximos y división llegan con la fase posterior (D-22).
 CREATE TABLE dbo.EstadisticaModo (
     id_usuario           INT            NOT NULL,  -- Cuenta.
     id_modo              TINYINT        NOT NULL,  -- Modo.
-    puntos_elo           SMALLINT       NOT NULL DEFAULT (1000),  -- Elo actual en el modo; lo escribe solo el CU-16.
-    fecha_ultima_partida DATETIME2(0)   NULL,  -- Fin de la última partida clasificatoria del modo: cuándo se alcanzó el elo actual; desempata el ranking (CU-23 RN-05).
-    partidas_jugadas     INT            NOT NULL DEFAULT (0),  -- Partidas clasificatorias, incluidas las tablas, que no son victoria ni derrota (CU-16 FA-03).
+    puntos_elo           SMALLINT       NOT NULL DEFAULT (1000),  -- Elo actual en el modo; lo escribe solo el CU-18.
+    fecha_ultima_partida DATETIME2(0)   NULL,  -- Fin de la última partida clasificatoria del modo: cuándo se alcanzó el elo actual; desempata el ranking (CU-25 RN-05).
+    partidas_jugadas     INT            NOT NULL DEFAULT (0),  -- Partidas clasificatorias, incluidas las tablas, que no son victoria ni derrota (CU-18 FA-03).
     partidas_ganadas     INT            NOT NULL DEFAULT (0),  -- Victorias. El porcentaje se calcula y no se guarda (DES-08 RN-01).
     partidas_perdidas    INT            NOT NULL DEFAULT (0),  -- Derrotas, incluidas rendiciones y abandonos.
-    abandonos            INT            NOT NULL DEFAULT (0),  -- Abandonos en partidas en línea, para la moderación (CU-15 RN-05).
+    abandonos            INT            NOT NULL DEFAULT (0),  -- Abandonos en partidas en línea, para la moderación (CU-17 RN-05).
     CONSTRAINT PK_EstadisticaModo PRIMARY KEY (id_usuario, id_modo),
     CONSTRAINT FK_EstadisticaModo_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario tiene una fila de estadísticas por cada modo.
     CONSTRAINT FK_EstadisticaModo_Modo FOREIGN KEY (id_modo) REFERENCES dbo.Modo (id_modo),  -- 1:N | Un modo tiene estadísticas de muchos usuarios.
@@ -412,15 +412,15 @@ GO
   Nada de lo que produce la moderación se elimina.
 ---------------------------------------------------------------------*/
 
--- @entidad Reporte | Denuncia de un jugador contra otro. Las pruebas se adjuntan por referencia a la partida, no por copia (CU-25 RN-01).
--- @fn Llave simple. El motivo es un dominio cerrado con `CHECK`: un catálogo de cinco códigos sin más atributos no aportaba nada (D-23). La partida adjunta se valida con llaves foráneas compuestas hacia *Participacion* (CU-25 RN-09).
+-- @entidad Reporte | Denuncia de un jugador contra otro. Las pruebas se adjuntan por referencia a la partida, no por copia (CU-27 RN-01).
+-- @fn Llave simple. El motivo es un dominio cerrado con `CHECK`: un catálogo de cinco códigos sin más atributos no aportaba nada (D-23). La partida adjunta se valida con llaves foráneas compuestas hacia *Participacion* (CU-27 RN-09).
 CREATE TABLE dbo.Reporte (
     id_reporte           INT IDENTITY(1,1) NOT NULL,  -- Identificador del reporte.
     id_denunciante       INT            NOT NULL,  -- Jugador que reporta (rol reportante del diagrama).
     id_reportado         INT            NOT NULL,  -- Jugador reportado.
-    motivo               VARCHAR(25)    NOT NULL,  -- `LENGUAJE_OFENSIVO`, `ACOSO`, `NOMBRE_INAPROPIADO`, `TRAMPAS` o `JUEGO_ANTIDEPORTIVO` (CU-25 RN-08); es la clave de su descripción en los diccionarios de recursos (D-21, D-23).
+    motivo               VARCHAR(25)    NOT NULL,  -- `LENGUAJE_OFENSIVO`, `ACOSO`, `NOMBRE_INAPROPIADO`, `TRAMPAS` o `JUEGO_ANTIDEPORTIVO` (CU-27 RN-08); es la clave de su descripción en los diccionarios de recursos (D-21, D-23).
     descripcion          NVARCHAR(500)  NULL,  -- Texto opcional del denunciante.
-    id_partida           INT            NULL,  -- Partida de la que salen las pruebas, si se adjunta; la jugaron el denunciante y el reportado (CU-25 RN-09).
+    id_partida           INT            NULL,  -- Partida de la que salen las pruebas, si se adjunta; la jugaron el denunciante y el reportado (CU-27 RN-09).
     fecha_reporte        DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Envío.
     estado               VARCHAR(20)    NOT NULL DEFAULT ('PENDIENTE'),  -- `PENDIENTE`, `EN_REVISION`, `RESUELTO_SIN_SANCION` o `RESUELTO_CON_SANCION`.
     id_moderador         INT            NULL,  -- Moderador que lo tiene en revisión o lo resolvió.
@@ -430,8 +430,8 @@ CREATE TABLE dbo.Reporte (
     CONSTRAINT PK_Reporte PRIMARY KEY (id_reporte),
     CONSTRAINT FK_Reporte_Denunciante FOREIGN KEY (id_denunciante) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario emite muchos reportes (relación Emite del diagrama).
     CONSTRAINT FK_Reporte_Reportado FOREIGN KEY (id_reportado) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario recibe muchos reportes (relación Señala del diagrama).
-    CONSTRAINT FK_Reporte_ParticipacionDenunciante FOREIGN KEY (id_partida, id_denunciante) REFERENCES dbo.Participacion (id_partida, id_usuario),  -- 1:N | La partida adjunta es una que jugó el denunciante (CU-25 RN-09; relación Sobre del diagrama).
-    CONSTRAINT FK_Reporte_ParticipacionReportado FOREIGN KEY (id_partida, id_reportado) REFERENCES dbo.Participacion (id_partida, id_usuario),  -- 1:N | La partida adjunta es una que jugó el reportado (CU-25 RN-09).
+    CONSTRAINT FK_Reporte_ParticipacionDenunciante FOREIGN KEY (id_partida, id_denunciante) REFERENCES dbo.Participacion (id_partida, id_usuario),  -- 1:N | La partida adjunta es una que jugó el denunciante (CU-27 RN-09; relación Sobre del diagrama).
+    CONSTRAINT FK_Reporte_ParticipacionReportado FOREIGN KEY (id_partida, id_reportado) REFERENCES dbo.Participacion (id_partida, id_usuario),  -- 1:N | La partida adjunta es una que jugó el reportado (CU-27 RN-09).
     CONSTRAINT FK_Reporte_Moderador FOREIGN KEY (id_moderador) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un moderador revisa muchos reportes.
     CONSTRAINT CK_Reporte_distintos CHECK (id_denunciante <> id_reportado),
     CONSTRAINT CK_Reporte_motivo CHECK (motivo IN ('LENGUAJE_OFENSIVO','ACOSO','NOMBRE_INAPROPIADO','TRAMPAS','JUEGO_ANTIDEPORTIVO')),
@@ -442,7 +442,7 @@ CREATE TABLE dbo.Reporte (
             AND nota_resolucion IS NOT NULL AND fecha_resolucion IS NOT NULL))
 );
 GO
-CREATE UNIQUE INDEX UX_Reporte_partida ON dbo.Reporte (id_denunciante, id_reportado, id_partida) WHERE id_partida IS NOT NULL;  -- No se reporta dos veces al mismo jugador por la misma partida (CU-25 RN-03).
+CREATE UNIQUE INDEX UX_Reporte_partida ON dbo.Reporte (id_denunciante, id_reportado, id_partida) WHERE id_partida IS NOT NULL;  -- No se reporta dos veces al mismo jugador por la misma partida (CU-27 RN-03).
 CREATE INDEX IX_Reporte_cola ON dbo.Reporte (estado, fecha_reporte);
 GO
 
@@ -548,7 +548,7 @@ GO
   DELETE de quien ejecuta, solo su permiso EXECUTE.
 ---------------------------------------------------------------------*/
 
--- CU-08 FA-09, CU-16 paso 10: la sala se cierra por inactividad, al salir el anfitrión o al terminar su partida.
+-- CU-10 FA-09, CU-18 paso 10: la sala se cierra por inactividad, al salir el anfitrión o al terminar su partida.
 -- Quién ocupa cada plaza lo lleva el Servidor de partidas en memoria (D-24).
 CREATE PROCEDURE dbo.usp_Sala_Cerrar
     @id_sala INT

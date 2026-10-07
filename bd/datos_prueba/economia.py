@@ -3,7 +3,7 @@
 
 Las monedas de las partidas no se escriben aquí: el generador crea un
 MovimientoMoneda de tipo PARTIDA por participante de cada partida
-clasificatoria (CU-16 RN-08) con estas tarifas de prueba.
+clasificatoria (CU-18 RN-08) con estas tarifas de prueba.
 """
 
 MONEDAS_2J = {"GANADA": 100, "PERDIDA": 25, "TABLAS": 50}
@@ -19,7 +19,7 @@ COMPRAS = [
     (5, 603, "2026-08-21 17:00:00"),
 ]
 
-# usuario, nivel alcanzado, fecha, monedas, objeto, tipo de caja, estado de la caja (CU-16 FA-03).
+# usuario, nivel alcanzado, fecha, monedas, objeto, tipo de caja, estado de la caja (CU-18 FA-03).
 RECOMPENSAS_NIVEL = [
     (3, 3, "2026-07-20 19:10:00", 100, 402, None, None),
     (4, 2, "2026-07-26 17:40:00", 0, None, 1, "CADUCADA"),

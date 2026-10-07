@@ -1,0 +1,14 @@
+\subsection*{DES-23: Retar a un jugador que no es amigo}
+\addcontentsline{toc}{subsection}{DES-23: Retar a un jugador que no es amigo}
+\label{des-23}
+
+\begin{fichacu}{DES-23}{Retar a un jugador que no es amigo}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador con cuenta registrada}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prioridad}{Won't en esta versión: requisito deseable. Categoría (c) Agregado del equipo. Se separó del \mbox{CU-23} cuando la invitación a jugar quedó limitada a amigos (\mbox{D-29}).}
+  \crudFila{Objetivo}{Permitir que un jugador registrado invite a una partida privada a cualquier otro jugador registrado, sea o no su amigo, desde el menú de ese jugador en el ranking, el historial o el fin de partida.}
+  \crudFila{Disparador}{El Jugador selecciona ``retar'' en el menú de un jugador que no es su amigo.}
+  \textbf{Descripción} & \cuCelda{Sigue el flujo normal del \mbox{CU-23} sin la comprobación de la \textit{Amistad} de su paso 6. Era el \mbox{FA-01} del caso ``Invitar a un amigo a jugar'' en la versión anterior, con la regla de que se podía retar a cualquier jugador. Al retomarlo hay que decidir si el destinatario puede rechazar los retos de desconocidos y cómo se evita que los retos se usen para molestar a otros jugadores. Una cuenta de invitado sigue sin poder retar ni ser retada.} \\ \hline
+\end{fichacu}
+\clearpage

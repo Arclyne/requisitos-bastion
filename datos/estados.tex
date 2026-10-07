@@ -17,8 +17,8 @@ La tabla siguiente hace la misma cuenta para todas las columnas de dominio cerra
 Los valores sin registros son estados de excepción o de paso, o eventos que no ocurren en la fotografía; incluirlos obligaría a romper la coherencia del escenario:
 
 \begin{reglas}
-  \item \textbf{\at{PENDIENTE\_DE\_CIERRE} de \textit{Partida}.} Una partida queda así solo si se agotan los reintentos al cerrarla (\mbox{CU-16} \mbox{EX-01}), y el servidor la cierra en cuanto puede.
-  \item \textbf{\at{EN\_PARTIDA} de \textit{Sala}.} Una sala lo está solo mientras dura su partida privada (\mbox{CU-08}). La de la sala 1 ya terminó, y la única partida en curso es clasificatoria.
+  \item \textbf{\at{PENDIENTE\_DE\_CIERRE} de \textit{Partida}.} Una partida queda así solo si se agotan los reintentos al cerrarla (\mbox{CU-18} \mbox{EX-01}), y el servidor la cierra en cuanto puede.
+  \item \textbf{\at{EN\_PARTIDA} de \textit{Sala}.} Una sala lo está solo mientras dura su partida privada (\mbox{CU-10}). La de la sala 1 ya terminó, y la única partida en curso es clasificatoria.
   \item \textbf{\at{META}, \at{TIEMPO\_AGOTADO} y \at{RENDICION} en la salida de una \textit{Participacion}.} Esa columna solo se escribe cuando un jugador sale antes que los demás de una partida de cuatro, y en la de prueba los tres salen por abandono. Las cinco formas sí aparecen como forma de término de las partidas.
   \item \textbf{\at{EN\_REVISION} de \textit{Apelacion}.} Una apelación tomada vuelve a la cola a los treinta minutos (\mbox{DES-17} \mbox{RN-03}), y a la hora de la fotografía la única moderadora conectada es la que aplicó las sanciones apeladas, que no puede resolverlas (\mbox{DES-19} \mbox{RN-06}).
   \item \textbf{\at{DEVOLUCION} de \textit{MovimientoMoneda}.} Solo aparece si falla la confirmación de la compra de una caja (\mbox{DES-14} \mbox{EX-02}) o para corregir un movimiento (\mbox{DES-15} \mbox{RN-01}), y en el escenario no falla ninguna compra.

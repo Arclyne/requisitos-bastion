@@ -41,9 +41,9 @@ Veintidós tablas las escriben únicamente casos de uso de la fase posterior. Pa
 \endhead
 Skins y cosméticos & \textit{Ranura}, \textit{ObjetoCosmetico}, \textit{UsuarioObjeto}, \textit{Equipamiento}, \textit{ParticipacionObjeto} & \mbox{DES-03}, \mbox{DES-07}, \mbox{DES-13}, \mbox{DES-14} \\ \hline
 Tienda, cajas y monedas & \textit{TipoCaja}, \textit{TipoCajaObjeto}, \textit{Caja}, \textit{CajaContenido}, \textit{MovimientoMoneda} & \mbox{DES-13}, \mbox{DES-14}, \mbox{DES-15} \\ \hline
-Divisiones & \textit{Division}, \textit{HistorialDivision} & \mbox{DES-08}, \mbox{CU-23} \\ \hline
-Perfil y enlaces de perfil & \textit{Avatar}, \textit{EnlaceRed}, \textit{HistorialNickname} & \mbox{CU-05}, \mbox{DES-06} \\ \hline
-Amigos e invitaciones & \textit{Amistad}, \textit{Solicitud}, \textit{Invitacion} & \mbox{CU-19}, \mbox{CU-20}, \mbox{CU-21}, \mbox{CU-22} \\ \hline
+Divisiones & \textit{Division}, \textit{HistorialDivision} & \mbox{DES-08}, \mbox{CU-25} \\ \hline
+Perfil y enlaces de perfil & \textit{Avatar}, \textit{EnlaceRed}, \textit{HistorialNickname} & \mbox{CU-07}, \mbox{DES-06} \\ \hline
+Amigos e invitaciones & \textit{Amistad}, \textit{Solicitud}, \textit{Invitacion} & \mbox{CU-21}, \mbox{CU-22}, \mbox{CU-23}, \mbox{CU-24} \\ \hline
 Espectador & \textit{EnlaceEspectador} & \mbox{DES-11} \\ \hline
 IA & \textit{NivelIA} & \mbox{DES-09} \\ \hline
 Tutorial & \textit{Leccion}, \textit{ProgresoTutorial} & \mbox{DES-16} \\ \hline
@@ -68,7 +68,7 @@ Los agregados también añadían columnas a tablas que sí son del núcleo. Esas
 \end{longtable}
 \end{center}
 
-\textit{EstadisticaModo} se queda en el núcleo con el elo, las partidas jugadas, ganadas y perdidas, y los abandonos: el emparejamiento busca rival por elo (\mbox{CU-07} \mbox{RN-03}) y la moderación lee los abandonos (\mbox{CU-15} \mbox{RN-05}). \at{tipo\_cuenta} también se queda aunque el invitado sea de la fase posterior: agregarlo después obligaría a volver nulo el \at{correo} y a reconstruir su índice único.
+\textit{EstadisticaModo} se queda en el núcleo con el elo, las partidas jugadas, ganadas y perdidas, y los abandonos: el emparejamiento busca rival por elo (\mbox{CU-09} \mbox{RN-03}) y la moderación lee los abandonos (\mbox{CU-17} \mbox{RN-05}). \at{tipo\_cuenta} también se queda aunque el invitado sea de la fase posterior: agregarlo después obligaría a volver nulo el \at{correo} y a reconstruir su índice único.
 
 \subsubsection*{Tablas que no aportan}
 \addcontentsline{toc}{subsubsection}{Tablas que no aportan}
@@ -90,6 +90,6 @@ Revisadas con el criterio de la normalización al revés ---¿esta tabla separa 
 \end{longtable}
 \end{center}
 
-\textbf{Lo que se consideró y se conservó.} \textit{OfertaTablas} podría vivir en memoria como la cola, pero la reconexión la lee (\mbox{CU-17}) y queda como prueba si un jugador ofrece tablas para acosar. \textit{Sala} se conserva porque guarda los ajustes de la partida privada y es el destino de los mensajes del chat de la sala, que el reporte adjunta. \textit{Silencio} y \textit{Bloqueo} se conservan porque son la moderación que ejerce el propio jugador (\mbox{DES-10}). Las columnas \at{fecha\_ultimo\_envio\_verificacion} y \at{fecha\_ultimo\_envio\_recuperacion} parecen derivables de \textit{CodigoVerificacion}, pero no lo son: registran el último correo que sí se envió, y un código existe aunque el envío falle.
+\textbf{Lo que se consideró y se conservó.} \textit{OfertaTablas} podría vivir en memoria como la cola, pero la reconexión la lee (\mbox{CU-19}) y queda como prueba si un jugador ofrece tablas para acosar. \textit{Sala} se conserva porque guarda los ajustes de la partida privada y es el destino de los mensajes del chat de la sala, que el reporte adjunta. \textit{Silencio} y \textit{Bloqueo} se conservan porque son la moderación que ejerce el propio jugador (\mbox{DES-10}). Las columnas \at{fecha\_ultimo\_envio\_verificacion} y \at{fecha\_ultimo\_envio\_recuperacion} parecen derivables de \textit{CodigoVerificacion}, pero no lo son: registran el último correo que sí se envió, y un código existe aunque el envío falle.
 
 \textbf{Cómo se leen las secciones siguientes.} Las tablas de entidades, atributos, llaves, relaciones y normalización, y los diagramas entidad-relación, describen el \textbf{núcleo}. Las tablas de la fase posterior tienen su propia subsección al final del modelo, con sus diagramas y sus atributos. Las subsecciones que cuentan cómo se llegó del diagrama original al modelo conservan la historia completa, y cuando nombran una tabla que esta revisión quitó, remiten a esta subsección.

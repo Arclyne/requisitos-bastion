@@ -11,8 +11,8 @@ Catálogos precargados (\mbox{D-09})
 \texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & PK & Identificador del modo. \\ \hline
 \texttt{codigo} & \texttt{VARCHAR(40)} & No & UQ & Clave del modo en los diccionarios de recursos (\mbox{D-21}): \texttt{CLASICO}, \texttt{CUATRO\_\allowbreak{}JUGADORES} o \texttt{RAPIDA}. \\ \hline
 \texttt{tamano\_\allowbreak{}tablero} & \texttt{TINYINT} & No &  & Casillas por lado: 7 o 9. \\ \hline
-\texttt{num\_\allowbreak{}jugadores} & \texttt{TINYINT} & No &  & Plazas de la partida: 2 o 4, nunca 3 (\mbox{CU-07} \mbox{RN-02}). \\ \hline
-\texttt{muros\_\allowbreak{}por\_\allowbreak{}jugador} & \texttt{TINYINT} & No &  & Muros de cada jugador: 10, 5 o 6 (\mbox{CU-12} \mbox{RN-02}). \\ \hline
+\texttt{num\_\allowbreak{}jugadores} & \texttt{TINYINT} & No &  & Plazas de la partida: 2 o 4, nunca 3 (\mbox{CU-09} \mbox{RN-02}). \\ \hline
+\texttt{muros\_\allowbreak{}por\_\allowbreak{}jugador} & \texttt{TINYINT} & No &  & Muros de cada jugador: 10, 5 o 6 (\mbox{CU-14} \mbox{RN-02}). \\ \hline
 \texttt{activo} & \texttt{BIT} & No &  & Solo los modos activos reciben estadísticas al dar de alta (\mbox{CU-02}). Por omisión, \texttt{1}. \\ \hline
 \end{tablaatributos}
 
@@ -20,7 +20,7 @@ Catálogos precargados (\mbox{D-09})
 \begin{tablaatributos}
 \texttt{id\_\allowbreak{}palabra} & \texttt{INT}, identidad & No & PK & Identificador del término. \\ \hline
 \texttt{termino} & \texttt{NVARCHAR(100)} & No &  & Término prohibido, con sus eñes y acentos; se compara sin mayúsculas ni acentos. \\ \hline
-\texttt{idioma} & \texttt{VARCHAR(10)} & Sí &  & Idioma del término: \texttt{es-MX} o \texttt{en}; nulo si se filtra en todos los idiomas (\mbox{CU-18} \mbox{RN-01}). \\ \hline
+\texttt{idioma} & \texttt{VARCHAR(10)} & Sí &  & Idioma del término: \texttt{es-MX} o \texttt{en}; nulo si se filtra en todos los idiomas (\mbox{CU-20} \mbox{RN-01}). \\ \hline
 \texttt{ambito} & \texttt{VARCHAR(10)} & No &  & \texttt{NICKNAME}, \texttt{CHAT} o \texttt{AMBOS}. \\ \hline
 \end{tablaatributos}
 

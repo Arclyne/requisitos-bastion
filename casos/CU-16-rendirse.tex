@@ -1,13 +1,13 @@
-\subsection*{CU-14: Rendirse}
-\addcontentsline{toc}{subsection}{CU-14: Rendirse}
-\label{cu-14}
+\subsection*{CU-16: Rendirse}
+\addcontentsline{toc}{subsection}{CU-16: Rendirse}
+\label{cu-16}
 
-\begin{fichacu}{CU-14}{Rendirse}
+\begin{fichacu}{CU-16}{Rendirse}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
   \crudFila{Prototipos}{19d, 7g}
-  \crudFila{Prioridad}{Should (debería estar). Categoría (b) Núcleo de jugabilidad. Da una salida limpia sin forzar un abandono y reutiliza el cierre del \mbox{CU-16}.}
+  \crudFila{Prioridad}{Should (debería estar). Categoría (b) Núcleo de jugabilidad. Da una salida limpia sin forzar un abandono y reutiliza el cierre del \mbox{CU-18}.}
   \crudFila{Objetivo}{Permitir al Jugador dar por perdida la partida en cualquier momento, avisándole antes del elo que va a perder si la partida es clasificatoria.}
   \crudFila{Disparador}{El Jugador selecciona ``rendirse'' en el menú de partida.}
   \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
@@ -27,13 +27,13 @@
    & \cuCelda{\begin{cuenum}[start=9]
       \item El Servidor de partidas verifica que la partida siga \texttt{EN\_\allowbreak{}CURSO}. \textit{(Ver \mbox{FA-04})}
       \item El Servidor de partidas marca como \texttt{CADUCADA} cualquier \textit{OfertaTablas} pendiente de la partida.
-      \item Si la partida es de dos jugadores, el flujo continúa en el \mbox{CU-16} Finalizar la partida con la forma de término \texttt{RENDICION} y el rival como ganador. \textit{(Ver \mbox{FA-05})}
+      \item Si la partida es de dos jugadores, el flujo continúa en el \mbox{CU-18} Finalizar la partida con la forma de término \texttt{RENDICION} y el rival como ganador. \textit{(Ver \mbox{FA-05})}
       \item El SJM despliega la pantalla de fin de partida con el resultado y, si la partida es clasificatoria, el elo perdido.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La partida no es clasificatoria}\par
     \begin{cuenum}[start=1]
-      \item El Servidor de partidas responde con la pérdida estimada en cero, indicando que la partida no es clasificatoria (\mbox{RN-03} del \mbox{CU-16}).
+      \item El Servidor de partidas responde con la pérdida estimada en cero, indicando que la partida no es clasificatoria (\mbox{RN-03} del \mbox{CU-18}).
       \item El SJM muestra la confirmación sin mencionar el elo, solo que la partida se dará por perdida.
       \item El flujo continúa en el paso 6 del FN.
     \end{cuenum}} \\
@@ -60,13 +60,13 @@
     \begin{cuenum}[start=1]
       \item El Servidor de partidas cierra solo la \textit{Participacion} del Jugador con resultado perdido, forma de término \texttt{RENDICION} y la última posición entre los activos, y retira su peón del tablero (\mbox{RN-04}).
       \item Los muros que había colocado permanecen en el tablero.
-      \item Si quedan al menos dos jugadores activos, la partida sigue y el turno salta al Jugador; si queda uno solo, el flujo continúa en el \mbox{CU-16} para toda la partida.
+      \item Si quedan al menos dos jugadores activos, la partida sigue y el turno salta al Jugador; si queda uno solo, el flujo continúa en el \mbox{CU-18} para toda la partida.
       \item El SJM del Jugador despliega su resultado y la opción de volver al menú principal.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al cerrar la partida}\par
     \begin{cuenum}[start=1]
-      \item El \mbox{CU-16} no logra cerrar la partida y la deja \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} conforme a su \mbox{EX-01}.
+      \item El \mbox{CU-18} no logra cerrar la partida y la deja \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} conforme a su \mbox{EX-01}.
       \item La rendición queda registrada como la causa del término y se aplicará al reintentar el cierre.
       \item El SJM muestra que el resultado se está procesando.
       \item Fin del caso de uso.
@@ -80,21 +80,21 @@
    & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe}\par
     \begin{cuenum}[start=1]
       \item El SJM muestra la barra de conexión perdida.
-      \item Si la rendición no llegó a enviarse, la partida sigue y el flujo continúa en el \mbox{CU-17}; si llegó, el resultado se verá al reconectar.
+      \item Si la rendición no llegó a enviarse, la partida sigue y el flujo continúa en el \mbox{CU-19}; si llegó, el resultado se verá al reconectar.
     \end{cuenum}} \\ \hline
   \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, la partida está cerrada con la forma de término \texttt{RENDICION}, el rival es el ganador y el Jugador perdió la partida.
       \item \textbf{\mbox{POST-02}} Si el caso termina por el \mbox{FA-05}, solo la \textit{Participacion} del Jugador está cerrada; la partida sigue para los demás.
       \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-02}, nada cambió.
-      \item \textbf{\mbox{POST-04}} El elo mostrado en la confirmación es el mismo que después aplicó el \mbox{CU-16}, salvo que la partida hubiera terminado por otra causa.
+      \item \textbf{\mbox{POST-04}} El elo mostrado en la confirmación es el mismo que después aplicó el \mbox{CU-18}, salvo que la partida hubiera terminado por otra causa.
     \end{cureglas}} \\ \hline
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} Un jugador puede rendirse en cualquier momento de la partida, sea o no su turno.
-      \item \textbf{\mbox{RN-02}} La confirmación muestra el elo que se perderá, calculado con la misma fórmula que aplicará el \mbox{CU-16}. Es la confirmación intermedia de las tres que frenan una partida.
+      \item \textbf{\mbox{RN-02}} La confirmación muestra el elo que se perderá, calculado con la misma fórmula que aplicará el \mbox{CU-18}. Es la confirmación intermedia de las tres que frenan una partida.
       \item \textbf{\mbox{RN-03}} Confirmar la rendición no detiene el reloj.
       \item \textbf{\mbox{RN-04}} En el modo de cuatro jugadores, rendirse retira al jugador con la última posición entre los activos; sus muros se quedan.
       \item \textbf{\mbox{RN-05}} En una partida clasificatoria, una rendición cuenta como derrota en la \textit{EstadisticaModo}.
-      \item \textbf{\mbox{RN-06}} Rendirse es distinto de abandonar: la rendición se hace desde el menú y termina la participación de forma ordenada; el abandono es el \mbox{CU-15}.
+      \item \textbf{\mbox{RN-06}} Rendirse es distinto de abandonar: la rendición se hace desde el menú y termina la participación de forma ordenada; el abandono es el \mbox{CU-17}.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre la vista previa del elo.}\par
     Calcular el elo en la confirmación obliga a un intercambio adicional con el servidor antes de rendirse, que se podría evitar calculándolo en el cliente. No se hace así porque el cliente no conoce con certeza el elo de entrada de los rivales ni los parámetros del modo, y un aviso que dice ``perderás 12'' y después resta 15 es peor que no avisar. La consulta no escribe nada, así que cancelar la rendición no deja rastro.} \\ \hline

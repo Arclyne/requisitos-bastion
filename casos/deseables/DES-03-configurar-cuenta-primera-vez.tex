@@ -45,7 +45,7 @@
       \item El jugador selecciona ``Omitir''.
       \item El SJM envía el mensaje \texttt{FIRST\_\allowbreak{}TIME\_\allowbreak{}SETUP\_\allowbreak{}REQUEST} sin peón ni icono.
       \item El Servidor de partidas conserva el peón y el icono predeterminados, y escribe únicamente \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} (\mbox{RN-04}).
-      \item El flujo continúa en el paso 15 del FN. La pantalla no volverá a aparecer: el peón y el icono pueden cambiarse después desde el \mbox{DES-07} y el \mbox{CU-05}.
+      \item El flujo continúa en el paso 15 del FN. La pantalla no volverá a aparecer: el peón y el icono pueden cambiarse después desde el \mbox{DES-07} y el \mbox{CU-07}.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-02}: El jugador quiere ver el peón sobre el tablero completo}\par
     \begin{cuenum}[start=1]
@@ -119,7 +119,7 @@
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} La configuración inicial se ofrece una sola vez por cuenta. La marca es \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial}, y no un indicador booleano, porque la fecha sirve además para saber cuánto tardó el jugador en empezar.
       \item \textbf{\mbox{RN-02}} El peón elegido debe ser un objeto inicial de la \textit{Ranura} de peón que el \textit{Usuario} ya posee. Esta pantalla no otorga objetos: el alta ya otorgó todos los iniciales (\mbox{CU-02} paso 18).
-      \item \textbf{\mbox{RN-03}} El icono se elige entre los treinta y dos iconos predefinidos de animales y objetos. Subir una imagen propia no está disponible aquí; es el \mbox{FA-01} del \mbox{CU-05}.
+      \item \textbf{\mbox{RN-03}} El icono se elige entre los treinta y dos iconos predefinidos de animales y objetos. Subir una imagen propia no está disponible aquí; es el \mbox{FA-01} del \mbox{CU-07}.
       \item \textbf{\mbox{RN-04}} Omitir la configuración es válido y equivale a aceptar los predeterminados. La pantalla no insiste.
       \item \textbf{\mbox{RN-05}} El \texttt{nickname} no se elige en este caso: se eligió en el registro (\mbox{CU-02}) o se elegirá al vincular la cuenta de invitado (\mbox{DES-02}).
       \item \textbf{\mbox{RN-06}} Todas las validaciones del cliente se repiten en el servidor.

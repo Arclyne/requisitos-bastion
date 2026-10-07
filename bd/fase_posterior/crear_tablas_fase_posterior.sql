@@ -84,7 +84,7 @@ CREATE TABLE dbo.Division (
     id_division        TINYINT        NOT NULL,  -- Identificador de la división.
     codigo             VARCHAR(40)    NOT NULL,  -- Clave de la división en los diccionarios de recursos (D-21), como `BRONCE` o `MURO_PIEDRA`.
     elo_minimo         SMALLINT       NOT NULL,  -- Elo con el que se asciende a esta división; ordena las divisiones de la más baja a la más alta.
-    elo_descenso       SMALLINT       NOT NULL,  -- Elo por debajo del cual se desciende; es el umbral visible (CU-16 RN-07).
+    elo_descenso       SMALLINT       NOT NULL,  -- Elo por debajo del cual se desciende; es el umbral visible (CU-18 RN-07).
     CONSTRAINT PK_Division PRIMARY KEY (id_division),
     CONSTRAINT UQ_Division_codigo UNIQUE (codigo),  -- Dos divisiones no tienen la misma clave.
     CONSTRAINT UQ_Division_elo_minimo UNIQUE (elo_minimo),  -- Dos divisiones no empiezan en el mismo elo, así que el orden no tiene empates.
@@ -151,7 +151,7 @@ GO
 
 -- Usuario: lo que usan el perfil, la economía, los amigos y el espectador.
 ALTER TABLE dbo.Usuario ADD
-    codigo_amigo                 CHAR(8)        NULL,  -- Código para encontrar al jugador sin su nickname (CU-19 RN-05).
+    codigo_amigo                 CHAR(8)        NULL,  -- Código para encontrar al jugador sin su nickname (CU-21 RN-05).
     id_icono                     TINYINT        NOT NULL CONSTRAINT DF_Usuario_id_icono DEFAULT (1),  -- Icono predefinido, de 1 a 32 (DES-03 RN-03).
     permite_espectadores         BIT            NOT NULL CONSTRAINT DF_Usuario_permite_espectadores DEFAULT (1),  -- Si admite espectadores (DES-11 RN-02).
     nivel                        SMALLINT       NOT NULL CONSTRAINT DF_Usuario_nivel DEFAULT (1),  -- Nivel alcanzado.
@@ -163,17 +163,17 @@ GO
 ALTER TABLE dbo.Usuario ADD
     CONSTRAINT CK_Usuario_rangos CHECK (id_icono BETWEEN 1 AND 32 AND nivel >= 1 AND experiencia >= 0
         AND saldo_monedas >= 0 AND cajas_sin_raro BETWEEN 0 AND 10);
-CREATE UNIQUE INDEX UX_Usuario_codigo_amigo ON dbo.Usuario (codigo_amigo) WHERE codigo_amigo IS NOT NULL;  -- El código de amigo es único por cuenta (CU-19 RN-05).
+CREATE UNIQUE INDEX UX_Usuario_codigo_amigo ON dbo.Usuario (codigo_amigo) WHERE codigo_amigo IS NOT NULL;  -- El código de amigo es único por cuenta (CU-21 RN-05).
 GO
 
 -- EstadisticaModo: lo que muestran el perfil y el ranking.
 ALTER TABLE dbo.EstadisticaModo ADD
     elo_maximo           SMALLINT       NOT NULL CONSTRAINT DF_EstadisticaModo_elo_maximo DEFAULT (1000),  -- Elo más alto alcanzado.
-    racha_actual         SMALLINT       NOT NULL CONSTRAINT DF_EstadisticaModo_racha_actual DEFAULT (0),  -- Victorias seguidas por llegada a meta (CU-16 RN-09).
+    racha_actual         SMALLINT       NOT NULL CONSTRAINT DF_EstadisticaModo_racha_actual DEFAULT (0),  -- Victorias seguidas por llegada a meta (CU-18 RN-09).
     mejor_racha          SMALLINT       NOT NULL CONSTRAINT DF_EstadisticaModo_mejor_racha DEFAULT (0),  -- Racha más larga.
     tiempo_total_jugado  INT            NOT NULL CONSTRAINT DF_EstadisticaModo_tiempo DEFAULT (0),  -- Segundos jugados en partidas clasificatorias del modo.
     barreras_colocadas   INT            NOT NULL CONSTRAINT DF_EstadisticaModo_barreras DEFAULT (0),  -- Muros colocados, contados desde Jugada al cerrar cada partida.
-    id_division          TINYINT        NULL;  -- División actual; nula hasta jugar cinco partidas en el modo (CU-16 RN-12).
+    id_division          TINYINT        NULL;  -- División actual; nula hasta jugar cinco partidas en el modo (CU-18 RN-12).
 GO
 ALTER TABLE dbo.EstadisticaModo ADD
     CONSTRAINT FK_EstadisticaModo_Division FOREIGN KEY (id_division) REFERENCES dbo.Division (id_division),
@@ -234,34 +234,34 @@ CREATE TABLE dbo.HistorialNickname (
 );
 GO
 
--- @entidad Avatar | Imagen subida por el jugador como foto de perfil (CU-05 FA-01).
+-- @entidad Avatar | Imagen subida por el jugador como foto de perfil (CU-07 FA-01).
 -- @fn Llave simple.
 CREATE TABLE dbo.Avatar (
     id_avatar          INT IDENTITY(1,1) NOT NULL,  -- Identificador del avatar.
     id_usuario         INT            NOT NULL,  -- Cuenta que lo subió.
     ruta_imagen        NVARCHAR(260)  NOT NULL,  -- Ubicación del archivo en el almacenamiento del servidor.
-    formato            VARCHAR(4)     NOT NULL,  -- `JPG` o `PNG` (CU-05 RN-05).
+    formato            VARCHAR(4)     NOT NULL,  -- `JPG` o `PNG` (CU-07 RN-05).
     tamano_bytes       INT            NOT NULL,  -- Tamaño del archivo; hasta dos megabytes.
     fecha_subida       DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Momento de la subida.
-    vigente            BIT            NOT NULL DEFAULT (1),  -- Si es el avatar que se muestra; el anterior pasa a falso (CU-05 RN-06).
+    vigente            BIT            NOT NULL DEFAULT (1),  -- Si es el avatar que se muestra; el anterior pasa a falso (CU-07 RN-06).
     CONSTRAINT PK_Avatar PRIMARY KEY (id_avatar),
     CONSTRAINT FK_Avatar_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario sube muchos avatares; solo uno está vigente.
     CONSTRAINT CK_Avatar_formato CHECK (formato IN ('JPG','PNG')),
     CONSTRAINT CK_Avatar_tamano CHECK (tamano_bytes BETWEEN 1 AND 2097152)
 );
 GO
-CREATE UNIQUE INDEX UX_Avatar_vigente ON dbo.Avatar (id_usuario) WHERE vigente = 1;  -- A lo sumo un avatar vigente por cuenta (CU-05 RN-06).
+CREATE UNIQUE INDEX UX_Avatar_vigente ON dbo.Avatar (id_usuario) WHERE vigente = 1;  -- A lo sumo un avatar vigente por cuenta (CU-07 RN-06).
 GO
 
--- @entidad EnlaceRed | Enlace a una red social que el jugador muestra en su perfil (CU-05).
+-- @entidad EnlaceRed | Enlace a una red social que el jugador muestra en su perfil (CU-07).
 -- @fn Llave sustituta; (id_usuario, `orden`) es llave candidata.
 CREATE TABLE dbo.EnlaceRed (
     id_enlace          INT IDENTITY(1,1) NOT NULL,  -- Identificador del enlace.
     id_usuario         INT            NOT NULL,  -- Cuenta que lo publica.
     orden              TINYINT        NOT NULL,  -- Posición en el perfil, de 1 a 4.
-    url                NVARCHAR(500)  NOT NULL,  -- Dirección web; no se admiten acortadores (CU-05 RN-03).
+    url                NVARCHAR(500)  NOT NULL,  -- Dirección web; no se admiten acortadores (CU-07 RN-03).
     CONSTRAINT PK_EnlaceRed PRIMARY KEY (id_enlace),
-    CONSTRAINT UQ_EnlaceRed_orden UNIQUE (id_usuario, orden),  -- Junto con el CHECK del orden, limita a cuatro enlaces por cuenta (CU-05 RN-02).
+    CONSTRAINT UQ_EnlaceRed_orden UNIQUE (id_usuario, orden),  -- Junto con el CHECK del orden, limita a cuatro enlaces por cuenta (CU-07 RN-02).
     CONSTRAINT FK_EnlaceRed_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario publica hasta cuatro enlaces.
     CONSTRAINT CK_EnlaceRed_orden CHECK (orden BETWEEN 1 AND 4)
 );
@@ -331,7 +331,7 @@ GO
   5. Invitaciones
 ---------------------------------------------------------------------*/
 
--- @entidad Invitacion | Invitación a jugar, que da acceso a una sala sin conocer su código (CU-21).
+-- @entidad Invitacion | Invitación a jugar, que da acceso a una sala sin conocer su código (CU-23).
 -- @fn Llave simple.
 CREATE TABLE dbo.Invitacion (
     id_invitacion        INT IDENTITY(1,1) NOT NULL,  -- Identificador de la invitación.
@@ -339,7 +339,7 @@ CREATE TABLE dbo.Invitacion (
     id_emisor            INT            NOT NULL,  -- Jugador que invita.
     id_destinatario      INT            NOT NULL,  -- Jugador invitado.
     fecha_invitacion     DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Envío.
-    fecha_expiracion     DATETIME2(0)   NOT NULL,  -- Sesenta segundos después del envío (CU-21 RN-03).
+    fecha_expiracion     DATETIME2(0)   NOT NULL,  -- Sesenta segundos después del envío (CU-23 RN-03).
     estado               VARCHAR(10)    NOT NULL DEFAULT ('PENDIENTE'),  -- `PENDIENTE`, `ACEPTADA`, `RECHAZADA` o `EXPIRADA`.
     CONSTRAINT PK_Invitacion PRIMARY KEY (id_invitacion),
     CONSTRAINT FK_Invitacion_Sala FOREIGN KEY (id_sala) REFERENCES dbo.Sala (id_sala),  -- 1:N | Una sala recibe muchas invitaciones.
@@ -349,7 +349,7 @@ CREATE TABLE dbo.Invitacion (
     CONSTRAINT CK_Invitacion_distintos CHECK (id_emisor <> id_destinatario)
 );
 GO
-CREATE UNIQUE INDEX UX_Invitacion_pendiente ON dbo.Invitacion (id_emisor, id_destinatario) WHERE estado = 'PENDIENTE';  -- Una sola invitación pendiente del mismo emisor al mismo destinatario (CU-21 RN-03).
+CREATE UNIQUE INDEX UX_Invitacion_pendiente ON dbo.Invitacion (id_emisor, id_destinatario) WHERE estado = 'PENDIENTE';  -- Una sola invitación pendiente del mismo emisor al mismo destinatario (CU-23 RN-03).
 GO
 
 /*---------------------------------------------------------------------
@@ -445,7 +445,7 @@ GO
   7. Relaciones entre jugadores y tutorial
 ---------------------------------------------------------------------*/
 
--- @entidad Amistad | Amistad recíproca entre dos cuentas, guardada una sola vez por par ordenado (CU-20 RN-03).
+-- @entidad Amistad | Amistad recíproca entre dos cuentas, guardada una sola vez por par ordenado (CU-22 RN-03).
 -- @fn Llave compuesta de par ordenado: el CHECK impide guardar la misma amistad en los dos sentidos.
 CREATE TABLE dbo.Amistad (
     id_usuario_a         INT            NOT NULL,  -- El menor de los dos identificadores.
@@ -460,15 +460,15 @@ GO
 CREATE INDEX IX_Amistad_b ON dbo.Amistad (id_usuario_b);
 GO
 
--- @entidad Solicitud | Solicitud de amistad pendiente. Tiene dirección, a diferencia de la amistad, y se borra al responderse (CU-19, CU-20).
+-- @entidad Solicitud | Solicitud de amistad pendiente. Tiene dirección, a diferencia de la amistad, y se borra al responderse (CU-21, CU-22).
 -- @fn Llave sustituta; (id_solicitante, id_destinatario) es llave candidata.
 CREATE TABLE dbo.Solicitud (
     id_solicitud         INT IDENTITY(1,1) NOT NULL,  -- Identificador de la solicitud.
     id_solicitante       INT            NOT NULL,  -- Jugador que la envía.
     id_destinatario      INT            NOT NULL,  -- Jugador que la recibe.
-    fecha_solicitud      DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Envío; caduca a los treinta días (CU-20 RN-05).
+    fecha_solicitud      DATETIME2(0)   NOT NULL DEFAULT (SYSUTCDATETIME()),  -- Envío; caduca a los treinta días (CU-22 RN-05).
     CONSTRAINT PK_Solicitud PRIMARY KEY (id_solicitud),
-    CONSTRAINT UQ_Solicitud_par UNIQUE (id_solicitante, id_destinatario),  -- No hay dos solicitudes iguales entre el mismo par (CU-19 RN-03).
+    CONSTRAINT UQ_Solicitud_par UNIQUE (id_solicitante, id_destinatario),  -- No hay dos solicitudes iguales entre el mismo par (CU-21 RN-03).
     CONSTRAINT FK_Solicitud_Solicitante FOREIGN KEY (id_solicitante) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario envía muchas solicitudes (rol solicitante).
     CONSTRAINT FK_Solicitud_Destinatario FOREIGN KEY (id_destinatario) REFERENCES dbo.Usuario (id_usuario),  -- 1:N | Un usuario recibe muchas solicitudes (rol destinatario).
     CONSTRAINT CK_Solicitud_distintos CHECK (id_solicitante <> id_destinatario)
@@ -496,7 +496,7 @@ GO
   Borrados físicos de la fase posterior y versión completa del bloqueo.
 ---------------------------------------------------------------------*/
 
--- CU-20: la solicitud se elimina al aceptarla, rechazarla o cancelarla (CU-20 RN-06).
+-- CU-22: la solicitud se elimina al aceptarla, rechazarla o cancelarla (CU-22 RN-06).
 CREATE PROCEDURE dbo.usp_Solicitud_Eliminar
     @id_solicitud INT
 AS
@@ -507,7 +507,7 @@ BEGIN
 END;
 GO
 
--- CU-22: eliminar a un amigo. Se busca por el par ordenado (CU-22 RN-02).
+-- CU-24: eliminar a un amigo. Se busca por el par ordenado (CU-24 RN-02).
 CREATE PROCEDURE dbo.usp_Amistad_Eliminar
     @id_usuario INT,
     @id_amigo   INT
@@ -521,7 +521,7 @@ BEGIN
 END;
 GO
 
--- CU-05 paso 13: el jugador quita un enlace de su perfil.
+-- CU-07 paso 13: el jugador quita un enlace de su perfil.
 CREATE PROCEDURE dbo.usp_EnlaceRed_Eliminar
     @id_usuario INT,
     @id_enlace  INT
@@ -600,7 +600,7 @@ BEGIN
         DELETE FROM dbo.Bloqueo           WHERE id_bloqueador = @id_usuario OR id_bloqueado = @id_usuario;
         UPDATE dbo.Avatar SET vigente = 0 WHERE id_usuario = @id_usuario AND vigente = 1;
 
-        -- Paso 15. Si era anfitrión de una sala abierta, la sala se cierra (CU-08 RN-07). La cola y
+        -- Paso 15. Si era anfitrión de una sala abierta, la sala se cierra (CU-10 RN-07). La cola y
         -- las plazas de sala las vacía el Servidor de partidas en memoria (D-24).
         UPDATE dbo.Sala SET estado = 'CERRADA' WHERE id_anfitrion = @id_usuario AND estado = 'ABIERTA';
 

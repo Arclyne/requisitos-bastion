@@ -1,8 +1,8 @@
-\subsection*{CU-19: Agregar a un amigo}
-\addcontentsline{toc}{subsection}{CU-19: Agregar a un amigo}
-\label{cu-19}
+\subsection*{CU-21: Agregar a un amigo}
+\addcontentsline{toc}{subsection}{CU-21: Agregar a un amigo}
+\label{cu-21}
 
-\begin{fichacu}{CU-19}{Agregar a un amigo}
+\begin{fichacu}{CU-21}{Agregar a un amigo}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
@@ -54,7 +54,7 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-03}: El Jugador añade desde el fin de partida o desde un perfil}\par
     \begin{cuenum}[start=1]
-      \item El Jugador selecciona ``Añadir'' en la \texttt{GUI\_\allowbreak{}MatchEnd} o en la \texttt{GUI\_\allowbreak{}PlayerCard} de otro jugador (\mbox{CU-06}).
+      \item El Jugador selecciona ``Añadir'' en la \texttt{GUI\_\allowbreak{}MatchEnd} o en la \texttt{GUI\_\allowbreak{}PlayerCard} de otro jugador (\mbox{CU-08}).
       \item El SJM omite la búsqueda: ya conoce el identificador del destinatario.
       \item El flujo continúa en el paso 10 del FN.
     \end{cuenum}} \\
@@ -84,7 +84,7 @@
    & \cuCelda{\textbf{\mbox{FA-08}: Ya existe una solicitud en sentido contrario}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas interpreta el envío como la aceptación de la solicitud que el destinatario ya había mandado: querer ser amigos en ambos sentidos es exactamente lo que hace falta (\mbox{RN-04}).
-      \item El flujo continúa en el \mbox{CU-20} Responder una solicitud de amistad, con la respuesta de aceptación.
+      \item El flujo continúa en el \mbox{CU-22} Responder una solicitud de amistad, con la respuesta de aceptación.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-09}: La búsqueda no encuentra a nadie}\par
@@ -118,8 +118,8 @@
       \item El flujo continúa en el paso 8 del FN.
     \end{cuenum}} \\ \hline
   \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
-      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe una \textit{Solicitud} con su solicitante, su destinatario y su fecha. Mientras la fila exista, la solicitud está pendiente: se borra al responderse (\mbox{RN-06} del \mbox{CU-20}).
-      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, todavía \textbf{no} existe ninguna \textit{Amistad}: la crea el \mbox{CU-20} al aceptarse.
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, existe una \textit{Solicitud} con su solicitante, su destinatario y su fecha. Mientras la fila exista, la solicitud está pendiente: se borra al responderse (\mbox{RN-06} del \mbox{CU-22}).
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, todavía \textbf{no} existe ninguna \textit{Amistad}: la crea el \mbox{CU-22} al aceptarse.
       \item \textbf{\mbox{POST-03}} Si el caso termina por el FN, el destinatario tiene la solicitud en su pestaña de entrantes y el solicitante en la de enviadas.
       \item \textbf{\mbox{POST-04}} Si el caso termina por el \mbox{FA-08}, existe una \textit{Amistad} y ya no existe ninguna \textit{Solicitud} pendiente entre los dos.
       \item \textbf{\mbox{POST-05}} No puede existir más de una \textit{Solicitud} pendiente entre el mismo par de jugadores, en ningún sentido.
@@ -135,7 +135,7 @@
     \end{cureglas}} \\
    & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-07}} Las cuentas de invitado no participan en el sistema de amistades.
-      \item \textbf{\mbox{RN-08}} Una solicitud sin responder caduca a los treinta días (\mbox{RN-05} del \mbox{CU-20}), para que las pestañas no acumulen solicitudes muertas.
+      \item \textbf{\mbox{RN-08}} Una solicitud sin responder caduca a los treinta días (\mbox{RN-05} del \mbox{CU-22}), para que las pestañas no acumulen solicitudes muertas.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué Solicitud y Amistad son tablas distintas.}\par
     Se consideró una sola tabla de relación con un estado que pasara de pendiente a aceptada. Se descartó porque la \textit{Amistad} es simétrica y la \textit{Solicitud} no: la solicitud tiene un emisor y un receptor, y esa dirección importa para pintar las dos pestañas y para el \mbox{RN-04}. Fundirlas obligaría a llevar la dirección en una fila que después deja de tenerla, y a distinguir en cada consulta si la fila significa ``quiere'' o ``son''. Con dos tablas, aceptar es borrar de una y escribir en la otra, y consultar la lista de amigos no tiene que filtrar por estado.} \\ \hline

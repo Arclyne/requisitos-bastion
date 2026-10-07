@@ -1,8 +1,8 @@
-\subsection*{CU-17: Reconectar a una partida en curso}
-\addcontentsline{toc}{subsection}{CU-17: Reconectar a una partida en curso}
-\label{cu-17}
+\subsection*{CU-19: Reconectar a una partida en curso}
+\addcontentsline{toc}{subsection}{CU-19: Reconectar a una partida en curso}
+\label{cu-19}
 
-\begin{fichacu}{CU-17}{Reconectar a una partida en curso}
+\begin{fichacu}{CU-19}{Reconectar a una partida en curso}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador}
   \crudFila{Actores interesados}{Rivales de la partida}
@@ -18,7 +18,7 @@
     \end{cureglas}} \\ \hline
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
       \item El Servidor de partidas detecta que la conexión del Jugador con la partida se perdió, pone \texttt{conectado} en falso y escribe \texttt{fecha\_\allowbreak{}desconexion} en su \textit{Participacion}. \textit{(Ver \mbox{EX-01})}
-      \item El Servidor de partidas notifica a los rivales con \texttt{OPPONENT\_\allowbreak{}DISCONNECTED}, y sus SJM despliegan la \texttt{GUI\_\allowbreak{}OpponentDisconnected} sobre el tablero con el tiempo transcurrido; a los sesenta segundos habilitan ``Reclamar victoria'', que continúa en el \mbox{FA-06} del \mbox{CU-15} (\mbox{RN-03}).
+      \item El Servidor de partidas notifica a los rivales con \texttt{OPPONENT\_\allowbreak{}DISCONNECTED}, y sus SJM despliegan la \texttt{GUI\_\allowbreak{}OpponentDisconnected} sobre el tablero con el tiempo transcurrido; a los sesenta segundos habilitan ``Reclamar victoria'', que continúa en el \mbox{FA-06} del \mbox{CU-17} (\mbox{RN-03}).
       \item El reloj del Jugador sigue corriendo en el servidor si es su turno (\mbox{RN-01}).
       \item El SJM del Jugador recupera la conexión o se vuelve a abrir, y despliega la barra de reconexión. \textit{(Ver \mbox{FA-01})}
       \item El SJM envía el mensaje \texttt{RECONNECT\_\allowbreak{}REQUEST} con el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
@@ -32,7 +32,7 @@
       \item El Servidor de partidas responde con \texttt{RECONNECT\_\allowbreak{}OK} y el estado completo de la partida.
       \item El Servidor de partidas notifica a los rivales con \texttt{OPPONENT\_\allowbreak{}RECONNECTED}, y sus SJM retiran la espera.
       \item El SJM reconstruye el tablero aplicando las jugadas en orden, restaura los relojes y el historial, y despliega la \texttt{GUI\_\allowbreak{}Match} con un aviso de que la partida siguió viva (6e). \textit{(Ver \mbox{FA-06})}
-      \item El flujo continúa en el \mbox{CU-11} o en el \mbox{CU-12} cuando llegue el turno del Jugador.
+      \item El flujo continúa en el \mbox{CU-13} o en el \mbox{CU-14} cuando llegue el turno del Jugador.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador no quiere volver todavía}\par
@@ -58,7 +58,7 @@
    & \cuCelda{\textbf{\mbox{FA-04}: El reloj del Jugador se agotó durante la desconexión}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas detecta que el reloj restante es cero o negativo.
-      \item El flujo continúa en el \mbox{CU-16} con la forma de término \texttt{TIEMPO\_\allowbreak{}AGOTADO} para el Jugador, y después en el \mbox{FA-03} de este caso.
+      \item El flujo continúa en el \mbox{CU-18} con la forma de término \texttt{TIEMPO\_\allowbreak{}AGOTADO} para el Jugador, y después en el \mbox{FA-03} de este caso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-05}: El Jugador reconecta desde otro dispositivo}\par
     \begin{cuenum}[start=1]
@@ -105,8 +105,8 @@
     \end{cureglas}} \\ \hline
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} La desconexión de un jugador no detiene su reloj. Si se desconecta en su turno, su tiempo se consume; si no es su turno, la partida sigue para los demás.
-      \item \textbf{\mbox{RN-02}} La partida se conserva completa en el servidor mientras dure: toda jugada se escribe antes de notificarse (\mbox{RN-12} del \mbox{CU-11}), así que no hay nada que recuperar del cliente.
-      \item \textbf{\mbox{RN-03}} Los rivales pueden reclamar la victoria a partir de los sesenta segundos de desconexión (\mbox{RN-06} del \mbox{CU-15}).
+      \item \textbf{\mbox{RN-02}} La partida se conserva completa en el servidor mientras dure: toda jugada se escribe antes de notificarse (\mbox{RN-12} del \mbox{CU-13}), así que no hay nada que recuperar del cliente.
+      \item \textbf{\mbox{RN-03}} Los rivales pueden reclamar la victoria a partir de los sesenta segundos de desconexión (\mbox{RN-06} del \mbox{CU-17}).
       \item \textbf{\mbox{RN-04}} Una partida admite una sola conexión por participante. Reconectar desde otro dispositivo toma el control de la partida, pero no cierra la sesión del dispositivo anterior.
       \item \textbf{\mbox{RN-05}} Si el que se cae es el servidor, el tiempo de caída no se descuenta de ningún reloj: la culpa no es de ningún jugador.
       \item \textbf{\mbox{RN-06}} El cliente nunca reconstruye el tablero con un estado parcial.

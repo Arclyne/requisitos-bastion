@@ -1,8 +1,8 @@
-\subsection*{CU-12: Colocar un muro}
-\addcontentsline{toc}{subsection}{CU-12: Colocar un muro}
-\label{cu-12}
+\subsection*{CU-14: Colocar un muro}
+\addcontentsline{toc}{subsection}{CU-14: Colocar un muro}
+\label{cu-14}
 
-\begin{fichacu}{CU-12}{Colocar un muro}
+\begin{fichacu}{CU-14}{Colocar un muro}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
@@ -38,7 +38,7 @@
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=17]
       \item El Servidor de partidas descuenta uno a los muros restantes de la \textit{Participacion} y actualiza su reloj.
-      \item El Servidor de partidas pasa el turno al siguiente jugador activo y marca como \texttt{CADUCADA} la \textit{OfertaTablas} pendiente del rival, si la hay (\mbox{RN-05} del \mbox{CU-13}).
+      \item El Servidor de partidas pasa el turno al siguiente jugador activo y marca como \texttt{CADUCADA} la \textit{OfertaTablas} pendiente del rival, si la hay (\mbox{RN-05} del \mbox{CU-15}).
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-04})}
       \item El Servidor de partidas notifica a todos los participantes con \texttt{PLACE\_\allowbreak{}WALL\_\allowbreak{}OK} y el estado actualizado.
       \item El SJM dibuja el muro, actualiza el contador del inventario, añade la jugada al historial en notación y atenúa el tablero. \textit{(Ver \mbox{FA-12})}
@@ -47,7 +47,7 @@
   \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador se quedó sin muros}\par
     \begin{cuenum}[start=1]
       \item El SJM muestra el inventario vacío y no permite entrar en modo muro.
-      \item El Jugador solo puede mover el peón, que es el \mbox{CU-11} (\mbox{RN-02}).
+      \item El Jugador solo puede mover el peón, que es el \mbox{CU-13} (\mbox{RN-02}).
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-02}: El Jugador lleva el muro a un surco no válido}\par
@@ -76,7 +76,7 @@
    & \cuCelda{\textbf{\mbox{FA-06}: La partida ya terminó}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas responde con \texttt{MATCH\_\allowbreak{}ALREADY\_\allowbreak{}FINISHED} y el resultado.
-      \item El SJM descarta la jugada y despliega la pantalla de fin de partida del \mbox{CU-16}.
+      \item El SJM descarta la jugada y despliega la pantalla de fin de partida del \mbox{CU-18}.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-07}: No es el turno del Jugador, o la jugada llega fuera de orden}\par
@@ -88,7 +88,7 @@
    & \cuCelda{\textbf{\mbox{FA-08}: El reloj del Jugador se agotó antes de la jugada}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas descarta la colocación recibida.
-      \item El flujo continúa en el \mbox{CU-16} Finalizar la partida, con la forma de término \texttt{TIEMPO\_\allowbreak{}AGOTADO} para ese jugador.
+      \item El flujo continúa en el \mbox{CU-18} Finalizar la partida, con la forma de término \texttt{TIEMPO\_\allowbreak{}AGOTADO} para ese jugador.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-09}: El servidor no encuentra muros restantes}\par
@@ -134,7 +134,7 @@
     \begin{cuenum}[start=1]
       \item El SJM detecta el cierre inesperado del socket y muestra la barra de conexión perdida.
       \item El reloj del Jugador sigue corriendo en el servidor.
-      \item El flujo continúa en el \mbox{CU-17} Reconectar a una partida en curso.
+      \item El flujo continúa en el \mbox{CU-19} Reconectar a una partida en curso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{EX-04}: Fallo al confirmar la transacción}\par
     \begin{cuenum}[start=1]
@@ -158,7 +158,7 @@
     \end{cureglas}} \\ \hline
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} El Servidor de partidas es la única autoridad sobre el estado del tablero.
-      \item \textbf{\mbox{RN-02}} Cada jugador dispone de un número de muros fijado por el \textit{Modo}: diez en clásico, cinco en cuatro jugadores y seis en rápida. En una sala privada, el anfitrión puede elegir otro número (\mbox{RN-04} del \mbox{CU-08}). Agotados, solo puede mover.
+      \item \textbf{\mbox{RN-02}} Cada jugador dispone de un número de muros fijado por el \textit{Modo}: diez en clásico, cinco en cuatro jugadores y seis en rápida. En una sala privada, el anfitrión puede elegir otro número (\mbox{RN-04} del \mbox{CU-10}). Agotados, solo puede mover.
       \item \textbf{\mbox{RN-03}} Un muro ocupa el surco entre casillas y mide exactamente dos casillas.
       \item \textbf{\mbox{RN-04}} Los muros no se solapan ni se cruzan entre sí.
       \item \textbf{\mbox{RN-05}} Un muro \textbf{nunca} puede dejar a un jugador sin ningún camino a su fila de meta. La comprobación se hace sobre todos los jugadores activos, no solo sobre el rival inmediato, y es la única regla del juego que obliga a recorrer el tablero entero antes de aceptar una jugada.

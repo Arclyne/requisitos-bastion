@@ -1231,7 +1231,7 @@
         ],
         "ref": "Participacion",
         "card": "1:N",
-        "texto": "La partida adjunta es una que jugó el denunciante (CU-25 RN-09; relación Sobre del diagrama).",
+        "texto": "La partida adjunta es una que jugó el denunciante (CU-27 RN-09; relación Sobre del diagrama).",
         "opcional": true
       },
       {
@@ -1242,7 +1242,7 @@
         ],
         "ref": "Participacion",
         "card": "1:N",
-        "texto": "La partida adjunta es una que jugó el reportado (CU-25 RN-09).",
+        "texto": "La partida adjunta es una que jugó el reportado (CU-27 RN-09).",
         "opcional": true
       },
       {

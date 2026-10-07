@@ -1,8 +1,8 @@
-\subsection*{CU-15: Abandonar la partida}
-\addcontentsline{toc}{subsection}{CU-15: Abandonar la partida}
-\label{cu-15}
+\subsection*{CU-17: Abandonar la partida}
+\addcontentsline{toc}{subsection}{CU-17: Abandonar la partida}
+\label{cu-17}
 
-\begin{fichacu}{CU-15}{Abandonar la partida}
+\begin{fichacu}{CU-17}{Abandonar la partida}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
@@ -25,7 +25,7 @@
       \item Si la partida es clasificatoria, el Servidor de partidas incrementa \texttt{abandonos} en la \textit{EstadisticaModo} del Jugador para el modo de la partida (\mbox{RN-05}). \textit{(Ver \mbox{EX-01})}
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=9]
-      \item Si la partida es de dos jugadores, el flujo continúa en el \mbox{CU-16} Finalizar la partida con la forma de término \texttt{ABANDONO} y el rival como ganador. \textit{(Ver \mbox{FA-05})}
+      \item Si la partida es de dos jugadores, el flujo continúa en el \mbox{CU-18} Finalizar la partida con la forma de término \texttt{ABANDONO} y el rival como ganador. \textit{(Ver \mbox{FA-05})}
       \item El SJM del Jugador despliega el menú principal con el resultado de la partida.
       \item El SJM del rival muestra que el Jugador abandonó y despliega la pantalla de fin de partida.
       \item Fin del caso de uso.
@@ -39,7 +39,7 @@
    & \cuCelda{\textbf{\mbox{FA-02}: El Jugador cierra el juego sin confirmar}\par
     \begin{cuenum}[start=1]
       \item El SJM no puede mostrar la confirmación porque el sistema operativo cierra la aplicación.
-      \item El Servidor de partidas detecta la pérdida de conexión y \textbf{no} lo trata como abandono: lo trata como desconexión, conforme al \mbox{CU-17} (\mbox{RN-03}).
+      \item El Servidor de partidas detecta la pérdida de conexión y \textbf{no} lo trata como abandono: lo trata como desconexión, conforme al \mbox{CU-19} (\mbox{RN-03}).
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-03}: La sesión o la participación no son válidas}\par
@@ -58,7 +58,7 @@
     \begin{cuenum}[start=1]
       \item El Servidor de partidas cierra solo la \textit{Participacion} del Jugador con resultado perdido, forma de término \texttt{ABANDONO} y la última posición entre los activos, y retira su peón del tablero.
       \item Los muros que había colocado permanecen en el tablero y siguen bloqueando (\mbox{RN-04}).
-      \item Si quedan al menos dos jugadores activos, la partida sigue y el turno salta al Jugador; si queda uno solo, el flujo continúa en el \mbox{CU-16}.
+      \item Si quedan al menos dos jugadores activos, la partida sigue y el turno salta al Jugador; si queda uno solo, el flujo continúa en el \mbox{CU-18}.
       \item Los SJM de los demás muestran el aviso de abandono y la fila del jugador tachada.
       \item Fin del caso de uso.
     \end{cuenum}} \\
@@ -103,9 +103,9 @@
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} Abandonar cuenta como una derrota a todos los efectos: elo y contadores.
       \item \textbf{\mbox{RN-02}} Abandonar exige escribir la palabra de confirmación. Es la confirmación más fuerte de las tres que frenan una partida, porque deja al rival sin partida.
-      \item \textbf{\mbox{RN-03}} Cerrar el juego o perder la conexión no es abandonar. Es una desconexión, y la partida espera al jugador mientras su reloj corre (\mbox{CU-17}).
-      \item \textbf{\mbox{RN-04}} El peón del que abandona se retira del tablero; sus muros permanecen (\mbox{RN-08} del \mbox{CU-16}).
-      \item \textbf{\mbox{RN-05}} Los abandonos se cuentan por modo en \texttt{abandonos} de la \textit{EstadisticaModo}, solo en las partidas clasificatorias, como los demás contadores (\mbox{RN-03} del \mbox{CU-16}): una partida de sala no cambia las estadísticas de nadie. El contador no se muestra en el perfil.
+      \item \textbf{\mbox{RN-03}} Cerrar el juego o perder la conexión no es abandonar. Es una desconexión, y la partida espera al jugador mientras su reloj corre (\mbox{CU-19}).
+      \item \textbf{\mbox{RN-04}} El peón del que abandona se retira del tablero; sus muros permanecen (\mbox{RN-08} del \mbox{CU-18}).
+      \item \textbf{\mbox{RN-05}} Los abandonos se cuentan por modo en \texttt{abandonos} de la \textit{EstadisticaModo}, solo en las partidas clasificatorias, como los demás contadores (\mbox{RN-03} del \mbox{CU-18}): una partida de sala no cambia las estadísticas de nadie. El contador no se muestra en el perfil.
       \item \textbf{\mbox{RN-06}} El rival de un jugador desconectado puede reclamar la victoria a partir de los sesenta segundos de desconexión. Antes de eso debe esperar, porque la mayoría de las desconexiones son breves.
       \item \textbf{\mbox{RN-07}} Reclamar la victoria convierte la desconexión en abandono, con las mismas consecuencias que un abandono voluntario.
     \end{cureglas}} \\ \hline

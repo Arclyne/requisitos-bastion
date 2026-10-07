@@ -1,14 +1,14 @@
-\subsection*{CU-13: Ofrecer y aceptar tablas}
-\addcontentsline{toc}{subsection}{CU-13: Ofrecer y aceptar tablas}
-\label{cu-13}
+\subsection*{CU-15: Ofrecer y aceptar tablas}
+\addcontentsline{toc}{subsection}{CU-15: Ofrecer y aceptar tablas}
+\label{cu-15}
 
-\begin{fichacu}{CU-13}{Ofrecer y aceptar tablas}
+\begin{fichacu}{CU-15}{Ofrecer y aceptar tablas}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador que ofrece}
   \crudFila{Actores interesados}{Jugador rival, que acepta o rechaza}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
   \crudFila{Prototipos}{19d, 7g}
-  \crudFila{Prioridad}{Should (debería estar). Categoría (b) Núcleo de jugabilidad. Termina la partida por acuerdo y reutiliza el cierre del \mbox{CU-16}.}
+  \crudFila{Prioridad}{Should (debería estar). Categoría (b) Núcleo de jugabilidad. Termina la partida por acuerdo y reutiliza el cierre del \mbox{CU-18}.}
   \crudFila{Objetivo}{Permitir que los dos jugadores de una partida acuerden terminarla en empate, con una sola pulsación para ofrecer y otra para aceptar, sin interrumpir el juego mientras la oferta está pendiente.}
   \crudFila{Disparador}{El Jugador selecciona ``ofrecer tablas'' en el menú de partida.}
   \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
@@ -31,7 +31,7 @@
       \item El rival selecciona ``Aceptar tablas'' y su SJM envía \texttt{ACCEPT\_\allowbreak{}DRAW\_\allowbreak{}REQUEST}. \textit{(Ver \mbox{FA-05}, \mbox{FA-06})}
       \item El Servidor de partidas verifica que la \textit{OfertaTablas} siga \texttt{PENDIENTE} y que la partida siga \texttt{EN\_\allowbreak{}CURSO}. \textit{(Ver \mbox{FA-07})}
       \item El Servidor de partidas marca la \textit{OfertaTablas} como \texttt{ACEPTADA} con la \texttt{fecha\_\allowbreak{}respuesta}. \textit{(Ver \mbox{EX-01})}
-      \item El flujo continúa en el \mbox{CU-16} Finalizar la partida, con la forma de término \texttt{TABLAS}. \textit{(Ver \mbox{EX-02})}
+      \item El flujo continúa en el \mbox{CU-18} Finalizar la partida, con la forma de término \texttt{TABLAS}. \textit{(Ver \mbox{EX-02})}
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La opción no está disponible}\par
@@ -75,7 +75,7 @@
     \begin{cuenum}[start=1]
       \item El Servidor de partidas encuentra la partida \texttt{FINALIZADA}, por ejemplo porque un reloj llegó a cero mientras la oferta estaba pendiente.
       \item El Servidor de partidas marca la oferta como \texttt{CADUCADA}, si seguía pendiente, y responde con \texttt{MATCH\_\allowbreak{}ALREADY\_\allowbreak{}FINISHED} y el resultado.
-      \item El SJM despliega la pantalla de fin de partida del \mbox{CU-16}.
+      \item El SJM despliega la pantalla de fin de partida del \mbox{CU-18}.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
@@ -86,7 +86,7 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{EX-02}: Fallo al cerrar la partida tras aceptar}\par
     \begin{cuenum}[start=1]
-      \item El \mbox{CU-16} no logra cerrar la partida y la deja \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} conforme a su \mbox{EX-01}.
+      \item El \mbox{CU-18} no logra cerrar la partida y la deja \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} conforme a su \mbox{EX-01}.
       \item La \textit{OfertaTablas} conserva el estado \texttt{ACEPTADA}, que es la prueba del acuerdo al reintentar el cierre.
       \item Fin del caso de uso.
     \end{cuenum}} \\
@@ -98,7 +98,7 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{EX-04}: La conexión se interrumpe}\par
     \begin{cuenum}[start=1]
-      \item El SJM muestra la barra de conexión perdida y el flujo continúa en el \mbox{CU-17}.
+      \item El SJM muestra la barra de conexión perdida y el flujo continúa en el \mbox{CU-19}.
       \item Una oferta pendiente no caduca por la desconexión, pero sí al jugar el rival, conforme al \mbox{FA-06}.
     \end{cuenum}} \\ \hline
   \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
@@ -114,10 +114,10 @@
       \item \textbf{\mbox{RN-04}} Si los dos jugadores ofrecen tablas, la segunda oferta se resuelve como aceptación de la primera.
       \item \textbf{\mbox{RN-05}} Una oferta caduca en cuanto el rival juega sin aceptarla.
       \item \textbf{\mbox{RN-06}} Ofrecer tablas no pide confirmación: basta con un botón. Es la confirmación más ligera de las tres que frenan una partida, porque no cuesta nada al que la ofrece.
-      \item \textbf{\mbox{RN-07}} Las tablas aceptadas mueven el elo conforme al \mbox{FA-03} del \mbox{CU-16} solo si la partida es clasificatoria (\mbox{RN-03} del \mbox{CU-16}); en las demás no cambian el elo ni las estadísticas de nadie.
+      \item \textbf{\mbox{RN-07}} Las tablas aceptadas mueven el elo conforme al \mbox{FA-03} del \mbox{CU-18} solo si la partida es clasificatoria (\mbox{RN-03} del \mbox{CU-18}); en las demás no cambian el elo ni las estadísticas de nadie.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué la oferta se guarda.}\par
-    Una oferta de tablas podría vivir solo en la memoria del servidor, porque dura como mucho una jugada. Se guarda por dos motivos. El primero es el \mbox{CU-17}: si el rival se desconecta y vuelve, la oferta tiene que seguir ahí o haber caducado de forma comprobable. El segundo es el \mbox{RN-03}: ofrecer tablas en bucle es una forma conocida de acoso en juegos por turnos, y el límite de una oferta cada cinco jugadas se comprueba contra la jugada de la última oferta del jugador, que debe sobrevivir, como la partida, a un reinicio del servidor.} \\ \hline
+    Una oferta de tablas podría vivir solo en la memoria del servidor, porque dura como mucho una jugada. Se guarda por dos motivos. El primero es el \mbox{CU-19}: si el rival se desconecta y vuelve, la oferta tiene que seguir ahí o haber caducado de forma comprobable. El segundo es el \mbox{RN-03}: ofrecer tablas en bucle es una forma conocida de acoso en juegos por turnos, y el límite de una oferta cada cinco jugadas se comprueba contra la jugada de la última oferta del jugador, que debe sobrevivir, como la partida, a un reinicio del servidor.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}, \textit{Participacion}:} lee por token \textit{(paso 3)}
       \item \textbf{\textit{Partida}, \textit{Modo}:} lee \texttt{estado} y número de jugadores \textit{(pasos 3, 11, \mbox{PRE-02})}

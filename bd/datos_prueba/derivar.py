@@ -100,7 +100,7 @@ def partidas():
         elif g["forma"] == "TABLAS":
             fin = max(o[4] for o in ofertas if o[3] == "ACEPTADA")
         elif g["forma"] == "TIEMPO_AGOTADO":
-            # el reloj de quien pierde llega a cero en su turno, sin jugada (CU-11 FA-06)
+            # el reloj de quien pierde llega a cero en su turno, sin jugada (CU-13 FA-06)
             sin_tiempo = next(u for u, res in g["resultados"].items() if res == "PERDIDA")
             resto = g["minutos"] * 60000 - sum(f["tiempo"] for f in filas if f["actor"] == sin_tiempo)
             fin = seg(s["ultima"] + timedelta(milliseconds=resto))
@@ -110,7 +110,7 @@ def partidas():
         r["partidas"].append(dict(id=pid, g=g, fin=fin, turno=s["turno"]))
         for f in filas:
             r["jugadas"].append((pid, f))
-        # elo de la partida (CU-16 RN-04): el de entrada queda en la participación
+        # elo de la partida (CU-18 RN-04): el de entrada queda en la participación
         entrada = {u: elo.get((u, g["modo"]), 1000) for u, _, _ in g["jugadores"]} if clasif else {}
         salida = {}
         if clasif and not en_curso:
@@ -157,7 +157,7 @@ def partidas():
 
 
 def _division(r, e, usuario, modo, fecha):
-    """División tras la partida: hacen falta cinco partidas (CU-16 RN-12)."""
+    """División tras la partida: hacen falta cinco partidas (CU-18 RN-12)."""
     if e["jugadas"] < 5:
         return
     divs = sorted(cat.DIVISIONES, key=lambda d: d[2])
