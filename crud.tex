@@ -879,31 +879,29 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
 \par\medskip
 \end{center}
 
-%--- F-20 Invitar a un jugador a una partida
-\begin{prototipocrud}{F-20}{Invitar a un jugador a una partida}
+%--- F-20 Invitar a un amigo a una partida
+\begin{prototipocrud}{F-20}{Invitar a un amigo a una partida}
   \crudFila{Operación}{Creación (C), Actualización (U)}
   \crudFila{Caso de uso}{\mbox{CU-23}}
-  \crudFila{Actor}{Jugador; para invitar por correo, el anfitrión de la sala con cuenta registrada}
-  \crudFila{Prototipos}{2b, el botón ``invitar'' (\mbox{F-40}), y 10a, la opción ``retar'' (\mbox{F-38}).}
+  \crudFila{Actor}{Jugador con cuenta registrada; responde el amigo invitado}
+  \crudFila{Prototipos}{2b, el botón ``invitar'' (\mbox{F-40}), y 10a, la opción ``retar'' de la tarjeta de un amigo.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item \texttt{id\_\allowbreak{}usuario} del invitado.
+    \item \texttt{id\_\allowbreak{}usuario} del amigo.
     \item Ajustes de la sala, si no existe.
-    \item \textbf{Respuesta del invitado:} aceptar o rechazar.
-    \item \textbf{Para invitar por correo:} el correo del destinatario y el \texttt{id\_\allowbreak{}sala} (\mbox{CU-23} \mbox{FA-10}).
+    \item \textbf{Respuesta del amigo:} aceptar o rechazar.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textbf{\textit{Sesion}:} la del emisor y, en la invitación dentro del juego, que el invitado tenga una abierta.
-    \item \textbf{\textit{Participacion}; \textit{ColaEmparejamiento}, en memoria:} del emisor y del invitado.
-    \item \textbf{\textit{Usuario}:} que el invitado exista y no esté \texttt{ELIMINADA}; para invitar por correo, el \texttt{tipo\_\allowbreak{}cuenta}, el \texttt{nickname} y el \texttt{idioma\_\allowbreak{}preferido} del anfitrión.
-    \item \textbf{\textit{Invitacion}:} pendientes del mismo emisor al mismo invitado; las de \texttt{canal} = \texttt{CORREO} que el emisor creó en la última hora.
-    \item \textbf{\textit{Sala} y \textit{Modo}:} el anfitrión, el \texttt{estado}, el \texttt{codigo} y el modo de la sala.
+    \item \textbf{\textit{Sesion}:} la del emisor y que el amigo tenga una abierta.
+    \item \textbf{\textit{Usuario}:} el \texttt{tipo\_\allowbreak{}cuenta} del emisor, y que el amigo exista y no esté \texttt{ELIMINADA}.
+    \item \textbf{\textit{Amistad}:} la del par.
+    \item \textbf{\textit{Participacion}; \textit{ColaEmparejamiento}, en memoria:} del emisor y del amigo.
+    \item \textbf{\textit{Invitacion}:} pendientes del mismo emisor al mismo amigo.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
     \item \textit{Sala}, y la plaza del emisor en memoria, si no estaba en una (\mbox{F-18}).
-    \item \textbf{\textit{Invitacion} dentro del juego:} \texttt{canal} = \texttt{JUEGO}, \texttt{id\_\allowbreak{}sala}, \texttt{id\_\allowbreak{}emisor}, \texttt{id\_\allowbreak{}destinatario}, \texttt{fecha\_\allowbreak{}invitacion}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{estado} = \texttt{PENDIENTE}.
-    \item \textbf{\textit{Invitacion} por correo:} \texttt{canal} = \texttt{CORREO}, \texttt{id\_\allowbreak{}sala}, \texttt{id\_\allowbreak{}emisor}, \texttt{correo\_\allowbreak{}destino} normalizado a minúsculas, \texttt{fecha\_\allowbreak{}invitacion}, \texttt{estado} = \texttt{ENVIADA}; sin \texttt{id\_\allowbreak{}destinatario} ni \texttt{fecha\_\allowbreak{}expiracion}.
-    \item \textit{SalaParticipante} del invitado, en memoria, al aceptar.
+    \item \textbf{\textit{Invitacion}:} \texttt{id\_\allowbreak{}sala}, \texttt{id\_\allowbreak{}emisor}, \texttt{id\_\allowbreak{}destinatario}, \texttt{fecha\_\allowbreak{}invitacion}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{estado} = \texttt{PENDIENTE}.
+    \item \textit{SalaParticipante} del amigo, en memoria, al aceptar.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
     \item \textbf{\textit{Invitacion}:} \texttt{estado} = \texttt{ACEPTADA}, \texttt{RECHAZADA} o \texttt{EXPIRADA}.
@@ -911,15 +909,14 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item La invitación crea o usa una sala privada; la partida que salga de ella es amistosa (\mbox{CU-23} \mbox{RN-01}).
-    \item Se puede retar a cualquier jugador, sea o no amigo (\mbox{CU-23} \mbox{RN-02}).
-    \item Una invitación dentro del juego expira a los sesenta segundos y no se duplica (\mbox{CU-23} \mbox{RN-03}).
+    \item Solo se invita a un amigo; retar a cualquier jugador es el deseable \mbox{DES-23} (\mbox{CU-23} \mbox{RN-02}).
+    \item Una invitación expira a los sesenta segundos y no se duplica (\mbox{CU-23} \mbox{RN-03}).
     \item Aceptar da acceso a la sala sin conocer su código (\mbox{CU-23} \mbox{RN-04}).
-    \item Solo se invita dentro del juego a jugadores conectados que no estén en una partida en línea ni en la cola (\mbox{CU-23} \mbox{RN-05}).
-    \item Un jugador envía a lo sumo diez invitaciones por correo en una hora, y solo el anfitrión con cuenta registrada puede enviarlas (\mbox{CU-23} \mbox{RN-06}, \mbox{RN-07}).
-    \item La invitación por correo solo lleva el código de la sala: no reserva plaza, y el destinatario entra con el \mbox{CU-11} (\mbox{CU-23} \mbox{RN-08}).
-    \item El correo capturado no se asocia a ninguna cuenta ni se muestra a otros jugadores (\mbox{CU-23} \mbox{RN-09}).
+    \item Solo se invita a amigos conectados que no estén en una partida en línea ni en la cola (\mbox{CU-23} \mbox{RN-05}).
+    \item Una cuenta de invitado no invita ni recibe invitaciones (\mbox{CU-23} \mbox{RN-06}).
+    \item No hay invitaciones por correo: el código de la sala se copia y se comparte por fuera del juego (\mbox{CU-23} \mbox{RN-07}, \mbox{D-29}).
   \end{crudlista}}
-  \crudFila{Resultado esperado}{Emisor e invitado están en la misma sala privada, o la invitación quedó rechazada o expirada. Por correo, el destinatario recibió el código de la sala y la invitación queda registrada como enviada.}
+  \crudFila{Resultado esperado}{Emisor y amigo están en la misma sala privada, o la invitación quedó rechazada o expirada.}
 \end{prototipocrud}
 
 \subsection*{Partida}
@@ -1374,7 +1371,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 \begin{prototipocrud}{F-31}{Consultar ranking}
   \crudFila{Operación}{Consulta (R)}
   \crudFila{Caso de uso}{\mbox{CU-25}}
-  \crudFila{Actor}{Jugador o invitado}
+  \crudFila{Actor}{Jugador con cuenta registrada}
   \crudFila{Prototipos}{2c, Ranking · tabla con tu fila fijada. La pantalla 2d muestra la vista por divisiones, que el ranking ya no tiene (ver \textit{Diferencias entre prototipos y casos de uso}).}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \textbf{Alcance:} global o entre amigos.
@@ -1399,6 +1396,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
     \item La fila del jugador se muestra siempre, aunque esté fuera de la página o no clasifique (\mbox{CU-25} \mbox{RN-04}).
     \item A igualdad de elo ordena primero la \texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}partida} más antigua (\mbox{CU-25} \mbox{RN-05}).
     \item No hay temporadas, y las posiciones se calculan en la consulta; no se almacenan (\mbox{CU-25} \mbox{RN-06}, \mbox{POST-03}).
+    \item Una cuenta de invitado no consulta el ranking (\mbox{CU-25} \mbox{RN-07}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Clasificación ordenada por elo con la posición del jugador fijada, o las partidas que le faltan para clasificar, o los resultados de la búsqueda.}
 \end{prototipocrud}
@@ -2288,7 +2286,7 @@ El análisis deja ocho puntos que el modelo relacional deberá resolver de forma
   \item \textbf{Las probabilidades de las cajas son una relación entre \textit{TipoCaja} y \textit{ObjetoCosmetico}} (requisito deseable \mbox{DES-14}). Se modelan en \textit{TipoCajaObjeto} y no como atributo de ninguna de las dos (\mbox{F-34}).
   \item \textbf{Las jugadas de la IA tienen \texttt{id\_\allowbreak{}usuario} nulo} (requisito deseable \mbox{DES-09}). La clave foránea de \textit{Jugada} hacia \textit{Usuario} deberá admitir nulos. La condición de que solo las partidas de tipo \texttt{IA} tengan jugadas sin usuario no puede expresarse con un \texttt{CHECK} de la tabla, porque el tipo está en \textit{Partida}; debe garantizarla la aplicación o un disparador (\mbox{F-26}). En el alcance toda \textit{Jugada} tiene usuario.
   \item \textbf{Los dominios cerrados se declaran en la base de datos.} \texttt{estado\_\allowbreak{}cuenta}, \texttt{tipo\_\allowbreak{}cuenta}, \texttt{rol}, \texttt{motivo\_\allowbreak{}cierre}, el \texttt{canal} de \textit{Mensaje} y de \textit{Invitacion}, \texttt{forma\_\allowbreak{}termino}, el \texttt{motivo} de \textit{Reporte} y los estados de \textit{Partida}, \textit{Sala}, \textit{Invitacion}, \textit{OfertaTablas} y \textit{Reporte} los escriben muchas funcionalidades distintas; en los requisitos deseables, también los de \textit{Caja} y \textit{Apelacion}. Un \texttt{CHECK} con sus valores evita que una de ellas introduzca uno que las demás no reconocen.
-  \item \textbf{El recorte deja columnas que dependen de otra.} La \textit{Sancion} que aplica el sistema por strikes y su registro en \textit{BitacoraModeracion} no tienen moderador, así que \texttt{id\_\allowbreak{}moderador} debe admitir nulos en ambas (\mbox{D-26}, \mbox{F-45}). Un \textit{Reporte} referencia la \textit{Partida} o la \textit{Sala} desde la que se reporta, o ninguna si se reporta desde un perfil, y los reportes atendidos referencian la \textit{Sancion} que originaron. Una \textit{Invitacion} de \texttt{canal} \texttt{JUEGO} tiene \texttt{id\_\allowbreak{}destinatario} y \texttt{fecha\_\allowbreak{}expiracion}, y una de \texttt{canal} \texttt{CORREO} tiene \texttt{correo\_\allowbreak{}destino} y ninguno de los dos (\mbox{F-20}); la condición se declara con un \texttt{CHECK} por canal.
+  \item \textbf{El recorte deja columnas que dependen de otra.} La \textit{Sancion} que aplica el sistema por strikes y su registro en \textit{BitacoraModeracion} no tienen moderador, así que \texttt{id\_\allowbreak{}moderador} debe admitir nulos en ambas (\mbox{D-26}, \mbox{F-45}). Un \textit{Reporte} referencia la \textit{Partida} o la \textit{Sala} desde la que se reporta, o ninguna si se reporta desde un perfil, y los reportes atendidos referencian la \textit{Sancion} que originaron.
 \end{flujo}
 \subsection*{Dominios de valores}
 \addcontentsline{toc}{subsection}{Dominios de valores}
@@ -2321,8 +2319,7 @@ Valores que los casos de uso y los requisitos deseables escriben en cada atribut
 \textit{Jugada} & \texttt{orientacion} & \texttt{HORIZONTAL}, \texttt{VERTICAL}; nulo en un movimiento \\ \hline
 \textit{OfertaTablas} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{ACEPTADA}, \texttt{RECHAZADA}, \texttt{CADUCADA} \\ \hline
 \textit{Sala} & \texttt{estado} & \texttt{ABIERTA}, \texttt{EN\_\allowbreak{}PARTIDA}, \texttt{CERRADA} \\ \hline
-\textit{Invitacion} & \texttt{canal} & \texttt{JUEGO}, \texttt{CORREO} \\ \hline
-\textit{Invitacion} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{ACEPTADA}, \texttt{RECHAZADA}, \texttt{EXPIRADA} en las de \texttt{canal} \texttt{JUEGO}; \texttt{ENVIADA} en las de \texttt{canal} \texttt{CORREO} \\ \hline
+\textit{Invitacion} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{ACEPTADA}, \texttt{RECHAZADA}, \texttt{EXPIRADA} \\ \hline
 \textit{Mensaje} & \texttt{canal} & \texttt{PARTIDA}, \texttt{SALA}, \texttt{ESPECTADORES}\textdagger{} \\ \hline
 \textit{UsuarioObjeto}\textdagger{} & \texttt{origen} & \texttt{INICIAL}, \texttt{COMPRA}, \texttt{CAJA}, \texttt{NIVEL} \\ \hline
 \textit{Caja}\textdagger{} & \texttt{origen} & \texttt{COMPRA}, \texttt{PARTIDA} \\ \hline

@@ -100,7 +100,7 @@ Se tomaron al priorizar los casos de uso y revisar la base de datos (secciones \
 \end{longtable}
 \end{center}
 
-\flujoTitulo{\mbox{D-25} a \mbox{D-28}. Decisiones del recorte del alcance}
+\flujoTitulo{\mbox{D-25} a \mbox{D-29}. Decisiones del recorte del alcance}
 Se tomaron cuando el cliente pidió reducir el número de casos de uso (sección \textit{Priorización de requisitos y casos de uso}). Sustituyen a las anteriores en lo que se contradigan.
 
 \begin{center}\small
@@ -115,6 +115,7 @@ Se tomaron cuando el cliente pidió reducir el número de casos de uso (sección
 \mbox{D-26} & \textbf{Moderación por strikes, sin moderadores.} El cliente pide una moderación simple. Tres reportes de jugadores distintos suman un strike, y el sistema aplica la sanción sin intervención humana: el primero restringe el chat veinticuatro horas, el segundo suspende la cuenta siete días y el tercero la expulsa de forma permanente (\mbox{CU-27} \mbox{RN-10} a \mbox{RN-13}). La \textit{Sancion} deja de exigir un moderador. La cola de reportes, la sanción manual, la apelación y la gestión de moderadores pasan a deseables. El filtro de palabras del chat (\mbox{CU-20}) sigue siendo parte de la moderación \\ \hline
 \mbox{D-27} & \textbf{Expulsados de la sala, en memoria.} La lista de jugadores expulsados de una sala (\mbox{CU-12}) vive con las plazas de la sala en la memoria del Servidor de partidas, igual que ellas (\mbox{D-24}), y desaparece cuando la sala se cierra. La expulsión no es una sanción: no genera reporte ni strike \\ \hline
 \mbox{D-28} & \textbf{El correo no se cambia; el segundo factor tiene caso propio.} El antiguo caso ``Cambiar contraseña o correo'' perseguía tres metas: cambiar la contraseña, cambiar el correo y activar el segundo factor. Se separa en el \mbox{CU-04} Cambiar la contraseña, el \mbox{CU-05} Activar el segundo factor y el \mbox{CU-06} Desactivar el segundo factor, que exige además un código del segundo factor. El cambio de correo se elimina del sistema, no pasa a deseable: el correo de una cuenta es el que se verificó en el registro (\mbox{CU-04} \mbox{RN-09}) y es el canal fijo de los avisos de seguridad. Sustituye a la \mbox{D-20}; el propósito \texttt{CAMBIO\_\allowbreak{}CORREO} de \textit{CodigoVerificacion} y su \texttt{correo\_\allowbreak{}destino} dejan de usarse \\ \hline
+\mbox{D-29} & \textbf{Tres formas de entrar a una partida; el invitado solo por código.} Se entra a una partida por el emparejamiento clasificatorio (\mbox{CU-09}), que es el único que mueve el elo; por el código de una sala (\mbox{CU-10}, \mbox{CU-11}); o por la invitación de un amigo (\mbox{CU-23}). Solo se invita a amigos: retar a cualquier jugador pasa a deseable (\mbox{DES-23}). El sistema no envía invitaciones por correo: el anfitrión copia el código de su sala y lo comparte por donde quiera, así que la tabla \textit{Invitacion} pierde el canal de correo. Una cuenta de invitado solo crea salas o entra con código; dentro de ellas juega y chatea, y puede consultar su historial y el perfil de otros, pero no busca partida clasificatoria, no consulta el ranking, no tiene amigos, no invita ni recibe invitaciones y no reporta. El chat no abre perfiles: desde él solo se reporta \\ \hline
 \end{longtable}
 \end{center}
 

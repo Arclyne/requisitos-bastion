@@ -30,7 +30,7 @@ Ninguna fila puede quedarse sin al menos un caso que la escriba. Una tabla que n
 \textbf{Estructura} & \textbf{Escrita por} & \textbf{Leída por} & \textbf{Estado} \\ \hline
 \endhead
 \textit{AceptacionTerminos} & \mbox{CU-02} & — & en \textit{Usuario} (\mbox{D-23}) \\ \hline
-\textit{Amistad} & \mbox{CU-22}, \mbox{CU-24} & \mbox{CU-08}, \mbox{CU-21}, \mbox{CU-25} & pasa al núcleo (\mbox{D-25}) \\ \hline
+\textit{Amistad} & \mbox{CU-22}, \mbox{CU-24} & \mbox{CU-08}, \mbox{CU-21}, \mbox{CU-23}, \mbox{CU-25} & pasa al núcleo (\mbox{D-25}) \\ \hline
 \textit{Apelacion} & — & — & solo deseables (\mbox{D-25}) \\ \hline
 \textit{BitacoraAcceso} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-03}, \mbox{CU-04}, \mbox{CU-05}, \mbox{CU-06} & — & correcta \\ \hline
 \textit{BitacoraModeracion} & \mbox{CU-27} & — & correcta \\ \hline
@@ -95,6 +95,7 @@ Un caso \textit{depende} de otro cuando lo invoca, lo continúa o presupone su r
 \mbox{CU-20} & \mbox{CU-27} & Lee la restricción de chat que aplica el primer strike \\ \hline
 \mbox{CU-21} & \mbox{CU-22} & La \textit{Amistad} la crea el otro al aceptar \\ \hline
 \mbox{CU-24} & \mbox{CU-22} & Busca la amistad por el mismo par ordenado con que se guardó \\ \hline
+\mbox{CU-23} & \mbox{CU-22} & Solo se invita a un amigo: la \textit{Amistad} que exige la crea el \mbox{CU-22} al aceptar una solicitud \\ \hline
 \mbox{CU-25}, \mbox{CU-26} & \mbox{CU-18} & Muestran el elo y los resultados que escribe el cierre de la partida \\ \hline
 \mbox{CU-27} & \mbox{CU-20}, \mbox{CU-13}, \mbox{CU-14} & Adjunta por referencia lo que ellos escribieron \\ \hline
 \mbox{CU-27} & \mbox{CU-17} & Retira de su partida al sancionado con las consecuencias de un abandono \\ \hline
@@ -134,6 +135,7 @@ Cambiar una decisión obliga a reescribir flujos, no solo tablas. Esta es la lis
 \mbox{D-26} · Moderación por strikes & \mbox{CU-01}, \mbox{CU-03}, \mbox{CU-20}, \mbox{CU-27} \\ \hline
 \mbox{D-27} · Expulsados de la sala, en memoria & \mbox{CU-11}, \mbox{CU-12} \\ \hline
 \mbox{D-28} · El correo no se cambia & \mbox{CU-02}, \mbox{CU-04}, \mbox{CU-05}, \mbox{CU-06} \\ \hline
+\mbox{D-29} · Tres formas de entrar; invitado solo por código & \mbox{CU-03}, \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-11}, \mbox{CU-18}, \mbox{CU-23}, \mbox{CU-25}, \mbox{CU-26} \\ \hline
 \end{longtable}
 \end{center}
 

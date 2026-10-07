@@ -4,7 +4,7 @@
 
 \begin{fichacu}{CU-25}{Consultar el ranking}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
-  \crudFila{Actor principal}{Jugador o Invitado}
+  \crudFila{Actor principal}{Jugador}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
   \crudFila{Prototipos}{2c, 13b, 13c}
   \crudFila{Prioridad}{Must (debe estar en la entrega). Categoría (a) Obligatorio: característica 11 del cliente (marcadores o tabla de ganadores).}
@@ -35,8 +35,8 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-02}: El jugador todavía no clasifica en ese modo}\par
     \begin{cuenum}[start=1]
-      \item El Servidor de partidas encuentra menos de cinco \texttt{partidas\_\allowbreak{}jugadas} en la \textit{EstadisticaModo} del jugador, o que el jugador es un invitado (\mbox{RN-02}).
-      \item El SJM muestra la fila fijada con ``sin clasificar'' y cuántas partidas clasificatorias faltan, con la acción ``buscar partida'', que continúa en el \mbox{CU-09}. Si el jugador es un invitado, la fila indica que los invitados no clasifican y no ofrece ninguna acción.
+      \item El Servidor de partidas encuentra menos de cinco \texttt{partidas\_\allowbreak{}jugadas} en la \textit{EstadisticaModo} del jugador (\mbox{RN-01}).
+      \item El SJM muestra la fila fijada con ``sin clasificar'' y cuántas partidas clasificatorias faltan, con la acción ``buscar partida'', que continúa en el \mbox{CU-09}.
       \item El flujo continúa en el paso 8 del FN.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-03}: El jugador cambia el alcance a amigos}\par
@@ -65,7 +65,14 @@
     \begin{cuenum}[start=1]
       \item Si el jugador selecciona una fila, el flujo continúa en el \mbox{CU-08}.
       \item Si el jugador pasa de página, el SJM solicita la siguiente y el flujo continúa en el paso 4 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El jugador usa una cuenta de invitado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no muestra la opción ``ranking'' en la \texttt{GUI\_\allowbreak{}MainMenu} de una cuenta de invitado (\mbox{RN-07}).
+      \item Si aun así llega una solicitud de una cuenta de invitado, el Servidor de partidas la rechaza con \texttt{LEADERBOARD\_\allowbreak{}FAILED} y el motivo \texttt{CUENTA\_\allowbreak{}INVITADO}, y la registra en la bitácora del servidor.
+      \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
+
   \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar la base de datos}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas registra la excepción con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
@@ -99,6 +106,7 @@
       \item \textbf{\mbox{RN-04}} La fila del jugador se muestra siempre, aunque esté fuera de la página visible o no clasifique.
       \item \textbf{\mbox{RN-05}} A igualdad de elo, ordena primero quien tiene la \texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}partida} más antigua: alcanzó ese elo antes, y la posición no cambia entre consultas sin que nadie haya jugado.
       \item \textbf{\mbox{RN-06}} No hay temporadas: el ranking es permanente.
+      \item \textbf{\mbox{RN-07}} Una cuenta de invitado no consulta el ranking: no clasifica y solo entra a partidas por código (\mbox{RN-05} del \mbox{CU-03}).
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre las temporadas.}\par
     \texttt{descripcion.md} deja abierto si el ranking se organiza por temporadas. Este caso lo resuelve sin ellas, porque las recompensas de fin de temporada se descartaron y sin recompensa la temporada solo añade un reinicio que castiga a quien juega poco. Si se decide adoptarlas, el cambio no toca este caso sino el modelo: haría falta una entidad \textit{Temporada} y que \textit{EstadisticaModo} dependa de ella, lo que convertiría la clave de usuario y modo en una de usuario, modo y temporada.} \\ \hline

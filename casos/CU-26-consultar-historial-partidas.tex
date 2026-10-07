@@ -9,7 +9,7 @@
   \crudFila{Prototipos}{2e, 17f}
   \crudFila{Prioridad}{Should (debería estar). Categoría (c) Agregado del equipo. Las partidas ya se guardan; el caso solo las muestra.}
   \crudFila{Objetivo}{Mostrar al jugador las partidas que ha jugado, con su resultado, la forma en que terminaron, su duración y el cambio de elo, filtrables por modo y por final.}
-  \crudFila{Disparador}{El jugador selecciona ``historial'' en la \texttt{GUI\_\allowbreak{}MainMenu}.}
+  \crudFila{Disparador}{El jugador abre su propio perfil y selecciona ``historial'' en la \texttt{GUI\_\allowbreak{}PlayerCard} (\mbox{FA-02} del \mbox{CU-08}).}
   \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{PRE-01}} El jugador tiene una \textit{Sesion} abierta y su token es válido.
       \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
@@ -54,7 +54,7 @@
    & \cuCelda{\textbf{\mbox{FA-05}: El jugador añade a un rival o abre su perfil}\par
     \begin{cuenum}[start=1]
       \item El jugador abre el menú de un rival en una fila.
-      \item El flujo continúa en el \mbox{CU-21} o en el \mbox{CU-08}, según la opción.
+      \item El flujo continúa en el \mbox{CU-21} o en el \mbox{CU-08}, según la opción. A una cuenta de invitado no se le ofrece añadir al rival (\mbox{RN-07} del \mbox{CU-21}).
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-06}: El jugador pasa de página}\par
@@ -93,6 +93,7 @@
       \item \textbf{\mbox{RN-03}} El cambio de elo mostrado es la \texttt{diferencia\_\allowbreak{}elo} guardada en la \textit{Participacion}, no una resta entre estados de la cuenta (\mbox{RN-05} del \mbox{CU-18}).
       \item \textbf{\mbox{RN-04}} Las partidas de rivales cuya cuenta fue eliminada o anonimizada siguen apareciendo, con el nombre anónimo que recibió la cuenta al darse de baja.
       \item \textbf{\mbox{RN-05}} La victoria por reloj se distingue visualmente de la victoria por llegar a meta.
+      \item \textbf{\mbox{RN-06}} El historial se consulta desde el perfil propio. Está disponible también para una cuenta de invitado, con sus partidas de sala.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué el historial no tiene tabla propia.}\par
     El historial es exactamente el conjunto de \textit{Participacion} terminadas del jugador, unido a sus partidas. Una tabla de historial duplicaría resultado, fecha y elo, que ya escribe el \mbox{CU-18}, con el riesgo de que ambas versiones diverjan. Guardar la diferencia de elo en la participación es lo único que el historial necesitaba y no podía calcular.} \\ \hline

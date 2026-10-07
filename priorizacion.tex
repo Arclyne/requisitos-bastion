@@ -9,7 +9,7 @@
 \section*{Priorización de requisitos y casos de uso}
 \addcontentsline{toc}{section}{Priorización de requisitos y casos de uso}
 
-La primera versión de este documento describía 49 casos de uso. El cliente señaló que eran demasiados para el plazo, y el equipo reconoció que más de la mitad eran ideas propias y no requisitos. Esta sección fija el alcance de la versión que se entrega: \textbf{27 casos de uso} que cubren lo que el cliente exige y lo mínimo para jugar Quoridor en línea: 23 de la versión anterior, tres que salen de separar el antiguo ``Cambiar contraseña o correo'' (\mbox{CU-04} a \mbox{CU-06}) y uno nuevo, el \mbox{CU-12}. De los 25 casos restantes, 22 pasan a \textbf{requisitos deseables} y 3 se fusionan con otros casos; ninguno se pierde, para retomarlos sin rehacer el análisis. El cambio de correo, que vivía dentro de aquel caso, se elimina del sistema (\mbox{D-28}).
+La primera versión de este documento describía 49 casos de uso. El cliente señaló que eran demasiados para el plazo, y el equipo reconoció que más de la mitad eran ideas propias y no requisitos. Esta sección fija el alcance de la versión que se entrega: \textbf{27 casos de uso} que cubren lo que el cliente exige y lo mínimo para jugar Quoridor en línea: 23 de la versión anterior, tres que salen de separar el antiguo ``Cambiar contraseña o correo'' (\mbox{CU-04} a \mbox{CU-06}) y uno nuevo, el \mbox{CU-12}. De los 25 casos restantes, 22 pasan a \textbf{requisitos deseables} y 3 se fusionan con otros casos; ninguno se pierde, para retomarlos sin rehacer el análisis. Además, el \mbox{DES-23} sale de limitar la invitación a jugar a los amigos (\mbox{D-29}). El cambio de correo, que vivía dentro de aquel caso, se elimina del sistema (\mbox{D-28}).
 
 \subsection*{Requisitos obligatorios del cliente}
 \addcontentsline{toc}{subsection}{Requisitos obligatorios del cliente}
@@ -28,12 +28,12 @@ El cliente pide trece características generales para todo juego del curso. Cada
 2 & Cambio de contraseñas & \mbox{CU-04}. \\ \hline
 3 & Personalización de perfil & \mbox{CU-07} lo edita, con los enlaces a redes sociales; \mbox{CU-08} lo muestra a los demás. \\ \hline
 4 & Inicio de sesión o jugar como invitado & \mbox{CU-01} y \mbox{CU-03}. \\ \hline
-5 & Invitación de amigos por correo o código & \mbox{CU-23}. \\ \hline
+5 & Invitación de amigos por correo o código & \mbox{CU-23} invita a un amigo conectado; con cualquier otra persona se comparte el código de la sala, que el \mbox{CU-10} permite copiar. El sistema no envía correos de invitación (\mbox{D-29}). \\ \hline
 6 & Lista de amigos & \mbox{CU-21}, \mbox{CU-22} y \mbox{CU-24}. \\ \hline
 7 & Jugadores expulsados & \mbox{CU-12} saca a un jugador de la sala; \mbox{CU-27} suspende o expulsa del juego por acumulación de reportes. \\ \hline
 8 & Lobby o sala de espera & \mbox{CU-10} y \mbox{CU-11}. \\ \hline
 9 & Chat colaborativo en sala o en partida & \mbox{CU-20}. \\ \hline
-10 & Unirse a la partida & \mbox{CU-11} con el código de una sala, y \mbox{CU-09} con el emparejamiento. \\ \hline
+10 & Unirse a la partida & Tres formas (\mbox{D-29}): \mbox{CU-09} con el emparejamiento clasificatorio, el único que mueve el elo; \mbox{CU-11} con el código de una sala; y \mbox{CU-23} por la invitación de un amigo. Una cuenta de invitado solo entra con código. \\ \hline
 11 & Marcadores o tabla de ganadores & \mbox{CU-25}, alimentado por las partidas clasificatorias del \mbox{CU-09} al cerrarse en el \mbox{CU-18}. \\ \hline
 12 & Iniciar juego & \mbox{CU-10} inicia la partida de una sala; \mbox{CU-09}, la de un emparejamiento. \\ \hline
 13 & Personalización de reglas o \textit{look and feel} & \mbox{CU-10}: el anfitrión elige el modo, los muros por jugador y el reloj. \\ \hline
@@ -148,7 +148,7 @@ La misma prioridad aparece en la lista de casos de uso y en la fila \textit{Prio
 \mbox{CU-20} & Enviar un mensaje de chat & Obligatorio & Característica 9 y moderación de chat (\mbox{CON-09}): el filtro de palabras se aplica aquí. Incluye los emotes. \\ \hline
 \mbox{CU-21} & Agregar a un amigo & Obligatorio & Característica 6: lista de amigos. \\ \hline
 \mbox{CU-22} & Responder una solicitud de amistad & Obligatorio & Característica 6: sin aceptar la solicitud no se forma la amistad. \\ \hline
-\mbox{CU-23} & Invitar a un amigo a jugar & Obligatorio & Característica 5: invitación por correo o con el código de la sala. \\ \hline
+\mbox{CU-23} & Invitar a un amigo a jugar & Obligatorio & Característica 5: invitación a un amigo conectado, sin compartir el código. \\ \hline
 \mbox{CU-25} & Consultar el ranking & Obligatorio & Característica 11: tabla de ganadores. \\ \hline
 \mbox{CU-27} & Reportar a un jugador & Obligatorio & Característica 7 y moderación por reportes (\mbox{CON-09}): los strikes restringen, suspenden o expulsan sin moderadores. \\ \hline
 \multicolumn{4}{|l|}{\textbf{Should: debería estar (4 casos)}} \\ \hline
@@ -187,8 +187,8 @@ CU-29 & Enviar un emote & \mbox{CU-20} & Flujo alterno \mbox{FA-09} del chat de 
 \textbf{Categoría} & \textbf{Must} & \textbf{Should} & \textbf{Alcance} & \textbf{Deseables} \\ \hline
 (a) Obligatorio del cliente & 17 & 1 & 18 & 9 \\ \hline
 (b) Núcleo de jugabilidad & 6 & 2 & 8 & --- \\ \hline
-(c) Agregado del equipo & --- & 1 & 1 & 13 \\ \hline
-\textbf{Total} & \textbf{23} & \textbf{4} & \textbf{27} & \textbf{22} \\ \hline
+(c) Agregado del equipo & --- & 1 & 1 & 14 \\ \hline
+\textbf{Total} & \textbf{23} & \textbf{4} & \textbf{27} & \textbf{23} \\ \hline
 \end{tabular}
 \end{center}
 
@@ -235,6 +235,7 @@ Ningún caso de uso del alcance depende de ellos. Cada uno conserva su análisis
 \mbox{DES-20} & Agregar un moderador & CU-46 & Obligatorio & Esta versión no tiene el rol de moderador. \\ \hline
 \mbox{DES-21} & Retirar a un moderador & CU-47 & Obligatorio & Esta versión no tiene el rol de moderador. \\ \hline
 \mbox{DES-22} & Consultar las bitácoras & CU-48 & Obligatorio & Las bitácoras se escriben siempre; consultarlas desde la aplicación no se pide. \\ \hline
+\mbox{DES-23} & Retar a un jugador que no es amigo & CU-32 (\mbox{FA-01}) & Agregado & La invitación a jugar se limita a amigos (\mbox{D-29}); retar a desconocidos queda para una próxima iteración. \\ \hline
 \end{longtable}
 \end{center}
 
