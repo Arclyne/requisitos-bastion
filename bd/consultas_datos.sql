@@ -1,8 +1,9 @@
 /*=====================================================================
   Bastion - Consultas de la sección Datos
-  Motor: SQL Server 2019 o posterior (CON-04); probado en SQL Server 2025.
+  Motor: SQL Server 2019 o posterior (CON-04).
 
-  Se ejecutan sobre la base cargada con insertar_datos_prueba.sql y solo
+  Se ejecutan sobre la base cargada con los scripts del núcleo y de la
+  fase posterior (fase_posterior/), porque consultan tablas de los dos, y solo
   leen: pueden abrirse en SQL Server Management Studio y ejecutarse una a
   una. bd/exportar_datos.py las ejecuta todas y convierte cada resultado en
   una tabla del documento.
@@ -69,10 +70,6 @@ SELECT id_leccion, orden, codigo, num_pasos FROM dbo.Leccion ORDER BY orden;
 -- @columnas Id | Código | Precio | Activo
 SELECT id_tipo_caja, codigo, precio, activo FROM dbo.TipoCaja ORDER BY id_tipo_caja;
 
--- @consulta motivo | MotivoReporte
--- @columnas Id | Código
-SELECT id_motivo, codigo FROM dbo.MotivoReporte ORDER BY id_motivo;
-
 -- @consulta objeto | ObjetoCosmetico
 -- @columnas Id | Ranura | Código | Rareza | Precio | Nivel | A la venta | Activo | Inicial | Predeterminado
 SELECT o.id_objeto, r.codigo, o.codigo, o.rareza, o.precio, o.nivel_requerido, o.a_la_venta, o.activo, o.es_inicial, o.es_predeterminado
@@ -106,28 +103,17 @@ SELECT s.id_sesion, u.nickname, CONVERT(VARCHAR(16), s.fecha_inicio, 120), CONVE
 FROM dbo.Sesion AS s JOIN dbo.Usuario AS u ON u.id_usuario = s.id_usuario
 ORDER BY s.id_sesion;
 
--- @consulta aceptacion | AceptacionTerminos
+-- @consulta aceptacion | Términos aceptados (Usuario, D-23)
 -- @columnas Id | Usuario | Versión | Idioma | Fecha
-SELECT a.id_aceptacion, u.nickname, a.version_terminos, a.idioma, CONVERT(VARCHAR(16), a.fecha_aceptacion, 120)
-FROM dbo.AceptacionTerminos AS a JOIN dbo.Usuario AS u ON u.id_usuario = a.id_usuario
-ORDER BY a.id_aceptacion;
+SELECT u.id_usuario, u.nickname, u.version_terminos, u.idioma_terminos, CONVERT(VARCHAR(16), u.fecha_aceptacion_terminos, 120)
+FROM dbo.Usuario AS u WHERE u.version_terminos IS NOT NULL
+ORDER BY u.id_usuario;
 
--- @consulta tokenverificacion | TokenVerificacionCorreo
--- @columnas Id | Usuario | Propósito | Correo destino | Generado | Estado
-SELECT t.id_token, u.nickname, t.proposito, t.correo_destino, CONVERT(VARCHAR(16), t.fecha_generacion, 120), t.estado
-FROM dbo.TokenVerificacionCorreo AS t JOIN dbo.Usuario AS u ON u.id_usuario = t.id_usuario
-ORDER BY t.id_token;
-
--- @consulta tokenrecuperacion | TokenRecuperacion
--- @columnas Id | Usuario | Generado | Expira | Intentos | Estado
-SELECT t.id_token, u.nickname, CONVERT(VARCHAR(16), t.fecha_generacion, 120), CONVERT(VARCHAR(16), t.fecha_expiracion, 120), t.intentos, t.estado
-FROM dbo.TokenRecuperacion AS t JOIN dbo.Usuario AS u ON u.id_usuario = t.id_usuario
-ORDER BY t.id_token;
-
--- @consulta codigo2fa | CodigoSegundoFactor
--- @columnas Id | Usuario | Canal | Generado | Expira | Intentos | Estado
-SELECT c.id_codigo, u.nickname, c.canal, CONVERT(VARCHAR(16), c.fecha_generacion, 120), CONVERT(VARCHAR(16), c.fecha_expiracion, 120), c.intentos, c.estado
-FROM dbo.CodigoSegundoFactor AS c JOIN dbo.Usuario AS u ON u.id_usuario = c.id_usuario
+-- @consulta codigoverificacion | CodigoVerificacion
+-- @columnas Id | Usuario | Propósito | Correo destino | Generado | Expira | Intentos | Estado
+SELECT c.id_codigo, u.nickname, c.proposito, c.correo_destino, CONVERT(VARCHAR(16), c.fecha_generacion, 120),
+       CONVERT(VARCHAR(16), c.fecha_expiracion, 120), c.intentos, c.estado
+FROM dbo.CodigoVerificacion AS c JOIN dbo.Usuario AS u ON u.id_usuario = c.id_usuario
 ORDER BY c.id_codigo;
 
 -- @consulta perfil | HistorialNickname, Avatar y EnlaceRed
@@ -175,13 +161,6 @@ ORDER BY o.id_oferta;
 SELECT e.id_enlace, e.id_partida, u.nickname, CONVERT(VARCHAR(16), e.fecha_creacion, 120)
 FROM dbo.EnlaceEspectador AS e JOIN dbo.Usuario AS u ON u.id_usuario = e.id_creador;
 
--- @consulta cola | ColaEmparejamiento
--- @columnas Usuario | Modo | Reloj (min) | Entrada
-SELECT u.nickname, m.codigo, c.minutos_reloj, CONVERT(VARCHAR(19), c.fecha_entrada, 120)
-FROM dbo.ColaEmparejamiento AS c
-JOIN dbo.Usuario AS u ON u.id_usuario = c.id_usuario
-JOIN dbo.Modo AS m ON m.id_modo = c.id_modo;
-
 -- @consulta sala | Sala
 -- @columnas Id | Código | Anfitrión | Modo | Muros | Reloj (min) | Espectadores | Estado | Partida | Creada
 SELECT s.id_sala, s.codigo, u.nickname, m.codigo, s.muros_por_jugador, s.minutos_reloj, s.permite_espectadores, s.estado, s.id_partida,
@@ -190,12 +169,6 @@ FROM dbo.Sala AS s
 JOIN dbo.Usuario AS u ON u.id_usuario = s.id_anfitrion
 JOIN dbo.Modo AS m ON m.id_modo = s.id_modo
 ORDER BY s.id_sala;
-
--- @consulta salaparticipante | SalaParticipante
--- @columnas Sala | Usuario | Plaza | Listo | Unión
-SELECT sp.id_sala, u.nickname, sp.plaza, sp.listo, CONVERT(VARCHAR(19), sp.fecha_union, 120)
-FROM dbo.SalaParticipante AS sp JOIN dbo.Usuario AS u ON u.id_usuario = sp.id_usuario
-ORDER BY sp.id_sala, sp.plaza;
 
 -- @consulta invitacion | Invitacion
 -- @columnas Id | Sala | Emisor | Destinatario | Enviada | Estado
@@ -296,12 +269,11 @@ ORDER BY p.id_usuario, l.orden;
 
 -- @consulta reporte | Reporte
 -- @columnas Id | Denunciante | Reportado | Motivo | Partida | Estado | Moderador | Enviado | Resuelto
-SELECT r.id_reporte, d.nickname, x.nickname, m.codigo, r.id_partida, r.estado, o.nickname,
+SELECT r.id_reporte, d.nickname, x.nickname, r.motivo, r.id_partida, r.estado, o.nickname,
        CONVERT(VARCHAR(16), r.fecha_reporte, 120), CONVERT(VARCHAR(16), r.fecha_resolucion, 120)
 FROM dbo.Reporte AS r
 JOIN dbo.Usuario AS d ON d.id_usuario = r.id_denunciante
 JOIN dbo.Usuario AS x ON x.id_usuario = r.id_reportado
-JOIN dbo.MotivoReporte AS m ON m.id_motivo = r.id_motivo
 LEFT JOIN dbo.Usuario AS o ON o.id_usuario = r.id_moderador
 ORDER BY r.id_reporte;
 
@@ -399,9 +371,8 @@ ORDER BY r.id_ranura;
 
 -- @consulta relmoderacion | Reporte, sanción y apelación
 -- @columnas Reporte | Motivo | Denunciante | Reportado | Estado del reporte | Sanción | Tipo | Apelación | Estado de la apelación
-SELECT r.id_reporte, m.codigo, d.nickname, x.nickname, r.estado, s.id_sancion, s.ambito + ' ' + s.tipo, a.id_apelacion, a.estado
+SELECT r.id_reporte, r.motivo, d.nickname, x.nickname, r.estado, s.id_sancion, s.ambito + ' ' + s.tipo, a.id_apelacion, a.estado
 FROM dbo.Reporte AS r
-JOIN dbo.MotivoReporte AS m ON m.id_motivo = r.id_motivo
 JOIN dbo.Usuario AS d ON d.id_usuario = r.id_denunciante
 JOIN dbo.Usuario AS x ON x.id_usuario = r.id_reportado
 LEFT JOIN dbo.Sancion AS s ON s.id_reporte = r.id_reporte
@@ -451,7 +422,7 @@ FROM (
     UNION ALL SELECT 15, 'Reporte.estado', estado, COUNT(*) FROM dbo.Reporte GROUP BY estado
     UNION ALL SELECT 16, 'Sancion.tipo', CONCAT(ambito, ' ', tipo), COUNT(*) FROM dbo.Sancion GROUP BY ambito, tipo
     UNION ALL SELECT 17, 'Apelacion.estado', estado, COUNT(*) FROM dbo.Apelacion GROUP BY estado
-    UNION ALL SELECT 18, 'TokenRecuperacion.estado', estado, COUNT(*) FROM dbo.TokenRecuperacion GROUP BY estado
+    UNION ALL SELECT 18, 'CodigoVerificacion.proposito', proposito, COUNT(*) FROM dbo.CodigoVerificacion GROUP BY proposito
 ) AS c
 GROUP BY c.o, c.columna
 ORDER BY c.o;
@@ -477,9 +448,9 @@ FROM (
            CONCAT(s.ambito, ' ', s.tipo, N', fin ', ISNULL(CONVERT(VARCHAR(16), s.fecha_fin, 120), 'NULL'))
     FROM dbo.Sancion AS s JOIN dbo.Usuario AS u ON u.id_usuario = s.id_usuario WHERE s.tipo = 'PERMANENTE' AND s.ambito = 'CUENTA'
     UNION ALL
-    SELECT 4, N'Interfaz y términos en inglés (D-21)', 'AceptacionTerminos', u.nickname COLLATE DATABASE_DEFAULT,
-           CONCAT(N'versión ', a.version_terminos, N' en ', a.idioma)
-    FROM dbo.AceptacionTerminos AS a JOIN dbo.Usuario AS u ON u.id_usuario = a.id_usuario WHERE a.idioma = 'en'
+    SELECT 4, N'Interfaz y términos en inglés (D-21)', 'Usuario', u.nickname COLLATE DATABASE_DEFAULT,
+           CONCAT(N'versión ', u.version_terminos, N' en ', u.idioma_terminos)
+    FROM dbo.Usuario AS u WHERE u.idioma_terminos = 'en'
     UNION ALL
     SELECT 5, N'Chat con ñ, acentos, emoji e inglés', 'Mensaje', CONCAT(N'mensaje ', id_mensaje), texto
     FROM dbo.Mensaje WHERE id_mensaje IN (4, 7)

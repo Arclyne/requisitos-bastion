@@ -155,6 +155,8 @@
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué los muros de la sala se copian a la participación.}\par
     El anfitrión puede elegir un número de muros distinto del que fija el \textit{Modo}. Ese valor se guarda en la \textit{Sala}, pero la partida no lo lee de allí: cada \textit{Participacion} nace con sus \texttt{muros\_\allowbreak{}restantes}, igual que en una partida clasificatoria. Así, la partida no depende de la sala una vez creada, y el \mbox{CU-21} descuenta muros sin saber si la partida vino del emparejamiento o de una sala.} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre la cola y las plazas de sala en memoria (\mbox{D-24}).}\par
+    Las plazas de la sala viven en la memoria del Servidor de partidas (\mbox{D-24}): donde el caso escribe o lee \textit{SalaParticipante}, la operación es sobre esa estructura. La \textit{Sala} sí se guarda, con sus ajustes y su código, y cerrarla es un cambio de estado (\texttt{usp\_\allowbreak{}Sala\_\allowbreak{}Cerrar}).} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 6)}
       \item \textbf{\textit{Participacion}, \textit{ColaEmparejamiento}, \textit{SalaParticipante}, \textit{Sancion}:} lee, para las precondiciones \textit{(paso 6)}

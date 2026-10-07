@@ -14,7 +14,7 @@
       \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
       \item \textbf{\mbox{PRE-02}} El \textit{Usuario} tiene \texttt{tipo\_\allowbreak{}cuenta} en \texttt{REGISTRADA} (\mbox{RN-07}). \textit{(Ver \mbox{FA-01})}
       \item \textbf{\mbox{PRE-03}} El jugador reportado existe y no es el propio denunciante.
-      \item \textbf{\mbox{PRE-04}} El catálogo contiene los cinco \textit{MotivoReporte}.
+      \item \textbf{\mbox{PRE-04}} Los diccionarios de recursos contienen el texto de los cinco motivos de reporte.
       \item \textbf{\mbox{PRE-05}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
     \end{cureglas}} \\ \hline
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
@@ -25,7 +25,7 @@
       \item El SJM envía el mensaje \texttt{REPORT\_\allowbreak{}PLAYER\_\allowbreak{}REQUEST} con el reportado, el motivo, la descripción, la partida desde la que se reporta si la hay, y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-05})}
       \item El Servidor de partidas verifica que el reportado exista, no sea el denunciante y no tenga \texttt{estado\_\allowbreak{}cuenta} en \texttt{ELIMINADA}; y, si se adjunta una partida, que denunciante y reportado tengan \textit{Participacion} en ella (\mbox{RN-09}). \textit{(Ver \mbox{FA-06})}
-      \item El Servidor de partidas verifica que el \textit{MotivoReporte} pertenezca al catálogo. \textit{(Ver \mbox{FA-07})}
+      \item El Servidor de partidas verifica que el \texttt{motivo} sea uno de los cinco admitidos. \textit{(Ver \mbox{FA-07})}
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=9]
       \item El Servidor de partidas verifica que el denunciante no haya reportado ya al mismo jugador por la misma partida (\mbox{RN-03}). \textit{(Ver \mbox{FA-08})}
@@ -142,7 +142,7 @@
       \item \textbf{\mbox{RN-07}} Las cuentas de invitado no pueden reportar. Un reporte sin cuenta rastreable no puede sostener el \mbox{RN-06} ni responder de un uso abusivo.
     \end{cureglas}} \\
    & \cuCelda{\begin{cureglas}
-      \item \textbf{\mbox{RN-08}} El catálogo de \textit{MotivoReporte} tiene cinco entradas y se mantiene por SQL, no desde la aplicación (\mbox{D-09}).
+      \item \textbf{\mbox{RN-08}} Hay cinco motivos de reporte: \texttt{LENGUAJE\_\allowbreak{}OFENSIVO}, \texttt{ACOSO}, \texttt{NOMBRE\_\allowbreak{}INAPROPIADO}, \texttt{TRAMPAS} y \texttt{JUEGO\_\allowbreak{}ANTIDEPORTIVO}. Son un dominio cerrado de \textit{Reporte}, declarado con \texttt{CHECK}, y no se cambian desde la aplicación (\mbox{D-23}).
           \item \textbf{\mbox{RN-09}} Solo puede adjuntarse una partida en la que participaron el denunciante y el reportado. De otro modo el reporte adjuntaría pruebas ajenas a los hechos.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué las pruebas van por referencia.}\par
@@ -151,7 +151,7 @@
       \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 6)}
       \item \textbf{\textit{Usuario}:} lee el reportado y su estado \textit{(paso 7)}
       \item \textbf{\textit{Participacion}:} lee, para comprobar que ambos jugaron la partida adjunta \textit{(paso 7)}
-      \item \textbf{\textit{MotivoReporte}:} lee el catálogo \textit{(pasos 2, 8)}
+      \item \textbf{Motivos de reporte:} el dominio de \texttt{Reporte.motivo} \textit{(pasos 2, 8, \mbox{D-23})}
       \item \textbf{\textit{Reporte}:} lee, para comprobar duplicados y el límite \textit{(pasos 9, 10)}
       \item \textbf{\textit{Reporte}:} crea \textit{(pasos 12, 13)}
       \item \textbf{\textit{Partida}:} referencia, sin copiar nada de ella \textit{(paso 13)}

@@ -4,6 +4,12 @@
 #
 # Uso, desde la raíz del repositorio:
 #     powershell -ExecutionPolicy Bypass -File bd\generar_tablas.ps1
+#   o, en macOS o Linux con PowerShell 7:
+#     pwsh -File bd/generar_tablas.ps1
+#
+# Las tablas de la fase posterior (D-22) se generan aparte, sin tocar las del núcleo:
+#     pwsh -File bd/generar_tablas.ps1 -Sql bd/fase_posterior/crear_tablas_fase_posterior.sql `
+#          -Salida bd/tex/fase-posterior -Esquema er/esquema-fase-posterior.json -Prefijo bdFp
 #
 # Lee del script:
 #   -- @entidad Nombre | descripción      antes de cada CREATE TABLE
@@ -16,7 +22,9 @@
 # En las descripciones, `x` se escribe como código y *X* en cursiva.
 param(
     [string]$Sql = (Join-Path $PSScriptRoot 'crear_tablas.sql'),
-    [string]$Salida = (Join-Path $PSScriptRoot 'tex')
+    [string]$Salida = (Join-Path $PSScriptRoot 'tex'),
+    [string]$Esquema = (Join-Path (Join-Path (Split-Path $PSScriptRoot) 'er') 'esquema.json'),
+    [string]$Prefijo = 'bd'
 )
 $ErrorActionPreference = 'Stop'
 $utf8 = New-Object System.Text.UTF8Encoding($false)
@@ -85,10 +93,13 @@ foreach ($l in [IO.File]::ReadAllLines($Sql, [Text.Encoding]::UTF8)) {
         continue
     }
     if ($l -match '^ALTER TABLE dbo\.(\w+) ADD CONSTRAINT (\w+) FOREIGN KEY \(([^)]*)\) REFERENCES dbo\.(\w+) \(([^)]*)\);\s+--\s(.*)$') {
+        if (-not $tablas.Contains($matches[1])) { continue }
         [void]$tablas[$matches[1]].Fk.Add((NuevaFk $matches[1] $matches[2] $matches[3] $matches[4] $matches[5] $matches[6]))
         continue
     }
     if ($l -match '^CREATE UNIQUE INDEX (\w+) ON dbo\.(\w+) \(([^)]*)\) WHERE (.+?);\s+--\s(.*)$') {
+        # Un índice sobre una tabla de otro script (la fase posterior indexa columnas que agrega al núcleo) no se documenta aquí.
+        if (-not $tablas.Contains($matches[2])) { continue }
         [void]$tablas[$matches[2]].UqIdx.Add([pscustomobject]@{ Nombre = $matches[1]; Cols = @(Cols $matches[3]); Filtro = $matches[4]; Desc = $matches[5] })
         continue
     }
@@ -199,7 +210,10 @@ function Llave($t, $nombreCol) {
 
 function Escribir($archivo, $lineas) { [IO.File]::WriteAllText((Join-Path $Salida $archivo), (($lineas -join "`n") + "`n"), $utf8) }
 
-$aviso = '% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.'
+$origen = (Split-Path (Split-Path $Sql) -Leaf) + '/' + (Split-Path $Sql -Leaf)
+if ($origen -like 'bd/*') { $origen = 'bd/' + (Split-Path $Sql -Leaf) } else { $origen = 'bd/' + $origen }
+$aviso = "% Archivo generado por bd/generar_tablas.ps1 a partir de $origen. No editar a mano."
+$rutaTex = (($Salida.Replace('\', '/')) -replace '^.*?(bd/tex)', '$1')
 $areas = @($tablas.Values | ForEach-Object { $_.Area } | Select-Object -Unique)
 
 #---------------------------------------------------------------------
@@ -242,7 +256,7 @@ foreach ($a in $areas) {
         $o += '\end{tablaatributos}', ''
     }
     [IO.File]::WriteAllText((Join-Path $dirAtributos "$slug.tex"), (($o -join "`n") + "`n"), $utf8)
-    $indice += "\input{bd/tex/atributos/$slug}"
+    $indice += "\input{$rutaTex/atributos/$slug}"
 }
 Escribir 'atributos.tex' $indice
 
@@ -365,8 +379,7 @@ Escribir 'valores-omision.tex' $o
 #---------------------------------------------------------------------
 # 8. Esquema en JSON para los diagramas entidad-relación de er/
 #---------------------------------------------------------------------
-$er = Join-Path (Split-Path $PSScriptRoot) 'er'
-if (Test-Path $er) {
+if (Test-Path (Split-Path $Esquema)) {
     $json = foreach ($t in $tablas.Values) {
         $fkCols = ColsFk $t
         [ordered]@{
@@ -383,7 +396,7 @@ if (Test-Path $er) {
             })
         }
     }
-    [IO.File]::WriteAllText((Join-Path $er 'esquema.json'), (ConvertTo-Json @($json) -Depth 6), $utf8)
+    [IO.File]::WriteAllText($Esquema, (ConvertTo-Json @($json) -Depth 6), $utf8)
 }
 
 #---------------------------------------------------------------------
@@ -397,20 +410,20 @@ $indicesUnicos = ($tablas.Values | ForEach-Object { $_.UqIdx.Count } | Measure-O
 $pkCompuestas = @($tablas.Values | Where-Object { $_.Pk.Count -gt 1 }).Count
 $fkCompuestas = ($tablas.Values | ForEach-Object { @($_.Fk | Where-Object { $_.Cols.Count -gt 1 }).Count } | Measure-Object -Sum).Sum
 $resumen = @($aviso,
-    "\newcommand{\bdNumTablas}{$($tablas.Count)}",
-    "\newcommand{\bdNumColumnas}{$cols}",
-    "\newcommand{\bdNumCalculadas}{$calc}",
-    "\newcommand{\bdNumForaneas}{$totalFk}",
-    "\newcommand{\bdNumFNBC}{$($tablas.Count - $soloTercera)}",
-    "\newcommand{\bdNumNoNulas}{$noNulas}",
-    "\newcommand{\bdNumChecks}{$numChecks}",
-    "\newcommand{\bdNumOmision}{$numDefaults}",
-    "\newcommand{\bdNumUnicas}{$unicas}",
-    "\newcommand{\bdNumIndicesUnicos}{$indicesUnicos}",
-    "\newcommand{\bdNumIndices}{$numIndices}",
-    "\newcommand{\bdNumProcedimientos}{$numProcs}",
-    "\newcommand{\bdNumPkCompuestas}{$pkCompuestas}",
-    "\newcommand{\bdNumFkCompuestas}{$fkCompuestas}")
+    "\newcommand{\${Prefijo}NumTablas}{$($tablas.Count)}",
+    "\newcommand{\${Prefijo}NumColumnas}{$cols}",
+    "\newcommand{\${Prefijo}NumCalculadas}{$calc}",
+    "\newcommand{\${Prefijo}NumForaneas}{$totalFk}",
+    "\newcommand{\${Prefijo}NumFNBC}{$($tablas.Count - $soloTercera)}",
+    "\newcommand{\${Prefijo}NumNoNulas}{$noNulas}",
+    "\newcommand{\${Prefijo}NumChecks}{$numChecks}",
+    "\newcommand{\${Prefijo}NumOmision}{$numDefaults}",
+    "\newcommand{\${Prefijo}NumUnicas}{$unicas}",
+    "\newcommand{\${Prefijo}NumIndicesUnicos}{$indicesUnicos}",
+    "\newcommand{\${Prefijo}NumIndices}{$numIndices}",
+    "\newcommand{\${Prefijo}NumProcedimientos}{$numProcs}",
+    "\newcommand{\${Prefijo}NumPkCompuestas}{$pkCompuestas}",
+    "\newcommand{\${Prefijo}NumFkCompuestas}{$fkCompuestas}")
 Escribir 'resumen.tex' $resumen
 "Tablas: $($tablas.Count); columnas: $cols; calculadas: $calc; llaves foráneas: $totalFk; solo 3FN: $soloTercera"
 "NOT NULL: $noNulas; CHECK: $numChecks; DEFAULT: $numDefaults; UNIQUE: $unicas; índices únicos: $indicesUnicos; índices: $numIndices; procedimientos: $numProcs"

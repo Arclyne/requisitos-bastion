@@ -73,7 +73,7 @@ Fechas y números & En la base, sin formato: las fechas en UTC. El cliente las p
 \at{Modo.CLASICO} & Clásico 9×9 & Classic 9×9 \\ \hline
 \at{Division.MURO\_PIEDRA} & Muro de piedra & Stone wall \\ \hline
 \at{ObjetoCosmetico.PEON\_DORADO} & Peón dorado & Golden pawn \\ \hline
-\at{MotivoReporte.ACOSO} & Acoso & Harassment \\ \hline
+\at{Reporte.motivo.ACOSO} & Acoso & Harassment \\ \hline
 \end{longtable}
 \end{center}
 
@@ -83,7 +83,7 @@ El código no cambia nunca: corregir o traducir un nombre es editar los dicciona
 
 \begin{reglas}
   \item \textbf{\at{idioma\_preferido} de \textit{Usuario}.} Vale \at{es-MX} por omisión y viaja con la cuenta a cualquier dispositivo (\mbox{CU-12} \mbox{RN-08}): con él, el cliente elige sus diccionarios al iniciar sesión y el servidor, los de los correos. Un idioma no admitido se rechaza (\mbox{CU-12} \mbox{FA-07}). El idioma que se elige en la \at{GUI\_Login}, antes de saber quién juega, es configuración local del cliente y no llega a la base (\mbox{CU-05} \mbox{RN-03}).
-  \item \textbf{\at{idioma} de \textit{AceptacionTerminos}.} Cada versión de los términos existe en los dos idiomas, y lo que una cuenta aceptó es una versión en un idioma (\mbox{CU-02} \mbox{RN-12}).
+  \item \textbf{\at{idioma\_terminos} de \textit{Usuario}.} Cada versión de los términos existe en los dos idiomas, y lo que una cuenta aceptó es una versión en un idioma (\mbox{CU-02} \mbox{RN-12}, \mbox{D-23}).
   \item \textbf{\at{idioma} de \textit{PalabraProhibida}.} Es el idioma del término, o nulo si se filtra en todos. El servidor toma los del idioma del canal más los que no tienen idioma, \at{WHERE idioma = @idioma OR idioma IS NULL} (\mbox{CU-28} \mbox{RN-01}).
 \end{reglas}
 

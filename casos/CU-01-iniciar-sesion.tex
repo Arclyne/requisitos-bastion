@@ -106,7 +106,7 @@
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}PendingVerification}, mostrando el \texttt{correo} registrado de forma parcialmente oculta y las opciones ``Reenviar correo de verificación'' y ``Aceptar''.
       \item El Jugador selecciona ``Reenviar correo de verificación'' y el SJM envía el mensaje \texttt{RESEND\_\allowbreak{}VERIFICATION\_\allowbreak{}REQUEST}. Si selecciona ``Aceptar'', el flujo continúa en el paso 2 del FN.
       \item El Servidor de partidas verifica que hayan transcurrido al menos cinco minutos desde \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, o que este valor sea nulo (\mbox{RN-10}). \textit{(Ver \mbox{FA-12})}
-      \item El Servidor de partidas invalida los \textit{TokenVerificacionCorreo} pendientes del \textit{Usuario}, genera uno nuevo con su fecha de expiración y lo guarda. \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas invalida los \textit{CodigoVerificacion} pendientes del \textit{Usuario}, genera uno nuevo con su fecha de expiración y lo guarda. \textit{(Ver \mbox{EX-04})}
       \item El Servidor de partidas solicita al Servicio de correo el envío del mensaje de verificación en el \texttt{idioma\_\allowbreak{}preferido} del \textit{Usuario}. \textit{(Ver \mbox{EX-06})}
       \item El Servidor de partidas actualiza \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} del \textit{Usuario}.
       \item El Servidor de partidas responde con \texttt{RESEND\_\allowbreak{}VERIFICATION\_\allowbreak{}OK}, que el SJM informa mediante la \texttt{GUI\_\allowbreak{}MessageSuccess}.
@@ -122,14 +122,14 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-11}: La cuenta tiene habilitado el segundo factor}\par
     \begin{cuenum}[start=1]
-      \item El Servidor de partidas genera un \textit{CodigoSegundoFactor} de un solo uso con su fecha de expiración, lo asocia al \textit{Usuario} y guarda únicamente su resumen criptográfico. \textit{(Ver \mbox{EX-04})}
+      \item El Servidor de partidas genera un \textit{CodigoVerificacion} de un solo uso con su fecha de expiración, lo asocia al \textit{Usuario} y guarda únicamente su resumen criptográfico. \textit{(Ver \mbox{EX-04})}
       \item El Servidor de partidas entrega el código al Proveedor del segundo factor configurado. \textit{(Ver \mbox{EX-06})}
       \item El Servidor de partidas responde con \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}REQUIRED} y la fecha de expiración del código.
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}SecondFactor}, solicitando el código y mostrando el tiempo restante de vigencia, con las opciones ``Verificar'', ``Reenviar código'' y ``Cancelar''. \textit{(Ver \mbox{FA-13}, \mbox{FA-14})}
       \item El Jugador captura el código y el SJM envía el mensaje \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}REQUEST}.
-      \item El Servidor de partidas verifica que el código no haya expirado y que no haya sido consumido. \textit{(Ver \mbox{FA-15})}
+      \item El Servidor de partidas verifica que el código no haya expirado y que no haya sido usado. \textit{(Ver \mbox{FA-15})}
       \item El Servidor de partidas compara el resumen del código recibido contra el almacenado. \textit{(Ver \mbox{FA-16})}
-      \item El Servidor de partidas marca el \textit{CodigoSegundoFactor} como consumido.
+      \item El Servidor de partidas marca el \textit{CodigoVerificacion} como usado.
       \item El flujo continúa en el paso 14 del FN.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-12}: Se solicita el reenvío antes del tiempo permitido}\par
@@ -140,7 +140,7 @@
    & \cuCelda{\textbf{\mbox{FA-13}: Cancelar la verificación del segundo factor}\par
     \begin{cuenum}[start=1]
       \item El Jugador selecciona ``Cancelar'' en la \texttt{GUI\_\allowbreak{}SecondFactor} y el SJM envía el mensaje \texttt{ABORT\_\allowbreak{}LOGIN\_\allowbreak{}REQUEST}.
-      \item El Servidor de partidas invalida el \textit{CodigoSegundoFactor} pendiente y registra el abandono en la \textit{BitacoraAcceso} con el resultado \texttt{ABANDONADO}.
+      \item El Servidor de partidas invalida el \textit{CodigoVerificacion} pendiente y registra el abandono en la \textit{BitacoraAcceso} con el resultado \texttt{ABANDONADO}.
       \item El flujo continúa en el paso 2 del FN.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-14}: Reenviar el código del segundo factor}\par
@@ -152,13 +152,13 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-15}: El código del segundo factor expiró}\par
     \begin{cuenum}[start=1]
-      \item El Servidor de partidas marca el \textit{CodigoSegundoFactor} como invalidado.
+      \item El Servidor de partidas marca el \textit{CodigoVerificacion} como invalidado.
       \item El Servidor de partidas responde con \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}EXPIRED}, que el SJM informa mediante la \texttt{GUI\_\allowbreak{}MessageWarning}.
       \item El flujo continúa en el paso 5 del \mbox{FA-11}.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-16}: El código del segundo factor es incorrecto}\par
     \begin{cuenum}[start=1]
-      \item El Servidor de partidas incrementa en uno el atributo \texttt{intentos} del \textit{CodigoSegundoFactor}.
+      \item El Servidor de partidas incrementa en uno el atributo \texttt{intentos} del \textit{CodigoVerificacion}.
       \item El Servidor de partidas evalúa \texttt{intentos} contra la regla \mbox{RN-09}. Si alcanza el máximo, invalida el código, cancela el intento de inicio de sesión y lo registra en la \textit{BitacoraAcceso} con el resultado \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}FALLIDO}.
       \item El Servidor de partidas responde con \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}INVALID} y el número de intentos restantes, que el SJM muestra en la \texttt{GUI\_\allowbreak{}MessageWarning}.
       \item Si se agotaron los intentos, el flujo continúa en el paso 2 del FN. En caso contrario, continúa en el paso 5 del \mbox{FA-11}.
@@ -282,8 +282,8 @@
       \item \textbf{\textit{Usuario}:} escribe \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}; \texttt{estado\_\allowbreak{}cuenta} en el \mbox{FA-19} \textit{(pasos 10, \mbox{FA-08}, \mbox{FA-09}, \mbox{FA-19})}
       \item \textbf{\textit{Sancion}:} lee las activas de ámbito \texttt{CUENTA} \textit{(pasos 12, \mbox{FA-10})}
       \item \textbf{\textit{Sesion}:} crea \textit{(paso 14)}
-      \item \textbf{\textit{CodigoSegundoFactor}:} crea, marca como consumido o invalidado, incrementa \texttt{intentos} \textit{(pasos \mbox{FA-11}, \mbox{FA-13} a \mbox{FA-16})}
-      \item \textbf{\textit{TokenVerificacionCorreo}:} invalida los pendientes y crea uno nuevo \textit{(paso \mbox{FA-09})}
+      \item \textbf{\textit{CodigoVerificacion}:} crea, marca como usado o invalidado, incrementa \texttt{intentos} \textit{(pasos \mbox{FA-11}, \mbox{FA-13} a \mbox{FA-16})}
+      \item \textbf{\textit{CodigoVerificacion}:} invalida los pendientes y crea uno nuevo \textit{(paso \mbox{FA-09})}
       \item \textbf{\textit{EstadisticaModo}, \textit{Equipamiento}, \textit{Participacion}:} lee, para el mensaje \texttt{LOGIN\_\allowbreak{}OK} \textit{(paso 17)}
       \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(pasos 15, \mbox{FA-06} a \mbox{FA-10}, \mbox{FA-13}, \mbox{FA-16}, \mbox{FA-19})}
     \end{cudatos}} \\ \hline

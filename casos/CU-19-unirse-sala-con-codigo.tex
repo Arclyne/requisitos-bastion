@@ -133,6 +133,8 @@
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué la sala no reserva plaza al entrar al campo del código.}\par
     Se consideró reservar la plaza desde que el jugador empieza a escribir un código válido, para que la sala no se llenara mientras lo termina. Se descartó porque exigiría que el servidor supiera qué sala se está escribiendo antes de recibir el código completo, y porque una reserva abandonada dejaría plazas bloqueadas que nadie usa. Resolver la carrera en el momento de ocupar, con la comprobación dentro de la transacción, es más simple y basta.} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre la cola y las plazas de sala en memoria (\mbox{D-24}).}\par
+    Las plazas de la sala viven en la memoria del Servidor de partidas (\mbox{D-24}): unirse ocupa una plaza en esa estructura y no crea una fila de \textit{SalaParticipante}. La regla de una sola sala por jugador la garantiza la estructura en memoria.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 5)}
       \item \textbf{\textit{Participacion}, \textit{ColaEmparejamiento}, \textit{SalaParticipante}, \textit{Sancion}:} lee, para las precondiciones \textit{(paso 5)}

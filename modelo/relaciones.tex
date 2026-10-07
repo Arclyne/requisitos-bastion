@@ -29,7 +29,7 @@ El modelo relacional no admite relaciones de muchos a muchos directas: cada una 
 \end{longtable}
 \end{center}
 
-\textit{Solicitud} también relaciona a dos usuarios, pero tiene llave sustituta porque la acción de responder la identifica por su número (\mbox{F-39}); su par (\at{id\_solicitante}, \at{id\_destinatario}) es llave candidata. \textit{SalaParticipante} relaciona usuarios con salas, pero en un momento dado cada usuario está en una sola sala: la relación es 1:N y su llave es \at{id\_usuario}.
+\textit{Solicitud} también relaciona a dos usuarios, pero tiene llave sustituta porque la acción de responder la identifica por su número (\mbox{F-39}); su par (\at{id\_solicitante}, \at{id\_destinatario}) es llave candidata. Las plazas de una sala relacionan usuarios con salas, pero viven en la memoria del Servidor de partidas y no son una tabla (\mbox{D-24}).
 
 \subsubsection*{Relaciones de uno a muchos y de uno a uno}
 \addcontentsline{toc}{subsubsection}{Relaciones de uno a muchos y de uno a uno}

@@ -1,0 +1,33 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/fase_posterior/crear_tablas_fase_posterior.sql. No editar a mano.
+\begin{center}\small
+\begin{longtable}{|L{0.21\textwidth}|L{0.28\textwidth}|L{0.18\textwidth}|L{0.21\textwidth}|}
+\hline
+\textbf{Entidad} & \textbf{Llave primaria} & \textbf{Clase} & \textbf{Otras llaves candidatas} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad} & \textbf{Llave primaria} & \textbf{Clase} & \textbf{Otras llaves candidatas} \\ \hline
+\endhead
+\textit{Ranura} & (\texttt{id\_\allowbreak{}ranura}) & Simple, asignada en la carga & (\texttt{codigo}) \\ \hline
+\textit{Objeto\-Cosmetico} & (\texttt{id\_\allowbreak{}objeto}) & Simple, asignada en la carga & (\texttt{codigo}) \\ \hline
+\textit{Division} & (\texttt{id\_\allowbreak{}division}) & Simple, asignada en la carga & (\texttt{codigo}); (\texttt{elo\_\allowbreak{}minimo}) \\ \hline
+\textit{Nivel\-IA} & (\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}) & Simple, asignada en la carga & (\texttt{codigo}) \\ \hline
+\textit{Leccion} & (\texttt{id\_\allowbreak{}leccion}) & Simple, asignada en la carga & (\texttt{codigo}); (\texttt{orden}) \\ \hline
+\textit{Tipo\-Caja} & (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}) & Simple, asignada en la carga & (\texttt{codigo}) \\ \hline
+\textit{Tipo\-Caja\-Objeto} & (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}, \texttt{id\_\allowbreak{}objeto}) & Compuesta & --- \\ \hline
+\textit{Historial\-Nickname} & (\texttt{id\_\allowbreak{}usuario}) & Simple, igual a la llave foránea & --- \\ \hline
+\textit{Avatar} & (\texttt{id\_\allowbreak{}avatar}) & Simple, sustituta & --- \\ \hline
+\textit{Enlace\-Red} & (\texttt{id\_\allowbreak{}enlace}) & Simple, sustituta & (\texttt{id\_\allowbreak{}usuario}, \texttt{orden}) \\ \hline
+\textit{Usuario\-Objeto} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & Compuesta & --- \\ \hline
+\textit{Equipamiento} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}ranura}) & Compuesta & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) \\ \hline
+\textit{Participacion\-Objeto} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}ranura}) & Compuesta & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) \\ \hline
+\textit{Enlace\-Espectador} & (\texttt{id\_\allowbreak{}enlace}) & Simple, sustituta & (\texttt{token\_\allowbreak{}hash}) \\ \hline
+\textit{Invitacion} & (\texttt{id\_\allowbreak{}invitacion}) & Simple, sustituta & --- \\ \hline
+\textit{Historial\-Division} & (\texttt{id\_\allowbreak{}historial\_\allowbreak{}division}) & Simple, sustituta & --- \\ \hline
+\textit{Caja} & (\texttt{id\_\allowbreak{}caja}) & Simple, sustituta & --- \\ \hline
+\textit{Caja\-Contenido} & (\texttt{id\_\allowbreak{}caja}, \texttt{numero}) & Compuesta & --- \\ \hline
+\textit{Movimiento\-Moneda} & (\texttt{id\_\allowbreak{}movimiento}) & Simple, sustituta & --- \\ \hline
+\textit{Amistad} & (\texttt{id\_\allowbreak{}usuario\_\allowbreak{}a}, \texttt{id\_\allowbreak{}usuario\_\allowbreak{}b}) & Compuesta & --- \\ \hline
+\textit{Solicitud} & (\texttt{id\_\allowbreak{}solicitud}) & Simple, sustituta & (\texttt{id\_\allowbreak{}solicitante}, \texttt{id\_\allowbreak{}destinatario}) \\ \hline
+\textit{Progreso\-Tutorial} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}leccion}) & Compuesta & --- \\ \hline
+\end{longtable}
+\end{center}

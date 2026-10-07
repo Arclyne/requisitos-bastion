@@ -1,0 +1,46 @@
+%=====================================================================
+% Modelo de datos · Tablas de la fase posterior
+%   Lo generado sale de bd/fase_posterior/crear_tablas_fase_posterior.sql
+%   con bd/generar_tablas.ps1 (-Prefijo bdFp) y de er/generar.py.
+%=====================================================================
+\subsection*{Tablas de la fase posterior}
+\addcontentsline{toc}{subsection}{Tablas de la fase posterior}
+
+Estas \bdFpNumTablas{} tablas, con \bdFpNumColumnas{} atributos y \bdFpNumForaneas{} llaves foráneas, solo las escriben casos de uso marcados como fase posterior (\mbox{D-22}). No se crean con el núcleo: las crea \at{bd/fase\_posterior/crear\_tablas\_fase\_posterior.sql}, que se ejecuta sobre una base que ya tiene el núcleo y que además agrega a \textit{Usuario}, \textit{EstadisticaModo}, \textit{Partida}, \textit{Jugada} y \textit{Sala} las columnas de la subsección \textit{Revisión del esquema}. Se documentan completas para que la fase posterior empiece desde un diseño ya revisado. \bdFpNumFNBC{} de ellas cumplen la forma normal de Boyce-Codd; \textit{Equipamiento} y \textit{ParticipacionObjeto} se quedan en tercera forma normal por el motivo que explica la verificación de la normalización.
+
+\subsubsection*{Entidades}
+\addcontentsline{toc}{subsubsection}{Entidades de la fase posterior}
+\input{bd/tex/fase-posterior/entidades}
+
+\subsubsection*{Diagramas}
+\addcontentsline{toc}{subsubsection}{Diagramas de la fase posterior}
+Uno por área. Las entidades del núcleo que sus relaciones tocan, como \textit{Usuario} o \textit{Participacion}, aparecen sin atributos.
+
+\begin{center}
+\includegraphics[width=\linewidth,height=0.42\textheight,keepaspectratio]{er/salida/fp-catalogos}\par\smallskip
+{\small Catálogos de la fase posterior.}
+\end{center}
+\begin{center}
+\includegraphics[width=\linewidth,height=0.42\textheight,keepaspectratio]{er/salida/fp-perfil}\par\smallskip
+{\small Perfil y personalización.}
+\end{center}
+\begin{center}
+\includegraphics[width=\linewidth,height=0.42\textheight,keepaspectratio]{er/salida/fp-partida}\par\smallskip
+{\small Aspecto en partida, espectador e invitaciones.}
+\end{center}
+\begin{center}
+\includegraphics[width=\linewidth,height=0.42\textheight,keepaspectratio]{er/salida/fp-economia}\par\smallskip
+{\small Clasificación y economía.}
+\end{center}
+\begin{center}
+\includegraphics[width=\linewidth,height=0.42\textheight,keepaspectratio]{er/salida/fp-social}\par\smallskip
+{\small Relaciones entre jugadores y tutorial.}
+\end{center}
+
+\subsubsection*{Atributos}
+\addcontentsline{toc}{subsubsection}{Atributos de la fase posterior}
+\input{bd/tex/fase-posterior/atributos}
+
+\subsubsection*{Relaciones}
+\addcontentsline{toc}{subsubsection}{Relaciones de la fase posterior}
+\input{bd/tex/fase-posterior/relaciones}

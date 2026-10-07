@@ -1,0 +1,33 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/crear_tablas.sql. No editar a mano.
+\subsubsection*{
+Salas y chat
+}
+\addcontentsline{toc}{subsubsection}{
+Salas y chat
+}
+
+\atributosde{Sala}{Sala privada con código, con los ajustes que elige el anfitrión (\mbox{CU-18}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}sala} & \texttt{INT}, identidad & No & PK & Identificador de la sala. \\ \hline
+\texttt{codigo} & \texttt{CHAR(6)} & No &  & Seis caracteres sin 0, O, 1 ni I; único entre las salas no cerradas (\mbox{CU-18} \mbox{RN-01}). \\ \hline
+\texttt{id\_\allowbreak{}anfitrion} & \texttt{INT} & No & FK & Jugador que creó la sala. \\ \hline
+\texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & FK & Modo, que fija el tablero y las plazas. \\ \hline
+\texttt{muros\_\allowbreak{}por\_\allowbreak{}jugador} & \texttt{TINYINT} & No &  & De 1 a 20, elegido por el anfitrión (\mbox{CU-18} \mbox{RN-04}). \\ \hline
+\texttt{minutos\_\allowbreak{}reloj} & \texttt{TINYINT} & No &  & 3, 5 o 10. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{ABIERTA}, \texttt{EN\_\allowbreak{}PARTIDA} o \texttt{CERRADA}. Por omisión, \texttt{ABIERTA}. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & Sí & FK & Partida que se inició desde la sala. \\ \hline
+\texttt{fecha\_\allowbreak{}creacion} & \texttt{DATETIME2(0)} & No &  & Creación de la sala. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}actividad} & \texttt{DATETIME2(0)} & No &  & Para cerrar la sala a los treinta minutos sin actividad (\mbox{CU-18} \mbox{RN-08}). Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Mensaje}{Mensaje de chat. Se guarda porque el reporte lo adjunta como prueba (\mbox{CU-28}, \mbox{CU-42}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}mensaje} & \texttt{BIGINT}, identidad & No & PK & Identificador del mensaje. \\ \hline
+\texttt{id\_\allowbreak{}autor} & \texttt{INT} & No & FK & Jugador que lo escribió. \\ \hline
+\texttt{canal} & \texttt{VARCHAR(12)} & No &  & \texttt{PARTIDA} o \texttt{SALA} en el núcleo. El CHECK admite ya \texttt{ESPECTADORES}, \texttt{GLOBAL} y \texttt{AMIGOS}, de la fase posterior, porque no necesitan columnas nuevas. Discrimina a qué pertenece el mensaje. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & Sí & FK & Partida; solo en los canales \texttt{PARTIDA} y \texttt{ESPECTADORES}. \\ \hline
+\texttt{id\_\allowbreak{}sala} & \texttt{INT} & Sí & FK & Sala; solo en el canal \texttt{SALA}. \\ \hline
+\texttt{texto} & \texttt{NVARCHAR(500)} & No &  & Texto tal como se escribió, en Unicode y sin traducir (\mbox{CU-28} \mbox{RN-12}). \\ \hline
+\texttt{fecha\_\allowbreak{}envio} & \texttt{DATETIME2(3)} & No &  & Momento del envío. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+

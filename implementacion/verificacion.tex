@@ -4,7 +4,9 @@
 \subsection*{Verificación en SQL Server}
 \addcontentsline{toc}{subsection}{Verificación en SQL Server}
 
-Los tres scripts se ejecutaron en orden sobre SQL Server 2025 (17.0.4065.4, edición Developer) sin ningún error. Todas las filas de prueba pasaron las llaves, las restricciones \at{CHECK} y los índices únicos al insertarse. Se comprobaron cuatro cosas más.
+\textbf{Estado tras la revisión del esquema (\mbox{D-22} a \mbox{D-24}).} Lo que sigue se hizo el 13 de septiembre de 2026 con la versión anterior, de 47 tablas en un solo script. Los scripts actuales ---núcleo y fase posterior--- se generaron sin acceso a SQL Server, así que \textbf{falta ejecutarlos} en ese orden y repetir estas pruebas. Sin SQL Server se comprobó: que los cuatro scripts se analizan como T-SQL válido lote por lote; que las filas de prueba de los dos scripts de datos respetan las llaves primarias, las restricciones de unicidad y los índices únicos filtrados, las llaves foráneas y las columnas \at{NOT NULL}, aplicando la fase posterior sobre el núcleo; y que \at{bd/generar\_tablas.ps1} corre en PowerShell 7 y produce el mismo esquema que en Windows.
+
+Con la versión anterior, los tres scripts se ejecutaron en orden sobre SQL Server 2025 (17.0.4065.4, edición Developer) sin ningún error. Todas las filas de prueba pasaron las llaves, las restricciones \at{CHECK} y los índices únicos al insertarse. Se comprobaron cuatro cosas más.
 
 \textbf{Los objetos creados son los del documento.} Esta consulta sobre el catálogo del sistema cuenta lo que \at{crear\_tablas.sql} creó:
 
@@ -19,9 +21,9 @@ UNION ALL SELECT 'columnas calculadas', COUNT(*) FROM sys.computed_columns
 UNION ALL SELECT 'procedimientos', COUNT(*) FROM sys.procedures;
 \end{lstlisting}
 
-Devolvió exactamente las cifras de este documento: \bdNumTablas{} tablas con \bdNumTablas{} llaves primarias, \bdNumUnicas{} restricciones \at{UNIQUE}, \bdNumForaneas{} llaves foráneas, \bdNumChecks{} restricciones \at{CHECK}, \bdNumOmision{} valores por omisión, \bdNumCalculadas{} columnas calculadas y \bdNumProcedimientos{} procedimientos, además de \bdNumNoNulas{} columnas \at{NOT NULL} entre \bdNumColumnas{}.
+Con la versión anterior devolvió exactamente las cifras que el documento tenía entonces. Con el núcleo actual debe devolver: \bdNumTablas{} tablas con \bdNumTablas{} llaves primarias, \bdNumUnicas{} restricciones \at{UNIQUE}, \bdNumForaneas{} llaves foráneas, \bdNumChecks{} restricciones \at{CHECK}, \bdNumOmision{} valores por omisión, \bdNumCalculadas{} columnas calculadas y \bdNumProcedimientos{} procedimientos, además de \bdNumNoNulas{} columnas \at{NOT NULL} entre \bdNumColumnas{}.
 
-\textbf{Los datos de prueba son coherentes.} Las \dpNumComprobaciones{} consultas del final de \at{insertar\_datos\_prueba.sql} devolvieron cero incoherencias: el saldo coincide con los movimientos; las partidas, victorias, derrotas, muros y elo de cada modo, con las participaciones; la división solo existe desde la quinta partida; el estado del tablero coincide con las jugadas; cada cuenta tiene un objeto por ranura, los objetos iniciales y estadísticas en cada modo; cada partida decidida tiene un ganador; las probabilidades de cada caja suman 100; cada caja abierta tiene tres objetos; y cada texto con eñes, acentos o emojis se guardó idéntico al insertado.
+\textbf{Los datos de prueba son coherentes.} Las consultas del final de \at{insertar\_datos\_prueba.sql} devolvieron, en la versión anterior, cero incoherencias: el saldo coincide con los movimientos; las partidas, victorias, derrotas, muros y elo de cada modo, con las participaciones; la división solo existe desde la quinta partida; el estado del tablero coincide con las jugadas; cada cuenta tiene un objeto por ranura, los objetos iniciales y estadísticas en cada modo; cada partida decidida tiene un ganador; las probabilidades de cada caja suman 100; cada caja abierta tiene tres objetos; y cada texto con eñes, acentos o emojis se guardó idéntico al insertado.
 
 \textbf{La base guarda cualquier carácter.} Esta consulta construye con \at{NCHAR} el texto \textit{compañera} seguido de un emoji, el U+1F44D, y lo convierte a \at{VARCHAR}, primero con la intercalación de la base y luego con la que tenía antes, \at{Modern\_Spanish\_CI\_AS}:
 

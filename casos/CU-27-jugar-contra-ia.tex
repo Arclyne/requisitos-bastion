@@ -134,6 +134,8 @@
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué la partida se guarda si no da elo.}\par
     Guardar las partidas contra la IA escribe filas que no afectan a la clasificación, y podría parecer desperdicio. Se guardan porque de ellas dependen tres cosas que el diseño promete: que aparezcan en el historial, que tengan repetición y que el repaso de errores se calcule en el servidor, donde está el motor que sabe cuál era la jugada correcta. Además, la experiencia sí se otorga, y otorgar algo a partir de una partida que el servidor no conoce sería aceptar un resultado dictado por el cliente.} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre la cola y las plazas de sala en memoria (\mbox{D-24}).}\par
+    La comprobación de que el jugador no está en la cola ni en una sala se hace sobre la memoria del Servidor de partidas (\mbox{D-24}). El caso es de la fase posterior.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 4)}
       \item \textbf{\textit{ColaEmparejamiento}, \textit{SalaParticipante}, \textit{Participacion}:} lee, para las exclusiones \textit{(pasos 4, \mbox{FA-03})}

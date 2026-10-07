@@ -10,6 +10,8 @@ Cada funcionalidad remite al caso de uso donde se describe su comportamiento com
 
 Las 52 funcionalidades cubren los 49 casos de uso del sistema salvo uno: enviar un emote (\mbox{CU-29}) no lee ni escribe en la base de datos (\mbox{D-10}), así que no tiene prototipo de análisis.
 
+\textbf{Tras la revisión del alcance.} Las funcionalidades se describen para los 49 casos de uso, también los de fase posterior. Tres decisiones posteriores cambian dónde viven algunos datos sin cambiar las funcionalidades: las tablas de los agregados pasan a la fase posterior (\mbox{D-22}); los tokens y códigos de acceso son una sola estructura, \textit{CodigoVerificacion}, los términos aceptados son columnas de \textit{Usuario} y el motivo de reporte es un dominio (\mbox{D-23}); y la cola de emparejamiento y las plazas de sala viven en la memoria del Servidor de partidas (\mbox{D-24}).
+
 Cada prototipo de análisis va acompañado de las pantallas del prototipo de interfaz que lo ilustran. De las 125 pantallas diseñadas se usan 57; la sección \textit{Trazabilidad de prototipos}, al final de este apartado, indica a qué funcionalidad corresponde cada una y por qué se descartaron las demás.
 
 \subsection*{Resumen de operaciones por objeto de información}
@@ -91,8 +93,8 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item \textbf{\textit{EstadisticaModo}:} una por cada \textit{Modo}, con los contadores en cero y el elo inicial.
     \item \textbf{\textit{UsuarioObjeto}:} uno por cada objeto inicial, con \texttt{origen} = \texttt{INICIAL}.
     \item \textbf{\textit{Equipamiento}:} una fila por cada una de las seis \textit{Ranura}, apuntando al objeto predeterminado.
-    \item \textbf{\textit{AceptacionTerminos}:} \texttt{version\_\allowbreak{}terminos}, \texttt{idioma} en que se mostró el texto, \texttt{fecha\_\allowbreak{}aceptacion}, \texttt{direccion\_\allowbreak{}ip}.
-    \item \textbf{\textit{TokenVerificacionCorreo}:} \texttt{token\_\allowbreak{}hash}, \texttt{proposito} = \texttt{ALTA}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{estado} = \texttt{PENDIENTE}.
+    \item \textbf{Términos aceptados, en \textit{Usuario}:} \texttt{version\_\allowbreak{}terminos}, \texttt{idioma\_\allowbreak{}terminos} en que se mostró el texto y \texttt{fecha\_\allowbreak{}aceptacion\_\allowbreak{}terminos} (\mbox{D-23}).
+    \item \textbf{\textit{CodigoVerificacion}:} \texttt{codigo\_\allowbreak{}hash}, \texttt{proposito} = \texttt{ALTA}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{estado} = \texttt{PENDIENTE}.
     \item \textbf{\textit{BitacoraAcceso}:} \texttt{REGISTRO\_\allowbreak{}EXITOSO}, \texttt{REGISTRO\_\allowbreak{}RECHAZADO} o \texttt{REGISTRO\_\allowbreak{}SIN\_\allowbreak{}CORREO}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
@@ -160,8 +162,8 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item \textit{PalabraProhibida}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textit{AceptacionTerminos}.
-    \item \textit{TokenVerificacionCorreo} con \texttt{proposito} = \texttt{ALTA}.
+    \item Términos aceptados en \textit{Usuario} (\mbox{D-23}).
+    \item \textit{CodigoVerificacion} con \texttt{proposito} = \texttt{ALTA}.
     \item \textbf{\textit{BitacoraAcceso}:} \texttt{resultado} = \texttt{VINCULACION\_\allowbreak{}EXITOSA}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
@@ -196,7 +198,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item Token incluido en el enlace del correo.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textbf{\textit{TokenVerificacionCorreo}:} \texttt{token\_\allowbreak{}hash}, \texttt{proposito}, \texttt{correo\_\allowbreak{}destino}, \texttt{estado}, \texttt{fecha\_\allowbreak{}expiracion}.
+    \item \textbf{\textit{CodigoVerificacion}:} \texttt{codigo\_\allowbreak{}hash}, \texttt{proposito}, \texttt{correo\_\allowbreak{}destino}, \texttt{estado}, \texttt{fecha\_\allowbreak{}expiracion}.
     \item \textbf{\textit{Usuario}:} \texttt{estado\_\allowbreak{}cuenta}, \texttt{idioma\_\allowbreak{}preferido}.
     \item \textbf{\textit{Sancion}:} activas con \texttt{ambito} = \texttt{CUENTA}.
   \end{crudlista}}
@@ -205,7 +207,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
     \item \textbf{\textit{Usuario}:} \texttt{estado\_\allowbreak{}cuenta} pasa de \texttt{PENDIENTE} a \texttt{ACTIVA}.
-    \item \textbf{\textit{TokenVerificacionCorreo}:} \texttt{estado} = \texttt{USADO}, y los demás pendientes del usuario pasan a \texttt{INVALIDADO}.
+    \item \textbf{\textit{CodigoVerificacion}:} \texttt{estado} = \texttt{USADO}, y los demás pendientes del usuario pasan a \texttt{INVALIDADO}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -410,15 +412,15 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
     \item \textbf{\textit{Usuario}:} \texttt{correo}, \texttt{estado\_\allowbreak{}cuenta}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion}, \texttt{idioma\_\allowbreak{}preferido}.
-    \item \textbf{\textit{TokenRecuperacion}:} \texttt{token\_\allowbreak{}hash}, \texttt{estado}, \texttt{intentos}, \texttt{fecha\_\allowbreak{}expiracion}.
+    \item \textbf{\textit{CodigoVerificacion}:} \texttt{codigo\_\allowbreak{}hash}, \texttt{estado}, \texttt{intentos}, \texttt{fecha\_\allowbreak{}expiracion}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textbf{\textit{TokenRecuperacion}:} \texttt{token\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{intentos} = 0, \texttt{estado} = \texttt{PENDIENTE}.
+    \item \textbf{\textit{CodigoVerificacion}:} \texttt{codigo\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{intentos} = 0, \texttt{estado} = \texttt{PENDIENTE}.
     \item \textbf{\textit{BitacoraAcceso}:} \texttt{RECUPERACION\_\allowbreak{}SOLICITADA} y \texttt{RECUPERACION\_\allowbreak{}EXITOSA}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
     \item \textbf{\textit{Usuario}:} \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}recuperacion}; \texttt{intentos\_\allowbreak{}fallidos} = 0 y \texttt{bloqueada\_\allowbreak{}hasta} en nulo.
-    \item \textbf{\textit{TokenRecuperacion}:} \texttt{intentos}, \texttt{estado}.
+    \item \textbf{\textit{CodigoVerificacion}:} \texttt{intentos}, \texttt{estado}.
     \item \textbf{\textit{Sesion}:} todas las abiertas reciben \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
@@ -460,12 +462,12 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
     \item \textbf{\textit{BitacoraAcceso}:} \texttt{CAMBIO\_\allowbreak{}CONTRASENA}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}ACTIVADO}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}DESACTIVADO}, o \texttt{CONTRASENA\_\allowbreak{}INCORRECTA} si la actual no coincide.
-    \item \textbf{\textit{CodigoSegundoFactor}:} el código de prueba, al activar el segundo factor.
+    \item \textbf{\textit{CodigoVerificacion}:} el código de prueba, al activar el segundo factor.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
     \item \textbf{\textit{Usuario}:} \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal}, o \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}; si la actual es incorrecta, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido} y \texttt{bloqueada\_\allowbreak{}hasta}.
     \item \textbf{\textit{Sesion}:} todas las abiertas salvo la que hace el cambio reciben \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}.
-    \item \textbf{\textit{TokenRecuperacion}:} los pendientes quedan invalidados.
+    \item \textbf{\textit{CodigoVerificacion}:} los pendientes quedan invalidados.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -499,15 +501,15 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
     \item \textbf{\textit{Usuario}:} \texttt{contrasena\_\allowbreak{}hash}, \texttt{correo} de todas las cuentas, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}.
-    \item \textbf{\textit{TokenVerificacionCorreo}:} el de \texttt{proposito} = \texttt{CAMBIO\_\allowbreak{}CORREO}, al confirmar.
+    \item \textbf{\textit{CodigoVerificacion}:} el de \texttt{proposito} = \texttt{CAMBIO\_\allowbreak{}CORREO}, al confirmar.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textbf{\textit{TokenVerificacionCorreo}:} \texttt{proposito} = \texttt{CAMBIO\_\allowbreak{}CORREO}, \texttt{correo\_\allowbreak{}destino}, \texttt{token\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}expiracion}.
+    \item \textbf{\textit{CodigoVerificacion}:} \texttt{proposito} = \texttt{CAMBIO\_\allowbreak{}CORREO}, \texttt{correo\_\allowbreak{}destino}, \texttt{codigo\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}expiracion}.
     \item \textbf{\textit{BitacoraAcceso}:} \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}SOLICITADO} y \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}CONFIRMADO}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
     \item \textbf{\textit{Usuario}:} \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} al solicitar; \texttt{correo} al confirmar.
-    \item \textbf{\textit{TokenVerificacionCorreo}:} los pendientes pasan a \texttt{INVALIDADO} al solicitar, y el del cambio pasa a \texttt{USADO} al confirmar.
+    \item \textbf{\textit{CodigoVerificacion}:} los pendientes pasan a \texttt{INVALIDADO} al solicitar, y el del cambio pasa a \texttt{USADO} al confirmar.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
@@ -591,8 +593,8 @@ Una cuenta puede tener varias sesiones abiertas, una por dispositivo (\mbox{D-01
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
     \item \textbf{\textit{Sesion}:} \texttt{token\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}inicio}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{direccion\_\allowbreak{}ip}, \texttt{huella\_\allowbreak{}dispositivo}, \texttt{nombre\_\allowbreak{}dispositivo}, \texttt{version\_\allowbreak{}cliente}.
-    \item \textbf{\textit{CodigoSegundoFactor}:} \texttt{codigo\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}generacion}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{intentos}, \texttt{estado}, \texttt{canal}, si aplica.
-    \item \textit{TokenVerificacionCorreo}, si una cuenta pendiente pide reenviar el correo.
+    \item \textbf{\textit{CodigoVerificacion}:} \texttt{codigo\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}generacion}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{intentos}, \texttt{estado}.
+    \item \textit{CodigoVerificacion}, si una cuenta pendiente pide reenviar el correo.
     \item \textbf{\textit{BitacoraAcceso}:} con el resultado del intento, sea exitoso o no.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
@@ -1936,7 +1938,7 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
   \crudFila{Prototipos}{10b, Reportar · motivo y pruebas.}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \texttt{id\_\allowbreak{}reportado}.
-    \item \textbf{\texttt{id\_\allowbreak{}motivo}:} uno de los cinco del catálogo.
+    \item \textbf{\texttt{motivo}:} uno de los cinco del dominio (\mbox{D-23}).
     \item \textbf{\texttt{descripcion}:} texto opcional hasta el largo máximo.
     \item \texttt{id\_\allowbreak{}partida}, si se reporta desde una partida.
     \item Token de sesión.
@@ -1944,11 +1946,11 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
   \crudFila{Datos que se consultan}{\begin{crudlista}
     \item \textbf{\textit{Usuario}:} el reportado y su \texttt{estado\_\allowbreak{}cuenta}.
     \item \textbf{\textit{Participacion}:} que denunciante y reportado jugaron la partida adjunta.
-    \item \textbf{\textit{MotivoReporte}:} el catálogo.
+    \item \textbf{Motivos de reporte:} el dominio de \texttt{Reporte.motivo} (\mbox{D-23}).
     \item \textbf{\textit{Reporte}:} duplicados y número de reportes recientes del denunciante.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textbf{\textit{Reporte}:} \texttt{id\_\allowbreak{}denunciante}, \texttt{id\_\allowbreak{}reportado}, \texttt{id\_\allowbreak{}motivo}, \texttt{descripcion}, \texttt{id\_\allowbreak{}partida}, \texttt{fecha\_\allowbreak{}reporte}, \texttt{estado} = \texttt{PENDIENTE}.
+    \item \textbf{\textit{Reporte}:} \texttt{id\_\allowbreak{}denunciante}, \texttt{id\_\allowbreak{}reportado}, \texttt{motivo}, \texttt{descripcion}, \texttt{id\_\allowbreak{}partida}, \texttt{fecha\_\allowbreak{}reporte}, \texttt{estado} = \texttt{PENDIENTE}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
@@ -1986,7 +1988,7 @@ Nada de lo que produce la moderación se elimina: reportes, sanciones y apelacio
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
     \item \textbf{\textit{Usuario}:} \texttt{rol} del moderador.
-    \item \textbf{\textit{Reporte}:} los pendientes con su \textit{MotivoReporte}; los que llevan más de treinta minutos en revisión.
+    \item \textbf{\textit{Reporte}:} los pendientes con su \texttt{motivo}; los que llevan más de treinta minutos en revisión.
     \item \textbf{\textit{Partida}, \textit{Jugada} y \textit{Mensaje}:} las pruebas.
     \item \textbf{\textit{Sancion}:} el historial del reportado.
   \end{crudlista}}
@@ -2257,10 +2259,8 @@ Valores que los casos de uso escriben en cada atributo de dominio cerrado, reuni
 \textit{Usuario} & \texttt{idioma\_\allowbreak{}preferido} & \texttt{es-MX}, español de México, por omisión; \texttt{en}, inglés (\mbox{D-21}) \\ \hline
 \textit{Aceptacion\-Terminos} & \texttt{idioma} & \texttt{es-MX}, \texttt{en} \\ \hline
 \textit{Sesion} & \texttt{motivo\_\allowbreak{}cierre} & \texttt{CIERRE\_\allowbreak{}VOLUNTARIO}, \texttt{CIERRE\_\allowbreak{}REMOTO}, \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}, \texttt{SANCION}, \texttt{BAJA\_\allowbreak{}CUENTA}; nulo mientras está abierta \\ \hline
-\textit{CodigoSegundo\-Factor} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{CONSUMIDO}, \texttt{INVALIDADO} \\ \hline
-\textit{TokenVerificacion\-Correo} & \texttt{proposito} & \texttt{ALTA}, \texttt{CAMBIO\_\allowbreak{}CORREO} \\ \hline
-\textit{TokenVerificacion\-Correo} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{USADO}, \texttt{INVALIDADO} \\ \hline
-\textit{TokenRecuperacion} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{USADO}, \texttt{INVALIDADO} \\ \hline
+\textit{Codigo\-Verificacion} & \texttt{proposito} & \texttt{ALTA}, \texttt{CAMBIO\_\allowbreak{}CORREO}, \texttt{RECUPERACION}, \texttt{SEGUNDO\_\allowbreak{}FACTOR} (\mbox{D-23}) \\ \hline
+\textit{Codigo\-Verificacion} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{USADO}, \texttt{INVALIDADO} \\ \hline
 \textit{BitacoraAcceso} & \texttt{resultado} & \texttt{EXITO}, \texttt{USUARIO\_\allowbreak{}INEXISTENTE}, \texttt{BLOQUEO\_\allowbreak{}VIGENTE}, \texttt{CONTRASENA\_\allowbreak{}INCORRECTA}, \texttt{CUENTA\_\allowbreak{}PENDIENTE}, \texttt{CUENTA\_\allowbreak{}SANCIONADA}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}FALLIDO}, \texttt{ABANDONADO}, \texttt{SUSPENSION\_\allowbreak{}VENCIDA}, \texttt{REGISTRO\_\allowbreak{}EXITOSO}, \texttt{REGISTRO\_\allowbreak{}RECHAZADO}, \texttt{REGISTRO\_\allowbreak{}SIN\_\allowbreak{}CORREO}, \texttt{ALTA\_\allowbreak{}INVITADO}, \texttt{VINCULACION\_\allowbreak{}EXITOSA}, \texttt{CUENTA\_\allowbreak{}VERIFICADA}, \texttt{RECUPERACION\_\allowbreak{}SOLICITADA}, \texttt{RECUPERACION\_\allowbreak{}CORREO\_\allowbreak{}INEXISTENTE}, \texttt{RECUPERACION\_\allowbreak{}EXITOSA}, \texttt{CIERRE\_\allowbreak{}VOLUNTARIO}, \texttt{CIERRE\_\allowbreak{}REMOTO}, \texttt{CAMBIO\_\allowbreak{}CONTRASENA}, \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}SOLICITADO}, \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}CONFIRMADO}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}ACTIVADO}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}DESACTIVADO}, \texttt{CUENTA\_\allowbreak{}ELIMINADA} \\ \hline
 \textit{BitacoraModeracion} & \texttt{accion} & \texttt{REPORTE\_\allowbreak{}TOMADO}, \texttt{REPORTE\_\allowbreak{}LIBERADO}, \texttt{REPORTE\_\allowbreak{}RESUELTO}, \texttt{SANCION\_\allowbreak{}APLICADA}, \texttt{APELACION\_\allowbreak{}RESUELTA}, \texttt{ROL\_\allowbreak{}OTORGADO}, \texttt{ROL\_\allowbreak{}RETIRADO}, \texttt{CONSULTA\_\allowbreak{}BITACORA}, \texttt{INTENTO\_\allowbreak{}SIN\_\allowbreak{}PERMISO} \\ \hline
 \textit{Partida} & \texttt{tipo} & \texttt{CLASIFICATORIA}, \texttt{PRIVADA}, \texttt{IA} \\ \hline

@@ -1,0 +1,51 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/fase_posterior/crear_tablas_fase_posterior.sql. No editar a mano.
+\subsubsection*{
+Clasificación y economía
+}
+\addcontentsline{toc}{subsubsection}{
+Clasificación y economía
+}
+
+\atributosde{HistorialDivision}{Cambio de división de una cuenta en un modo. No se deduce de una sola partida por las partidas de margen, así que se guarda (\mbox{CU-15}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}historial\_\allowbreak{}division} & \texttt{INT}, identidad & No & PK & Identificador del cambio. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta. \\ \hline
+\texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & FK & Modo en que cambió de división. \\ \hline
+\texttt{id\_\allowbreak{}division\_\allowbreak{}anterior} & \texttt{TINYINT} & Sí & FK & División de la que sale; nula al obtener la primera. \\ \hline
+\texttt{id\_\allowbreak{}division\_\allowbreak{}nueva} & \texttt{TINYINT} & No & FK & División a la que llega. \\ \hline
+\texttt{fecha\_\allowbreak{}cambio} & \texttt{DATETIME2(0)} & No &  & Momento del cambio; lo marca la gráfica de elo. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Caja}{Caja comprada u obtenida al subir de nivel. Existe sin abrir entre la compra y la apertura (\mbox{CU-39} \mbox{RN-09}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}caja} & \texttt{INT}, identidad & No & PK & Identificador de la caja. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta dueña de la caja. \\ \hline
+\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja} & \texttt{TINYINT} & No & FK & Tipo, que fija el contenido posible. \\ \hline
+\texttt{origen} & \texttt{VARCHAR(10)} & No &  & \texttt{COMPRA} o \texttt{PARTIDA}. \\ \hline
+\texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{SIN\_\allowbreak{}ABRIR}, \texttt{ABIERTA} o \texttt{CADUCADA}. Por omisión, \texttt{SIN\_\allowbreak{}ABRIR}. \\ \hline
+\texttt{fecha\_\allowbreak{}obtencion} & \texttt{DATETIME2(0)} & No &  & Momento en que se obtuvo. Por omisión, la fecha actual. \\ \hline
+\texttt{fecha\_\allowbreak{}apertura} & \texttt{DATETIME2(0)} & Sí &  & Momento en que se abrió. \\ \hline
+\texttt{fecha\_\allowbreak{}caducidad} & \texttt{DATETIME2(0)} & Sí &  & Solo en cajas ganadas jugando, a los catorce días; las compradas no caducan (\mbox{CU-39} \mbox{RN-06}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{CajaContenido}{Los tres objetos que salieron al abrir una caja, registrados para poder comprobarlos después (\mbox{CU-39} \mbox{RN-07}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}caja} & \texttt{INT} & No & PK, FK & Caja abierta. \\ \hline
+\texttt{numero} & \texttt{TINYINT} & No & PK & Posición del objeto en la caja, de 1 a 3. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & FK & Objeto que salió. \\ \hline
+\texttt{monedas\_\allowbreak{}conversion} & \texttt{INT} & Sí &  & Monedas recibidas si el objeto estaba repetido y se convirtió (\mbox{CU-39} \mbox{RN-03}). \\ \hline
+\texttt{convertido} & calculada & --- &  & Si el objeto se convirtió en monedas. Calculada: es exactamente que \texttt{monedas\_\allowbreak{}conversion} no sea nula. \\ \hline
+\end{tablaatributos}
+
+\atributosde{MovimientoMoneda}{Entrada o salida de monedas. El saldo verdadero es su suma; nunca se modifica ni se elimina (\mbox{CU-40} \mbox{RN-01}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}movimiento} & \texttt{BIGINT}, identidad & No & PK & Identificador del movimiento. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & FK & Cuenta afectada. \\ \hline
+\texttt{tipo} & \texttt{VARCHAR(12)} & No &  & \texttt{PARTIDA}, \texttt{NIVEL}, \texttt{COMPRA}, \texttt{COMPRA\_\allowbreak{}CAJA}, \texttt{CONVERSION} o \texttt{DEVOLUCION}. Discrimina qué origen aplica. \\ \hline
+\texttt{importe} & \texttt{INT} & No &  & Monedas; negativo en las compras. \\ \hline
+\texttt{fecha\_\allowbreak{}movimiento} & \texttt{DATETIME2(0)} & No &  & Momento del movimiento. Por omisión, la fecha actual. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & Sí & FK & Partida que lo originó, en \texttt{PARTIDA}. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & Sí & FK & Objeto comprado o convertido, en \texttt{COMPRA} y \texttt{CONVERSION}. \\ \hline
+\texttt{id\_\allowbreak{}caja} & \texttt{INT} & Sí & FK & Caja comprada o abierta, en \texttt{COMPRA\_\allowbreak{}CAJA} y \texttt{CONVERSION}. \\ \hline
+\end{tablaatributos}
+

@@ -1,0 +1,45 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/fase_posterior/crear_tablas_fase_posterior.sql. No editar a mano.
+\begin{center}\small
+\begin{longtable}{|L{0.21\textwidth}|L{0.26\textwidth}|L{0.29\textwidth}|L{0.12\textwidth}|}
+\hline
+\textbf{Entidad} & \textbf{Llave foránea} & \textbf{Referencia} & \textbf{Obligatoria} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad} & \textbf{Llave foránea} & \textbf{Referencia} & \textbf{Obligatoria} \\ \hline
+\endhead
+\textit{Objeto\-Cosmetico} & (\texttt{id\_\allowbreak{}ranura}) & \textit{Ranura} (\texttt{id\_\allowbreak{}ranura}) & Sí \\ \hline
+\textit{Tipo\-Caja\-Objeto} & (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}) & \textit{Tipo\-Caja} (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}) & Sí \\ \hline
+\textit{Tipo\-Caja\-Objeto} & (\texttt{id\_\allowbreak{}objeto}) & \textit{Objeto\-Cosmetico} (\texttt{id\_\allowbreak{}objeto}) & Sí \\ \hline
+\textit{Historial\-Nickname} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Avatar} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Enlace\-Red} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Usuario\-Objeto} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Usuario\-Objeto} & (\texttt{id\_\allowbreak{}objeto}) & \textit{Objeto\-Cosmetico} (\texttt{id\_\allowbreak{}objeto}) & Sí \\ \hline
+\textit{Equipamiento} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & \textit{Usuario\-Objeto} (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & Sí \\ \hline
+\textit{Equipamiento} & (\texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}ranura}) & \textit{Objeto\-Cosmetico} (\texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}ranura}) & Sí \\ \hline
+\textit{Equipamiento} & (\texttt{id\_\allowbreak{}ranura}) & \textit{Ranura} (\texttt{id\_\allowbreak{}ranura}) & Sí \\ \hline
+\textit{Participacion\-Objeto} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & \textit{Participacion} (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Participacion\-Objeto} & (\texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}ranura}) & \textit{Objeto\-Cosmetico} (\texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}ranura}) & Sí \\ \hline
+\textit{Enlace\-Espectador} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}creador}) & \textit{Participacion} (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Invitacion} & (\texttt{id\_\allowbreak{}sala}) & \textit{Sala} (\texttt{id\_\allowbreak{}sala}) & Sí \\ \hline
+\textit{Invitacion} & (\texttt{id\_\allowbreak{}emisor}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Invitacion} & (\texttt{id\_\allowbreak{}destinatario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Historial\-Division} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}modo}) & \textit{Estadistica\-Modo} (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}modo}) & Sí \\ \hline
+\textit{Historial\-Division} & (\texttt{id\_\allowbreak{}division\_\allowbreak{}anterior}) & \textit{Division} (\texttt{id\_\allowbreak{}division}) & No \\ \hline
+\textit{Historial\-Division} & (\texttt{id\_\allowbreak{}division\_\allowbreak{}nueva}) & \textit{Division} (\texttt{id\_\allowbreak{}division}) & Sí \\ \hline
+\textit{Caja} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Caja} & (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}) & \textit{Tipo\-Caja} (\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja}) & Sí \\ \hline
+\textit{Caja\-Contenido} & (\texttt{id\_\allowbreak{}caja}) & \textit{Caja} (\texttt{id\_\allowbreak{}caja}) & Sí \\ \hline
+\textit{Caja\-Contenido} & (\texttt{id\_\allowbreak{}objeto}) & \textit{Objeto\-Cosmetico} (\texttt{id\_\allowbreak{}objeto}) & Sí \\ \hline
+\textit{Movimiento\-Moneda} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Movimiento\-Moneda} & (\texttt{id\_\allowbreak{}partida}) & \textit{Partida} (\texttt{id\_\allowbreak{}partida}) & No \\ \hline
+\textit{Movimiento\-Moneda} & (\texttt{id\_\allowbreak{}objeto}) & \textit{Objeto\-Cosmetico} (\texttt{id\_\allowbreak{}objeto}) & No \\ \hline
+\textit{Movimiento\-Moneda} & (\texttt{id\_\allowbreak{}caja}) & \textit{Caja} (\texttt{id\_\allowbreak{}caja}) & No \\ \hline
+\textit{Amistad} & (\texttt{id\_\allowbreak{}usuario\_\allowbreak{}a}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Amistad} & (\texttt{id\_\allowbreak{}usuario\_\allowbreak{}b}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Solicitud} & (\texttt{id\_\allowbreak{}solicitante}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Solicitud} & (\texttt{id\_\allowbreak{}destinatario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Progreso\-Tutorial} & (\texttt{id\_\allowbreak{}usuario}) & \textit{Usuario} (\texttt{id\_\allowbreak{}usuario}) & Sí \\ \hline
+\textit{Progreso\-Tutorial} & (\texttt{id\_\allowbreak{}leccion}) & \textit{Leccion} (\texttt{id\_\allowbreak{}leccion}) & Sí \\ \hline
+\end{longtable}
+\end{center}

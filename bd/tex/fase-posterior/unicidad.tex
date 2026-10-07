@@ -1,0 +1,28 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/fase_posterior/crear_tablas_fase_posterior.sql. No editar a mano.
+\begin{center}\small
+\begin{longtable}{|L{0.2\textwidth}|L{0.25\textwidth}|L{0.45\textwidth}|}
+\hline
+\textbf{Entidad} & \textbf{Columnas y condición} & \textbf{Regla que garantiza} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad} & \textbf{Columnas y condición} & \textbf{Regla que garantiza} \\ \hline
+\endhead
+\textit{Ranura} & (\texttt{codigo}) & Dos ranuras no tienen la misma clave. \\ \hline
+\textit{Objeto\-Cosmetico} & (\texttt{codigo}) & Dos objetos no tienen la misma clave. \\ \hline
+\textit{Objeto\-Cosmetico} & (\texttt{id\_\allowbreak{}objeto}, \texttt{id\_\allowbreak{}ranura}) & Superclave que usan Equipamiento y ParticipacionObjeto para exigir que el objeto sea de la ranura. \\ \hline
+\textit{Objeto\-Cosmetico} & (\texttt{id\_\allowbreak{}ranura}), si \texttt{es\_\allowbreak{}predeterminado = 1} & Un solo objeto predeterminado por ranura (\mbox{CU-02} \mbox{PRE-05}). \\ \hline
+\textit{Division} & (\texttt{codigo}) & Dos divisiones no tienen la misma clave. \\ \hline
+\textit{Division} & (\texttt{elo\_\allowbreak{}minimo}) & Dos divisiones no empiezan en el mismo elo, así que el orden no tiene empates. \\ \hline
+\textit{Nivel\-IA} & (\texttt{codigo}) & Dos niveles no tienen la misma clave. \\ \hline
+\textit{Leccion} & (\texttt{codigo}) & Dos lecciones no tienen la misma clave. \\ \hline
+\textit{Leccion} & (\texttt{orden}) & Dos lecciones no ocupan la misma posición. \\ \hline
+\textit{Tipo\-Caja} & (\texttt{codigo}) & Dos tipos de caja no tienen la misma clave. \\ \hline
+\textit{Avatar} & (\texttt{id\_\allowbreak{}usuario}), si \texttt{vigente = 1} & A lo sumo un avatar vigente por cuenta (\mbox{CU-12} \mbox{RN-06}). \\ \hline
+\textit{Enlace\-Red} & (\texttt{id\_\allowbreak{}usuario}, \texttt{orden}) & Junto con el CHECK del orden, limita a cuatro enlaces por cuenta (\mbox{CU-12} \mbox{RN-03}). \\ \hline
+\textit{Equipamiento} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & Llave candidata: como el objeto determina su ranura, la cuenta y el objeto también identifican la fila. \\ \hline
+\textit{Participacion\-Objeto} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & Llave candidata: como el objeto determina su ranura, también identifica la fila. \\ \hline
+\textit{Enlace\-Espectador} & (\texttt{token\_\allowbreak{}hash}) & El token identifica un solo enlace. \\ \hline
+\textit{Invitacion} & (\texttt{id\_\allowbreak{}emisor}, \texttt{id\_\allowbreak{}destinatario}), si \texttt{estado = PENDIENTE} & Una sola invitación pendiente del mismo emisor al mismo destinatario (\mbox{CU-32} \mbox{RN-04}). \\ \hline
+\textit{Solicitud} & (\texttt{id\_\allowbreak{}solicitante}, \texttt{id\_\allowbreak{}destinatario}) & No hay dos solicitudes iguales entre el mismo par (\mbox{CU-30} \mbox{RN-03}). \\ \hline
+\end{longtable}
+\end{center}

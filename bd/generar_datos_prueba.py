@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Escribe bd/insertar_datos_prueba.sql y bd/tex/datos-prueba*.tex a partir del
-escenario de bd/datos_prueba/.
+"""Escribe bd/insertar_datos_prueba.sql (núcleo),
+bd/fase_posterior/insertar_datos_prueba_fase_posterior.sql y bd/tex/datos-prueba*.tex
+a partir del escenario de bd/datos_prueba/.
+
+Requiere er/esquema.json y er/esquema-fase-posterior.json, que escribe
+bd/generar_tablas.ps1: de ellos sale qué tabla va a cada script.
 
 Uso, desde la raíz del repositorio:
     python bd/generar_datos_prueba.py
@@ -78,11 +82,11 @@ def literal_unicode(texto):
     return " + ".join(partes)
 
 
-def textos_unicode():
+def textos_unicode(tablas=None):
     """Consulta que devuelve cada texto con caracteres fuera de ASCII que no se
     lee idéntico al que se insertó, comparando en binario."""
     textos = {}
-    for nombre, columnas, filas, _, _ in TABLAS:
+    for nombre, columnas, filas, _, _ in (TABLAS if tablas is None else tablas):
         for fila in filas:
             for col, v in zip(columnas, fila):
                 if isinstance(v, str) and not isinstance(v, Crudo) and any(ord(c) > 127 for c in v):
@@ -251,18 +255,129 @@ def construir():
     return part
 
 
-COMPROBACIONES = r"""
+# ---------------------------------------------------------------------------
+# Reparto entre el núcleo y la fase posterior (D-22, D-23, D-24)
+#
+# El escenario se construye completo, como antes, y aquí se reparte: las filas
+# de las tablas del núcleo van a insertar_datos_prueba.sql con las columnas que
+# el núcleo tiene; las tablas, columnas y partidas de los agregados van a
+# fase_posterior/insertar_datos_prueba_fase_posterior.sql.
+# ---------------------------------------------------------------------------
+
+# Columnas del núcleo que se difieren a la fase posterior, por tabla.
+DIFERIDAS = {
+    "Usuario": ["codigo_amigo", "id_icono", "permite_espectadores", "nivel", "experiencia", "saldo_monedas",
+                "cajas_sin_raro", "fecha_configuracion_inicial"],
+    "EstadisticaModo": ["elo_maximo", "racha_actual", "mejor_racha", "tiempo_total_jugado", "barreras_colocadas",
+                        "id_division"],
+    "Sala": ["permite_espectadores"],
+    "Partida": ["id_nivel_ia", "permite_deshacer", "permite_sugerencias", "deshacer_usados", "sugerencias_usadas"],
+    "Jugada": ["deshecha"],
+}
+LLAVES = {"Usuario": ["id_usuario"], "EstadisticaModo": ["id_usuario", "id_modo"], "Sala": ["id_sala"]}
+# Estado que vive en la memoria del Servidor de partidas (D-24).
+EN_MEMORIA = {"ColaEmparejamiento", "SalaParticipante"}
+
+
+def _esquema(nombre):
+    return json.loads((AQUI.parent / "er" / nombre).read_text(encoding="utf-8-sig"))
+
+
+def _sin(columnas, filas, quitar):
+    idx = [i for i, c in enumerate(columnas) if c not in quitar]
+    return [columnas[i] for i in idx], [tuple(f[i] for i in idx) for f in filas]
+
+
+def repartir():
+    """Devuelve (núcleo, fase, actualizaciones, retiradas)."""
+    nucleo_n = [t["nombre"] for t in _esquema("esquema.json")]
+    fase_n = [t["nombre"] for t in _esquema("esquema-fase-posterior.json")]
+    orig = {n: (c, f, i, k) for n, c, f, i, k in TABLAS}
+    nucleo, fase, act, retiradas = [], [], [], {}
+
+    ids_ia = {f[0] for f in orig["Partida"][1] if f[orig["Partida"][0].index("tipo")] == "IA"}
+
+    for n in EN_MEMORIA:
+        retiradas[n] = len(orig[n][1])
+    retiradas["MotivoReporte"] = len(orig["MotivoReporte"][1])
+    retiradas["AceptacionTerminos"] = len(orig["AceptacionTerminos"][1])
+    for n in ("TokenVerificacionCorreo", "TokenRecuperacion", "CodigoSegundoFactor"):
+        retiradas[n] = len(orig[n][1])
+
+    def agregar(n, columnas, filas, identidad, comentario, lista):
+        lista.append((n, list(columnas), list(filas), identidad, comentario))
+
+    for n in nucleo_n:
+        if n == "CodigoVerificacion":
+            filas = []
+            c, f, _, _ = orig["TokenVerificacionCorreo"]
+            for x in f:
+                d = dict(zip(c, x))
+                filas.append((d["id_usuario"], d["proposito"], d["token_hash"], d["correo_destino"],
+                              d["fecha_generacion"], d["fecha_expiracion"], 0, d["estado"]))
+            c, f, _, _ = orig["TokenRecuperacion"]
+            for x in f:
+                d = dict(zip(c, x))
+                filas.append((d["id_usuario"], "RECUPERACION", d["token_hash"], None, d["fecha_generacion"],
+                              d["fecha_expiracion"], d["intentos"], d["estado"]))
+            c, f, _, _ = orig["CodigoSegundoFactor"]
+            for x in f:
+                d = dict(zip(c, x))
+                filas.append((d["id_usuario"], "SEGUNDO_FACTOR", d["codigo_hash"], None, d["fecha_generacion"],
+                              d["fecha_expiracion"], d["intentos"], "USADO" if d["estado"] == "CONSUMIDO" else d["estado"]))
+            filas.sort(key=lambda r: (r[4], r[0]))
+            filas = [(i,) + r for i, r in enumerate(filas, 1)]
+            agregar(n, "id_codigo id_usuario proposito codigo_hash correo_destino fecha_generacion fecha_expiracion "
+                       "intentos estado".split(), filas, True,
+                    "Los tokens de verificación y de recuperación y los códigos del segundo factor, en una sola tabla (D-23).",
+                    nucleo)
+            continue
+        c, f, i, k = orig[n]
+        if n == "Usuario":
+            ult = {}
+            for u, version, fecha, _ in cu.ACEPTACIONES:
+                if u not in ult or de.dt(fecha) > ult[u][1]:
+                    ult[u] = (version, de.dt(fecha))
+            c = list(c) + ["version_terminos", "idioma_terminos", "fecha_aceptacion_terminos"]
+            f = [x + ((ult[x[0]][0], cu.USUARIOS[x[0]]["idioma"], ult[x[0]][1]) if x[0] in ult else (None, None, None))
+                 for x in f]
+            k = (k + " " if k else "") + "La última versión de los términos que aceptó cada cuenta (D-23)."
+        if n == "Reporte":
+            motivos = dict(cat.MOTIVOS)
+            j = c.index("id_motivo")
+            c = list(c); c[j] = "motivo"
+            f = [x[:j] + (motivos[x[j]],) + x[j + 1:] for x in f]
+        if n in ("Partida", "Participacion", "Jugada", "Mensaje"):
+            j = c.index("id_partida")
+            ia = [x for x in f if x[j] in ids_ia]
+            f = [x for x in f if x[j] not in ids_ia]
+            if ia:
+                agregar(n, c, ia, i, "La partida contra la IA (D-12).", fase)
+        if n in DIFERIDAS:
+            if n in LLAVES:
+                llaves = LLAVES[n]
+                cols = [x for x in DIFERIDAS[n] if x in c]
+                act.append((n, llaves, cols, [tuple(dict(zip(c, x))[y] for y in llaves + cols) for x in f]))
+            c, f = _sin(c, f, set(DIFERIDAS[n]))
+        agregar(n, c, f, i, k, nucleo)
+
+    # la partida de la IA se inserta completa en la fase posterior, después de las columnas nuevas
+    ia_tablas = [t for t in fase]
+    fase = []
+    for n in fase_n:
+        c, f, i, k = orig[n]
+        agregar(n, c, f, i, k, fase)
+    return nucleo, fase, ia_tablas, act, retiradas
+
+
+COMPROBACIONES_NUCLEO = r"""
 /*---------------------------------------------------------------------
   Comprobación: cada fila debe mostrar 0 incoherencias. Recalcula en la
   propia base las redundancias controladas y las reglas que los datos de
   prueba deben cumplir.
 ---------------------------------------------------------------------*/
 SELECT comprobacion, incoherencias FROM (
-    SELECT 1 AS n, N'Saldo igual a la suma de movimientos (CU-40 RN-02)' AS comprobacion, COUNT(*) AS incoherencias
-    FROM dbo.Usuario AS u
-    WHERE u.saldo_monedas <> ISNULL((SELECT SUM(m.importe) FROM dbo.MovimientoMoneda AS m WHERE m.id_usuario = u.id_usuario), 0)
-    UNION ALL
-    SELECT 2, N'Partidas, victorias y derrotas por modo', COUNT(*)
+    SELECT 1 AS n, N'Partidas, victorias y derrotas por modo' AS comprobacion, COUNT(*) AS incoherencias
     FROM dbo.EstadisticaModo AS e
     CROSS APPLY (SELECT COUNT(*) AS jugadas,
                         SUM(CASE WHEN p.resultado = 'GANADA' THEN 1 ELSE 0 END) AS ganadas,
@@ -272,76 +387,54 @@ SELECT comprobacion, incoherencias FROM (
                    AND pa.tipo = 'CLASIFICATORIA' AND p.resultado IS NOT NULL) AS c
     WHERE e.partidas_jugadas <> c.jugadas OR e.partidas_ganadas <> ISNULL(c.ganadas, 0) OR e.partidas_perdidas <> ISNULL(c.perdidas, 0)
     UNION ALL
-    SELECT 3, N'Elo vigente igual al último elo final', COUNT(*)
+    SELECT 2, N'Elo vigente igual al último elo final', COUNT(*)
     FROM dbo.EstadisticaModo AS e
     WHERE e.puntos_elo <> ISNULL((SELECT TOP (1) p.elo_final FROM dbo.Participacion AS p
                                   JOIN dbo.Partida AS pa ON pa.id_partida = p.id_partida
                                   WHERE p.id_usuario = e.id_usuario AND pa.id_modo = e.id_modo AND p.elo_final IS NOT NULL
                                   ORDER BY pa.fecha_fin DESC), 1000)
     UNION ALL
-    SELECT 4, N'Muros colocados en partidas clasificatorias', COUNT(*)
-    FROM dbo.EstadisticaModo AS e
-    WHERE e.barreras_colocadas <> (SELECT COUNT(*) FROM dbo.Jugada AS j JOIN dbo.Partida AS pa ON pa.id_partida = j.id_partida
-                                   WHERE j.id_usuario = e.id_usuario AND pa.id_modo = e.id_modo AND pa.tipo = 'CLASIFICATORIA'
-                                     AND pa.estado = 'FINALIZADA' AND j.tipo = 'MURO' AND j.deshecha = 0)
-    UNION ALL
-    SELECT 5, N'División solo a partir de cinco partidas (CU-25 RN-14)', COUNT(*)
-    FROM dbo.EstadisticaModo AS e
-    WHERE (e.id_division IS NULL AND e.partidas_jugadas >= 5) OR (e.id_division IS NOT NULL AND e.partidas_jugadas < 5)
-    UNION ALL
-    SELECT 6, N'Muros restantes: los iniciales menos los colocados', COUNT(*)
+    SELECT 3, N'Muros restantes: los iniciales menos los colocados', COUNT(*)
     FROM dbo.Participacion AS p
     JOIN dbo.Partida AS pa ON pa.id_partida = p.id_partida
     JOIN dbo.Modo AS mo ON mo.id_modo = pa.id_modo
     LEFT JOIN dbo.Sala AS s ON s.id_partida = pa.id_partida
     WHERE p.muros_restantes <> COALESCE(s.muros_por_jugador, mo.muros_por_jugador)
           - (SELECT COUNT(*) FROM dbo.Jugada AS j WHERE j.id_partida = p.id_partida AND j.id_usuario = p.id_usuario
-             AND j.tipo = 'MURO' AND j.deshecha = 0)
+             AND j.tipo = 'MURO')
     UNION ALL
-    SELECT 7, N'Reloj restante: el inicial menos el consumido, o cero si se agotó', COUNT(*)
+    SELECT 4, N'Reloj restante: el inicial menos el consumido, o cero si se agotó', COUNT(*)
     FROM dbo.Participacion AS p JOIN dbo.Partida AS pa ON pa.id_partida = p.id_partida
-    WHERE pa.minutos_reloj IS NOT NULL
-      AND p.reloj_restante <> CASE WHEN pa.forma_termino = 'TIEMPO_AGOTADO' AND p.resultado = 'PERDIDA' THEN 0
+    WHERE p.reloj_restante <> CASE WHEN pa.forma_termino = 'TIEMPO_AGOTADO' AND p.resultado = 'PERDIDA' THEN 0
           ELSE pa.minutos_reloj * 60000
           - ISNULL((SELECT SUM(j.tiempo_consumido) FROM dbo.Jugada AS j WHERE j.id_partida = p.id_partida AND j.id_usuario = p.id_usuario), 0) END
     UNION ALL
-    SELECT 8, N'Casilla actual igual a la de la última jugada', COUNT(*)
+    SELECT 5, N'Casilla actual igual a la de la última jugada', COUNT(*)
     FROM dbo.Participacion AS p
     CROSS APPLY (SELECT TOP (1) j.casilla_destino FROM dbo.Jugada AS j
-                 WHERE j.id_partida = p.id_partida AND j.id_usuario = p.id_usuario AND j.tipo = 'MOVIMIENTO' AND j.deshecha = 0
+                 WHERE j.id_partida = p.id_partida AND j.id_usuario = p.id_usuario AND j.tipo = 'MOVIMIENTO'
                  ORDER BY j.numero_jugada DESC) AS ultima
     WHERE p.casilla_actual <> ultima.casilla_destino
     UNION ALL
-    SELECT 9, N'Un objeto equipado en cada ranura (CU-14 RN-01)', COUNT(*)
-    FROM dbo.Usuario AS u
-    WHERE (SELECT COUNT(*) FROM dbo.Equipamiento AS e WHERE e.id_usuario = u.id_usuario) <> (SELECT COUNT(*) FROM dbo.Ranura)
-    UNION ALL
-    SELECT 10, N'Aspecto fijado en cada ranura por participación', COUNT(*)
-    FROM dbo.Participacion AS p
-    WHERE (SELECT COUNT(*) FROM dbo.ParticipacionObjeto AS o WHERE o.id_partida = p.id_partida AND o.id_usuario = p.id_usuario)
-          <> (SELECT COUNT(*) FROM dbo.Ranura)
-    UNION ALL
-    SELECT 11, N'Estadísticas de cada cuenta en cada modo activo (CU-02 RN-06)', COUNT(*)
+    SELECT 6, N'Estadísticas de cada cuenta en cada modo activo (CU-02 RN-06)', COUNT(*)
     FROM dbo.Usuario AS u CROSS JOIN dbo.Modo AS m
     WHERE m.activo = 1 AND NOT EXISTS (SELECT 1 FROM dbo.EstadisticaModo AS e WHERE e.id_usuario = u.id_usuario AND e.id_modo = m.id_modo)
     UNION ALL
-    SELECT 12, N'Objetos iniciales de cada cuenta (CU-02 RN-08)', COUNT(*)
-    FROM dbo.Usuario AS u CROSS JOIN dbo.ObjetoCosmetico AS o
-    WHERE o.es_inicial = 1 AND NOT EXISTS (SELECT 1 FROM dbo.UsuarioObjeto AS uo WHERE uo.id_usuario = u.id_usuario AND uo.id_objeto = o.id_objeto)
-    UNION ALL
-    SELECT 13, N'Un ganador en cada partida decidida entre jugadores', COUNT(*)
+    SELECT 7, N'Un ganador en cada partida decidida', COUNT(*)
     FROM dbo.Partida AS pa
-    WHERE pa.estado = 'FINALIZADA' AND pa.forma_termino <> 'TABLAS' AND pa.tipo <> 'IA'
+    WHERE pa.estado = 'FINALIZADA' AND pa.forma_termino <> 'TABLAS'
       AND (SELECT COUNT(*) FROM dbo.Participacion AS p WHERE p.id_partida = pa.id_partida AND p.resultado = 'GANADA') <> 1
     UNION ALL
-    SELECT 14, N'Probabilidades de cada tipo de caja que suman 100', COUNT(*)
-    FROM (SELECT id_tipo_caja FROM dbo.TipoCajaObjeto GROUP BY id_tipo_caja HAVING SUM(probabilidad) <> 100) AS x
+    SELECT 8, N'Dos o cuatro participantes por partida, según su modo', COUNT(*)
+    FROM dbo.Partida AS pa JOIN dbo.Modo AS mo ON mo.id_modo = pa.id_modo
+    WHERE (SELECT COUNT(*) FROM dbo.Participacion AS p WHERE p.id_partida = pa.id_partida) <> mo.num_jugadores
     UNION ALL
-    SELECT 15, N'Tres objetos en cada caja abierta (CU-39 RN-07)', COUNT(*)
-    FROM dbo.Caja AS c
-    WHERE c.estado = 'ABIERTA' AND (SELECT COUNT(*) FROM dbo.CajaContenido AS x WHERE x.id_caja = c.id_caja) <> 3
+    SELECT 9, N'Segundo factor activado con un código emitido (CU-09 FA-10)', COUNT(*)
+    FROM dbo.Usuario AS u
+    WHERE u.doble_factor_habilitado = 1
+      AND NOT EXISTS (SELECT 1 FROM dbo.CodigoVerificacion AS c WHERE c.id_usuario = u.id_usuario AND c.proposito = 'SEGUNDO_FACTOR')
     UNION ALL
-    SELECT 16, N'Textos con ñ, acentos y emojis idénticos a los insertados (D-21)', COUNT(*)
+    SELECT 10, N'Textos con ñ, acentos y emojis idénticos a los insertados (D-21)', COUNT(*)
     FROM (
 @TEXTOS_UNICODE@
          ) AS distintos
@@ -357,11 +450,57 @@ ORDER BY t.name;
 GO
 """
 
+COMPROBACIONES_FASE = r"""
+/*---------------------------------------------------------------------
+  Comprobación de la fase posterior: cada fila debe mostrar 0.
+---------------------------------------------------------------------*/
+SELECT comprobacion, incoherencias FROM (
+    SELECT 1 AS n, N'Saldo igual a la suma de movimientos (CU-40 RN-02)' AS comprobacion, COUNT(*) AS incoherencias
+    FROM dbo.Usuario AS u
+    WHERE u.saldo_monedas <> ISNULL((SELECT SUM(m.importe) FROM dbo.MovimientoMoneda AS m WHERE m.id_usuario = u.id_usuario), 0)
+    UNION ALL
+    SELECT 2, N'Muros colocados en partidas clasificatorias', COUNT(*)
+    FROM dbo.EstadisticaModo AS e
+    WHERE e.barreras_colocadas <> (SELECT COUNT(*) FROM dbo.Jugada AS j JOIN dbo.Partida AS pa ON pa.id_partida = j.id_partida
+                                   WHERE j.id_usuario = e.id_usuario AND pa.id_modo = e.id_modo AND pa.tipo = 'CLASIFICATORIA'
+                                     AND pa.estado = 'FINALIZADA' AND j.tipo = 'MURO' AND j.deshecha = 0)
+    UNION ALL
+    SELECT 3, N'División solo a partir de cinco partidas (CU-25 RN-14)', COUNT(*)
+    FROM dbo.EstadisticaModo AS e
+    WHERE (e.id_division IS NULL AND e.partidas_jugadas >= 5) OR (e.id_division IS NOT NULL AND e.partidas_jugadas < 5)
+    UNION ALL
+    SELECT 4, N'Un objeto equipado en cada ranura (CU-14 RN-01)', COUNT(*)
+    FROM dbo.Usuario AS u
+    WHERE (SELECT COUNT(*) FROM dbo.Equipamiento AS e WHERE e.id_usuario = u.id_usuario) <> (SELECT COUNT(*) FROM dbo.Ranura)
+    UNION ALL
+    SELECT 5, N'Aspecto fijado en cada ranura por participación', COUNT(*)
+    FROM dbo.Participacion AS p
+    WHERE (SELECT COUNT(*) FROM dbo.ParticipacionObjeto AS o WHERE o.id_partida = p.id_partida AND o.id_usuario = p.id_usuario)
+          <> (SELECT COUNT(*) FROM dbo.Ranura)
+    UNION ALL
+    SELECT 6, N'Objetos iniciales de cada cuenta (CU-02 RN-08)', COUNT(*)
+    FROM dbo.Usuario AS u CROSS JOIN dbo.ObjetoCosmetico AS o
+    WHERE o.es_inicial = 1 AND NOT EXISTS (SELECT 1 FROM dbo.UsuarioObjeto AS uo WHERE uo.id_usuario = u.id_usuario AND uo.id_objeto = o.id_objeto)
+    UNION ALL
+    SELECT 7, N'Probabilidades de cada tipo de caja que suman 100', COUNT(*)
+    FROM (SELECT id_tipo_caja FROM dbo.TipoCajaObjeto GROUP BY id_tipo_caja HAVING SUM(probabilidad) <> 100) AS x
+    UNION ALL
+    SELECT 8, N'Tres objetos en cada caja abierta (CU-39 RN-07)', COUNT(*)
+    FROM dbo.Caja AS c
+    WHERE c.estado = 'ABIERTA' AND (SELECT COUNT(*) FROM dbo.CajaContenido AS x WHERE x.id_caja = c.id_caja) <> 3
+    UNION ALL
+    SELECT 9, N'Textos con ñ, acentos y emojis idénticos a los insertados (D-21)', COUNT(*)
+    FROM (
+@TEXTOS_UNICODE@
+         ) AS distintos
+) AS c
+ORDER BY n;
+GO
+"""
 
-def escribir_sql(ruta):
-    lineas = ["""/*=====================================================================
-  Bastion - Inserción de datos de prueba (3 de 3)
-  Motor: SQL Server 2019 o posterior (CON-04); probado en SQL Server 2025.
+CABECERA_NUCLEO = """/*=====================================================================
+  Bastion - Inserción de datos de prueba del núcleo (3 de 3)
+  Motor: SQL Server 2019 o posterior (CON-04).
 
   Orden de ejecución:
      1. crear_base_datos.sql
@@ -372,11 +511,14 @@ def escribir_sql(ruta):
   bd/datos_prueba/. No editar a mano: se edita el escenario y se vuelve a
   generar.
 
-  Carga los catálogos precargados (D-09) y un escenario de prueba que ocupa
-  las """ + str(len({t[0] for t in TABLAS})) + """ tablas. Es una fotografía de la base el """ + cu.AHORA + """ UTC.
+  Carga los catálogos del núcleo y la parte del escenario de prueba que
+  cabe en las @NUM@ tablas del núcleo. Es una fotografía de la base el @AHORA@
+  UTC. Lo que el escenario tiene de los agregados (objetos, monedas, cajas,
+  divisiones, amigos, la partida contra la IA) se carga después con
+  fase_posterior/insertar_datos_prueba_fase_posterior.sql (D-22).
   Lo que el modelo guarda como consecuencia de otras filas (elo,
-  estadísticas, divisiones, saldo, estado del tablero) se calculó a partir
-  de ellas, y las consultas del final lo comprueban.
+  estadísticas, estado del tablero) se calculó a partir de ellas, y las
+  consultas del final lo comprueban.
 
   Se ejecuta con una cuenta de administración sobre las tablas recién
   creadas y vacías: fija los identificadores con IDENTITY_INSERT, que
@@ -386,9 +528,26 @@ def escribir_sql(ruta):
   El archivo está en UTF-8: se ejecuta con sqlcmd -f 65001, o se abre en
   SQL Server Management Studio, que lo reconoce por su marca de orden de
   bytes. Los textos van como literales N'...', con sus eñes y acentos, y la
-  comprobación 16 del final verifica que se guardaron sin pérdida (D-21).
+  última comprobación verifica que se guardaron sin pérdida (D-21).
 =====================================================================*/
+"""
 
+CABECERA_FASE = """/*=====================================================================
+  Bastion - Inserción de datos de prueba de la fase posterior
+  Motor: SQL Server 2019 o posterior (CON-04).
+
+  Se ejecuta después de fase_posterior/crear_tablas_fase_posterior.sql,
+  sobre la base que ya tiene los datos del núcleo. Archivo generado por
+  bd/generar_datos_prueba.py; no editar a mano.
+
+  Completa el escenario de prueba con lo que pertenece a los agregados:
+  los catálogos de la fase posterior, las columnas que se agregaron a
+  Usuario, EstadisticaModo y Sala, la partida contra la IA y las @NUM@
+  tablas nuevas.
+=====================================================================*/
+"""
+
+PREAMBULO = """
 USE Bastion;
 GO
 SET ANSI_NULLS ON;
@@ -398,62 +557,129 @@ SET XACT_ABORT ON;
 GO
 
 BEGIN TRANSACTION;
-"""]
-    area_actual = None
-    areas = {t["nombre"]: t["area"] for t in json.loads((AQUI.parent / "er" / "esquema.json").read_text(encoding="utf-8-sig"))}
-    for nombre, columnas, filas, identidad, comentario in TABLAS:
-        if areas[nombre] != area_actual:
-            area_actual = areas[nombre]
-            lineas.append("/*" + "-" * 69 + "\n  " + area_actual + "\n" + "-" * 69 + "*/\n")
-        if comentario:
-            lineas.append(f"-- {comentario}")
-        if identidad:
-            lineas.append(f"SET IDENTITY_INSERT dbo.{nombre} ON;")
-        lineas.append(f"INSERT INTO dbo.{nombre} ({', '.join(columnas)}) VALUES")
-        lineas.append(",\n".join("    (" + ", ".join(valor(v) for v in fila) + ")" for fila in filas) + ";")
-        if identidad:
-            lineas.append(f"SET IDENTITY_INSERT dbo.{nombre} OFF;")
-        lineas.append("")
-    sustituidas = [(i, s[9]) for i, s in com.SANCIONES.items() if s[9]]
-    for i, sust in sustituidas:
-        lineas.append(f"UPDATE dbo.Sancion SET id_sancion_sustituta = {sust} WHERE id_sancion = {i};")
-    lineas += ["", "COMMIT TRANSACTION;", "GO", COMPROBACIONES.replace("@TEXTOS_UNICODE@", textos_unicode()[0])]
+"""
+
+
+def _insert(nombre, columnas, filas, identidad, comentario):
+    lineas = []
+    if comentario:
+        lineas.append(f"-- {comentario}")
+    if identidad:
+        lineas.append(f"SET IDENTITY_INSERT dbo.{nombre} ON;")
+    lineas.append(f"INSERT INTO dbo.{nombre} ({', '.join(columnas)}) VALUES")
+    lineas.append(",\n".join("    (" + ", ".join(valor(v) for v in fila) + ")" for fila in filas) + ";")
+    if identidad:
+        lineas.append(f"SET IDENTITY_INSERT dbo.{nombre} OFF;")
+    lineas.append("")
+    return lineas
+
+
+def _titulo(area):
+    return "/*" + "-" * 69 + "\n  " + area + "\n" + "-" * 69 + "*/\n"
+
+
+def _escribir(ruta, lineas):
     ruta.write_bytes(b"\xef\xbb\xbf" + "\n".join(lineas).replace("\n", "\r\n").encode("utf-8"))
 
 
-def escribir_tex(salida, part):
-    aviso = "% Archivo generado por bd/generar_datos_prueba.py. No editar a mano."
+def escribir_sql(nucleo, fase, ia, act):
+    areas = {t["nombre"]: t["area"] for t in _esquema("esquema.json")}
+    areas.update({t["nombre"]: t["area"] for t in _esquema("esquema-fase-posterior.json")})
+
+    # --- núcleo
+    lineas = [CABECERA_NUCLEO.replace("@NUM@", str(len(nucleo))).replace("@AHORA@", cu.AHORA), PREAMBULO]
+    area_actual = None
+    for nombre, columnas, filas, identidad, comentario in nucleo:
+        if areas[nombre] != area_actual:
+            area_actual = areas[nombre]
+            lineas.append(_titulo(area_actual))
+        if filas:
+            lineas += _insert(nombre, columnas, filas, identidad, comentario)
+    for i, sust in [(i, s[9]) for i, s in com.SANCIONES.items() if s[9]]:
+        lineas.append(f"UPDATE dbo.Sancion SET id_sancion_sustituta = {sust} WHERE id_sancion = {i};")
+    lineas += ["", "COMMIT TRANSACTION;", "GO",
+               COMPROBACIONES_NUCLEO.replace("@TEXTOS_UNICODE@", textos_unicode(nucleo)[0])]
+    _escribir(AQUI / "insertar_datos_prueba.sql", lineas)
+
+    # --- fase posterior: catálogos, columnas agregadas al núcleo, la partida de la IA y tablas nuevas
+    lineas = [CABECERA_FASE.replace("@NUM@", str(len(fase))), PREAMBULO]
+    catalogos = [t for t in fase if areas[t[0]].startswith("Catálogos")]
+    resto = [t for t in fase if not areas[t[0]].startswith("Catálogos")]
+    lineas.append(_titulo(areas[catalogos[0][0]]))
+    for t in catalogos:
+        lineas += _insert(*t)
+    lineas.append(_titulo("Columnas que se agregaron al núcleo"))
+    for nombre, llaves, cols, filas in act:
+        lineas.append(f"-- {nombre}: {', '.join(cols)}.")
+        for fila in filas:
+            k = fila[:len(llaves)]
+            v = fila[len(llaves):]
+            sets = ", ".join(f"{c} = {valor(x)}" for c, x in zip(cols, v))
+            donde = " AND ".join(f"{c} = {valor(x)}" for c, x in zip(llaves, k))
+            lineas.append(f"UPDATE dbo.{nombre} SET {sets} WHERE {donde};")
+        lineas.append("")
+    lineas.append(_titulo("Partida contra la IA (D-12)"))
+    for t in ia:
+        lineas += _insert(*t)
+    area_actual = None
+    for t in resto:
+        if areas[t[0]] != area_actual:
+            area_actual = areas[t[0]]
+            lineas.append(_titulo(area_actual))
+        if t[2]:
+            lineas += _insert(*t)
+    lineas += ["", "COMMIT TRANSACTION;", "GO",
+               COMPROBACIONES_FASE.replace("@TEXTOS_UNICODE@", textos_unicode(fase + ia)[0] or
+                                           "          SELECT CAST(NULL AS NVARCHAR(10)) AS v WHERE 1 = 0")]
+    _escribir(AQUI / "fase_posterior" / "insertar_datos_prueba_fase_posterior.sql", lineas)
+
+
+def _tabla_filas(esquema, cuenta, aviso):
     areas = {}
-    for t in json.loads((AQUI.parent / "er" / "esquema.json").read_text(encoding="utf-8-sig")):
+    for t in _esquema(esquema):
         areas.setdefault(t["area"], []).append(t["nombre"])
-    cuenta = {n: len(filas) for n, _, filas, _, _ in TABLAS}
-    o = [aviso, r"\begin{center}\small", r"\begin{longtable}{|L{0.34\textwidth}|L{0.12\textwidth}|}",
+    o = [aviso, r"\begin{center}\small", r"\begin{longtable}{|L{0.40\textwidth}|L{0.12\textwidth}|}",
          r"\hline", r"\textbf{Tabla} & \textbf{Filas} \\ \hline", r"\endfirsthead",
          r"\hline", r"\textbf{Tabla} & \textbf{Filas} \\ \hline", r"\endhead"]
     for area, nombres in areas.items():
-        if not any(n in cuenta for n in nombres):
-            continue
         o.append(r"\multicolumn{2}{|l|}{\textbf{" + area.replace("(D-09)", r"(\mbox{D-09})") + r"}} \\ \hline")
         o += [r"\textit{" + n + "} & " + str(cuenta.get(n, 0)) + r" \\ \hline" for n in nombres]
-    o += [r"\textbf{Total} & \textbf{" + str(sum(cuenta.values())) + r"} \\ \hline", r"\end{longtable}", r"\end{center}"]
-    (salida / "datos-prueba.tex").write_text("\n".join(o) + "\n", encoding="utf-8")
+    o += [r"\textbf{Total} & \textbf{" + str(sum(cuenta.get(n, 0) for ns in areas.values() for n in ns)) + r"} \\ \hline",
+          r"\end{longtable}", r"\end{center}"]
+    return "\n".join(o) + "\n"
+
+
+def escribir_tex(nucleo, fase, ia, retiradas):
+    aviso = "% Archivo generado por bd/generar_datos_prueba.py. No editar a mano."
+    cuenta = {n: len(f) for n, _, f, _, _ in nucleo}
+    (AQUI / "tex" / "datos-prueba.tex").write_text(_tabla_filas("esquema.json", cuenta, aviso), encoding="utf-8")
+    cuenta_f = {n: len(f) for n, _, f, _, _ in fase}
+    dir_f = AQUI / "tex" / "fase-posterior"
+    dir_f.mkdir(parents=True, exist_ok=True)
+    (dir_f / "datos-prueba.tex").write_text(_tabla_filas("esquema-fase-posterior.json", cuenta_f, aviso), encoding="utf-8")
     macros = {
         "dpFecha": cu.AHORA[:10], "dpNumFilas": sum(cuenta.values()), "dpNumUsuarios": cuenta["Usuario"],
         "dpNumPartidas": cuenta["Partida"], "dpNumJugadas": cuenta["Jugada"],
-        "dpNumMovimientos": cuenta["MovimientoMoneda"], "dpNumTablasConDatos": sum(1 for v in cuenta.values() if v),
-        "dpNumComprobaciones": len(re.findall(r"^\s+SELECT \d+(?: AS n)?, N'", COMPROBACIONES, re.M)),
-        "dpNumTextosUnicode": textos_unicode()[1],
+        "dpNumTablasConDatos": sum(1 for v in cuenta.values() if v),
+        "dpNumComprobaciones": len(re.findall(r"^\s+SELECT \d+(?: AS n)?, N'", COMPROBACIONES_NUCLEO, re.M)),
+        "dpNumTextosUnicode": textos_unicode(nucleo)[1],
+        "dpFpNumFilas": sum(cuenta_f.values()) + sum(len(t[2]) for t in ia),
+        "dpFpNumComprobaciones": len(re.findall(r"^\s+SELECT \d+(?: AS n)?, N'", COMPROBACIONES_FASE, re.M)),
+        "dpNumMovimientos": cuenta_f.get("MovimientoMoneda", 0),
     }
-    (salida / "datos-prueba-resumen.tex").write_text(
+    (AQUI / "tex" / "datos-prueba-resumen.tex").write_text(
         aviso + "\n" + "\n".join(f"\\newcommand{{\\{k}}}{{{v}}}" for k, v in macros.items()) + "\n", encoding="utf-8")
 
 
 def main():
-    part = construir()
-    escribir_sql(AQUI / "insertar_datos_prueba.sql")
-    escribir_tex(AQUI / "tex", part)
-    vacias = [n for n, _, filas, _, _ in TABLAS if not filas]
-    print(f"{len(TABLAS)} tablas, {sum(len(t[2]) for t in TABLAS)} filas" + (f"; vacías: {vacias}" if vacias else ""))
+    construir()
+    nucleo, fase, ia, act, retiradas = repartir()
+    (AQUI / "fase_posterior").mkdir(exist_ok=True)
+    escribir_sql(nucleo, fase, ia, act)
+    escribir_tex(nucleo, fase, ia, retiradas)
+    print(f"núcleo: {len(nucleo)} tablas, {sum(len(t[2]) for t in nucleo)} filas; "
+          f"fase posterior: {len(fase)} tablas, {sum(len(t[2]) for t in fase) + sum(len(t[2]) for t in ia)} filas "
+          f"y {sum(len(a[3]) for a in act)} actualizaciones; en memoria o fusionadas: {retiradas}")
 
 
 if __name__ == "__main__":

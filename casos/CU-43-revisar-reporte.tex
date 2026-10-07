@@ -19,7 +19,7 @@
       \item El SJM envía el mensaje \texttt{MODERATION\_\allowbreak{}QUEUE\_\allowbreak{}REQUEST} con el token. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y que el \texttt{rol} del \textit{Usuario} sea \texttt{MODERADOR} (\mbox{RN-01}). \textit{(Ver \mbox{FA-01})}
       \item El Servidor de partidas devuelve a \texttt{PENDIENTE} los \textit{Reporte} que llevan más de treinta minutos \texttt{EN\_\allowbreak{}REVISION} sin resolverse (\mbox{RN-03}).
-      \item El Servidor de partidas recupera los \textit{Reporte} en \texttt{PENDIENTE}, ordenados por \texttt{fecha\_\allowbreak{}reporte}, con su \textit{MotivoReporte}, y las \textit{Apelacion} pendientes, excluyendo aquellos en los que el Moderador es denunciante o reportado, o aplicó la sanción apelada (\mbox{RN-04}). \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas recupera los \textit{Reporte} en \texttt{PENDIENTE}, ordenados por \texttt{fecha\_\allowbreak{}reporte}, con su \texttt{motivo}, y las \textit{Apelacion} pendientes, excluyendo aquellos en los que el Moderador es denunciante o reportado, o aplicó la sanción apelada (\mbox{RN-04}). \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas responde con \texttt{MODERATION\_\allowbreak{}QUEUE\_\allowbreak{}OK}.
       \item El SJM despliega la cola con los reportes y las apelaciones, su motivo, su antigüedad y el número de reportes que acumula cada reportado. \textit{(Ver \mbox{FA-02})}
       \item El Moderador selecciona ``tomar'' en un reporte. \textit{(Ver \mbox{FA-08})}
@@ -140,7 +140,7 @@
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}, \textit{Usuario}:} lee por token y el \texttt{rol} \textit{(paso 3)}
       \item \textbf{\textit{Reporte}:} lee la cola; escribe \texttt{estado}, \texttt{id\_\allowbreak{}moderador}, \texttt{fecha\_\allowbreak{}asignacion}, \texttt{nota\_\allowbreak{}resolucion}, \texttt{fecha\_\allowbreak{}resolucion} \textit{(pasos 4, 5, 10, 17, \mbox{FA-06})}
-      \item \textbf{\textit{MotivoReporte}:} lee \textit{(paso 5)}
+      \item \textbf{\textit{Reporte}:} lee \texttt{motivo} \textit{(paso 5, \mbox{D-23})}
       \item \textbf{\textit{Apelacion}:} lee la cola; escribe \texttt{estado}, \texttt{id\_\allowbreak{}moderador}, \texttt{nota\_\allowbreak{}resolucion}, \texttt{fecha\_\allowbreak{}resolucion} \textit{(pasos 5, \mbox{FA-08})}
       \item \textbf{\textit{Partida}, \textit{Jugada}, \textit{Mensaje}:} lee las pruebas \textit{(paso 11)}
       \item \textbf{\textit{Sancion}:} lee el historial; retira la apelada en el \mbox{FA-08} \textit{(pasos 11, \mbox{FA-08})}

@@ -29,7 +29,7 @@
       \item El Servidor de partidas inicia una transacción sobre la Base de datos.
       \item El Servidor de partidas genera una \texttt{contrasena\_\allowbreak{}sal} nueva y deriva la \texttt{contrasena\_\allowbreak{}hash} de la contraseña nueva (\mbox{RN-02}). \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas cierra todas las \textit{Sesion} abiertas del \textit{Usuario} \textbf{salvo la que envió la solicitud}, con \texttt{motivo\_\allowbreak{}cierre} igual a \texttt{CAMBIO\_\allowbreak{}CREDENCIALES} (\mbox{RN-04}).
-      \item El Servidor de partidas invalida los \textit{TokenRecuperacion} pendientes del \textit{Usuario}, porque ya no hace falta recuperar una contraseña que se acaba de cambiar.
+      \item El Servidor de partidas invalida los \textit{CodigoVerificacion} pendientes del \textit{Usuario}, porque ya no hace falta recuperar una contraseña que se acaba de cambiar.
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
       \item El Servidor de partidas registra el cambio en la \textit{BitacoraAcceso} con el resultado \texttt{CAMBIO\_\allowbreak{}CONTRASENA}.
       \item El Servidor de partidas solicita al Servicio de correo un aviso al \texttt{correo} del \textit{Usuario} informando del cambio, en su \texttt{idioma\_\allowbreak{}preferido} y fuera de la transacción (\mbox{RN-05}). \textit{(Ver \mbox{EX-06})}
@@ -48,7 +48,7 @@
       \item El Servidor de partidas verifica la contraseña actual como en el paso 7 del FN. \textit{(Ver \mbox{FA-05})}
       \item El Servidor de partidas normaliza el correo nuevo a minúsculas y verifica que sea distinto del actual y que no esté registrado por otro \textit{Usuario}. \textit{(Ver \mbox{FA-07})}
       \item El Servidor de partidas verifica que hayan transcurrido al menos cinco minutos desde \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, o que sea nulo. \textit{(Ver \mbox{FA-08})}
-      \item El Servidor de partidas invalida los \textit{TokenVerificacionCorreo} pendientes del \textit{Usuario} y genera uno nuevo con propósito \texttt{CAMBIO\_\allowbreak{}CORREO}, el \texttt{correo\_\allowbreak{}destino} igual al correo nuevo y su fecha de expiración. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas invalida los \textit{CodigoVerificacion} pendientes del \textit{Usuario} y genera uno nuevo con propósito \texttt{CAMBIO\_\allowbreak{}CORREO}, el \texttt{correo\_\allowbreak{}destino} igual al correo nuevo y su fecha de expiración. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas solicita al Servicio de correo el envío del enlace de confirmación \textbf{al correo nuevo}, y un aviso \textbf{al correo actual} informando de la solicitud, los dos en el \texttt{idioma\_\allowbreak{}preferido} del \textit{Usuario} (\mbox{RN-06}). \textit{(Ver \mbox{EX-06})}
       \item El Servidor de partidas actualiza \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} y registra la solicitud en la \textit{BitacoraAcceso} con el resultado \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}SOLICITADO}.
       \item El Servidor de partidas responde con \texttt{CHANGE\_\allowbreak{}EMAIL\_\allowbreak{}PENDING}.
@@ -102,7 +102,7 @@
     \begin{cuenum}[start=1]
       \item El Jugador selecciona ``cancelar cambio'' junto al correo pendiente.
       \item El SJM envía el mensaje \texttt{CANCEL\_\allowbreak{}EMAIL\_\allowbreak{}CHANGE\_\allowbreak{}REQUEST}.
-      \item El Servidor de partidas invalida el \textit{TokenVerificacionCorreo} con propósito \texttt{CAMBIO\_\allowbreak{}CORREO} y responde con \texttt{CANCEL\_\allowbreak{}EMAIL\_\allowbreak{}CHANGE\_\allowbreak{}OK}.
+      \item El Servidor de partidas invalida el \textit{CodigoVerificacion} con propósito \texttt{CAMBIO\_\allowbreak{}CORREO} y responde con \texttt{CANCEL\_\allowbreak{}EMAIL\_\allowbreak{}CHANGE\_\allowbreak{}OK}.
       \item El SJM retira el correo pendiente de la \texttt{GUI\_\allowbreak{}AccountSettings}.
       \item Fin del caso de uso. El correo vigente nunca dejó de serlo.
     \end{cuenum}} \\
@@ -112,7 +112,7 @@
       \item El SJM solicita la contraseña actual y, al activar, un código de prueba entregado por el Proveedor del segundo factor, para comprobar que el canal funciona antes de exigirlo (\mbox{RN-11}).
       \item El SJM envía el mensaje \texttt{TOGGLE\_\allowbreak{}SECOND\_\allowbreak{}FACTOR\_\allowbreak{}REQUEST} con la contraseña actual, el valor deseado y el código de prueba.
       \item El Servidor de partidas verifica la contraseña actual como en el paso 7 del FN. \textit{(Ver \mbox{FA-05})}
-      \item Al activar, el Servidor de partidas genera un \textit{CodigoSegundoFactor}, lo entrega y comprueba el código de prueba; si no coincide, responde con \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}INVALID} sin cambiar nada.
+      \item Al activar, el Servidor de partidas genera un \textit{CodigoVerificacion}, lo entrega y comprueba el código de prueba; si no coincide, responde con \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}INVALID} sin cambiar nada.
       \item El Servidor de partidas escribe \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} en el \textit{Usuario}, registra el cambio en la \textit{BitacoraAcceso} con el resultado \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}ACTIVADO} o \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}DESACTIVADO}, y avisa al correo de la cuenta fuera de la transacción.
       \item Fin del caso de uso. Las sesiones abiertas no se cierran: activar el segundo factor protege los accesos futuros, no los presentes.
     \end{cuenum}} \\ \hline
@@ -160,7 +160,7 @@
   \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene una \texttt{contrasena\_\allowbreak{}hash} y una \texttt{contrasena\_\allowbreak{}sal} nuevas, y la contraseña anterior ya no permite el acceso.
       \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, la única \textit{Sesion} abierta de la cuenta es la que realizó el cambio.
-      \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-01}, el \texttt{correo} del \textit{Usuario} no cambió todavía; existe un \textit{TokenVerificacionCorreo} vigente con propósito \texttt{CAMBIO\_\allowbreak{}CORREO} y el correo nuevo como destino.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-01}, el \texttt{correo} del \textit{Usuario} no cambió todavía; existe un \textit{CodigoVerificacion} vigente con propósito \texttt{CAMBIO\_\allowbreak{}CORREO} y el correo nuevo como destino.
       \item \textbf{\mbox{POST-04}} El \texttt{estado\_\allowbreak{}cuenta} no cambia en ningún flujo: cambiar el correo no devuelve la cuenta a \texttt{PENDIENTE}.
       \item \textbf{\mbox{POST-05}} Si el caso termina por el \mbox{FA-05} con bloqueo, ninguna \textit{Sesion} de la cuenta sigue abierta.
       \item \textbf{\mbox{POST-06}} En todos los casos que llegan al servidor, el intento quedó registrado en la \textit{BitacoraAcceso}.
@@ -181,13 +181,13 @@
           \item \textbf{\mbox{RN-11}} El segundo factor se activa solo tras comprobar un código de prueba. Activarlo sin esa comprobación podría dejar al Jugador fuera de su cuenta si el canal no funciona.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre dónde vive el correo pendiente.}\par
-    Se consideró guardar el correo nuevo en una columna \texttt{correo\_\allowbreak{}pendiente} de \textit{Usuario}. Se descartó porque el correo pendiente no tiene sentido sin el token que lo confirma: caduca con él, se invalida con él y se sustituye con él. Guardarlo en el \textit{TokenVerificacionCorreo}, junto con un \texttt{proposito} que distinga el alta del cambio, mantiene en una sola fila todo lo que tiene la misma vigencia, y evita una columna de \textit{Usuario} que estaría nula en casi todas las cuentas.} \\ \hline
+    Se consideró guardar el correo nuevo en una columna \texttt{correo\_\allowbreak{}pendiente} de \textit{Usuario}. Se descartó porque el correo pendiente no tiene sentido sin el token que lo confirma: caduca con él, se invalida con él y se sustituye con él. Guardarlo en el \textit{CodigoVerificacion}, junto con un \texttt{proposito} que distinga el alta del cambio, mantiene en una sola fila todo lo que tiene la misma vigencia, y evita una columna de \textit{Usuario} que estaría nula en casi todas las cuentas.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}:} lee por token; cierra las demás \textit{(pasos 6, 11)}
       \item \textbf{\textit{Usuario}:} lee \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{correo}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, \texttt{idioma\_\allowbreak{}preferido} \textit{(pasos 7, 15, \mbox{FA-01})}
       \item \textbf{\textit{Usuario}:} escribe \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido}, \texttt{bloqueada\_\allowbreak{}hasta} \textit{(pasos 10, \mbox{FA-01}, \mbox{FA-05})}
-      \item \textbf{\textit{TokenRecuperacion}:} invalida los pendientes \textit{(paso 12)}
-      \item \textbf{\textit{TokenVerificacionCorreo}:} invalida los pendientes y crea uno con \texttt{proposito} y \texttt{correo\_\allowbreak{}destino} \textit{(pasos \mbox{FA-01}, \mbox{FA-09})}
+      \item \textbf{\textit{CodigoVerificacion}:} invalida los pendientes \textit{(paso 12)}
+      \item \textbf{\textit{CodigoVerificacion}:} invalida los pendientes y crea uno con \texttt{proposito} y \texttt{correo\_\allowbreak{}destino} \textit{(pasos \mbox{FA-01}, \mbox{FA-09})}
       \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(pasos 14, \mbox{FA-01}, \mbox{FA-05})}
     \end{cudatos}} \\ \hline
 \end{fichacu}

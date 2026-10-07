@@ -1,0 +1,95 @@
+%=====================================================================
+% Modelo de datos · Revisión del esquema: núcleo y fase posterior
+%   Explica el paso del esquema de 47 tablas al núcleo y a la fase
+%   posterior (D-22, D-23, D-24). Las cifras del núcleo salen de
+%   bd/tex/resumen.tex y las de la fase posterior de
+%   bd/tex/fase-posterior/resumen.tex.
+%=====================================================================
+\subsection*{Revisión del esquema: núcleo y fase posterior}
+\addcontentsline{toc}{subsection}{Revisión del esquema: núcleo y fase posterior}
+
+La primera versión del esquema tenía 47 tablas, 327 columnas y 78 llaves foráneas, porque cubría los 49 casos de uso por igual. Tras la priorización (sección \textit{Priorización de requisitos y casos de uso}) se revisó tabla por tabla con tres preguntas: ¿la escribe algún caso que entra en las catorce semanas?, ¿aporta algo que otra tabla o una restricción no den ya?, ¿su contenido sobrevive a la conexión que lo creó? El resultado son dos scripts:
+
+\begin{center}\small
+\begin{longtable}{|L{0.34\textwidth}|L{0.12\textwidth}|L{0.12\textwidth}|L{0.28\textwidth}|}
+\hline
+\textbf{Esquema} & \textbf{Tablas} & \textbf{Columnas} & \textbf{Llaves foráneas} \\ \hline
+\endfirsthead
+\hline
+\textbf{Esquema} & \textbf{Tablas} & \textbf{Columnas} & \textbf{Llaves foráneas} \\ \hline
+\endhead
+Versión anterior (un solo script) & 47 & 327 & 78 \\ \hline
+\textbf{Núcleo}: \at{bd/crear\_tablas.sql} & \textbf{\bdNumTablas{}} & \textbf{\bdNumColumnas{}} & \textbf{\bdNumForaneas{}} \\ \hline
+Fase posterior: \at{bd/fase\_posterior/crear\_tablas\_fase\_posterior.sql} & \bdFpNumTablas{} & \bdFpNumColumnas{} y 21 agregadas al núcleo & \bdFpNumForaneas{} y 2 agregadas al núcleo \\ \hline
+\end{longtable}
+\end{center}
+
+El núcleo es lo que se construye y se entrega: todo lo que piden el profesor y la jugabilidad. La fase posterior se ejecuta encima del núcleo cuando llegue su momento, sin rehacer nada: crea sus tablas y agrega columnas con \at{ALTER TABLE}. Siete tablas desaparecen de los dos esquemas y aparece una nueva: tres se funden en ella, una pasa a columnas de \textit{Usuario}, una a una restricción y dos a la memoria del Servidor de partidas. Así, 47 $-$ 22 $-$ 7 $+$ 1 = \bdNumTablas{}.
+
+\subsubsection*{Tablas que solo existen por los agregados}
+\addcontentsline{toc}{subsubsection}{Tablas que solo existen por los agregados}
+
+Veintidós tablas las escriben únicamente casos de uso de la fase posterior. Pasan completas a \at{bd/fase\_posterior} (\mbox{D-22}).
+
+\begin{center}\small
+\begin{longtable}{|L{0.28\textwidth}|L{0.34\textwidth}|L{0.26\textwidth}|}
+\hline
+\textbf{Agregado} & \textbf{Tablas} & \textbf{Casos que las justifican} \\ \hline
+\endfirsthead
+\hline
+\textbf{Agregado} & \textbf{Tablas} & \textbf{Casos que las justifican} \\ \hline
+\endhead
+Skins y cosméticos & \textit{Ranura}, \textit{ObjetoCosmetico}, \textit{UsuarioObjeto}, \textit{Equipamiento}, \textit{ParticipacionObjeto} & \mbox{CU-08}, \mbox{CU-14}, \mbox{CU-38}, \mbox{CU-39} \\ \hline
+Tienda, cajas y monedas & \textit{TipoCaja}, \textit{TipoCajaObjeto}, \textit{Caja}, \textit{CajaContenido}, \textit{MovimientoMoneda} & \mbox{CU-38}, \mbox{CU-39}, \mbox{CU-40} \\ \hline
+Divisiones & \textit{Division}, \textit{HistorialDivision} & \mbox{CU-15}, \mbox{CU-35} \\ \hline
+Perfil y enlaces de perfil & \textit{Avatar}, \textit{EnlaceRed}, \textit{HistorialNickname} & \mbox{CU-12}, \mbox{CU-13} \\ \hline
+Amigos e invitaciones & \textit{Amistad}, \textit{Solicitud}, \textit{Invitacion} & \mbox{CU-30}, \mbox{CU-31}, \mbox{CU-32}, \mbox{CU-49} \\ \hline
+Espectador & \textit{EnlaceEspectador} & \mbox{CU-34} \\ \hline
+IA & \textit{NivelIA} & \mbox{CU-27} \\ \hline
+Tutorial & \textit{Leccion}, \textit{ProgresoTutorial} & \mbox{CU-41} \\ \hline
+\end{longtable}
+\end{center}
+
+Los agregados también añadían columnas a tablas que sí son del núcleo. Esas columnas se quitan del núcleo y la fase posterior las agrega:
+
+\begin{center}\small
+\begin{longtable}{|L{0.18\textwidth}|L{0.44\textwidth}|L{0.26\textwidth}|}
+\hline
+\textbf{Tabla} & \textbf{Columnas que se difieren} & \textbf{Agregado} \\ \hline
+\endfirsthead
+\hline
+\textbf{Tabla} & \textbf{Columnas que se difieren} & \textbf{Agregado} \\ \hline
+\endhead
+\textit{Usuario} & \at{codigo\_amigo}, \at{id\_icono}, \at{permite\_espectadores}, \at{nivel}, \at{experiencia}, \at{saldo\_monedas}, \at{cajas\_sin\_raro}, \at{fecha\_configuracion\_inicial} & Amigos, perfil, espectador, niveles, monedas, cajas \\ \hline
+\textit{EstadisticaModo} & \at{elo\_maximo}, \at{racha\_actual}, \at{mejor\_racha}, \at{tiempo\_total\_jugado}, \at{barreras\_colocadas}, \at{id\_division} & Perfil, ranking y divisiones \\ \hline
+\textit{Partida} & \at{id\_nivel\_ia}, \at{permite\_deshacer}, \at{permite\_sugerencias}, \at{deshacer\_usados}, \at{sugerencias\_usadas}; el tipo \at{IA} y el reloj opcional & IA \\ \hline
+\textit{Jugada} & \at{deshecha}; el \at{id\_usuario} nulo de las jugadas de la IA & IA \\ \hline
+\textit{Sala} & \at{permite\_espectadores} & Espectador \\ \hline
+\end{longtable}
+\end{center}
+
+\textit{EstadisticaModo} se queda en el núcleo con el elo, las partidas jugadas, ganadas y perdidas, y los abandonos: el emparejamiento busca rival por elo (\mbox{CU-17} \mbox{RN-03}) y la moderación lee los abandonos (\mbox{CU-24} \mbox{RN-05}). \at{tipo\_cuenta} también se queda aunque el invitado sea de la fase posterior: agregarlo después obligaría a volver nulo el \at{correo} y a reconstruir su índice único.
+
+\subsubsection*{Tablas que no aportan}
+\addcontentsline{toc}{subsubsection}{Tablas que no aportan}
+
+Revisadas con el criterio de la normalización al revés ---¿esta tabla separa algo que de verdad es independiente?---, siete tablas se simplifican sin perder ninguna regla (\mbox{D-23}, \mbox{D-24}):
+
+\begin{center}\small
+\begin{longtable}{|L{0.25\textwidth}|L{0.20\textwidth}|L{0.43\textwidth}|}
+\hline
+\textbf{Antes} & \textbf{Ahora} & \textbf{Por qué} \\ \hline
+\endfirsthead
+\hline
+\textbf{Antes} & \textbf{Ahora} & \textbf{Por qué} \\ \hline
+\endhead
+\textit{TokenVerificacionCorreo}, \textit{TokenRecuperacion} y \textit{CodigoSegundoFactor} & \textit{CodigoVerificacion}, con \at{proposito} & Las tres guardaban lo mismo: cuenta, resumen del código, emisión, vencimiento, intentos y un estado \at{PENDIENTE}, usado o \at{INVALIDADO}. Separarlas triplicaba tablas, llaves e índices para un solo concepto. El propósito decide la vigencia y si aplica \at{correo\_destino}; el índice filtrado por cuenta y propósito conserva la regla de un solo código vigente de cada clase. \\ \hline
+\textit{AceptacionTerminos} & \at{version\_terminos}, \at{idioma\_terminos} y \at{fecha\_aceptacion\_terminos} en \textit{Usuario} & Ningún caso la leía (Matriz 1) y cada cuenta necesita solo la última versión que aceptó. La dirección de red de la aceptación ya queda en \textit{BitacoraAcceso}. \\ \hline
+\textit{MotivoReporte} & \at{motivo} en \textit{Reporte}, con \at{CHECK} & Un catálogo de cinco códigos sin ningún otro atributo. Los demás dominios cerrados del modelo ya son restricciones \at{CHECK}, y el texto del motivo está en los diccionarios de recursos (\mbox{D-21}). \\ \hline
+\textit{ColaEmparejamiento} y \textit{SalaParticipante} & Memoria del Servidor de partidas & Describen quién está conectado esperando. Si el servidor se reinicia, las conexiones TCP se caen con él y no queda nadie a quien avisar ni a quien emparejar, así que guardarlas no servía. Las reglas que garantizaban sus llaves (un jugador en una sola cola y en una sola sala) las garantiza la estructura en memoria. \\ \hline
+\end{longtable}
+\end{center}
+
+\textbf{Lo que se consideró y se conservó.} \textit{OfertaTablas} podría vivir en memoria como la cola, pero la reconexión la lee (\mbox{CU-26}) y queda como prueba si un jugador ofrece tablas para acosar. \textit{Sala} se conserva porque guarda los ajustes de la partida privada y es el destino de los mensajes del chat de la sala, que el reporte adjunta. \textit{Silencio} y \textit{Bloqueo} se conservan porque son la moderación que ejerce el propio jugador (\mbox{CU-33}). Las columnas \at{fecha\_ultimo\_envio\_verificacion} y \at{fecha\_ultimo\_envio\_recuperacion} parecen derivables de \textit{CodigoVerificacion}, pero no lo son: registran el último correo que sí se envió, y un código existe aunque el envío falle.
+
+\textbf{Cómo se leen las secciones siguientes.} Las tablas de entidades, atributos, llaves, relaciones y normalización, y los diagramas entidad-relación, describen el \textbf{núcleo}. Las tablas de la fase posterior tienen su propia subsección al final del modelo, con sus diagramas y sus atributos. Las subsecciones que cuentan cómo se llegó del diagrama original al modelo conservan la historia completa, y cuando nombran una tabla que esta revisión quitó, remiten a esta subsección.

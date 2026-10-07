@@ -19,64 +19,64 @@ Todos los casos de uso están redactados a detalle. La Matriz 1 se obtuvo direct
 Ninguna fila puede quedarse sin al menos un caso que la escriba. Una tabla que nadie escribe o no hace falta, o falta el caso de uso que la llena.
 
 \begin{center}\small
-\begin{longtable}{|L{0.240\textwidth}|L{0.275\textwidth}|L{0.240\textwidth}|L{0.105\textwidth}|}
+\begin{longtable}{|L{0.215\textwidth}|L{0.26\textwidth}|L{0.235\textwidth}|L{0.15\textwidth}|}
 \hline
 \textbf{Estructura} & \textbf{Escrita por} & \textbf{Leída por} & \textbf{Estado} \\ \hline
 \endfirsthead
 \hline
 \textbf{Estructura} & \textbf{Escrita por} & \textbf{Leída por} & \textbf{Estado} \\ \hline
 \endhead
-\textit{AceptacionTerminos} & \mbox{CU-02}, \mbox{CU-07} & — & correcta \\ \hline
-\textit{Amistad} & \mbox{CU-11}, \mbox{CU-31}, \mbox{CU-33}, \mbox{CU-49} & \mbox{CU-16}, \mbox{CU-28}, \mbox{CU-30}, \mbox{CU-35} & correcta \\ \hline
+\textit{AceptacionTerminos} & \mbox{CU-02}, \mbox{CU-07} & — & en \textit{Usuario} (\mbox{D-23}) \\ \hline
+\textit{Amistad} & \mbox{CU-11}, \mbox{CU-31}, \mbox{CU-33}, \mbox{CU-49} & \mbox{CU-16}, \mbox{CU-28}, \mbox{CU-30}, \mbox{CU-35} & fase posterior \\ \hline
 \textit{Apelacion} & \mbox{CU-43}, \mbox{CU-45}, \mbox{CU-47} & — & correcta \\ \hline
-\textit{Avatar} & \mbox{CU-11}, \mbox{CU-12} & \mbox{CU-15}, \mbox{CU-16} & correcta \\ \hline
+\textit{Avatar} & \mbox{CU-11}, \mbox{CU-12} & \mbox{CU-15}, \mbox{CU-16} & fase posterior \\ \hline
 \textit{BitacoraAcceso} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-03}, \mbox{CU-04}, \mbox{CU-05}, \mbox{CU-06}, \mbox{CU-07}, \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-11} & \mbox{CU-48} & correcta \\ \hline
 \textit{BitacoraModeracion} & \mbox{CU-43}, \mbox{CU-44}, \mbox{CU-46}, \mbox{CU-47}, \mbox{CU-48} & — & correcta \\ \hline
 \textit{Bloqueo} & \mbox{CU-11}, \mbox{CU-33} & \mbox{CU-16}, \mbox{CU-17}, \mbox{CU-19}, \mbox{CU-28}, \mbox{CU-30}, \mbox{CU-31}, \mbox{CU-32}, \mbox{CU-34}, \mbox{CU-35} & correcta \\ \hline
-\textit{Caja} & \mbox{CU-25}, \mbox{CU-39} & \mbox{CU-40} & correcta \\ \hline
-\textit{CajaContenido} & \mbox{CU-39} & \mbox{CU-40} & correcta \\ \hline
-\textit{CodigoSegundoFactor} & \mbox{CU-01}, \mbox{CU-09} & — & correcta \\ \hline
-\textit{ColaEmparejamiento} & \mbox{CU-11}, \mbox{CU-17}, \mbox{CU-33} & \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-27}, \mbox{CU-32} & correcta \\ \hline
-\textit{Division} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-35} & precargada \\ \hline
-\textit{EnlaceEspectador} & \mbox{CU-25}, \mbox{CU-34} & — & correcta \\ \hline
-\textit{EnlaceRed} & \mbox{CU-11}, \mbox{CU-12} & \mbox{CU-15}, \mbox{CU-16} & correcta \\ \hline
-\textit{Equipamiento} & \mbox{CU-02}, \mbox{CU-06}, \mbox{CU-08}, \mbox{CU-12}, \mbox{CU-14} & \mbox{CU-01}, \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-17}, \mbox{CU-18} & correcta \\ \hline
+\textit{Caja} & \mbox{CU-25}, \mbox{CU-39} & \mbox{CU-40} & fase posterior \\ \hline
+\textit{CajaContenido} & \mbox{CU-39} & \mbox{CU-40} & fase posterior \\ \hline
+\textit{CodigoVerificacion} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-03}, \mbox{CU-04}, \mbox{CU-07}, \mbox{CU-09} & --- & correcta (\mbox{D-23}) \\ \hline
+\textit{ColaEmparejamiento} & \mbox{CU-11}, \mbox{CU-17}, \mbox{CU-33} & \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-27}, \mbox{CU-32} & en memoria (\mbox{D-24}) \\ \hline
+\textit{Division} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-35} & fase posterior \\ \hline
+\textit{EnlaceEspectador} & \mbox{CU-25}, \mbox{CU-34} & — & fase posterior \\ \hline
+\textit{EnlaceRed} & \mbox{CU-11}, \mbox{CU-12} & \mbox{CU-15}, \mbox{CU-16} & fase posterior \\ \hline
+\textit{Equipamiento} & \mbox{CU-02}, \mbox{CU-06}, \mbox{CU-08}, \mbox{CU-12}, \mbox{CU-14} & \mbox{CU-01}, \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-17}, \mbox{CU-18} & fase posterior \\ \hline
 \textit{EstadisticaModo} & \mbox{CU-02}, \mbox{CU-06}, \mbox{CU-24}, \mbox{CU-25} & \mbox{CU-01}, \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-17}, \mbox{CU-18}, \mbox{CU-31}, \mbox{CU-35} & correcta \\ \hline
-\textit{HistorialDivision} & \mbox{CU-25} & \mbox{CU-15} & correcta \\ \hline
-\textit{HistorialNickname} & \mbox{CU-11}, \mbox{CU-13} & — & correcta \\ \hline
-\textit{Invitacion} & \mbox{CU-11}, \mbox{CU-32}, \mbox{CU-33} & — & correcta \\ \hline
+\textit{HistorialDivision} & \mbox{CU-25} & \mbox{CU-15} & fase posterior \\ \hline
+\textit{HistorialNickname} & \mbox{CU-11}, \mbox{CU-13} & — & fase posterior \\ \hline
+\textit{Invitacion} & \mbox{CU-11}, \mbox{CU-32}, \mbox{CU-33} & — & fase posterior \\ \hline
 \textit{Jugada} & \mbox{CU-20}, \mbox{CU-21}, \mbox{CU-27} & \mbox{CU-25}, \mbox{CU-26}, \mbox{CU-34}, \mbox{CU-37}, \mbox{CU-43} & correcta \\ \hline
-\textit{Leccion} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-41} & precargada \\ \hline
+\textit{Leccion} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-41} & fase posterior \\ \hline
 \textit{Mensaje} & \mbox{CU-18}, \mbox{CU-28} & \mbox{CU-19}, \mbox{CU-43} & correcta \\ \hline
 \textit{Modo} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-02}, \mbox{CU-06}, \mbox{CU-16}, \mbox{CU-17}, \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-21}, \mbox{CU-22}, \mbox{CU-23}, \mbox{CU-24}, \mbox{CU-25}, \mbox{CU-27}, \mbox{CU-36}, \mbox{CU-37}, \mbox{CU-40} & precargada \\ \hline
-\textit{MotivoReporte} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-42}, \mbox{CU-43} & precargada \\ \hline
-\textit{MovimientoMoneda} & \mbox{CU-25}, \mbox{CU-38}, \mbox{CU-39} & \mbox{CU-40} & correcta \\ \hline
-\textit{NivelIA} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-27}, \mbox{CU-36} & precargada \\ \hline
-\textit{ObjetoCosmetico} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-02}, \mbox{CU-06}, \mbox{CU-08}, \mbox{CU-14}, \mbox{CU-38}, \mbox{CU-39}, \mbox{CU-40} & precargada \\ \hline
+\textit{MotivoReporte} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-42}, \mbox{CU-43} & \texttt{CHECK} (\mbox{D-23}) \\ \hline
+\textit{MovimientoMoneda} & \mbox{CU-25}, \mbox{CU-38}, \mbox{CU-39} & \mbox{CU-40} & fase posterior \\ \hline
+\textit{NivelIA} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-27}, \mbox{CU-36} & fase posterior \\ \hline
+\textit{ObjetoCosmetico} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-02}, \mbox{CU-06}, \mbox{CU-08}, \mbox{CU-14}, \mbox{CU-38}, \mbox{CU-39}, \mbox{CU-40} & fase posterior \\ \hline
 \textit{OfertaTablas} & \mbox{CU-20}, \mbox{CU-21}, \mbox{CU-22}, \mbox{CU-23}, \mbox{CU-24} & \mbox{CU-26} & correcta \\ \hline
 \textit{PalabraProhibida} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-02}, \mbox{CU-07}, \mbox{CU-13}, \mbox{CU-28}, \mbox{CU-45} & precargada \\ \hline
 \textit{Participacion} & \mbox{CU-17}, \mbox{CU-18}, \mbox{CU-20}, \mbox{CU-21}, \mbox{CU-23}, \mbox{CU-24}, \mbox{CU-25}, \mbox{CU-26}, \mbox{CU-27}, \mbox{CU-44} & \mbox{CU-01}, \mbox{CU-05}, \mbox{CU-10}, \mbox{CU-11}, \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-19}, \mbox{CU-22}, \mbox{CU-28}, \mbox{CU-30}, \mbox{CU-32}, \mbox{CU-34}, \mbox{CU-36}, \mbox{CU-37}, \mbox{CU-42} & correcta \\ \hline
-\textit{ParticipacionObjeto} & \mbox{CU-18}, \mbox{CU-27} & \mbox{CU-26}, \mbox{CU-34}, \mbox{CU-37} & correcta \\ \hline
+\textit{ParticipacionObjeto} & \mbox{CU-18}, \mbox{CU-27} & \mbox{CU-26}, \mbox{CU-34}, \mbox{CU-37} & fase posterior \\ \hline
 \textit{Partida} & \mbox{CU-17}, \mbox{CU-18}, \mbox{CU-20}, \mbox{CU-21}, \mbox{CU-25}, \mbox{CU-27} & \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-22}, \mbox{CU-23}, \mbox{CU-24}, \mbox{CU-26}, \mbox{CU-34}, \mbox{CU-36}, \mbox{CU-37}, \mbox{CU-40}, \mbox{CU-42}, \mbox{CU-43} & correcta \\ \hline
-\textit{ProgresoTutorial} & \mbox{CU-41} & — & correcta \\ \hline
-\textit{Ranura} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-02}, \mbox{CU-06}, \mbox{CU-14} & precargada \\ \hline
+\textit{ProgresoTutorial} & \mbox{CU-41} & — & fase posterior \\ \hline
+\textit{Ranura} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-02}, \mbox{CU-06}, \mbox{CU-14} & fase posterior \\ \hline
 \textit{Reporte} & \mbox{CU-11}, \mbox{CU-42}, \mbox{CU-43}, \mbox{CU-44}, \mbox{CU-47} & \mbox{CU-37}, \mbox{CU-46} & correcta \\ \hline
 \textit{Sala} & \mbox{CU-18}, \mbox{CU-25}, \mbox{CU-32} & \mbox{CU-19}, \mbox{CU-34} & correcta \\ \hline
-\textit{SalaParticipante} & \mbox{CU-11}, \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-25}, \mbox{CU-32}, \mbox{CU-33} & \mbox{CU-27} & correcta \\ \hline
+\textit{SalaParticipante} & \mbox{CU-11}, \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-25}, \mbox{CU-32}, \mbox{CU-33} & \mbox{CU-27} & en memoria (\mbox{D-24}) \\ \hline
 \textit{Sancion} & \mbox{CU-43}, \mbox{CU-44} & \mbox{CU-01}, \mbox{CU-04}, \mbox{CU-17}, \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-28}, \mbox{CU-45}, \mbox{CU-46} & correcta \\ \hline
 \textit{Sesion} & \mbox{CU-01}, \mbox{CU-03}, \mbox{CU-05}, \mbox{CU-06}, \mbox{CU-07}, \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-11}, \mbox{CU-44} & \mbox{CU-08}, \mbox{CU-12}, \mbox{CU-13}, \mbox{CU-14}, \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-17}, \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-20}, \mbox{CU-21}, \mbox{CU-22}, \mbox{CU-23}, \mbox{CU-24}, \mbox{CU-26}, \mbox{CU-27}, \mbox{CU-28}, \mbox{CU-30}, \mbox{CU-31}, \mbox{CU-32}, \mbox{CU-33}, \mbox{CU-34}, \mbox{CU-35}, \mbox{CU-36}, \mbox{CU-37}, \mbox{CU-38}, \mbox{CU-39}, \mbox{CU-40}, \mbox{CU-41}, \mbox{CU-42}, \mbox{CU-43}, \mbox{CU-45}, \mbox{CU-46}, \mbox{CU-47}, \mbox{CU-48}, \mbox{CU-49} & correcta \\ \hline
 \textit{Silencio} & \mbox{CU-11}, \mbox{CU-33} & \mbox{CU-16}, \mbox{CU-28} & correcta \\ \hline
-\textit{Solicitud} & \mbox{CU-11}, \mbox{CU-30}, \mbox{CU-31}, \mbox{CU-33} & \mbox{CU-16} & correcta \\ \hline
-\textit{TipoCaja} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-39}, \mbox{CU-40} & precargada \\ \hline
-\textit{TipoCajaObjeto} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-39} & precargada \\ \hline
-\textit{TokenRecuperacion} & \mbox{CU-03}, \mbox{CU-09} & — & correcta \\ \hline
-\textit{TokenVerificacionCorreo} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-04}, \mbox{CU-07}, \mbox{CU-09} & — & correcta \\ \hline
+\textit{Solicitud} & \mbox{CU-11}, \mbox{CU-30}, \mbox{CU-31}, \mbox{CU-33} & \mbox{CU-16} & fase posterior \\ \hline
+\textit{TipoCaja} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-39}, \mbox{CU-40} & fase posterior \\ \hline
+\textit{TipoCajaObjeto} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-39} & fase posterior \\ \hline
 \textit{Usuario} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-03}, \mbox{CU-04}, \mbox{CU-06}, \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-11}, \mbox{CU-12}, \mbox{CU-13}, \mbox{CU-25}, \mbox{CU-38}, \mbox{CU-39}, \mbox{CU-43}, \mbox{CU-44}, \mbox{CU-46}, \mbox{CU-47} & \mbox{CU-14}, \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-30}, \mbox{CU-31}, \mbox{CU-32}, \mbox{CU-33}, \mbox{CU-34}, \mbox{CU-35}, \mbox{CU-36}, \mbox{CU-37}, \mbox{CU-40}, \mbox{CU-42}, \mbox{CU-48} & correcta \\ \hline
-\textit{UsuarioObjeto} & \mbox{CU-02}, \mbox{CU-06}, \mbox{CU-25}, \mbox{CU-38}, \mbox{CU-39} & \mbox{CU-08}, \mbox{CU-12}, \mbox{CU-14} & correcta \\ \hline
+\textit{UsuarioObjeto} & \mbox{CU-02}, \mbox{CU-06}, \mbox{CU-25}, \mbox{CU-38}, \mbox{CU-39} & \mbox{CU-08}, \mbox{CU-12}, \mbox{CU-14} & fase posterior \\ \hline
 \end{longtable}
 \end{center}
 
-\textbf{Sin huérfanas.} Las \bdNumTablas{} estructuras que aparecen en los casos tienen al menos un caso de uso que las escribe, salvo los 10 catálogos, que por la decisión \mbox{D-09} se cargan con \texttt{insertar\_\allowbreak{}datos\_\allowbreak{}prueba.sql} y se mantienen por SQL. Esa es una elección, no un olvido, y conviene que aparezca escrita en el documento de entrega.
+\textbf{Sin huérfanas.} Todas las estructuras que aparecen en los casos tienen al menos un caso de uso que las escribe, salvo los catálogos, que por la decisión \mbox{D-09} se cargan con \texttt{insertar\_\allowbreak{}datos\_\allowbreak{}prueba.sql} y se mantienen por SQL. Esa es una elección, no un olvido, y conviene que aparezca escrita en el documento de entrega.
+
+\textbf{Núcleo y fase posterior.} La columna \textit{Estado} dice además dónde vive cada estructura tras la revisión del esquema: las \bdNumTablas{} del núcleo, marcadas \textit{correcta} o \textit{precargada}; las \bdFpNumTablas{} de la \textit{fase posterior}, que solo escriben casos de fase posterior o pasos diferidos de casos del núcleo (\mbox{D-22}); las dos que pasaron a la memoria del Servidor de partidas (\mbox{D-24}); y las que se reemplazaron por columnas o por un \texttt{CHECK} (\mbox{D-23}). Los tres tokens y códigos de acceso aparecen ya como una sola estructura, \textit{CodigoVerificacion}.
 
 \textbf{Estructuras sin tabla propia.} Tres conceptos que podrían parecer tablas se resuelven sin ellas: el historial de elo sale de las \textit{Participacion} clasificatorias (\mbox{CU-15}), el marcador entre dos jugadores se calcula al consultarlo (\mbox{CU-16}) y los espectadores se llevan en memoria (\mbox{CU-34}). Cada caso justifica la decisión en su observación.
 
@@ -160,6 +160,9 @@ Cambiar una decisión obliga a reescribir flujos, no solo tablas. Esta es la lis
 \mbox{D-18} · Tutorial en la cuenta & \mbox{CU-41} \\ \hline
 \mbox{D-19} · Espectadores sin persistencia & \mbox{CU-25}, \mbox{CU-34} \\ \hline
 \mbox{D-20} · Cambio de correo por token & \mbox{CU-04}, \mbox{CU-09} \\ \hline
+\mbox{D-22} · Núcleo y fase posterior & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-17}, \mbox{CU-18}, \mbox{CU-25}, \mbox{CU-28}, \mbox{CU-33} y todos los de fase posterior \\ \hline
+\mbox{D-23} · Menos tablas para lo mismo & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-03}, \mbox{CU-04}, \mbox{CU-07}, \mbox{CU-09}, \mbox{CU-42}, \mbox{CU-43} \\ \hline
+\mbox{D-24} · Quién espera, en memoria & \mbox{CU-11}, \mbox{CU-17}, \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-27}, \mbox{CU-32}, \mbox{CU-33} \\ \hline
 \end{longtable}
 \end{center}
 
