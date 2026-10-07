@@ -55,7 +55,7 @@ Textos de la interfaz y de los términos de uso & En los diccionarios de recurso
 Valores de dominio: estados, tipos, rarezas, ámbitos & En los mismos diccionarios. La base guarda el código, como \at{ACTIVA} o \at{LEGENDARIO}, que no cambia con el idioma y es el que validan las restricciones \at{CHECK}. \\ \hline
 Nombres de las ranuras, los objetos, los modos, las divisiones, los niveles de la IA, las lecciones, los tipos de caja y los motivos de reporte & En los mismos diccionarios. Cada fila de catálogo guarda un \at{codigo} único, que es la clave de su nombre. \\ \hline
 Correos de verificación, recuperación, cambio de correo y avisos & En los diccionarios o plantillas del servidor de partidas, que elige los del \at{idioma\_preferido} de la cuenta (\mbox{CU-02}, \mbox{DES-01}, \mbox{CU-02}, \mbox{DES-02}, \mbox{CU-04}). \\ \hline
-Lo que escriben las personas: nickname, chat, descripciones de reportes y apelaciones & En la base, en \at{NVARCHAR}, tal como se escribió. No se traduce (\mbox{CU-18} \mbox{RN-09}). \\ \hline
+Lo que escriben las personas: nickname, chat, descripciones de reportes y apelaciones & En la base, en \at{NVARCHAR}, tal como se escribió. No se traduce (\mbox{CU-19} \mbox{RN-09}). \\ \hline
 Fechas y números & En la base, sin formato: las fechas en UTC. El cliente las pasa a la hora local y les da el formato de su idioma. \\ \hline
 \end{longtable}
 \end{center}
@@ -82,9 +82,9 @@ El código no cambia nunca: corregir o traducir un nombre es editar los dicciona
 \textbf{Lo que la base sí guarda del idioma.} Tres columnas guardan un código de idioma, y una restricción \at{CHECK} admite en cada una solo \at{es-MX} y \at{en}:
 
 \begin{reglas}
-  \item \textbf{\at{idioma\_preferido} de \textit{Usuario}.} Vale \at{es-MX} por omisión y viaja con la cuenta a cualquier dispositivo (\mbox{CU-05} \mbox{RN-05}): con él, el cliente elige sus diccionarios al iniciar sesión y el servidor, los de los correos. Un idioma no admitido se rechaza (\mbox{CU-05} \mbox{FA-05}). El idioma que se elige en la \at{GUI\_Login}, antes de saber quién juega, es configuración local del cliente y no llega a la base (\mbox{CU-01} \mbox{RN-03}).
+  \item \textbf{\at{idioma\_preferido} de \textit{Usuario}.} Vale \at{es-MX} por omisión y viaja con la cuenta a cualquier dispositivo (\mbox{CU-06} \mbox{RN-05}): con él, el cliente elige sus diccionarios al iniciar sesión y el servidor, los de los correos. Un idioma no admitido se rechaza (\mbox{CU-06} \mbox{FA-05}). El idioma que se elige en la \at{GUI\_Login}, antes de saber quién juega, es configuración local del cliente y no llega a la base (\mbox{CU-01} \mbox{RN-03}).
   \item \textbf{\at{idioma\_terminos} de \textit{Usuario}.} Cada versión de los términos existe en los dos idiomas, y lo que una cuenta aceptó es una versión en un idioma (\mbox{CU-02} \mbox{RN-12}, \mbox{D-23}).
-  \item \textbf{\at{idioma} de \textit{PalabraProhibida}.} Es el idioma del término, o nulo si se filtra en todos. El servidor toma los del idioma del canal más los que no tienen idioma, \at{WHERE idioma = @idioma OR idioma IS NULL} (\mbox{CU-18} \mbox{RN-01}).
+  \item \textbf{\at{idioma} de \textit{PalabraProhibida}.} Es el idioma del término, o nulo si se filtra en todos. El servidor toma los del idioma del canal más los que no tienen idioma, \at{WHERE idioma = @idioma OR idioma IS NULL} (\mbox{CU-19} \mbox{RN-01}).
 \end{reglas}
 
 Los idiomas admitidos son una lista cerrada, como los demás dominios, y no un catálogo: un idioma nuevo no es solo un dato, porque exige sus diccionarios, y llega con la versión del cliente que los trae. Admitirlo es añadirlo a esos tres \at{CHECK}; ninguna tabla cambia de forma.

@@ -34,7 +34,7 @@
       \item El Servidor de partidas crea la \textit{Sancion} con el sancionado, el moderador que la aplica, el ámbito, el tipo, el motivo, la \texttt{fecha\_\allowbreak{}inicio}, la \texttt{fecha\_\allowbreak{}fin} y el reporte de origen; sin \texttt{fecha\_\allowbreak{}retiro}, nace \texttt{activa}. \textit{(Ver \mbox{EX-01})}
       \item Si el ámbito es de cuenta, el Servidor de partidas cambia el \texttt{estado\_\allowbreak{}cuenta} del \textit{Usuario} a \texttt{SUSPENDIDA} si la sanción es temporal, o a \texttt{BANEADA} si es permanente (\mbox{RN-03}).
       \item Si el ámbito es de cuenta, el Servidor de partidas cierra todas las \textit{Sesion} abiertas del sancionado con \texttt{motivo\_\allowbreak{}cierre} igual a \texttt{SANCION}, e invalida sus tokens (\mbox{RN-05}).
-      \item Si el ámbito es de cuenta y el sancionado tiene una \textit{Participacion} sin terminar, el Servidor de partidas la cierra con la forma de término \texttt{ABANDONO}, y el flujo continúa en el \mbox{CU-16} para esa partida. \textit{(Ver \mbox{FA-08})}
+      \item Si el ámbito es de cuenta y el sancionado tiene una \textit{Participacion} sin terminar, el Servidor de partidas la cierra con la forma de término \texttt{ABANDONO}, y el flujo continúa en el \mbox{CU-17} para esa partida. \textit{(Ver \mbox{FA-08})}
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=17]
       \item Si el ámbito es de chat, el Servidor de partidas \textbf{no} toca el \texttt{estado\_\allowbreak{}cuenta}, \textbf{no} cierra ninguna sesión y \textbf{no} interrumpe ninguna partida (\mbox{RN-03}).
@@ -91,7 +91,7 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-08}: El sancionado está jugando una partida}\par
     \begin{cuenum}[start=1]
-      \item Si el ámbito es de cuenta, el Servidor de partidas cierra su \textit{Participacion} con la forma de término \texttt{ABANDONO} y la partida se resuelve conforme al \mbox{CU-16} para los demás jugadores.
+      \item Si el ámbito es de cuenta, el Servidor de partidas cierra su \textit{Participacion} con la forma de término \texttt{ABANDONO} y la partida se resuelve conforme al \mbox{CU-17} para los demás jugadores.
       \item Si el ámbito es de chat, la partida sigue con normalidad: el jugador puede seguir jugando y solo pierde la escritura en el chat (\mbox{D-05}).
       \item El flujo continúa en el paso 18 del FN.
     \end{cuenum}} \\
@@ -130,7 +130,7 @@
     \begin{cuenum}[start=1]
       \item El Servidor de partidas no encuentra ninguna \textit{Sesion} abierta del sancionado, o la notificación no llega.
       \item El Servidor de partidas no reintenta: la sanción ya está escrita y surte efecto sin que el sancionado la haya visto.
-      \item El sancionado verá la pantalla informativa en su próximo intento de iniciar sesión, por el \mbox{FA-05} del \mbox{CU-07} o por el \mbox{FA-03} del \mbox{CU-18}, según el ámbito.
+      \item El sancionado verá la pantalla informativa en su próximo intento de iniciar sesión, por el \mbox{FA-05} del \mbox{CU-08} o por el \mbox{FA-03} del \mbox{CU-19}, según el ámbito.
       \item El flujo continúa en el paso 23 del FN.
     \end{cuenum}} \\ \hline
   \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}

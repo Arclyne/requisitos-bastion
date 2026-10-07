@@ -1,8 +1,8 @@
-\subsection*{CU-09: Unirse a una sala con código}
-\addcontentsline{toc}{subsection}{CU-09: Unirse a una sala con código}
-\label{cu-09}
+\subsection*{CU-10: Unirse a una sala con código}
+\addcontentsline{toc}{subsection}{CU-10: Unirse a una sala con código}
+\label{cu-10}
 
-\begin{fichacu}{CU-09}{Unirse a una sala con código}
+\begin{fichacu}{CU-10}{Unirse a una sala con código}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador o Invitado}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
@@ -19,7 +19,7 @@
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
       \item El SJM despliega el campo de código de la \texttt{GUI\_\allowbreak{}PrivateMatch}, que acepta seis caracteres, los convierte a mayúsculas mientras se escriben y admite pegar el código copiado.
       \item El jugador captura el código y da click en ``Entrar''.
-      \item El SJM valida que tenga seis caracteres del alfabeto permitido (\mbox{RN-01} del \mbox{CU-08}). \textit{(Ver \mbox{FA-01})}
+      \item El SJM valida que tenga seis caracteres del alfabeto permitido (\mbox{RN-01} del \mbox{CU-09}). \textit{(Ver \mbox{FA-01})}
       \item El SJM envía el mensaje \texttt{JOIN\_\allowbreak{}ROOM\_\allowbreak{}REQUEST} con el código y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y comprueba las precondiciones \mbox{PRE-02} y \mbox{PRE-03}. \textit{(Ver \mbox{FA-06})}
       \item El Servidor de partidas busca la \textit{Sala} con ese \texttt{codigo} y \texttt{estado} igual a \texttt{ABIERTA}. \textit{(Ver \mbox{FA-02}, \mbox{FA-03}, \mbox{EX-01})}
@@ -33,7 +33,7 @@
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}WaitingRoom} con el anfitrión identificado, las plazas ocupadas y libres, los ajustes que eligió el anfitrión, el chat de sala y el botón ``Estoy listo''. \textit{(Ver \mbox{FA-05}, \mbox{FA-07}, \mbox{FA-08})}
       \item El jugador revisa los ajustes y da click en ``Estoy listo''.
       \item El SJM envía \texttt{ROOM\_\allowbreak{}READY\_\allowbreak{}REQUEST} y el Servidor de partidas pone \texttt{listo} en verdadero en su \textit{SalaParticipante} y notifica a todos con \texttt{ROOM\_\allowbreak{}UPDATED}.
-      \item El SJM marca al jugador como listo. Cuando el anfitrión inicia la partida, el flujo continúa en el paso 17 del \mbox{CU-08}.
+      \item El SJM marca al jugador como listo. Cuando el anfitrión inicia la partida, el flujo continúa en el paso 17 del \mbox{CU-09}.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El código tiene un formato inválido}\par
@@ -69,19 +69,19 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-06}: El jugador ya está en una partida, en la cola o en otra sala}\par
     \begin{cuenum}[start=1]
-      \item El Servidor de partidas responde con \texttt{JOIN\_\allowbreak{}ROOM\_\allowbreak{}FAILED} y el motivo \texttt{YA\_\allowbreak{}EN\_\allowbreak{}PARTIDA}, \texttt{YA\_\allowbreak{}EN\_\allowbreak{}COLA} (\mbox{CU-07}) o \texttt{YA\_\allowbreak{}EN\_\allowbreak{}SALA}.
-      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} con la acción correspondiente, como en el \mbox{FA-01} del \mbox{CU-08}.
+      \item El Servidor de partidas responde con \texttt{JOIN\_\allowbreak{}ROOM\_\allowbreak{}FAILED} y el motivo \texttt{YA\_\allowbreak{}EN\_\allowbreak{}PARTIDA}, \texttt{YA\_\allowbreak{}EN\_\allowbreak{}COLA} (\mbox{CU-08}) o \texttt{YA\_\allowbreak{}EN\_\allowbreak{}SALA}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} con la acción correspondiente, como en el \mbox{FA-01} del \mbox{CU-09}.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-07}: El anfitrión cambia los ajustes}\par
     \begin{cuenum}[start=1]
-      \item El SJM recibe \texttt{ROOM\_\allowbreak{}UPDATED} con los ajustes nuevos y la marca de listo retirada (\mbox{RN-06} del \mbox{CU-08}).
+      \item El SJM recibe \texttt{ROOM\_\allowbreak{}UPDATED} con los ajustes nuevos y la marca de listo retirada (\mbox{RN-06} del \mbox{CU-09}).
       \item El SJM resalta los ajustes que cambiaron y vuelve a mostrar ``Estoy listo''.
       \item El flujo continúa en el paso 13 del FN.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-08}: El jugador sale de la sala o el anfitrión la cierra}\par
     \begin{cuenum}[start=1]
-      \item Si el jugador selecciona ``Salir'', el flujo continúa en el \mbox{FA-07} del \mbox{CU-08}.
+      \item Si el jugador selecciona ``Salir'', el flujo continúa en el \mbox{FA-07} del \mbox{CU-09}.
       \item Si el anfitrión cierra la sala, el SJM recibe \texttt{ROOM\_\allowbreak{}CLOSED} y vuelve al menú principal con el aviso de que la sala se cerró.
       \item Fin del caso de uso.
     \end{cuenum}} \\
@@ -116,7 +116,7 @@
     \begin{cuenum}[start=1]
       \item El Servidor de partidas detecta la pérdida de conexión del miembro y espera sesenta segundos.
       \item Si reconecta, conserva su plaza; si no, elimina su \textit{SalaParticipante} y notifica a los demás.
-      \item Si la conexión se pierde con la partida ya creada, rige el \mbox{CU-17}.
+      \item Si la conexión se pierde con la partida ya creada, rige el \mbox{CU-18}.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{EX-04}: El mensaje recibido está malformado}\par
     \begin{cuenum}[start=1]
@@ -135,7 +135,7 @@
       \item \textbf{\mbox{RN-02}} Ocupar una plaza se hace dentro de una transacción que vuelve a contar las plazas libres, para que dos jugadores no ocupen la última al mismo tiempo.
       \item \textbf{\mbox{RN-03}} Un jugador que entra a una sala no está listo hasta que lo declara, porque debe haber visto los ajustes que eligió el anfitrión.
       \item \textbf{\mbox{RN-04}} El número de códigos fallidos por jugador en un periodo está acotado, para que no puedan adivinarse salas probando códigos.
-      \item \textbf{\mbox{RN-05}} Un jugador que el anfitrión expulsó de la sala no puede volver a entrar a ella mientras exista, aunque conserve el código (\mbox{RN-03} del \mbox{CU-10}). El servidor lo comprueba en cada intento.
+      \item \textbf{\mbox{RN-05}} Un jugador que el anfitrión expulsó de la sala no puede volver a entrar a ella mientras exista, aunque conserve el código (\mbox{RN-03} del \mbox{CU-11}). El servidor lo comprueba en cada intento.
       \item \textbf{\mbox{RN-06}} Las cuentas de invitado pueden unirse a salas privadas.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué la sala no reserva plaza al entrar al campo del código.}\par

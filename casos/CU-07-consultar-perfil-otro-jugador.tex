@@ -1,13 +1,13 @@
-\subsection*{CU-06: Consultar el perfil de otro jugador}
-\addcontentsline{toc}{subsection}{CU-06: Consultar el perfil de otro jugador}
-\label{cu-06}
+\subsection*{CU-07: Consultar el perfil de otro jugador}
+\addcontentsline{toc}{subsection}{CU-07: Consultar el perfil de otro jugador}
+\label{cu-07}
 
-\begin{fichacu}{CU-06}{Consultar el perfil de otro jugador}
+\begin{fichacu}{CU-07}{Consultar el perfil de otro jugador}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador o Invitado}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
   \crudFila{Prototipos}{5b, 10a}
-  \crudFila{Prioridad}{Must (debe estar en la entrega). Categoría (a) Obligatorio: característica 3 del cliente. Hace visibles para los demás los enlaces a redes sociales que el jugador personaliza en el \mbox{CU-05}.}
+  \crudFila{Prioridad}{Must (debe estar en la entrega). Categoría (a) Obligatorio: característica 3 del cliente. Hace visibles para los demás los enlaces a redes sociales que el jugador personaliza en el \mbox{CU-06}.}
   \crudFila{Objetivo}{Mostrar el perfil público de otro jugador —su icono, sus enlaces a redes sociales y sus estadísticas por modo— junto con lo que ambos tienen en común —el marcador entre ellos y sus últimas partidas juntos— y dar acceso a las acciones que pueden hacerse sobre él.}
   \crudFila{Disparador}{El jugador selecciona a otro jugador en el chat, el ranking, la lista de amigos, el historial o el fin de partida, y elige ``ver perfil'' en su menú.}
   \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
@@ -52,12 +52,12 @@
    & \cuCelda{\textbf{\mbox{FA-04}: El jugador ejecuta una acción sobre el perfil}\par
     \begin{cuenum}[start=1]
       \item El jugador selecciona una de las acciones de la tarjeta.
-      \item El flujo continúa en el caso de uso correspondiente: retar en el \mbox{CU-21}, añadir amigo en el \mbox{CU-19}, eliminar amigo en el \mbox{CU-22} y reportar en el \mbox{CU-25}.
+      \item El flujo continúa en el caso de uso correspondiente: retar en el \mbox{CU-22}, añadir amigo en el \mbox{CU-20}, eliminar amigo en el \mbox{CU-23} y reportar en el \mbox{CU-26}.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-05}: No tienen partidas en común}\par
     \begin{cuenum}[start=1]
-      \item El SJM muestra el marcador en cero y un estado vacío en la sección de partidas juntos, con la acción ``retar'', que continúa en el \mbox{CU-21}.
+      \item El SJM muestra el marcador en cero y un estado vacío en la sección de partidas juntos, con la acción ``retar'', que continúa en el \mbox{CU-22}.
       \item El flujo continúa en el paso 11 del FN.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-06}: El consultante es un invitado}\par
@@ -68,8 +68,8 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-07}: El consultado es un invitado}\par
     \begin{cuenum}[start=1]
-      \item El SJM muestra el \texttt{nickname} provisional y el icono, sin enlaces a redes, que solo publican las cuentas registradas, ni estadísticas por modo, que una cuenta de invitado no tiene porque no busca partida clasificatoria (\mbox{CU-07}, \mbox{RN-06} del \mbox{CU-03}).
-      \item El SJM no ofrece ``añadir amigo'', porque las cuentas de invitado no tienen amistades (\mbox{RN-07} del \mbox{CU-19}).
+      \item El SJM muestra el \texttt{nickname} provisional y el icono, sin enlaces a redes, que solo publican las cuentas registradas, ni estadísticas por modo, que una cuenta de invitado no tiene porque no busca partida clasificatoria (\mbox{CU-08}, \mbox{RN-06} del \mbox{CU-03}).
+      \item El SJM no ofrece ``añadir amigo'', porque las cuentas de invitado no tienen amistades (\mbox{RN-07} del \mbox{CU-20}).
       \item El flujo continúa en el paso 11 del FN.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-08}: El jugador abre uno de los enlaces a redes sociales}\par

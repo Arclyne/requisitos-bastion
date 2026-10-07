@@ -122,7 +122,7 @@ def construir():
     tabla("TipoCaja", "id_tipo_caja codigo precio activo", cat.TIPOS_CAJA)
     tabla("TipoCajaObjeto", "id_tipo_caja id_objeto probabilidad", cat.CONTENIDO_CAJA)
     tabla("PalabraProhibida", "id_palabra termino idioma ambito", [(i,) + p for i, p in enumerate(cat.PALABRAS, 1)], True,
-          "Un término sin idioma se filtra en todos (CU-18 RN-01).")
+          "Un término sin idioma se filtra en todos (CU-19 RN-01).")
     tabla("MotivoReporte", "id_motivo codigo", cat.MOTIVOS)
 
     part = de.partidas()
@@ -429,7 +429,7 @@ SELECT comprobacion, incoherencias FROM (
     FROM dbo.Partida AS pa JOIN dbo.Modo AS mo ON mo.id_modo = pa.id_modo
     WHERE (SELECT COUNT(*) FROM dbo.Participacion AS p WHERE p.id_partida = pa.id_partida) <> mo.num_jugadores
     UNION ALL
-    SELECT 9, N'Segundo factor activado con un código emitido (CU-04 FA-10)', COUNT(*)
+    SELECT 9, N'Segundo factor activado con un código emitido (CU-05)', COUNT(*)
     FROM dbo.Usuario AS u
     WHERE u.doble_factor_habilitado = 1
       AND NOT EXISTS (SELECT 1 FROM dbo.CodigoVerificacion AS c WHERE c.id_usuario = u.id_usuario AND c.proposito = 'SEGUNDO_FACTOR')
@@ -465,7 +465,7 @@ SELECT comprobacion, incoherencias FROM (
                                    WHERE j.id_usuario = e.id_usuario AND pa.id_modo = e.id_modo AND pa.tipo = 'CLASIFICATORIA'
                                      AND pa.estado = 'FINALIZADA' AND j.tipo = 'MURO' AND j.deshecha = 0)
     UNION ALL
-    SELECT 3, N'División solo a partir de cinco partidas (CU-16 RN-12)', COUNT(*)
+    SELECT 3, N'División solo a partir de cinco partidas (CU-17 RN-12)', COUNT(*)
     FROM dbo.EstadisticaModo AS e
     WHERE (e.id_division IS NULL AND e.partidas_jugadas >= 5) OR (e.id_division IS NOT NULL AND e.partidas_jugadas < 5)
     UNION ALL

@@ -1,8 +1,8 @@
-\subsection*{CU-11: Mover el peón}
-\addcontentsline{toc}{subsection}{CU-11: Mover el peón}
-\label{cu-11}
+\subsection*{CU-12: Mover el peón}
+\addcontentsline{toc}{subsection}{CU-12: Mover el peón}
+\label{cu-12}
 
-\begin{fichacu}{CU-11}{Mover el peón}
+\begin{fichacu}{CU-12}{Mover el peón}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
@@ -34,7 +34,7 @@
       \item El Servidor de partidas crea la \textit{Jugada} con su número de orden, el tipo \texttt{MOVIMIENTO}, la casilla de origen, la de destino, el tiempo consumido y la fecha. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas actualiza en la \textit{Participacion} la casilla actual del peón y el tiempo de reloj restante.
       \item El Servidor de partidas comprueba si la casilla de destino pertenece a la fila de meta del jugador. \textit{(Ver \mbox{FA-08})}
-      \item El Servidor de partidas pasa el turno al siguiente jugador en orden, saltando a los que ya estén clasificados o hayan abandonado (\mbox{RN-08}), y marca como \texttt{CADUCADA} la \textit{OfertaTablas} pendiente del rival, si la hay (\mbox{RN-05} del \mbox{CU-13}).
+      \item El Servidor de partidas pasa el turno al siguiente jugador en orden, saltando a los que ya estén clasificados o hayan abandonado (\mbox{RN-08}), y marca como \texttt{CADUCADA} la \textit{OfertaTablas} pendiente del rival, si la hay (\mbox{RN-05} del \mbox{CU-14}).
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=17]
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-04})}
@@ -52,7 +52,7 @@
     \begin{cuenum}[start=1]
       \item El Jugador pulsa fuera del tablero o vuelve a pulsar su peón.
       \item El SJM retira el resaltado de las casillas.
-      \item El flujo continúa en el paso 2 del FN. El Jugador puede optar por colocar un muro, que es el \mbox{CU-12}.
+      \item El flujo continúa en el paso 2 del FN. El Jugador puede optar por colocar un muro, que es el \mbox{CU-13}.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-03}: La sesión o la participación no son válidas}\par
     \begin{cuenum}[start=1]
@@ -63,7 +63,7 @@
    & \cuCelda{\textbf{\mbox{FA-04}: La partida ya terminó}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas responde con \texttt{MATCH\_\allowbreak{}ALREADY\_\allowbreak{}FINISHED} y el resultado.
-      \item El SJM descarta la jugada y despliega la pantalla de fin de partida del \mbox{CU-16}.
+      \item El SJM descarta la jugada y despliega la pantalla de fin de partida del \mbox{CU-17}.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-05}: No es el turno del Jugador, o la jugada llega fuera de orden}\par
@@ -76,7 +76,7 @@
    & \cuCelda{\textbf{\mbox{FA-06}: El reloj del Jugador se agotó antes de la jugada}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas descarta la jugada recibida: llegó tarde.
-      \item El flujo continúa en el \mbox{CU-16} Finalizar la partida, con la forma de término \texttt{TIEMPO\_\allowbreak{}AGOTADO} para ese jugador (\mbox{RN-10}).
+      \item El flujo continúa en el \mbox{CU-17} Finalizar la partida, con la forma de término \texttt{TIEMPO\_\allowbreak{}AGOTADO} para ese jugador (\mbox{RN-10}).
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-07}: El servidor rechaza una jugada que el cliente había aceptado}\par
@@ -89,7 +89,7 @@
    & \cuCelda{\textbf{\mbox{FA-08}: El peón llega a la fila de meta}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas marca la \textit{Participacion} como clasificada, con su posición.
-      \item Si el \textit{Modo} es de dos jugadores, o si en el de cuatro solo queda un jugador sin clasificar, el flujo continúa en el \mbox{CU-16} Finalizar la partida.
+      \item Si el \textit{Modo} es de dos jugadores, o si en el de cuatro solo queda un jugador sin clasificar, el flujo continúa en el \mbox{CU-17} Finalizar la partida.
       \item Si el \textit{Modo} es de cuatro jugadores y quedan al menos dos sin clasificar, la partida sigue: el flujo continúa en el paso 16 del FN, y el jugador clasificado deja de recibir turno (\mbox{RN-08}).
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-09}: El Jugador confirma cada jugada}\par
@@ -116,7 +116,7 @@
     \begin{cuenum}[start=1]
       \item El SJM detecta el cierre inesperado del socket y muestra la barra de conexión perdida.
       \item El reloj del Jugador sigue corriendo en el servidor: la partida no se detiene por una desconexión (\mbox{RN-11}).
-      \item El flujo continúa en el \mbox{CU-17} Reconectar a una partida en curso.
+      \item El flujo continúa en el \mbox{CU-18} Reconectar a una partida en curso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{EX-04}: Fallo al confirmar la transacción}\par
     \begin{cuenum}[start=1]
@@ -156,7 +156,7 @@
       \item \textbf{\mbox{RN-13}} Ante una respuesta que no llega, el cliente nunca reenvía la jugada: pide el estado. Reenviar podría duplicarla si la primera sí se aplicó.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué se guarda cada jugada.}\par
-    Se consideró guardar solo el resultado de la partida y no las jugadas, que es mucho más barato. Se descartó porque el servidor valida cada jugada sobre el tablero reconstruido a partir de las anteriores (\mbox{RN-07}), y porque la reconexión del \mbox{CU-17} necesita reconstruir el tablero. Las dos funciones se apoyan en la misma tabla. Guardar la jugada como origen y destino, y no como una fotografía del tablero, mantiene la fila pequeña: el tablero completo siempre puede reconstruirse sumando las jugadas desde el inicio.} \\ \hline
+    Se consideró guardar solo el resultado de la partida y no las jugadas, que es mucho más barato. Se descartó porque el servidor valida cada jugada sobre el tablero reconstruido a partir de las anteriores (\mbox{RN-07}), y porque la reconexión del \mbox{CU-18} necesita reconstruir el tablero. Las dos funciones se apoyan en la misma tabla. Guardar la jugada como origen y destino, y no como una fotografía del tablero, mantiene la fila pequeña: el tablero completo siempre puede reconstruirse sumando las jugadas desde el inicio.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 6)}
       \item \textbf{\textit{Partida}:} lee estado y turno; escribe el turno siguiente \textit{(pasos 7, 8, 16)}

@@ -1,15 +1,15 @@
-\subsection*{CU-25: Reportar a un jugador}
-\addcontentsline{toc}{subsection}{CU-25: Reportar a un jugador}
-\label{cu-25}
+\subsection*{CU-26: Reportar a un jugador}
+\addcontentsline{toc}{subsection}{CU-26: Reportar a un jugador}
+\label{cu-26}
 
-\begin{fichacu}{CU-25}{Reportar a un jugador}
+\begin{fichacu}{CU-26}{Reportar a un jugador}
   \crudFila{Responsable}{José Eduardo Prior Hernández}
   \crudFila{Actor principal}{Jugador}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
   \crudFila{Prototipos}{10a, 10b}
   \crudFila{Prioridad}{Must (debe estar en la entrega). Categoría (a) Obligatorio: característica 7 del cliente (jugadores expulsados) y moderación por reportes (\mbox{CON-09}): los strikes restringen, suspenden o expulsan al jugador sin intervención de moderadores.}
   \crudFila{Objetivo}{Denunciar la conducta de otro jugador, adjuntando automáticamente las pruebas de la partida o de la sala, y sancionar de forma automática al jugador que reúne reportes de varios jugadores distintos, con un strike cuya sanción crece con cada uno.}
-  \crudFila{Disparador}{El Jugador selecciona ``Reportar'' en el menú de un jugador, accesible desde el chat, la partida, la sala de espera o el perfil del jugador (\mbox{CU-06}).}
+  \crudFila{Disparador}{El Jugador selecciona ``Reportar'' en el menú de un jugador, accesible desde el chat, la partida, la sala de espera o el perfil del jugador (\mbox{CU-07}).}
   \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
       \item \textbf{\mbox{PRE-02}} El \textit{Usuario} tiene \texttt{tipo\_\allowbreak{}cuenta} en \texttt{REGISTRADA} (\mbox{RN-07}). \textit{(Ver \mbox{FA-01})}
@@ -55,7 +55,7 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-03}: El Jugador reporta desde fuera de una partida o una sala}\par
     \begin{cuenum}[start=1]
-      \item El SJM no adjunta ninguna \textit{Partida} ni ninguna \textit{Sala} al reporte, porque no hay ninguna de la que hablar; por ejemplo, si reporta desde el perfil del \mbox{CU-06}.
+      \item El SJM no adjunta ninguna \textit{Partida} ni ninguna \textit{Sala} al reporte, porque no hay ninguna de la que hablar; por ejemplo, si reporta desde el perfil del \mbox{CU-07}.
       \item El SJM indica en el formulario que no se adjuntarán pruebas y que la descripción es, por tanto, lo único que acompañará al reporte.
       \item El flujo continúa en el paso 4 del FN.
     \end{cuenum}} \\
@@ -104,7 +104,7 @@
       \item El Servidor de partidas registra la sanción en la \textit{BitacoraModeracion} con la acción \texttt{SANCION\_\allowbreak{}APLICADA}, el reportado como usuario afectado y, en el detalle, el número de strike y los reportes que lo originaron.
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-04})}
       \item Si la \textit{Sancion} es de ámbito \texttt{CUENTA}, el Servidor de partidas envía \texttt{ACCOUNT\_\allowbreak{}SANCTIONED} a los SJM conectados del sancionado, que despliegan la \texttt{GUI\_\allowbreak{}BannedAccount}, y lo saca de la sala o de la partida en la que esté (\mbox{RN-13}). \textit{(Ver \mbox{EX-05})}
-      \item Si la \textit{Sancion} es de ámbito \texttt{CHAT}, el Servidor de partidas envía \texttt{CHAT\_\allowbreak{}RESTRICTED} a los SJM conectados del sancionado, que deshabilitan la escritura del chat conforme al \mbox{FA-03} del \mbox{CU-18}.
+      \item Si la \textit{Sancion} es de ámbito \texttt{CHAT}, el Servidor de partidas envía \texttt{CHAT\_\allowbreak{}RESTRICTED} a los SJM conectados del sancionado, que deshabilitan la escritura del chat conforme al \mbox{FA-03} del \mbox{CU-19}.
       \item El flujo continúa en el paso 16 del FN.
     \end{cuenum}} \\ \hline
   \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
@@ -134,7 +134,7 @@
    & \cuCelda{\textbf{\mbox{EX-05}: No puede retirarse al sancionado de su partida}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas registra la excepción con un identificador de incidencia. La \textit{Sancion} ya está confirmada y no se revierte.
-      \item Como el sancionado ya no tiene sesiones abiertas, la partida lo trata como desconectado (\mbox{CU-17}) y su rival puede reclamar la victoria a los sesenta segundos (\mbox{CU-15}).
+      \item Como el sancionado ya no tiene sesiones abiertas, la partida lo trata como desconectado (\mbox{CU-18}) y su rival puede reclamar la victoria a los sesenta segundos (\mbox{CU-16}).
       \item El flujo continúa en el paso 16 del FN.
     \end{cuenum}} \\ \hline
   \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
@@ -162,7 +162,7 @@
       \item \textbf{\mbox{RN-10}} Cuando un jugador reúne \textit{Reporte} en \texttt{PENDIENTE} de tres denunciantes distintos, el sistema le aplica un strike en la misma transacción en la que se crea el último y pasa todos sus reportes pendientes a \texttt{ATENDIDO}, de modo que ninguno vuelva a contar para otro strike.
       \item \textbf{\mbox{RN-11}} Cada strike tiene una sanción fija. El primero restringe el chat veinticuatro horas (\textit{Sancion} de ámbito \texttt{CHAT}). El segundo suspende la cuenta siete días (\textit{Sancion} de ámbito \texttt{CUENTA}, \texttt{estado\_\allowbreak{}cuenta} en \texttt{SUSPENDIDA}). El tercero la expulsa de forma permanente (\textit{Sancion} de ámbito \texttt{CUENTA} sin \texttt{fecha\_\allowbreak{}fin}, \texttt{estado\_\allowbreak{}cuenta} en \texttt{BANEADA}).
       \item \textbf{\mbox{RN-12}} Los strikes no caducan en esta versión. El número de un strike es el de sanciones que el jugador ya recibió, más uno. Una cuenta \texttt{BANEADA} no recibe más strikes: los reportes posteriores contra ella se guardan sin consecuencia.
-      \item \textbf{\mbox{RN-13}} Una sanción de ámbito \texttt{CUENTA} surte efecto de inmediato: cierra todas las sesiones del sancionado (\mbox{RN-07} del \mbox{CU-01}), lo saca de la sala en la que espere como si hubiera salido de ella y, si está jugando, lo retira de la partida con las consecuencias de un abandono (\mbox{CU-15}). Una de ámbito \texttt{CHAT} solo le impide escribir en el chat (\mbox{RN-05} del \mbox{CU-18}).
+      \item \textbf{\mbox{RN-13}} Una sanción de ámbito \texttt{CUENTA} surte efecto de inmediato: cierra todas las sesiones del sancionado (\mbox{RN-07} del \mbox{CU-01}), lo saca de la sala en la que espere como si hubiera salido de ella y, si está jugando, lo retira de la partida con las consecuencias de un abandono (\mbox{CU-16}). Una de ámbito \texttt{CHAT} solo le impide escribir en el chat (\mbox{RN-05} del \mbox{CU-19}).
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué las pruebas van por referencia.}\par
     Se consideró copiar en el reporte los mensajes y las jugadas relevantes, para que la prueba quedara congelada en el momento de reportar. Se descartó por dos motivos. El primero es que duplicar el chat en el reporte crea dos copias del mismo texto que pueden divergir. El segundo es que recortar qué mensajes son relevantes obliga a decidirlo en el momento del envío, cuando todavía no se sabe qué hará falta mirar. Referenciar la partida o la sala entrega el contexto completo, que es lo que después explica por qué se aplicó cada strike.} \\ \hline
@@ -178,7 +178,7 @@
       \item \textbf{\textit{Partida}, \textit{Sala}:} referencia, sin copiar nada de ellas \textit{(paso 13)}
       \item \textbf{\textit{Sancion}:} lee las del reportado y crea la del strike \textit{(\mbox{FA-10})}
       \item \textbf{\textit{BitacoraModeracion}:} crea \textit{(\mbox{FA-10})}
-      \item \textbf{\textit{Participacion}, \textit{EstadisticaModo}:} las que escribe el \mbox{CU-15} al retirar al sancionado de su partida \textit{(\mbox{FA-10})}
+      \item \textbf{\textit{Participacion}, \textit{EstadisticaModo}:} las que escribe el \mbox{CU-16} al retirar al sancionado de su partida \textit{(\mbox{FA-10})}
     \end{cudatos}} \\ \hline
 \end{fichacu}
 \clearpage

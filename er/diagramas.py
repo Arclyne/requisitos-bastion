@@ -105,7 +105,7 @@ PADRE_TOTAL = {
     "FK_UsuarioObjeto_Usuario",              # el alta otorga los objetos iniciales (CU-02 RN-08)
     "FK_EstadisticaModo_Usuario",            # una fila por modo desde el alta (CU-02 RN-06)
     "FK_Participacion_Partida",              # una partida tiene al menos un participante
-    "FK_ParticipacionObjeto_Participacion",  # una fila por ranura al empezar (CU-07 RN-06)
+    "FK_ParticipacionObjeto_Participacion",  # una fila por ranura al empezar (CU-08 RN-06)
 }
 
 # ---------------------------------------------------------------- diagramas

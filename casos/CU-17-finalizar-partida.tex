@@ -1,16 +1,16 @@
-\subsection*{CU-16: Finalizar la partida}
-\addcontentsline{toc}{subsection}{CU-16: Finalizar la partida}
-\label{cu-16}
+\subsection*{CU-17: Finalizar la partida}
+\addcontentsline{toc}{subsection}{CU-17: Finalizar la partida}
+\label{cu-17}
 
-\begin{fichacu}{CU-16}{Finalizar la partida}
+\begin{fichacu}{CU-17}{Finalizar la partida}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
-  \crudFila{Actor principal}{Ninguno: caso incluido por \mbox{CU-11}, \mbox{CU-12}, \mbox{CU-13}, \mbox{CU-14}, \mbox{CU-15} y \mbox{CU-17}}
+  \crudFila{Actor principal}{Ninguno: caso incluido por \mbox{CU-12}, \mbox{CU-13}, \mbox{CU-14}, \mbox{CU-15}, \mbox{CU-16} y \mbox{CU-18}}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
   \crudFila{Actores interesados}{Jugador}
   \crudFila{Prototipos}{2g, 2h, 15c, 15d, 17d}
   \crudFila{Prioridad}{Must (debe estar en la entrega). Categoría (b) Núcleo de jugabilidad. Caso incluido: condición de victoria, tiempo agotado y cierre de la partida con su elo y sus estadísticas.}
   \crudFila{Objetivo}{Cerrar la partida, determinar el resultado de cada participante y aplicar lo que la partida cambia en la cuenta: el elo y los contadores de la \textit{EstadisticaModo}, si la partida es clasificatoria.}
-  \crudFila{Disparador}{Lo incluye el caso de uso que produce la condición de término: el \mbox{CU-11} cuando un peón llega a su fila de meta o el reloj se agota antes del movimiento, el \mbox{CU-12} cuando el reloj se agota antes de colocar el muro, el \mbox{CU-13} cuando se aceptan tablas, el \mbox{CU-14} cuando un jugador se rinde, el \mbox{CU-15} cuando un jugador abandona o su rival reclama la victoria, y el \mbox{CU-17} cuando el reloj de un jugador se agotó mientras estaba desconectado.}
+  \crudFila{Disparador}{Lo incluye el caso de uso que produce la condición de término: el \mbox{CU-12} cuando un peón llega a su fila de meta o el reloj se agota antes del movimiento, el \mbox{CU-13} cuando el reloj se agota antes de colocar el muro, el \mbox{CU-14} cuando se aceptan tablas, el \mbox{CU-15} cuando un jugador se rinde, el \mbox{CU-16} cuando un jugador abandona o su rival reclama la victoria, y el \mbox{CU-18} cuando el reloj de un jugador se agotó mientras estaba desconectado.}
   \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{PRE-01}} Existe una \textit{Partida} con estado \texttt{EN\_\allowbreak{}CURSO}.
       \item \textbf{\mbox{PRE-02}} Se ha producido una condición de término conforme a \mbox{RN-01}.
@@ -19,7 +19,7 @@
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
       \item El Servidor de partidas detecta la condición de término y determina la forma de término: \texttt{META}, \texttt{TIEMPO\_\allowbreak{}AGOTADO}, \texttt{RENDICION}, \texttt{ABANDONO} o \texttt{TABLAS} (\mbox{RN-01}). \textit{(Ver \mbox{FA-02}, \mbox{FA-03}, \mbox{FA-04})}
       \item El Servidor de partidas determina el resultado de cada \textit{Participacion}: ganada, perdida o tablas, y la posición en el modo de cuatro jugadores (\mbox{RN-02}).
-      \item El Servidor de partidas comprueba, por el \texttt{tipo} de la \textit{Partida}, si la partida es clasificatoria, es decir, si nació del emparejamiento del \mbox{CU-07} (\mbox{RN-03}). \textit{(Ver \mbox{FA-01})}
+      \item El Servidor de partidas comprueba, por el \texttt{tipo} de la \textit{Partida}, si la partida es clasificatoria, es decir, si nació del emparejamiento del \mbox{CU-08} (\mbox{RN-03}). \textit{(Ver \mbox{FA-01})}
       \item El Servidor de partidas inicia una transacción sobre la Base de datos.
       \item El Servidor de partidas actualiza la \textit{Partida}: estado \texttt{FINALIZADA}, \texttt{fecha\_\allowbreak{}fin} y forma de término. El ganador, si lo hay, no se escribe en la \textit{Partida}: es la \textit{Participacion} con resultado ganada. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas escribe en cada \textit{Participacion} su resultado, su posición y el tiempo de reloj que le quedaba.
@@ -33,7 +33,7 @@
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
       \item El Servidor de partidas notifica a cada cliente con \texttt{MATCH\_\allowbreak{}ENDED}, incluyendo el resultado, la forma de término y el cambio de elo. \textit{(Ver \mbox{FA-05}, \mbox{EX-03})}
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}MatchEnd} con el resumen sobre el tablero, que sigue visible detrás.
-      \item El SJM ofrece las opciones ``Buscar otra'', que continúa en el \mbox{CU-07} y no se ofrece a los invitados, ``Añadir al rival'' y ``Volver al menú''.
+      \item El SJM ofrece las opciones ``Buscar otra'', que continúa en el \mbox{CU-08} y no se ofrece a los invitados, ``Añadir al rival'' y ``Volver al menú''.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La partida no es clasificatoria}\par
@@ -46,7 +46,7 @@
     \begin{cuenum}[start=1]
       \item El Servidor de partidas marca la \textit{Participacion} del que abandonó con resultado perdido y forma de término \texttt{ABANDONO}, y retira su peón del tablero.
       \item Los muros que ese jugador había colocado permanecen en el tablero (\mbox{RN-08}).
-      \item Si quedan al menos dos jugadores activos, la partida \textbf{no} termina: el flujo vuelve al \mbox{CU-11} y este caso solo se aplicó a esa participación. En caso contrario, el flujo continúa en el paso 1 del FN.
+      \item Si quedan al menos dos jugadores activos, la partida \textbf{no} termina: el flujo vuelve al \mbox{CU-12} y este caso solo se aplicó a esa participación. En caso contrario, el flujo continúa en el paso 1 del FN.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-03}: La partida termina en tablas}\par
     \begin{cuenum}[start=1]
@@ -108,9 +108,9 @@
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} Una partida termina de cinco formas: llegada a meta, reloj agotado, rendición, tablas aceptadas y abandono. La forma de término se guarda, no solo el resultado, porque no todas valen lo mismo.
       \item \textbf{\mbox{RN-02}} En el modo de cuatro jugadores, quien llega a meta queda clasificado con su posición y la partida sigue para los demás.
-      \item \textbf{\mbox{RN-03}} Solo las partidas clasificatorias, las que crea el emparejamiento del \mbox{CU-07} con \texttt{tipo} \texttt{CLASIFICATORIA}, cambian el elo y suman a la \textit{EstadisticaModo}, que alimenta el ranking. Las de sala privada, con \texttt{tipo} \texttt{PRIVADA}, son amistosas: no cambian el elo ni la \textit{EstadisticaModo}.
+      \item \textbf{\mbox{RN-03}} Solo las partidas clasificatorias, las que crea el emparejamiento del \mbox{CU-08} con \texttt{tipo} \texttt{CLASIFICATORIA}, cambian el elo y suman a la \textit{EstadisticaModo}, que alimenta el ranking. Las de sala privada, con \texttt{tipo} \texttt{PRIVADA}, son amistosas: no cambian el elo ni la \textit{EstadisticaModo}.
       \item \textbf{\mbox{RN-04}} El elo se calcula a partir del elo de entrada de cada participante, no del que tenga en ese momento en su cuenta. Dos partidas simultáneas no pueden ocurrir (\mbox{D-01}), pero el elo de entrada es de todos modos lo único que hace reproducible el cálculo.
-      \item \textbf{\mbox{RN-05}} El cambio de elo se guarda en la \textit{Participacion}. El historial del \mbox{CU-24} lo muestra partida por partida y no podría recomponerlo restando estados sucesivos de la cuenta.
+      \item \textbf{\mbox{RN-05}} El cambio de elo se guarda en la \textit{Participacion}. El historial del \mbox{CU-25} lo muestra partida por partida y no podría recomponerlo restando estados sucesivos de la cuenta.
       \item \textbf{\mbox{RN-06}} Los contadores de \textit{EstadisticaModo} son por modo, no globales. El elo del menú y del ranking general es el del modo clásico 9×9.
     \end{cureglas}} \\
    & \cuCelda{\begin{cureglas}
@@ -122,7 +122,7 @@
       \item \textbf{\mbox{RN-12}} Hacen falta cinco partidas en un modo para aparecer en su clasificación.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué este caso es un caso incluido.}\par
-    Ningún actor lo inicia: lo incluyen los seis casos que pueden terminar una partida, el \mbox{CU-11} por llegada a meta o reloj agotado, el \mbox{CU-12} por reloj agotado, el \mbox{CU-13} por tablas, el \mbox{CU-14} por rendición, el \mbox{CU-15} por abandono y el \mbox{CU-17} por reloj agotado durante una desconexión. Separarlo concentra en un solo lugar las reglas de victoria y la actualización del elo y de las estadísticas que los seis comparten; si cada uno las repitiera, bastaría corregir una regla en un caso y olvidarla en otro para que la misma partida puntuara distinto según cómo terminó.} \\ \hline
+    Ningún actor lo inicia: lo incluyen los seis casos que pueden terminar una partida, el \mbox{CU-12} por llegada a meta o reloj agotado, el \mbox{CU-13} por reloj agotado, el \mbox{CU-14} por tablas, el \mbox{CU-15} por rendición, el \mbox{CU-16} por abandono y el \mbox{CU-18} por reloj agotado durante una desconexión. Separarlo concentra en un solo lugar las reglas de victoria y la actualización del elo y de las estadísticas que los seis comparten; si cada uno las repitiera, bastaría corregir una regla en un caso y olvidarla en otro para que la misma partida puntuara distinto según cómo terminó.} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué este caso es el único que escribe el elo.}\par
     Es el caso de uso más caro del sistema y el que más tablas toca de una vez, y por eso conviene decir en voz alta por qué no se reparte. El resultado, el elo y los contadores dependen todos del mismo cierre y deben moverse juntos o no moverse: un jugador con el elo actualizado y los contadores sin tocar es un error que nadie sabría reparar después. Repartirlo entre varios casos —uno que cierre, otro que puntúe, otro que cuente— obligaría a coordinarlos con una transacción que los abarcara a todos, que es exactamente lo que este caso ya es.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}

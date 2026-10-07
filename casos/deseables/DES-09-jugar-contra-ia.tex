@@ -28,11 +28,11 @@
     \end{cuenum}} \\
    & \cuCelda{\begin{cuenum}[start=9]
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}Match} con la IA como rival, su nivel en lugar del elo y, si están activados, los botones de deshacer y sugerencia.
-      \item En el turno del jugador, el flujo continúa en el \mbox{CU-11} o en el \mbox{CU-12}. \textit{(Ver \mbox{FA-04}, \mbox{FA-05})}
+      \item En el turno del jugador, el flujo continúa en el \mbox{CU-12} o en el \mbox{CU-13}. \textit{(Ver \mbox{FA-04}, \mbox{FA-05})}
       \item En el turno de la IA, el Servidor de partidas calcula su jugada conforme al \textit{NivelIA}, la valida con las mismas reglas que las del jugador y la registra como \textit{Jugada} con \texttt{id\_\allowbreak{}usuario} nulo (\mbox{RN-04}). \textit{(Ver \mbox{EX-05})}
       \item El Servidor de partidas notifica la jugada y el SJM la anima sobre el tablero.
       \item Los pasos 10 a 12 se repiten hasta una condición de término.
-      \item El flujo continúa en el \mbox{CU-16}, que por su \mbox{FA-01} otorga la experiencia sin elo ni monedas y calcula el repaso de tres puntos sobre las \textit{Jugada} registradas.
+      \item El flujo continúa en el \mbox{CU-17}, que por su \mbox{FA-01} otorga la experiencia sin elo ni monedas y calcula el repaso de tres puntos sobre las \textit{Jugada} registradas.
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}AIMatchEnd} con el resultado, la experiencia y el repaso de tres errores, cada uno con acceso a su posición en el tablero.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
@@ -52,7 +52,7 @@
     \begin{cuenum}[start=1]
       \item El Servidor de partidas encuentra una \textit{Participacion} sin terminar en una partida \texttt{CLASIFICATORIA} o \texttt{PRIVADA}.
       \item El Servidor de partidas responde con \texttt{START\_\allowbreak{}AI\_\allowbreak{}MATCH\_\allowbreak{}FAILED} y el motivo \texttt{YA\_\allowbreak{}EN\_\allowbreak{}PARTIDA}.
-      \item El SJM ofrece volver a la partida, que continúa en el \mbox{CU-17}.
+      \item El SJM ofrece volver a la partida, que continúa en el \mbox{CU-18}.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-04}: El jugador deshace una jugada}\par
@@ -79,7 +79,7 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-07}: El jugador entra a una partida en línea con una partida contra la IA sin terminar}\par
     \begin{cuenum}[start=1]
-      \item El \mbox{CU-07}, el \mbox{CU-08} o el \mbox{CU-09} crean la partida en línea.
+      \item El \mbox{CU-08}, el \mbox{CU-09} o el \mbox{CU-10} crean la partida en línea.
       \item En la misma transacción, el Servidor de partidas cierra la partida contra la IA con la forma de término \texttt{ABANDONO}, sin experiencia ni penalización (\mbox{RN-07}).
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
@@ -105,7 +105,7 @@
     \begin{cuenum}[start=1]
       \item El SJM muestra la barra de conexión perdida.
       \item Si la partida tiene reloj, el reloj del jugador sigue corriendo en su turno, como en cualquier partida.
-      \item Al reconectar, el flujo continúa en el paso 5 del \mbox{CU-17}.
+      \item Al reconectar, el flujo continúa en el paso 5 del \mbox{CU-18}.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{EX-05}: El motor de la IA no calcula una jugada a tiempo}\par
     \begin{cuenum}[start=1]
@@ -121,7 +121,7 @@
       \item \textbf{\mbox{POST-05}} La partida aparece en el historial del jugador marcada como partida contra la IA.
     \end{cureglas}} \\ \hline
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
-      \item \textbf{\mbox{RN-01}} Las partidas contra la IA no otorgan elo ni monedas, pero sí experiencia (\mbox{RN-03} del \mbox{CU-16}).
+      \item \textbf{\mbox{RN-01}} Las partidas contra la IA no otorgan elo ni monedas, pero sí experiencia (\mbox{RN-03} del \mbox{CU-17}).
       \item \textbf{\mbox{RN-02}} Los cuatro niveles tienen una fuerza aproximada fija: aprendiz, unos 1000; constructor, 1500; arquitecto, 1900; y bastión, 2300.
       \item \textbf{\mbox{RN-03}} La IA no es un \textit{Usuario} y no tiene \textit{Participacion}. Su nivel se guarda en la \textit{Partida} y sus jugadas llevan \texttt{id\_\allowbreak{}usuario} nulo.
       \item \textbf{\mbox{RN-04}} Las jugadas de la IA se validan con las mismas reglas que las del jugador. La IA no tiene privilegios sobre el tablero.

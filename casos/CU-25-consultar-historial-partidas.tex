@@ -1,8 +1,8 @@
-\subsection*{CU-24: Consultar el historial de partidas}
-\addcontentsline{toc}{subsection}{CU-24: Consultar el historial de partidas}
-\label{cu-24}
+\subsection*{CU-25: Consultar el historial de partidas}
+\addcontentsline{toc}{subsection}{CU-25: Consultar el historial de partidas}
+\label{cu-25}
 
-\begin{fichacu}{CU-24}{Consultar el historial de partidas}
+\begin{fichacu}{CU-25}{Consultar el historial de partidas}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador o Invitado}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
@@ -43,18 +43,18 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-03}: El jugador no tiene partidas}\par
     \begin{cuenum}[start=1]
-      \item El SJM muestra un estado vacío con la acción ``buscar partida'', que continúa en el \mbox{CU-07}; a un invitado le ofrece en su lugar ``crear sala'', que continúa en el \mbox{CU-08}.
+      \item El SJM muestra un estado vacío con la acción ``buscar partida'', que continúa en el \mbox{CU-08}; a un invitado le ofrece en su lugar ``crear sala'', que continúa en el \mbox{CU-09}.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-04}: Una partida está pendiente de cierre}\par
     \begin{cuenum}[start=1]
-      \item El SJM muestra la fila con ``procesando resultado'' en lugar del resultado y del cambio de elo (\mbox{RN-11} del \mbox{CU-16}).
+      \item El SJM muestra la fila con ``procesando resultado'' en lugar del resultado y del cambio de elo (\mbox{RN-11} del \mbox{CU-17}).
       \item El flujo continúa en el paso 9 del FN.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-05}: El jugador añade a un rival o abre su perfil}\par
     \begin{cuenum}[start=1]
       \item El jugador abre el menú de un rival en una fila.
-      \item El flujo continúa en el \mbox{CU-19} o en el \mbox{CU-06}, según la opción.
+      \item El flujo continúa en el \mbox{CU-20} o en el \mbox{CU-07}, según la opción.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-06}: El jugador pasa de página}\par
@@ -90,12 +90,12 @@
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} El historial muestra las partidas clasificatorias y las de sala privada. Las de sala privada aparecen marcadas como partidas sin elo.
       \item \textbf{\mbox{RN-02}} La duración no se almacena: se calcula a partir de \texttt{fecha\_\allowbreak{}inicio} y \texttt{fecha\_\allowbreak{}fin}.
-      \item \textbf{\mbox{RN-03}} El cambio de elo mostrado es la \texttt{diferencia\_\allowbreak{}elo} guardada en la \textit{Participacion}, no una resta entre estados de la cuenta (\mbox{RN-05} del \mbox{CU-16}).
+      \item \textbf{\mbox{RN-03}} El cambio de elo mostrado es la \texttt{diferencia\_\allowbreak{}elo} guardada en la \textit{Participacion}, no una resta entre estados de la cuenta (\mbox{RN-05} del \mbox{CU-17}).
       \item \textbf{\mbox{RN-04}} Las partidas de rivales cuya cuenta fue eliminada o anonimizada siguen apareciendo, con el nombre anónimo que recibió la cuenta al darse de baja.
       \item \textbf{\mbox{RN-05}} La victoria por reloj se distingue visualmente de la victoria por llegar a meta.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué el historial no tiene tabla propia.}\par
-    El historial es exactamente el conjunto de \textit{Participacion} terminadas del jugador, unido a sus partidas. Una tabla de historial duplicaría resultado, fecha y elo, que ya escribe el \mbox{CU-16}, con el riesgo de que ambas versiones diverjan. Guardar la diferencia de elo en la participación es lo único que el historial necesitaba y no podía calcular.} \\ \hline
+    El historial es exactamente el conjunto de \textit{Participacion} terminadas del jugador, unido a sus partidas. Una tabla de historial duplicaría resultado, fecha y elo, que ya escribe el \mbox{CU-17}, con el riesgo de que ambas versiones diverjan. Guardar la diferencia de elo en la participación es lo único que el historial necesitaba y no podía calcular.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 3)}
       \item \textbf{\textit{Participacion}:} lee las del jugador y las de sus rivales \textit{(pasos 4, 6)}

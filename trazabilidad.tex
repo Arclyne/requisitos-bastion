@@ -1,6 +1,6 @@
 %=====================================================================
 % Matriz de trazabilidad
-%   Cubre los 25 casos del alcance. La Matriz 1 y la Matriz 4 salen de
+%   Cubre los 26 casos del alcance. La Matriz 1 y la Matriz 4 salen de
 %   las filas "Datos que toca" y "Prototipos" de cada caso: si cambian,
 %   hay que regenerarlas.
 %=====================================================================
@@ -15,7 +15,7 @@ Documento de control. No se lee de corrido: se consulta para responder tres preg
   \item ¿Quedó alguna pantalla sin caso o alguna tabla sin quién la escriba? — \textbf{Matriz 1} y \textbf{Matriz 4}
 \end{flujo}
 
-Las matrices cubren los 25 casos del alcance. Los requisitos deseables no aparecen: ningún caso del alcance depende de ellos, y su trazabilidad se reconstruirá cuando entren a una versión. La Matriz 1 se obtuvo directamente de la sección \textit{Datos que toca} de cada caso.
+Las matrices cubren los 26 casos del alcance. Los requisitos deseables no aparecen: ningún caso del alcance depende de ellos, y su trazabilidad se reconstruirá cuando entren a una versión. La Matriz 1 se obtuvo directamente de la sección \textit{Datos que toca} de cada caso.
 
 \subsection*{Matriz 1. Estructuras de datos y el caso de uso que las justifica}
 \addcontentsline{toc}{subsection}{Matriz 1. Estructuras de datos y el caso de uso que las justifica}
@@ -30,33 +30,33 @@ Ninguna fila puede quedarse sin al menos un caso que la escriba. Una tabla que n
 \textbf{Estructura} & \textbf{Escrita por} & \textbf{Leída por} & \textbf{Estado} \\ \hline
 \endhead
 \textit{AceptacionTerminos} & \mbox{CU-02} & — & en \textit{Usuario} (\mbox{D-23}) \\ \hline
-\textit{Amistad} & \mbox{CU-20}, \mbox{CU-22} & \mbox{CU-06}, \mbox{CU-19}, \mbox{CU-23} & pasa al núcleo (\mbox{D-25}) \\ \hline
+\textit{Amistad} & \mbox{CU-21}, \mbox{CU-23} & \mbox{CU-07}, \mbox{CU-20}, \mbox{CU-24} & pasa al núcleo (\mbox{D-25}) \\ \hline
 \textit{Apelacion} & — & — & solo deseables (\mbox{D-25}) \\ \hline
-\textit{BitacoraAcceso} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-03}, \mbox{CU-04} & — & correcta \\ \hline
-\textit{BitacoraModeracion} & \mbox{CU-25} & — & correcta \\ \hline
+\textit{BitacoraAcceso} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-03}, \mbox{CU-04}, \mbox{CU-05} & — & correcta \\ \hline
+\textit{BitacoraModeracion} & \mbox{CU-26} & — & correcta \\ \hline
 \textit{Bloqueo} & — & — & solo deseables (\mbox{D-25}) \\ \hline
-\textit{CodigoVerificacion} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-04} & \mbox{CU-02} & correcta (\mbox{D-23}) \\ \hline
-\textit{ColaEmparejamiento} & \mbox{CU-07} & \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-21} & en memoria (\mbox{D-24}) \\ \hline
-\textit{EnlaceRed} & \mbox{CU-05} & \mbox{CU-06} & pasa al núcleo (\mbox{D-25}) \\ \hline
-\textit{EstadisticaModo} & \mbox{CU-02}, \mbox{CU-15}, \mbox{CU-16} & \mbox{CU-01}, \mbox{CU-06}, \mbox{CU-07}, \mbox{CU-20}, \mbox{CU-23} & correcta \\ \hline
-Expulsados de la sala & \mbox{CU-10} & \mbox{CU-09} & en memoria (\mbox{D-27}) \\ \hline
-\textit{Invitacion} & \mbox{CU-21} & \mbox{CU-21} & pasa al núcleo (\mbox{D-25}) \\ \hline
-\textit{Jugada} & \mbox{CU-11}, \mbox{CU-12} & \mbox{CU-17} & correcta \\ \hline
-\textit{Mensaje} & \mbox{CU-08}, \mbox{CU-18} & \mbox{CU-09} & correcta \\ \hline
-\textit{Modo} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-02}, \mbox{CU-06}, \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-12}, \mbox{CU-13}, \mbox{CU-14}, \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-21}, \mbox{CU-24} & precargada \\ \hline
-\textit{MotivoReporte} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-25} & \texttt{CHECK} (\mbox{D-23}) \\ \hline
-\textit{OfertaTablas} & \mbox{CU-11}, \mbox{CU-12}, \mbox{CU-13}, \mbox{CU-14}, \mbox{CU-15} & \mbox{CU-17} & correcta \\ \hline
-\textit{PalabraProhibida} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-02}, \mbox{CU-18} & precargada \\ \hline
-\textit{Participacion} & \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-11}, \mbox{CU-12}, \mbox{CU-14}, \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-17} & \mbox{CU-01}, \mbox{CU-06}, \mbox{CU-09}, \mbox{CU-13}, \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-21}, \mbox{CU-24}, \mbox{CU-25} & correcta \\ \hline
-\textit{Partida} & \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-11}, \mbox{CU-12}, \mbox{CU-16} & \mbox{CU-06}, \mbox{CU-13}, \mbox{CU-14}, \mbox{CU-15}, \mbox{CU-17}, \mbox{CU-24}, \mbox{CU-25} & correcta \\ \hline
-\textit{Reporte} & \mbox{CU-25} & \mbox{CU-25} & correcta \\ \hline
-\textit{Sala} & \mbox{CU-08}, \mbox{CU-16}, \mbox{CU-21} & \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-25} & correcta \\ \hline
-\textit{SalaParticipante} & \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-16}, \mbox{CU-21} & \mbox{CU-07}, \mbox{CU-18}, \mbox{CU-25} & en memoria (\mbox{D-24}) \\ \hline
-\textit{Sancion} & \mbox{CU-25} & \mbox{CU-01}, \mbox{CU-03}, \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-18} & correcta \\ \hline
-\textit{Sesion} & \mbox{CU-01}, \mbox{CU-03}, \mbox{CU-04}, \mbox{CU-25} & todos los casos que exigen una sesión abierta & correcta \\ \hline
+\textit{CodigoVerificacion} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-04}, \mbox{CU-05} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-05} & correcta (\mbox{D-23}) \\ \hline
+\textit{ColaEmparejamiento} & \mbox{CU-08} & \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-22} & en memoria (\mbox{D-24}) \\ \hline
+\textit{EnlaceRed} & \mbox{CU-06} & \mbox{CU-07} & pasa al núcleo (\mbox{D-25}) \\ \hline
+\textit{EstadisticaModo} & \mbox{CU-02}, \mbox{CU-16}, \mbox{CU-17} & \mbox{CU-01}, \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-21}, \mbox{CU-24} & correcta \\ \hline
+Expulsados de la sala & \mbox{CU-11} & \mbox{CU-10} & en memoria (\mbox{D-27}) \\ \hline
+\textit{Invitacion} & \mbox{CU-22} & \mbox{CU-22} & pasa al núcleo (\mbox{D-25}) \\ \hline
+\textit{Jugada} & \mbox{CU-12}, \mbox{CU-13} & \mbox{CU-18} & correcta \\ \hline
+\textit{Mensaje} & \mbox{CU-09}, \mbox{CU-19} & \mbox{CU-10} & correcta \\ \hline
+\textit{Modo} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-02}, \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-13}, \mbox{CU-14}, \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-17}, \mbox{CU-22}, \mbox{CU-25} & precargada \\ \hline
+\textit{MotivoReporte} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-26} & \texttt{CHECK} (\mbox{D-23}) \\ \hline
+\textit{OfertaTablas} & \mbox{CU-12}, \mbox{CU-13}, \mbox{CU-14}, \mbox{CU-15}, \mbox{CU-16} & \mbox{CU-18} & correcta \\ \hline
+\textit{PalabraProhibida} & — \textit{(catálogo, \mbox{D-09})} & \mbox{CU-02}, \mbox{CU-19} & precargada \\ \hline
+\textit{Participacion} & \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-12}, \mbox{CU-13}, \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-17}, \mbox{CU-18} & \mbox{CU-01}, \mbox{CU-07}, \mbox{CU-10}, \mbox{CU-14}, \mbox{CU-19}, \mbox{CU-20}, \mbox{CU-22}, \mbox{CU-25}, \mbox{CU-26} & correcta \\ \hline
+\textit{Partida} & \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-12}, \mbox{CU-13}, \mbox{CU-17} & \mbox{CU-07}, \mbox{CU-14}, \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-18}, \mbox{CU-25}, \mbox{CU-26} & correcta \\ \hline
+\textit{Reporte} & \mbox{CU-26} & \mbox{CU-26} & correcta \\ \hline
+\textit{Sala} & \mbox{CU-09}, \mbox{CU-17}, \mbox{CU-22} & \mbox{CU-10}, \mbox{CU-11}, \mbox{CU-26} & correcta \\ \hline
+\textit{SalaParticipante} & \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-11}, \mbox{CU-17}, \mbox{CU-22} & \mbox{CU-08}, \mbox{CU-19}, \mbox{CU-26} & en memoria (\mbox{D-24}) \\ \hline
+\textit{Sancion} & \mbox{CU-26} & \mbox{CU-01}, \mbox{CU-03}, \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-19} & correcta \\ \hline
+\textit{Sesion} & \mbox{CU-01}, \mbox{CU-03}, \mbox{CU-04}, \mbox{CU-26} & todos los casos que exigen una sesión abierta & correcta \\ \hline
 \textit{Silencio} & — & — & solo deseables (\mbox{D-25}) \\ \hline
-\textit{Solicitud} & \mbox{CU-19}, \mbox{CU-20} & \mbox{CU-06} & pasa al núcleo (\mbox{D-25}) \\ \hline
-\textit{Usuario} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-03}, \mbox{CU-04}, \mbox{CU-05}, \mbox{CU-25} & \mbox{CU-06}, \mbox{CU-07}, \mbox{CU-19}, \mbox{CU-20}, \mbox{CU-21}, \mbox{CU-23}, \mbox{CU-24} & correcta \\ \hline
+\textit{Solicitud} & \mbox{CU-20}, \mbox{CU-21} & \mbox{CU-07} & pasa al núcleo (\mbox{D-25}) \\ \hline
+\textit{Usuario} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-03}, \mbox{CU-04}, \mbox{CU-05}, \mbox{CU-06}, \mbox{CU-26} & \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-20}, \mbox{CU-21}, \mbox{CU-22}, \mbox{CU-24}, \mbox{CU-25} & correcta \\ \hline
 \end{longtable}
 \end{center}
 
@@ -64,7 +64,7 @@ Expulsados de la sala & \mbox{CU-10} & \mbox{CU-09} & en memoria (\mbox{D-27}) \
 
 \textbf{Lo que cambia en el esquema.} La columna \textit{Estado} refleja la decisión \mbox{D-25}. \textit{Amistad}, \textit{Solicitud}, \textit{Invitacion} y \textit{EnlaceRed} estaban en la fase posterior y ahora las escriben casos del alcance, así que pasan al núcleo. \textit{Silencio}, \textit{Bloqueo} y \textit{Apelacion} siguen en el núcleo, pero solo las escriben requisitos deseables. Las demás tablas de la fase posterior, como las de cosméticos, economía, divisiones, espectadores y tutorial, solo las usan deseables y no aparecen en esta matriz. Las tres estructuras en memoria (\mbox{D-24}, \mbox{D-27}) no llegan a la base de datos.
 
-\textbf{Estructuras sin tabla propia.} El marcador entre dos jugadores se calcula al consultarlo (\mbox{CU-06}), y el número de strike de un jugador se deduce de sus sanciones (\mbox{CU-25} \mbox{RN-12}). Cada caso justifica la decisión en su observación.
+\textbf{Estructuras sin tabla propia.} El marcador entre dos jugadores se calcula al consultarlo (\mbox{CU-07}), y el número de strike de un jugador se deduce de sus sanciones (\mbox{CU-26} \mbox{RN-12}). Cada caso justifica la decisión en su observación.
 
 \subsection*{Matriz 2. Dependencias entre casos de uso}
 \addcontentsline{toc}{subsection}{Matriz 2. Dependencias entre casos de uso}
@@ -79,30 +79,30 @@ Un caso \textit{depende} de otro cuando lo invoca, lo continúa o presupone su r
 \textbf{Caso} & \textbf{Depende de} & \textbf{Por qué} \\ \hline
 \endhead
 \mbox{CU-01} & \mbox{CU-02} & Sin verificar el correo ninguna cuenta llega a \texttt{ACTIVA}, y el \mbox{FA-08} del \mbox{CU-01} la rechaza \\ \hline
-\mbox{CU-01} & \mbox{CU-25} & Lee las sanciones de ámbito de cuenta que aplican los strikes \\ \hline
-\mbox{CU-01} & \mbox{CU-17} & Su \mbox{FA-16} ofrece volver a la partida sin terminar \\ \hline
-\mbox{CU-03} & \mbox{CU-25} & Un invitado también recibe strikes; al recuperar la cuenta se comprueba si su suspensión venció \\ \hline
-\mbox{CU-04} & \mbox{CU-02} & El cambio de correo se confirma con un código que sigue las reglas del registro (\mbox{CU-02} \mbox{RN-11}) \\ \hline
-\mbox{CU-06} & \mbox{CU-05} & Muestra el perfil y los enlaces que el \mbox{CU-05} edita \\ \hline
-\mbox{CU-07} & \mbox{CU-16} & Lee el elo que solo el \mbox{CU-16} escribe \\ \hline
-\mbox{CU-07}, \mbox{CU-08} & \mbox{CU-17} & Si el jugador ya tiene una partida sin terminar, lo que quiere es volver a ella \\ \hline
-\mbox{CU-09}, \mbox{CU-10}, \mbox{CU-21} & \mbox{CU-08} & Entrar con código, expulsar o invitar suponen una sala creada, y el inicio de la partida lo hace el \mbox{CU-08} \\ \hline
-\mbox{CU-09} & \mbox{CU-10} & Rechaza la entrada de un jugador expulsado de la sala \\ \hline
-\mbox{CU-11}, \mbox{CU-12} & \mbox{CU-07}, \mbox{CU-08} & Sin partida creada no hay turno \\ \hline
-\mbox{CU-11}, \mbox{CU-12}, \mbox{CU-13}, \mbox{CU-14}, \mbox{CU-15}, \mbox{CU-17} & \mbox{CU-16} & Son formas de término; el cierre, el elo y las estadísticas los hace el caso incluido \mbox{CU-16} \\ \hline
-\mbox{CU-15} & \mbox{CU-17} & Reclamar la victoria convierte en abandono una desconexión que el \mbox{CU-17} no resolvió \\ \hline
-\mbox{CU-18} & \mbox{CU-25} & Lee la restricción de chat que aplica el primer strike \\ \hline
-\mbox{CU-19} & \mbox{CU-20} & La \textit{Amistad} la crea el otro al aceptar \\ \hline
-\mbox{CU-22} & \mbox{CU-20} & Busca la amistad por el mismo par ordenado con que se guardó \\ \hline
-\mbox{CU-23}, \mbox{CU-24} & \mbox{CU-16} & Muestran el elo y los resultados que escribe el cierre de la partida \\ \hline
-\mbox{CU-25} & \mbox{CU-18}, \mbox{CU-11}, \mbox{CU-12} & Adjunta por referencia lo que ellos escribieron \\ \hline
-\mbox{CU-25} & \mbox{CU-15} & Retira de su partida al sancionado con las consecuencias de un abandono \\ \hline
+\mbox{CU-01} & \mbox{CU-26} & Lee las sanciones de ámbito de cuenta que aplican los strikes \\ \hline
+\mbox{CU-01} & \mbox{CU-18} & Su \mbox{FA-16} ofrece volver a la partida sin terminar \\ \hline
+\mbox{CU-03} & \mbox{CU-26} & Un invitado también recibe strikes; al recuperar la cuenta se comprueba si su suspensión venció \\ \hline
+\mbox{CU-05} & \mbox{CU-01} & Activa el segundo factor que el \mbox{FA-10} del \mbox{CU-01} pide al iniciar sesión, con las mismas reglas del código (\mbox{CU-01} \mbox{RN-09}) \\ \hline
+\mbox{CU-07} & \mbox{CU-06} & Muestra el perfil y los enlaces que el \mbox{CU-06} edita \\ \hline
+\mbox{CU-08} & \mbox{CU-17} & Lee el elo que solo el \mbox{CU-17} escribe \\ \hline
+\mbox{CU-08}, \mbox{CU-09} & \mbox{CU-18} & Si el jugador ya tiene una partida sin terminar, lo que quiere es volver a ella \\ \hline
+\mbox{CU-10}, \mbox{CU-11}, \mbox{CU-22} & \mbox{CU-09} & Entrar con código, expulsar o invitar suponen una sala creada, y el inicio de la partida lo hace el \mbox{CU-09} \\ \hline
+\mbox{CU-10} & \mbox{CU-11} & Rechaza la entrada de un jugador expulsado de la sala \\ \hline
+\mbox{CU-12}, \mbox{CU-13} & \mbox{CU-08}, \mbox{CU-09} & Sin partida creada no hay turno \\ \hline
+\mbox{CU-12}, \mbox{CU-13}, \mbox{CU-14}, \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-18} & \mbox{CU-17} & Son formas de término; el cierre, el elo y las estadísticas los hace el caso incluido \mbox{CU-17} \\ \hline
+\mbox{CU-16} & \mbox{CU-18} & Reclamar la victoria convierte en abandono una desconexión que el \mbox{CU-18} no resolvió \\ \hline
+\mbox{CU-19} & \mbox{CU-26} & Lee la restricción de chat que aplica el primer strike \\ \hline
+\mbox{CU-20} & \mbox{CU-21} & La \textit{Amistad} la crea el otro al aceptar \\ \hline
+\mbox{CU-23} & \mbox{CU-21} & Busca la amistad por el mismo par ordenado con que se guardó \\ \hline
+\mbox{CU-24}, \mbox{CU-25} & \mbox{CU-17} & Muestran el elo y los resultados que escribe el cierre de la partida \\ \hline
+\mbox{CU-26} & \mbox{CU-19}, \mbox{CU-12}, \mbox{CU-13} & Adjunta por referencia lo que ellos escribieron \\ \hline
+\mbox{CU-26} & \mbox{CU-16} & Retira de su partida al sancionado con las consecuencias de un abandono \\ \hline
 \end{longtable}
 \end{center}
 
 \subsection*{Matriz 3. Decisiones y los casos que las aplican}
 \addcontentsline{toc}{subsection}{Matriz 3. Decisiones y los casos que las aplican}
-Cambiar una decisión obliga a reescribir flujos, no solo tablas. Esta es la lista de a quién hay que avisar. Las decisiones \mbox{D-03}, \mbox{D-12}, \mbox{D-13}, \mbox{D-17}, \mbox{D-18} y \mbox{D-19} solo afectan a requisitos deseables.
+Cambiar una decisión obliga a reescribir flujos, no solo tablas. Esta es la lista de a quién hay que avisar. La \mbox{D-20} quedó sustituida por la \mbox{D-28}. Las decisiones \mbox{D-03}, \mbox{D-12}, \mbox{D-13}, \mbox{D-17}, \mbox{D-18} y \mbox{D-19} solo afectan a requisitos deseables.
 
 \begin{center}\small
 \begin{longtable}{|L{0.308\textwidth}|L{0.592\textwidth}|}
@@ -112,27 +112,27 @@ Cambiar una decisión obliga a reescribir flujos, no solo tablas. Esta es la lis
 \hline
 \textbf{Decisión} & \textbf{Casos afectados} \\ \hline
 \endhead
-\mbox{D-01} · Varias sesiones, una partida & \mbox{CU-01}, \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-16}, \mbox{CU-21} \\ \hline
-\mbox{D-02} · Invitado como \textit{Usuario} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-03}, \mbox{CU-19}, \mbox{CU-25} \\ \hline
-\mbox{D-04} · Elo por modo & \mbox{CU-02}, \mbox{CU-06}, \mbox{CU-07}, \mbox{CU-16}, \mbox{CU-23} \\ \hline
-\mbox{D-05} · Sanciones con ámbito & \mbox{CU-01}, \mbox{CU-03}, \mbox{CU-18}, \mbox{CU-25} \\ \hline
+\mbox{D-01} · Varias sesiones, una partida & \mbox{CU-01}, \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-17}, \mbox{CU-22} \\ \hline
+\mbox{D-02} · Invitado como \textit{Usuario} & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-03}, \mbox{CU-20}, \mbox{CU-26} \\ \hline
+\mbox{D-04} · Elo por modo & \mbox{CU-02}, \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-17}, \mbox{CU-24} \\ \hline
+\mbox{D-05} · Sanciones con ámbito & \mbox{CU-01}, \mbox{CU-03}, \mbox{CU-19}, \mbox{CU-26} \\ \hline
 \mbox{D-06} · Registro mínimo & \mbox{CU-02} \\ \hline
 \mbox{D-07} · Borrado lógico & \mbox{CU-02} \\ \hline
-\mbox{D-08} · Sin revisión de enlaces & \mbox{CU-05}, \mbox{CU-06} \\ \hline
-\mbox{D-09} · Catálogos precargados & \mbox{CU-02}, \mbox{CU-18}, \mbox{CU-25} \\ \hline
-\mbox{D-10} · Emotes sin persistir & \mbox{CU-18} \\ \hline
-\mbox{D-11} · Una sola participación & \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-09} \\ \hline
-\mbox{D-14} · Tablas solo entre dos & \mbox{CU-13}, \mbox{CU-16} \\ \hline
-\mbox{D-15} · Abandono y desconexión & \mbox{CU-15}, \mbox{CU-16}, \mbox{CU-17} \\ \hline
-\mbox{D-16} · Salas privadas & \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-16}, \mbox{CU-21} \\ \hline
-\mbox{D-20} · Cambio de correo por token & \mbox{CU-04} \\ \hline
+\mbox{D-08} · Sin revisión de enlaces & \mbox{CU-06}, \mbox{CU-07} \\ \hline
+\mbox{D-09} · Catálogos precargados & \mbox{CU-02}, \mbox{CU-19}, \mbox{CU-26} \\ \hline
+\mbox{D-10} · Emotes sin persistir & \mbox{CU-19} \\ \hline
+\mbox{D-11} · Una sola participación & \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-10} \\ \hline
+\mbox{D-14} · Tablas solo entre dos & \mbox{CU-14}, \mbox{CU-17} \\ \hline
+\mbox{D-15} · Abandono y desconexión & \mbox{CU-16}, \mbox{CU-17}, \mbox{CU-18} \\ \hline
+\mbox{D-16} · Salas privadas & \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-17}, \mbox{CU-22} \\ \hline
 \mbox{D-21} · Internacionalización & Todos \\ \hline
 \mbox{D-22} · Núcleo y fase posterior & Todos \\ \hline
-\mbox{D-23} · Menos tablas para lo mismo & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-04}, \mbox{CU-25} \\ \hline
-\mbox{D-24} · Quién espera, en memoria & \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-21} \\ \hline
+\mbox{D-23} · Menos tablas para lo mismo & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-04}, \mbox{CU-05}, \mbox{CU-26} \\ \hline
+\mbox{D-24} · Quién espera, en memoria & \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-11}, \mbox{CU-22} \\ \hline
 \mbox{D-25} · Alcance por requisitos del cliente & Todos \\ \hline
-\mbox{D-26} · Moderación por strikes & \mbox{CU-01}, \mbox{CU-03}, \mbox{CU-18}, \mbox{CU-25} \\ \hline
-\mbox{D-27} · Expulsados de la sala, en memoria & \mbox{CU-09}, \mbox{CU-10} \\ \hline
+\mbox{D-26} · Moderación por strikes & \mbox{CU-01}, \mbox{CU-03}, \mbox{CU-19}, \mbox{CU-26} \\ \hline
+\mbox{D-27} · Expulsados de la sala, en memoria & \mbox{CU-10}, \mbox{CU-11} \\ \hline
+\mbox{D-28} · El correo no se cambia & \mbox{CU-02}, \mbox{CU-04}, \mbox{CU-05} \\ \hline
 \end{longtable}
 \end{center}
 
@@ -152,27 +152,28 @@ Pantallas que cada caso de uso cita en su campo \textit{Prototipos}. Qué pantal
 6c, 6d, 7e & \mbox{CU-02} \\ \hline
 6c & \mbox{CU-03} \\ \hline
 9f & \mbox{CU-04} \\ \hline
-9c, 18d, 12c & \mbox{CU-05} \\ \hline
-5b, 10a & \mbox{CU-06} \\ \hline
-16a, 16b, 1f, 1g, 7d & \mbox{CU-07} \\ \hline
-1h, 5d, 5e & \mbox{CU-08} \\ \hline
-1h, 5d, 5e, 7d & \mbox{CU-09} \\ \hline
-Sin prototipo & \mbox{CU-10} \\ \hline
-17c, 8c, 8d, 20a, 7a, 17d & \mbox{CU-11} \\ \hline
-15a, 15b, 21a, 20b, 7b, 19b & \mbox{CU-12} \\ \hline
-19d, 7g & \mbox{CU-13} \\ \hline
+9f, 22d & \mbox{CU-05} \\ \hline
+9c, 18d, 12c & \mbox{CU-06} \\ \hline
+5b, 10a & \mbox{CU-07} \\ \hline
+16a, 16b, 1f, 1g, 7d & \mbox{CU-08} \\ \hline
+1h, 5d, 5e & \mbox{CU-09} \\ \hline
+1h, 5d, 5e, 7d & \mbox{CU-10} \\ \hline
+Sin prototipo & \mbox{CU-11} \\ \hline
+17c, 8c, 8d, 20a, 7a, 17d & \mbox{CU-12} \\ \hline
+15a, 15b, 21a, 20b, 7b, 19b & \mbox{CU-13} \\ \hline
 19d, 7g & \mbox{CU-14} \\ \hline
-8e, 6f, 7g & \mbox{CU-15} \\ \hline
-2g, 2h, 15c, 15d, 17d & \mbox{CU-16} \\ \hline
-6e, 6f, 7c & \mbox{CU-17} \\ \hline
-20c, 5f, 1b, 10g, 12e, 1a, 8a & \mbox{CU-18} \\ \hline
-2a, 2b, 5c, 13b, 13c, 2g & \mbox{CU-19} \\ \hline
-5c, 2b & \mbox{CU-20} \\ \hline
-2a, 10a, 13a & \mbox{CU-21} \\ \hline
-2a, 2b, 5b & \mbox{CU-22} \\ \hline
-2c, 13b, 13c & \mbox{CU-23} \\ \hline
-2e, 17f & \mbox{CU-24} \\ \hline
-10a, 10b & \mbox{CU-25} \\ \hline
+19d, 7g & \mbox{CU-15} \\ \hline
+8e, 6f, 7g & \mbox{CU-16} \\ \hline
+2g, 2h, 15c, 15d, 17d & \mbox{CU-17} \\ \hline
+6e, 6f, 7c & \mbox{CU-18} \\ \hline
+20c, 5f, 1b, 10g, 12e, 1a, 8a & \mbox{CU-19} \\ \hline
+2a, 2b, 5c, 13b, 13c, 2g & \mbox{CU-20} \\ \hline
+5c, 2b & \mbox{CU-21} \\ \hline
+2a, 10a, 13a & \mbox{CU-22} \\ \hline
+2a, 2b, 5b & \mbox{CU-23} \\ \hline
+2c, 13b, 13c & \mbox{CU-24} \\ \hline
+2e, 17f & \mbox{CU-25} \\ \hline
+10a, 10b & \mbox{CU-26} \\ \hline
 \end{longtable}
 \end{center}
 
@@ -188,21 +189,21 @@ Reglas que aparecen con el mismo contenido en varios casos. Si cambia una, hay q
 \hline
 \textbf{Regla} & \textbf{Dónde aparece} \\ \hline
 \endhead
-Las contraseñas y los códigos nunca viajan ni se guardan en claro & \mbox{CU-01} \mbox{RN-02}, \mbox{CU-02} \mbox{RN-03}, \mbox{CU-02} \mbox{RN-11} \\ \hline
-Toda validación del cliente se repite en el servidor & \mbox{CU-02} \mbox{RN-10}, \mbox{CU-05} \mbox{RN-04}, \mbox{CU-11} \mbox{RN-07}, \mbox{CU-12} \mbox{RN-08}, \mbox{CU-18} \mbox{RN-06} \\ \hline
-El servidor es la única autoridad sobre la partida & \mbox{CU-11} \mbox{RN-01}, \mbox{CU-12} \mbox{RN-01}, \mbox{CU-16} \mbox{RN-04} \\ \hline
-El cliente pide el estado en lugar de reenviar & \mbox{CU-11} \mbox{RN-13}, \mbox{CU-12} \mbox{RN-13}, \mbox{CU-18} \mbox{RN-07} \\ \hline
-Una sola \textit{Participacion} sin terminar por jugador & \mbox{CU-01} \mbox{RN-06}, \mbox{CU-07} \mbox{RN-01}, \mbox{CU-16} \mbox{RN-07} \\ \hline
-Solo el emparejamiento crea partidas clasificatorias & \mbox{CU-07} \mbox{RN-09}, \mbox{CU-08} \mbox{RN-03}, \mbox{CU-16} \mbox{RN-03} \\ \hline
-El filtro de palabras se aplica en el servidor y no dice qué término saltó & \mbox{CU-02} \mbox{RN-09}, \mbox{CU-18} \mbox{RN-02} \\ \hline
-Las sanciones salen de los strikes y su vigencia la decide la \textit{Sancion} & \mbox{CU-25} \mbox{RN-11}, \mbox{RN-12}; \mbox{CU-01} \mbox{RN-05}, \mbox{RN-16}; \mbox{CU-03} \mbox{RN-10} \\ \hline
+Las contraseñas y los códigos nunca viajan ni se guardan en claro & \mbox{CU-01} \mbox{RN-02}, \mbox{CU-02} \mbox{RN-03}, \mbox{CU-02} \mbox{RN-11}, \mbox{CU-04} \mbox{RN-02}, \mbox{CU-05} \mbox{RN-03} \\ \hline
+Toda validación del cliente se repite en el servidor & \mbox{CU-02} \mbox{RN-10}, \mbox{CU-06} \mbox{RN-04}, \mbox{CU-12} \mbox{RN-07}, \mbox{CU-13} \mbox{RN-08}, \mbox{CU-19} \mbox{RN-06} \\ \hline
+El servidor es la única autoridad sobre la partida & \mbox{CU-12} \mbox{RN-01}, \mbox{CU-13} \mbox{RN-01}, \mbox{CU-17} \mbox{RN-04} \\ \hline
+El cliente pide el estado en lugar de reenviar & \mbox{CU-12} \mbox{RN-13}, \mbox{CU-13} \mbox{RN-13}, \mbox{CU-19} \mbox{RN-07} \\ \hline
+Una sola \textit{Participacion} sin terminar por jugador & \mbox{CU-01} \mbox{RN-06}, \mbox{CU-08} \mbox{RN-01}, \mbox{CU-17} \mbox{RN-07} \\ \hline
+Solo el emparejamiento crea partidas clasificatorias & \mbox{CU-08} \mbox{RN-09}, \mbox{CU-09} \mbox{RN-03}, \mbox{CU-17} \mbox{RN-03} \\ \hline
+El filtro de palabras se aplica en el servidor y no dice qué término saltó & \mbox{CU-02} \mbox{RN-09}, \mbox{CU-19} \mbox{RN-02} \\ \hline
+Las sanciones salen de los strikes y su vigencia la decide la \textit{Sancion} & \mbox{CU-26} \mbox{RN-11}, \mbox{RN-12}; \mbox{CU-01} \mbox{RN-05}, \mbox{RN-16}; \mbox{CU-03} \mbox{RN-10} \\ \hline
 \end{longtable}
 \end{center}
 
 \subsection*{Lo que esta matriz deja al descubierto}
 \addcontentsline{toc}{subsection}{Lo que esta matriz deja al descubierto}
 \begin{flujo}
-  \item \textbf{El \mbox{CU-16} es el cuello de botella del modelo.} Es el único origen del elo y de los contadores del ranking, y lo incluyen seis casos. Si algo se prueba con datos reales, que sea este.
+  \item \textbf{El \mbox{CU-17} es el cuello de botella del modelo.} Es el único origen del elo y de los contadores del ranking, y lo incluyen seis casos. Si algo se prueba con datos reales, que sea este.
   \item \textbf{\textit{Usuario} y \textit{Sesion} tienen muchos escritores.} Conviene que las restricciones de sus columnas —dominios de \texttt{estado\_\allowbreak{}cuenta}, \texttt{tipo\_\allowbreak{}cuenta} y \texttt{motivo\_\allowbreak{}cierre}— se declaren en la base de datos con \texttt{CHECK}, y no dependan de que cada caso respete los valores.
   \item \textbf{El esquema va detrás del alcance.} Cuatro tablas de la fase posterior deben pasar al núcleo y tres del núcleo solo las usan deseables (\mbox{D-25}). Hasta que el esquema se ajuste, la Matriz 1 describe el destino y no el estado actual de los scripts.
   \item \textbf{Las reglas transversales no tienen dueño.} La numeración local por caso es cómoda para leer un caso aislado, pero deja reglas repetidas en varios sitios sin nada que las mantenga iguales. La Matriz 5 es el único lugar donde se ven juntas.

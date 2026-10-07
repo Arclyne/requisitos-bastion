@@ -16,10 +16,10 @@
 \textit{Codigo\-Verificacion} & (\texttt{codigo\_\allowbreak{}hash}), si \texttt{proposito IN (ALTA,CAMBIO\_\allowbreak{}CORREO)} & El enlace de un correo identifica un solo código; los códigos tecleados son cortos y pueden repetirse entre cuentas. \\ \hline
 \textit{Participacion} & (\texttt{id\_\allowbreak{}partida}, \texttt{orden\_\allowbreak{}turno}) & Dos jugadores no comparten turno en la misma partida. \\ \hline
 \textit{Participacion} & (\texttt{id\_\allowbreak{}usuario}), si \texttt{resultado IS NULL} & Una sola participación sin terminar por jugador, (\mbox{D-11}). Filtra por \texttt{resultado} porque un índice filtrado no admite columnas calculadas. \\ \hline
-\textit{Oferta\-Tablas} & (\texttt{id\_\allowbreak{}partida}), si \texttt{estado = PENDIENTE} & A lo sumo una oferta pendiente por partida; la segunda es aceptación (\mbox{CU-13} \mbox{RN-04}). \\ \hline
-\textit{Sala} & (\texttt{codigo}), si \texttt{estado <> CERRADA} & El código es único entre las salas no cerradas y puede reutilizarse después (\mbox{CU-08} \mbox{RN-01}). \\ \hline
+\textit{Oferta\-Tablas} & (\texttt{id\_\allowbreak{}partida}), si \texttt{estado = PENDIENTE} & A lo sumo una oferta pendiente por partida; la segunda es aceptación (\mbox{CU-14} \mbox{RN-04}). \\ \hline
+\textit{Sala} & (\texttt{codigo}), si \texttt{estado <> CERRADA} & El código es único entre las salas no cerradas y puede reutilizarse después (\mbox{CU-09} \mbox{RN-01}). \\ \hline
 \textit{Sala} & (\texttt{id\_\allowbreak{}partida}), si \texttt{id\_\allowbreak{}partida IS NOT NULL} & Una partida viene de una sola sala. \\ \hline
-\textit{Reporte} & (\texttt{id\_\allowbreak{}denunciante}, \texttt{id\_\allowbreak{}reportado}, \texttt{id\_\allowbreak{}partida}), si \texttt{id\_\allowbreak{}partida IS NOT NULL} & No se reporta dos veces al mismo jugador por la misma partida (\mbox{CU-25} \mbox{RN-03}). \\ \hline
+\textit{Reporte} & (\texttt{id\_\allowbreak{}denunciante}, \texttt{id\_\allowbreak{}reportado}, \texttt{id\_\allowbreak{}partida}), si \texttt{id\_\allowbreak{}partida IS NOT NULL} & No se reporta dos veces al mismo jugador por la misma partida (\mbox{CU-26} \mbox{RN-03}). \\ \hline
 \textit{Apelacion} & (\texttt{id\_\allowbreak{}sancion}) & Una sola apelación por sanción (\mbox{DES-19} \mbox{RN-01}). \\ \hline
 \end{longtable}
 \end{center}

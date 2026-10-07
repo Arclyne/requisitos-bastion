@@ -17,7 +17,7 @@ Cuenta y acceso
 \texttt{contrasena\_\allowbreak{}hash} & \texttt{VARBINARY(64)} & Sí &  & Resumen criptográfico de la contraseña; nunca en claro (\mbox{CU-01} \mbox{RN-02}). \\ \hline
 \texttt{contrasena\_\allowbreak{}sal} & \texttt{VARBINARY(32)} & Sí &  & Sal del resumen. \\ \hline
 \texttt{fecha\_\allowbreak{}nacimiento} & \texttt{DATE} & Sí &  & Para comprobar la edad mínima de ocho años; la edad no se guarda (\mbox{CU-02}). \\ \hline
-\texttt{idioma\_\allowbreak{}preferido} & \texttt{VARCHAR(10)} & No &  & Idioma de la interfaz y de los correos, \texttt{es-MX} o \texttt{en} (\mbox{D-21}); viaja con el jugador a cualquier dispositivo (\mbox{CU-05} \mbox{RN-05}). Por omisión, \texttt{es-MX}. \\ \hline
+\texttt{idioma\_\allowbreak{}preferido} & \texttt{VARCHAR(10)} & No &  & Idioma de la interfaz y de los correos, \texttt{es-MX} o \texttt{en} (\mbox{D-21}); viaja con el jugador a cualquier dispositivo (\mbox{CU-06} \mbox{RN-05}). Por omisión, \texttt{es-MX}. \\ \hline
 \texttt{intentos\_\allowbreak{}fallidos} & \texttt{TINYINT} & No &  & Intentos fallidos consecutivos de inicio de sesión (\mbox{CU-01} \mbox{RN-03}). Por omisión, \texttt{0}. \\ \hline
 \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido} & \texttt{DATETIME2(0)} & Sí &  & Para restablecer el contador a las 24 horas (\mbox{CU-01} \mbox{RN-03}). \\ \hline
 \texttt{bloqueada\_\allowbreak{}hasta} & \texttt{DATETIME2(0)} & Sí &  & Fin del bloqueo escalonado vigente. \\ \hline

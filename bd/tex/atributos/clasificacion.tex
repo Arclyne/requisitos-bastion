@@ -6,15 +6,15 @@ Clasificación
 Clasificación
 }
 
-\atributosde{EstadisticaModo}{Estadísticas y elo de cada cuenta en cada modo, solo de partidas clasificatorias (\mbox{CU-16} \mbox{RN-12}); es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, \mbox{D-04}).}
+\atributosde{EstadisticaModo}{Estadísticas y elo de cada cuenta en cada modo, solo de partidas clasificatorias (\mbox{CU-17} \mbox{RN-12}); es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, \mbox{D-04}).}
 \begin{tablaatributos}
 \texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Cuenta. \\ \hline
 \texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & PK, FK & Modo. \\ \hline
-\texttt{puntos\_\allowbreak{}elo} & \texttt{SMALLINT} & No &  & Elo actual en el modo; lo escribe solo el \mbox{CU-16}. Por omisión, \texttt{1000}. \\ \hline
-\texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}partida} & \texttt{DATETIME2(0)} & Sí &  & Fin de la última partida clasificatoria del modo: cuándo se alcanzó el elo actual; desempata el ranking (\mbox{CU-23} \mbox{RN-05}). \\ \hline
-\texttt{partidas\_\allowbreak{}jugadas} & \texttt{INT} & No &  & Partidas clasificatorias, incluidas las tablas, que no son victoria ni derrota (\mbox{CU-16} \mbox{FA-03}). Por omisión, \texttt{0}. \\ \hline
+\texttt{puntos\_\allowbreak{}elo} & \texttt{SMALLINT} & No &  & Elo actual en el modo; lo escribe solo el \mbox{CU-17}. Por omisión, \texttt{1000}. \\ \hline
+\texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}partida} & \texttt{DATETIME2(0)} & Sí &  & Fin de la última partida clasificatoria del modo: cuándo se alcanzó el elo actual; desempata el ranking (\mbox{CU-24} \mbox{RN-05}). \\ \hline
+\texttt{partidas\_\allowbreak{}jugadas} & \texttt{INT} & No &  & Partidas clasificatorias, incluidas las tablas, que no son victoria ni derrota (\mbox{CU-17} \mbox{FA-03}). Por omisión, \texttt{0}. \\ \hline
 \texttt{partidas\_\allowbreak{}ganadas} & \texttt{INT} & No &  & Victorias. El porcentaje se calcula y no se guarda (\mbox{DES-08} \mbox{RN-01}). Por omisión, \texttt{0}. \\ \hline
 \texttt{partidas\_\allowbreak{}perdidas} & \texttt{INT} & No &  & Derrotas, incluidas rendiciones y abandonos. Por omisión, \texttt{0}. \\ \hline
-\texttt{abandonos} & \texttt{INT} & No &  & Abandonos en partidas en línea, para la moderación (\mbox{CU-15} \mbox{RN-05}). Por omisión, \texttt{0}. \\ \hline
+\texttt{abandonos} & \texttt{INT} & No &  & Abandonos en partidas en línea, para la moderación (\mbox{CU-16} \mbox{RN-05}). Por omisión, \texttt{0}. \\ \hline
 \end{tablaatributos}
 

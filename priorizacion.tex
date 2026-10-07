@@ -9,7 +9,7 @@
 \section*{Priorización de requisitos y casos de uso}
 \addcontentsline{toc}{section}{Priorización de requisitos y casos de uso}
 
-La primera versión de este documento describía 49 casos de uso. El cliente señaló que eran demasiados para el plazo, y el equipo reconoció que más de la mitad eran ideas propias y no requisitos. Esta sección fija el alcance de la versión que se entrega: \textbf{25 casos de uso} que cubren lo que el cliente exige y lo mínimo para jugar Quoridor en línea, 24 de la versión anterior y uno nuevo, el \mbox{CU-10}. De los 25 casos restantes, 22 pasan a \textbf{requisitos deseables} y 3 se fusionan con otros casos; ninguno se pierde, para retomarlos sin rehacer el análisis.
+La primera versión de este documento describía 49 casos de uso. El cliente señaló que eran demasiados para el plazo, y el equipo reconoció que más de la mitad eran ideas propias y no requisitos. Esta sección fija el alcance de la versión que se entrega: \textbf{26 casos de uso} que cubren lo que el cliente exige y lo mínimo para jugar Quoridor en línea: 23 de la versión anterior, dos que salen de separar el antiguo ``Cambiar contraseña o correo'' (\mbox{CU-04} y \mbox{CU-05}) y uno nuevo, el \mbox{CU-11}. De los 25 casos restantes, 22 pasan a \textbf{requisitos deseables} y 3 se fusionan con otros casos; ninguno se pierde, para retomarlos sin rehacer el análisis. El cambio de correo, que vivía dentro de aquel caso, se elimina del sistema (\mbox{D-28}).
 
 \subsection*{Requisitos obligatorios del cliente}
 \addcontentsline{toc}{subsection}{Requisitos obligatorios del cliente}
@@ -26,17 +26,17 @@ El cliente pide trece características generales para todo juego del curso. Cada
 \endhead
 1 & Registro de usuarios o jugadores & \mbox{CU-02}, que incluye la verificación del correo. \\ \hline
 2 & Cambio de contraseñas & \mbox{CU-04}. \\ \hline
-3 & Personalización de perfil & \mbox{CU-05} lo edita, con los enlaces a redes sociales; \mbox{CU-06} lo muestra a los demás. \\ \hline
+3 & Personalización de perfil & \mbox{CU-06} lo edita, con los enlaces a redes sociales; \mbox{CU-07} lo muestra a los demás. \\ \hline
 4 & Inicio de sesión o jugar como invitado & \mbox{CU-01} y \mbox{CU-03}. \\ \hline
-5 & Invitación de amigos por correo o código & \mbox{CU-21}. \\ \hline
-6 & Lista de amigos & \mbox{CU-19}, \mbox{CU-20} y \mbox{CU-22}. \\ \hline
-7 & Jugadores expulsados & \mbox{CU-10} saca a un jugador de la sala; \mbox{CU-25} suspende o expulsa del juego por acumulación de reportes. \\ \hline
-8 & Lobby o sala de espera & \mbox{CU-08} y \mbox{CU-09}. \\ \hline
-9 & Chat colaborativo en sala o en partida & \mbox{CU-18}. \\ \hline
-10 & Unirse a la partida & \mbox{CU-09} con el código de una sala, y \mbox{CU-07} con el emparejamiento. \\ \hline
-11 & Marcadores o tabla de ganadores & \mbox{CU-23}, alimentado por las partidas clasificatorias del \mbox{CU-07} al cerrarse en el \mbox{CU-16}. \\ \hline
-12 & Iniciar juego & \mbox{CU-08} inicia la partida de una sala; \mbox{CU-07}, la de un emparejamiento. \\ \hline
-13 & Personalización de reglas o \textit{look and feel} & \mbox{CU-08}: el anfitrión elige el modo, los muros por jugador y el reloj. \\ \hline
+5 & Invitación de amigos por correo o código & \mbox{CU-22}. \\ \hline
+6 & Lista de amigos & \mbox{CU-20}, \mbox{CU-21} y \mbox{CU-23}. \\ \hline
+7 & Jugadores expulsados & \mbox{CU-11} saca a un jugador de la sala; \mbox{CU-26} suspende o expulsa del juego por acumulación de reportes. \\ \hline
+8 & Lobby o sala de espera & \mbox{CU-09} y \mbox{CU-10}. \\ \hline
+9 & Chat colaborativo en sala o en partida & \mbox{CU-19}. \\ \hline
+10 & Unirse a la partida & \mbox{CU-10} con el código de una sala, y \mbox{CU-08} con el emparejamiento. \\ \hline
+11 & Marcadores o tabla de ganadores & \mbox{CU-24}, alimentado por las partidas clasificatorias del \mbox{CU-08} al cerrarse en el \mbox{CU-17}. \\ \hline
+12 & Iniciar juego & \mbox{CU-09} inicia la partida de una sala; \mbox{CU-08}, la de un emparejamiento. \\ \hline
+13 & Personalización de reglas o \textit{look and feel} & \mbox{CU-09}: el anfitrión elige el modo, los muros por jugador y el reloj. \\ \hline
 \end{longtable}
 \end{center}
 
@@ -51,13 +51,13 @@ Además de las características, el cliente fija estas restricciones, que tampoc
 \textbf{Restricción obligatoria} & \textbf{Identificador} & \textbf{Dónde se cumple} \\ \hline
 \endhead
 Programar en C\# & \mbox{CON-01} & Todo el sistema: cliente y Servidor de partidas. \\ \hline
-Conexión por TCP, sin WebSockets & \mbox{CON-02}, \mbox{CON-03} & Todo mensaje entre el cliente y el Servidor de partidas, como \texttt{MOVE\_\allowbreak{}PAWN\_\allowbreak{}REQUEST} del \mbox{CU-11}. \\ \hline
+Conexión por TCP, sin WebSockets & \mbox{CON-02}, \mbox{CON-03} & Todo mensaje entre el cliente y el Servidor de partidas, como \texttt{MOVE\_\allowbreak{}PAWN\_\allowbreak{}REQUEST} del \mbox{CU-12}. \\ \hline
 Base de datos en SQL Server & \mbox{CON-04} & Modelo de datos e implementación. \\ \hline
-Multijugador en línea & sin identificador en el repositorio & \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-11}, \mbox{CU-12}, \mbox{CU-15}, \mbox{CU-16} y \mbox{CU-17}. \\ \hline
-Segundo factor de autenticación & \mbox{CON-08} & \mbox{CU-01} lo pide al iniciar sesión; \mbox{CU-04} lo activa (\mbox{Q-03}). \\ \hline
-Moderación simple, por reportes & \mbox{CON-09} & \mbox{CU-18} aplica el filtro de palabras; \mbox{CU-25} recibe los reportes y aplica los strikes de forma automática, sin moderadores. \\ \hline
+Multijugador en línea & sin identificador en el repositorio & \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-12}, \mbox{CU-13}, \mbox{CU-16}, \mbox{CU-17} y \mbox{CU-18}. \\ \hline
+Segundo factor de autenticación & \mbox{CON-08} & \mbox{CU-01} lo pide al iniciar sesión; \mbox{CU-05} lo activa (\mbox{Q-03}). \\ \hline
+Moderación simple, por reportes & \mbox{CON-09} & \mbox{CU-19} aplica el filtro de palabras; \mbox{CU-26} recibe los reportes y aplica los strikes de forma automática, sin moderadores. \\ \hline
 Soporte a inglés y español & \mbox{CON-11} & Todos los casos: los textos visibles salen de los catálogos de recursos. \\ \hline
-Catorce semanas con incrementos semanales auditables & sin identificador en el repositorio & Esta priorización: los 25 casos caben en el plazo y cada incremento cierra casos completos. \\ \hline
+Catorce semanas con incrementos semanales auditables & sin identificador en el repositorio & Esta priorización: los 26 casos caben en el plazo y cada incremento cierra casos completos. \\ \hline
 \end{longtable}
 \end{center}
 
@@ -82,9 +82,9 @@ Cada caso recibe una \textbf{categoría}, que dice de dónde sale, y una \textbf
   \item \textbf{Won't (esta versión).} No entra en el plazo. Son los requisitos deseables.
 \end{reglas}
 
-\textbf{La jugabilidad va primero.} Dentro de los \textit{Must}, los casos de jugabilidad preceden a los de cuenta y social: una partida completa entre dos clientes por TCP es el primer incremento que demuestra algo, y el inicio de sesión con segundo factor, el chat moderado, los amigos y los reportes se montan encima. Una partida nunca tiene tres jugadores: los modos admiten solo 2 o 4 (\mbox{CU-07} \mbox{RN-02}), y el modelo de datos lo fija con un \texttt{CHECK}.
+\textbf{La jugabilidad va primero.} Dentro de los \textit{Must}, los casos de jugabilidad preceden a los de cuenta y social: una partida completa entre dos clientes por TCP es el primer incremento que demuestra algo, y el inicio de sesión con segundo factor, el chat moderado, los amigos y los reportes se montan encima. Una partida nunca tiene tres jugadores: los modos admiten solo 2 o 4 (\mbox{CU-08} \mbox{RN-02}), y el modelo de datos lo fija con un \texttt{CHECK}.
 
-\textbf{Solo el emparejamiento clasifica.} Las partidas que crea el \mbox{CU-07} son clasificatorias: mueven el elo y las estadísticas que muestra el ranking del \mbox{CU-23}. Las de sala privada (\mbox{CU-08}) son amistosas y no cambian ni el elo ni las estadísticas, para que dos amigos no puedan regalarse puntos (\mbox{CU-08} \mbox{RN-03}, \mbox{CU-16} \mbox{RN-03}).
+\textbf{Solo el emparejamiento clasifica.} Las partidas que crea el \mbox{CU-08} son clasificatorias: mueven el elo y las estadísticas que muestra el ranking del \mbox{CU-24}. Las de sala privada (\mbox{CU-09}) son amistosas y no cambian ni el elo ni las estadísticas, para que dos amigos no puedan regalarse puntos (\mbox{CU-09} \mbox{RN-03}, \mbox{CU-17} \mbox{RN-03}).
 
 \subsection*{Núcleo de jugabilidad}
 \addcontentsline{toc}{subsection}{Núcleo de jugabilidad}
@@ -99,18 +99,18 @@ Cada regla del núcleo ya está especificada en un caso de uso. La tabla dice d�
 \hline
 \textbf{Regla o función} & \textbf{Dónde está} & \textbf{Qué fija} \\ \hline
 \endhead
-Mover el peón & \mbox{CU-11} \mbox{RN-02}, \mbox{RN-04} & Una casilla en ortogonal, libre y sin muro de por medio. \\ \hline
-Salto recto y diagonal & \mbox{CU-11} \mbox{RN-03} & Recto sobre un rival adyacente; en diagonal si detrás hay muro u otro peón. \\ \hline
-Colocar muros sin encerrar a nadie & \mbox{CU-12} \mbox{RN-02} a \mbox{RN-05} & Muros por modo, de dos casillas, sin solaparse, y nunca sin camino a la meta. \\ \hline
-Turnos & \mbox{CU-11} \mbox{RN-05}, \mbox{RN-06}; \mbox{CU-12} \mbox{RN-06} & Una sola acción por turno y jugadas numeradas. \\ \hline
-Reloj & \mbox{CU-11} \mbox{FA-06}, \mbox{CU-16} \mbox{RN-01} & El servidor descuenta el tiempo; agotarlo termina la partida. \\ \hline
-Condición de victoria & \mbox{CU-16} \mbox{RN-01}, \mbox{RN-02} & Llegar a la fila de meta; en cuatro jugadores se clasifica y la partida sigue. \\ \hline
-Partidas de 2 y 4 jugadores & \mbox{CU-07} \mbox{RN-02} & Clásico 9×9 y rápida 7×7 con dos jugadores; 9×9 con cuatro. \\ \hline
-Buscar partida & \mbox{CU-07} & Cola por modo y reloj con ventana de elo; solo para cuentas registradas. \\ \hline
-Sala privada & \mbox{CU-08}, \mbox{CU-09}, \mbox{CU-10} & Sala con código de seis caracteres, ajustes del anfitrión y expulsión antes de iniciar. \\ \hline
-Reconexión & \mbox{CU-17}, \mbox{CU-15} & La partida espera con el reloj corriendo; a los sesenta segundos el rival puede reclamarla (\mbox{D-15}). \\ \hline
-Fin de partida & \mbox{CU-16}, \mbox{CU-13}, \mbox{CU-14}, \mbox{CU-15} & Meta, tiempo agotado, rendición, tablas o abandono, todos cerrados por el mismo caso incluido. \\ \hline
-El servidor manda & \mbox{CU-11} \mbox{RN-01}, \mbox{RN-07}; \mbox{CU-12} \mbox{RN-08} & El cliente propone y el servidor valida cada jugada sobre su propio estado. \\ \hline
+Mover el peón & \mbox{CU-12} \mbox{RN-02}, \mbox{RN-04} & Una casilla en ortogonal, libre y sin muro de por medio. \\ \hline
+Salto recto y diagonal & \mbox{CU-12} \mbox{RN-03} & Recto sobre un rival adyacente; en diagonal si detrás hay muro u otro peón. \\ \hline
+Colocar muros sin encerrar a nadie & \mbox{CU-13} \mbox{RN-02} a \mbox{RN-05} & Muros por modo, de dos casillas, sin solaparse, y nunca sin camino a la meta. \\ \hline
+Turnos & \mbox{CU-12} \mbox{RN-05}, \mbox{RN-06}; \mbox{CU-13} \mbox{RN-06} & Una sola acción por turno y jugadas numeradas. \\ \hline
+Reloj & \mbox{CU-12} \mbox{FA-06}, \mbox{CU-17} \mbox{RN-01} & El servidor descuenta el tiempo; agotarlo termina la partida. \\ \hline
+Condición de victoria & \mbox{CU-17} \mbox{RN-01}, \mbox{RN-02} & Llegar a la fila de meta; en cuatro jugadores se clasifica y la partida sigue. \\ \hline
+Partidas de 2 y 4 jugadores & \mbox{CU-08} \mbox{RN-02} & Clásico 9×9 y rápida 7×7 con dos jugadores; 9×9 con cuatro. \\ \hline
+Buscar partida & \mbox{CU-08} & Cola por modo y reloj con ventana de elo; solo para cuentas registradas. \\ \hline
+Sala privada & \mbox{CU-09}, \mbox{CU-10}, \mbox{CU-11} & Sala con código de seis caracteres, ajustes del anfitrión y expulsión antes de iniciar. \\ \hline
+Reconexión & \mbox{CU-18}, \mbox{CU-16} & La partida espera con el reloj corriendo; a los sesenta segundos el rival puede reclamarla (\mbox{D-15}). \\ \hline
+Fin de partida & \mbox{CU-17}, \mbox{CU-14}, \mbox{CU-15}, \mbox{CU-16} & Meta, tiempo agotado, rendición, tablas o abandono, todos cerrados por el mismo caso incluido. \\ \hline
+El servidor manda & \mbox{CU-12} \mbox{RN-01}, \mbox{RN-07}; \mbox{CU-13} \mbox{RN-08} & El cliente propone y el servidor valida cada jugada sobre su propio estado. \\ \hline
 \end{longtable}
 \end{center}
 
@@ -127,33 +127,34 @@ La misma prioridad aparece en la lista de casos de uso y en la fila \textit{Prio
 \hline
 \textbf{ID} & \textbf{Caso de uso} & \textbf{Categoría} & \textbf{Por qué} \\ \hline
 \endhead
-\multicolumn{4}{|l|}{\textbf{Must: debe estar en la entrega (21 casos)}} \\ \hline
-\mbox{CU-07} & Elegir modo y buscar partida clasificatoria & Jugabilidad & Única fuente de partidas clasificatorias: alimenta el elo y el ranking. \\ \hline
-\mbox{CU-11} & Mover el peón & Jugabilidad & Mover el peón y el salto recto o diagonal: regla central de Quoridor, con turno y reloj. \\ \hline
-\mbox{CU-12} & Colocar un muro & Jugabilidad & Colocar muros sin encerrar a nadie: la otra regla central. \\ \hline
-\mbox{CU-15} & Abandonar la partida & Jugabilidad & Abandono y reclamo de victoria: sin él una partida con un jugador caído no termina. \\ \hline
-\mbox{CU-16} & Finalizar la partida & Jugabilidad & Caso incluido: condición de victoria, tiempo agotado y cierre con elo y estadísticas. \\ \hline
-\mbox{CU-17} & Reconectar a una partida en curso & Jugabilidad & Maneja las fallas de red: una desconexión no debe costar la partida. \\ \hline
-\mbox{CU-08} & Crear una sala privada & Obligatorio & Características 8, 12 y 13: sala de espera, iniciar juego y reglas personalizadas. \\ \hline
-\mbox{CU-09} & Unirse a una sala con código & Obligatorio & Característica 10: unirse a la partida. \\ \hline
-\mbox{CU-10} & Expulsar a un jugador de la sala & Obligatorio & Característica 7: jugadores expulsados. \\ \hline
+\multicolumn{4}{|l|}{\textbf{Must: debe estar en la entrega (22 casos)}} \\ \hline
+\mbox{CU-08} & Elegir modo y buscar partida clasificatoria & Jugabilidad & Única fuente de partidas clasificatorias: alimenta el elo y el ranking. \\ \hline
+\mbox{CU-12} & Mover el peón & Jugabilidad & Mover el peón y el salto recto o diagonal: regla central de Quoridor, con turno y reloj. \\ \hline
+\mbox{CU-13} & Colocar un muro & Jugabilidad & Colocar muros sin encerrar a nadie: la otra regla central. \\ \hline
+\mbox{CU-16} & Abandonar la partida & Jugabilidad & Abandono y reclamo de victoria: sin él una partida con un jugador caído no termina. \\ \hline
+\mbox{CU-17} & Finalizar la partida & Jugabilidad & Caso incluido: condición de victoria, tiempo agotado y cierre con elo y estadísticas. \\ \hline
+\mbox{CU-18} & Reconectar a una partida en curso & Jugabilidad & Maneja las fallas de red: una desconexión no debe costar la partida. \\ \hline
+\mbox{CU-09} & Crear una sala privada & Obligatorio & Características 8, 12 y 13: sala de espera, iniciar juego y reglas personalizadas. \\ \hline
+\mbox{CU-10} & Unirse a una sala con código & Obligatorio & Característica 10: unirse a la partida. \\ \hline
+\mbox{CU-11} & Expulsar a un jugador de la sala & Obligatorio & Característica 7: jugadores expulsados. \\ \hline
 \mbox{CU-01} & Iniciar sesión & Obligatorio & Característica 4 y segundo factor (\mbox{CON-08}); sin sesión no hay juego en línea. \\ \hline
 \mbox{CU-02} & Registrar cuenta & Obligatorio & Característica 1; incluye la verificación del correo, sin la cual el \mbox{CU-01} no deja entrar. \\ \hline
 \mbox{CU-03} & Jugar como invitado & Obligatorio & Característica 4: jugar sin crear una cuenta. \\ \hline
-\mbox{CU-04} & Cambiar contraseña o correo & Obligatorio & Característica 2; su flujo alterno activa el segundo factor. \\ \hline
-\mbox{CU-05} & Editar el perfil y las preferencias & Obligatorio & Característica 3, con los enlaces a redes sociales. \\ \hline
-\mbox{CU-06} & Consultar el perfil de otro jugador & Obligatorio & Característica 3: sin él nadie vería las redes sociales que el jugador pone en su perfil. \\ \hline
-\mbox{CU-18} & Enviar un mensaje de chat & Obligatorio & Característica 9 y moderación de chat (\mbox{CON-09}): el filtro de palabras se aplica aquí. Incluye los emotes. \\ \hline
-\mbox{CU-19} & Agregar a un amigo & Obligatorio & Característica 6: lista de amigos. \\ \hline
-\mbox{CU-20} & Responder una solicitud de amistad & Obligatorio & Característica 6: sin aceptar la solicitud no se forma la amistad. \\ \hline
-\mbox{CU-21} & Invitar a un amigo a jugar & Obligatorio & Característica 5: invitación por correo o con el código de la sala. \\ \hline
-\mbox{CU-23} & Consultar el ranking & Obligatorio & Característica 11: tabla de ganadores. \\ \hline
-\mbox{CU-25} & Reportar a un jugador & Obligatorio & Característica 7 y moderación por reportes (\mbox{CON-09}): los strikes restringen, suspenden o expulsan sin moderadores. \\ \hline
+\mbox{CU-04} & Cambiar la contraseña & Obligatorio & Característica 2: cambio de contraseñas. \\ \hline
+\mbox{CU-05} & Activar el segundo factor & Obligatorio & Segundo factor de autenticación (\mbox{CON-08}); el \mbox{CU-01} lo pide al iniciar sesión. \\ \hline
+\mbox{CU-06} & Editar el perfil y las preferencias & Obligatorio & Característica 3, con los enlaces a redes sociales. \\ \hline
+\mbox{CU-07} & Consultar el perfil de otro jugador & Obligatorio & Característica 3: sin él nadie vería las redes sociales que el jugador pone en su perfil. \\ \hline
+\mbox{CU-19} & Enviar un mensaje de chat & Obligatorio & Característica 9 y moderación de chat (\mbox{CON-09}): el filtro de palabras se aplica aquí. Incluye los emotes. \\ \hline
+\mbox{CU-20} & Agregar a un amigo & Obligatorio & Característica 6: lista de amigos. \\ \hline
+\mbox{CU-21} & Responder una solicitud de amistad & Obligatorio & Característica 6: sin aceptar la solicitud no se forma la amistad. \\ \hline
+\mbox{CU-22} & Invitar a un amigo a jugar & Obligatorio & Característica 5: invitación por correo o con el código de la sala. \\ \hline
+\mbox{CU-24} & Consultar el ranking & Obligatorio & Característica 11: tabla de ganadores. \\ \hline
+\mbox{CU-26} & Reportar a un jugador & Obligatorio & Característica 7 y moderación por reportes (\mbox{CON-09}): los strikes restringen, suspenden o expulsan sin moderadores. \\ \hline
 \multicolumn{4}{|l|}{\textbf{Should: debería estar (4 casos)}} \\ \hline
-\mbox{CU-13} & Ofrecer y aceptar tablas & Jugabilidad & Termina la partida por acuerdo y reutiliza el cierre del \mbox{CU-16}. \\ \hline
-\mbox{CU-14} & Rendirse & Jugabilidad & Da una salida limpia sin forzar un abandono y reutiliza el cierre del \mbox{CU-16}. \\ \hline
-\mbox{CU-22} & Eliminar a un amigo & Obligatorio & Completa la administración de la lista de amigos. \\ \hline
-\mbox{CU-24} & Consultar el historial de partidas & Agregado & Las partidas ya se guardan; el caso solo las muestra. \\ \hline
+\mbox{CU-14} & Ofrecer y aceptar tablas & Jugabilidad & Termina la partida por acuerdo y reutiliza el cierre del \mbox{CU-17}. \\ \hline
+\mbox{CU-15} & Rendirse & Jugabilidad & Da una salida limpia sin forzar un abandono y reutiliza el cierre del \mbox{CU-17}. \\ \hline
+\mbox{CU-23} & Eliminar a un amigo & Obligatorio & Completa la administración de la lista de amigos. \\ \hline
+\mbox{CU-25} & Consultar el historial de partidas & Agregado & Las partidas ya se guardan; el caso solo las muestra. \\ \hline
 \end{longtable}
 \end{center}
 
@@ -172,7 +173,7 @@ Tres casos de la versión anterior no describían una meta propia del jugador, o
 \endhead
 CU-04 & Verificar correo y activar la cuenta & \mbox{CU-02} & Pasos 25 a 33 del registro y sus flujos alternos \mbox{FA-12} a \mbox{FA-15}: el jugador captura el código que recibió por correo y la cuenta pasa a \texttt{ACTIVA}. \\ \hline
 CU-05 & Cerrar sesión & \mbox{CU-01} & Regla de negocio sobre la vida de la sesión (\mbox{RN-17}). Cerrar sesión no es una meta del jugador ni tiene flujos alternos propios. \\ \hline
-CU-29 & Enviar un emote & \mbox{CU-18} & Flujo alterno \mbox{FA-09} del chat de partida, con seis emotes fijos. \\ \hline
+CU-29 & Enviar un emote & \mbox{CU-19} & Flujo alterno \mbox{FA-09} del chat de partida, con seis emotes fijos. \\ \hline
 \end{longtable}
 \end{center}
 
@@ -183,14 +184,14 @@ CU-29 & Enviar un emote & \mbox{CU-18} & Flujo alterno \mbox{FA-09} del chat de 
 \begin{tabular}{|l|c|c|c|c|}
 \hline
 \textbf{Categoría} & \textbf{Must} & \textbf{Should} & \textbf{Alcance} & \textbf{Deseables} \\ \hline
-(a) Obligatorio del cliente & 15 & 1 & 16 & 9 \\ \hline
+(a) Obligatorio del cliente & 16 & 1 & 17 & 9 \\ \hline
 (b) Núcleo de jugabilidad & 6 & 2 & 8 & --- \\ \hline
 (c) Agregado del equipo & --- & 1 & 1 & 13 \\ \hline
-\textbf{Total} & \textbf{21} & \textbf{4} & \textbf{25} & \textbf{22} \\ \hline
+\textbf{Total} & \textbf{22} & \textbf{4} & \textbf{26} & \textbf{22} \\ \hline
 \end{tabular}
 \end{center}
 
-Los 25 casos \textit{Must} y \textit{Should} forman el alcance de esta versión. Si el plazo aprieta, se recorta primero por la fila \textit{Should}; nunca por un \textit{Must}. Los requisitos deseables se describen en la sección siguiente.
+Los 26 casos \textit{Must} y \textit{Should} forman el alcance de esta versión. Si el plazo aprieta, se recorta primero por la fila \textit{Should}; nunca por un \textit{Must}. Los requisitos deseables se describen en la sección siguiente.
 
 \newpage
 %=====================================================================
@@ -216,19 +217,19 @@ Ningún caso de uso del alcance depende de ellos. Cada uno conserva su análisis
 \mbox{DES-03} & Configurar la cuenta la primera vez & CU-08 & Agregado & Elegir peón e icono al entrar es personalización; la cuenta funciona con los valores predeterminados. \\ \hline
 \mbox{DES-04} & Gestionar sesiones activas & CU-10 & Obligatorio & Cerrar sesiones a distancia es seguridad deseable que el cliente no exige. \\ \hline
 \mbox{DES-05} & Borrar la cuenta & CU-11 & Agregado & El cliente no pide la baja de cuenta. \\ \hline
-\mbox{DES-06} & Cambiar el nombre (una sola vez) & CU-13 & Agregado & El \mbox{CU-05} ya cubre la personalización del perfil; el nombre se elige en el registro. \\ \hline
+\mbox{DES-06} & Cambiar el nombre (una sola vez) & CU-13 & Agregado & El \mbox{CU-06} ya cubre la personalización del perfil; el nombre se elige en el registro. \\ \hline
 \mbox{DES-07} & Equipar un objeto cosmético & CU-14 & Agregado & Depende del inventario y de la tienda. \\ \hline
-\mbox{DES-08} & Consultar el perfil propio & CU-15 & Agregado & El \mbox{CU-05} ya muestra el perfil que el jugador edita. \\ \hline
+\mbox{DES-08} & Consultar el perfil propio & CU-15 & Agregado & El \mbox{CU-06} ya muestra el perfil que el jugador edita. \\ \hline
 \mbox{DES-09} & Jugar contra la IA & CU-27 & Agregado & Exige un algoritmo propio. \\ \hline
-\mbox{DES-10} & Silenciar o bloquear a un jugador & CU-33 & Obligatorio & La moderación que pide el cliente se cubre con los reportes del \mbox{CU-25}. \\ \hline
+\mbox{DES-10} & Silenciar o bloquear a un jugador & CU-33 & Obligatorio & La moderación que pide el cliente se cubre con los reportes del \mbox{CU-26}. \\ \hline
 \mbox{DES-11} & Ver una partida como espectador & CU-34 & Agregado & No lo pide el cliente. \\ \hline
 \mbox{DES-12} & Ver la repetición de una partida & CU-37 & Agregado & No lo pide el cliente; las jugadas se guardan igual. \\ \hline
 \mbox{DES-13} & Comprar un objeto en la tienda & CU-38 & Agregado & Economía del juego: no la pide el cliente. \\ \hline
 \mbox{DES-14} & Comprar y abrir una caja & CU-39 & Agregado & Economía del juego: no la pide el cliente. \\ \hline
 \mbox{DES-15} & Consultar el historial de monedas & CU-40 & Agregado & Economía del juego: no la pide el cliente. \\ \hline
 \mbox{DES-16} & Avanzar en el tutorial & CU-41 & Agregado & Basta con una pantalla de reglas. \\ \hline
-\mbox{DES-17} & Revisar un reporte y resolverlo & CU-43 & Obligatorio & El cliente pide moderación simple; los strikes automáticos del \mbox{CU-25} la cubren sin moderadores. \\ \hline
-\mbox{DES-18} & Aplicar una sanción & CU-44 & Obligatorio & La sanción la aplica el sistema al acumular strikes (\mbox{CU-25}). \\ \hline
+\mbox{DES-17} & Revisar un reporte y resolverlo & CU-43 & Obligatorio & El cliente pide moderación simple; los strikes automáticos del \mbox{CU-26} la cubren sin moderadores. \\ \hline
+\mbox{DES-18} & Aplicar una sanción & CU-44 & Obligatorio & La sanción la aplica el sistema al acumular strikes (\mbox{CU-26}). \\ \hline
 \mbox{DES-19} & Apelar una sanción & CU-45 & Obligatorio & Sin moderadores no hay quien resuelva la apelación. \\ \hline
 \mbox{DES-20} & Agregar un moderador & CU-46 & Obligatorio & Esta versión no tiene el rol de moderador. \\ \hline
 \mbox{DES-21} & Retirar a un moderador & CU-47 & Obligatorio & Esta versión no tiene el rol de moderador. \\ \hline
@@ -236,4 +237,4 @@ Ningún caso de uso del alcance depende de ellos. Cada uno conserva su análisis
 \end{longtable}
 \end{center}
 
-La categoría \textit{Obligatorio} de \mbox{DES-01}, \mbox{DES-04}, \mbox{DES-10} y \mbox{DES-17} a \mbox{DES-22} indica que en la versión anterior se atribuían a un requisito del cliente. Al revisar las trece características y las restricciones se comprobó que el requisito se cumple con otro caso del alcance: el cambio de contraseña con el \mbox{CU-04}, y la moderación con los reportes y strikes del \mbox{CU-25}.
+La categoría \textit{Obligatorio} de \mbox{DES-01}, \mbox{DES-04}, \mbox{DES-10} y \mbox{DES-17} a \mbox{DES-22} indica que en la versión anterior se atribuían a un requisito del cliente. Al revisar las trece características y las restricciones se comprobó que el requisito se cumple con otro caso del alcance: el cambio de contraseña con el \mbox{CU-04}, y la moderación con los reportes y strikes del \mbox{CU-26}.

@@ -10,7 +10,7 @@ Cada funcionalidad remite al caso de uso o al requisito deseable donde se descri
 
 Hay 52 funcionalidades. \textbf{29 pertenecen a los 25 casos de uso del alcance} y \textbf{23 a los 22 requisitos deseables}. Las de los requisitos deseables conservan el análisis que tenían antes del recorte, para retomarlas sin rehacerlo, y llevan la marca \textit{(requisito deseable)} en la fila \textit{Caso de uso}. Las del alcance se actualizaron conforme a los casos vigentes.
 
-Todos los casos del alcance tienen al menos una ficha salvo el \mbox{CU-10}. Expulsar a un jugador de la sala solo lee la \textit{Sesion} y la \textit{Sala} para comprobar que quien expulsa es el anfitrión; lo que cambia, la plaza y la lista de expulsados, vive en la memoria del Servidor de partidas (\mbox{D-27}), así que no escribe en la base de datos. Tampoco tiene ficha el envío de un emote, que ahora es el \mbox{FA-09} del \mbox{CU-18}: no lee ni escribe en la base de datos (\mbox{D-10}). Los otros dos casos absorbidos sí la tienen: la verificación del correo es la \mbox{F-04}, que forma parte del \mbox{CU-02}, y cerrar sesión es la \mbox{F-15}, que describe la \mbox{RN-17} del \mbox{CU-01}. El perfil propio (\mbox{DES-08}) no tiene ficha: la \mbox{F-06} describe solo el perfil de otro jugador (\mbox{CU-06}).
+Todos los casos del alcance tienen al menos una ficha salvo el \mbox{CU-11}. Expulsar a un jugador de la sala solo lee la \textit{Sesion} y la \textit{Sala} para comprobar que quien expulsa es el anfitrión; lo que cambia, la plaza y la lista de expulsados, vive en la memoria del Servidor de partidas (\mbox{D-27}), así que no escribe en la base de datos. Tampoco tiene ficha el envío de un emote, que ahora es el \mbox{FA-09} del \mbox{CU-19}: no lee ni escribe en la base de datos (\mbox{D-10}). Los otros dos casos absorbidos sí la tienen: la verificación del correo es la \mbox{F-04}, que forma parte del \mbox{CU-02}, y cerrar sesión es la \mbox{F-15}, que describe la \mbox{RN-17} del \mbox{CU-01}. El perfil propio (\mbox{DES-08}) no tiene ficha: la \mbox{F-06} describe solo el perfil de otro jugador (\mbox{CU-07}).
 
 \textbf{Tras la revisión del alcance.} Varias decisiones cambian dónde viven los datos sin cambiar lo que hace cada funcionalidad. La \mbox{D-25} fija el alcance por los requisitos del cliente: entran los casos que cubren una de las trece características o una restricción obligatoria y los del núcleo de jugabilidad, y el resto pasa a requisitos deseables. Con ello \textit{Amistad}, \textit{Solicitud}, \textit{Invitacion} y \textit{EnlaceRed}, y las columnas \texttt{id\_\allowbreak{}icono} y \texttt{codigo\_\allowbreak{}amigo} de \textit{Usuario}, pasan al núcleo porque las usan casos del alcance, mientras que \textit{Silencio}, \textit{Bloqueo} y \textit{Apelacion} solo las usan requisitos deseables. Las tablas que solo escriben los deseables van en el script de fase posterior (\mbox{D-22}). Los tokens y códigos de acceso son una sola estructura, \textit{CodigoVerificacion}, los términos aceptados son columnas de \textit{Usuario} y el motivo de reporte es un dominio (\mbox{D-23}). La cola de emparejamiento, las plazas de sala y la lista de expulsados viven en la memoria del Servidor de partidas (\mbox{D-24}, \mbox{D-27}): las fichas nombran \textit{ColaEmparejamiento} y \textit{SalaParticipante} como lo hacen los casos de uso, pero esas operaciones no llegan a la base de datos. Por último, la moderación es por strikes automáticos, sin moderadores (\mbox{D-26}).
 
@@ -58,7 +58,7 @@ El sistema distingue dos formas de eliminar, y la elección no es indiferente pa
 
 \begin{reglas}
   \item \textbf{Eliminación lógica.} La fila se conserva y cambia de estado. Se aplica a lo que otros registros necesitan seguir referenciando o a lo que tiene valor como evidencia: la sesión cerrada recibe \texttt{fecha\_\allowbreak{}fin} y su motivo (\mbox{F-10}, \mbox{F-15}, \mbox{F-45}) y la sala pasa a \texttt{CERRADA} (\mbox{F-18}, \mbox{F-27}). En los requisitos deseables, la cuenta dada de baja pasa a \texttt{ELIMINADA} y se anonimiza (\mbox{F-12}) y la sanción retirada recibe \texttt{fecha\_\allowbreak{}retiro} (\mbox{F-47}, \mbox{F-49}). Por eso la cuenta no tiene eliminación en el alcance: borrarla físicamente arrastraría por clave foránea las partidas, las jugadas y los mensajes de los demás jugadores que participaron en ellas.
-  \item \textbf{Eliminación física.} La fila desaparece. Se aplica a lo que describe un estado presente y no un hecho pasado: una solicitud ya respondida (\mbox{F-39}), una amistad terminada (\mbox{F-41}) y un enlace quitado del perfil (\mbox{F-07}); en los requisitos deseables, también un silencio o un bloqueo retirados (\mbox{F-42}). Conservar esas filas no aporta información y obligaría a filtrarlas en cada consulta. La entrada en la cola de emparejamiento (\mbox{F-16}, \mbox{F-17}), la plaza en una sala (\mbox{F-18}, \mbox{F-19}) y la lista de expulsados de una sala (\mbox{CU-10}) siguen el mismo criterio, pero viven en la memoria del Servidor de partidas y no son filas (\mbox{D-24}, \mbox{D-27}).
+  \item \textbf{Eliminación física.} La fila desaparece. Se aplica a lo que describe un estado presente y no un hecho pasado: una solicitud ya respondida (\mbox{F-39}), una amistad terminada (\mbox{F-41}) y un enlace quitado del perfil (\mbox{F-07}); en los requisitos deseables, también un silencio o un bloqueo retirados (\mbox{F-42}). Conservar esas filas no aporta información y obligaría a filtrarlas en cada consulta. La entrada en la cola de emparejamiento (\mbox{F-16}, \mbox{F-17}), la plaza en una sala (\mbox{F-18}, \mbox{F-19}) y la lista de expulsados de una sala (\mbox{CU-11}) siguen el mismo criterio, pero viven en la memoria del Servidor de partidas y no son filas (\mbox{D-24}, \mbox{D-27}).
   \item \textbf{Sin eliminación.} Jugadas, ofertas de tablas, invitaciones, reportes, sanciones y bitácoras nunca se eliminan ni se modifican desde la aplicación más allá de su estado. Lo mismo vale, en los requisitos deseables, para los movimientos de monedas y las apelaciones: una jugada deshecha contra la IA se marca, no se borra (\mbox{F-26}), y una corrección de monedas es un movimiento nuevo (\mbox{F-37}).
 \end{reglas}
 
@@ -88,7 +88,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item \textbf{\textit{Modo}:} los modos activos.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textbf{\textit{Usuario}:} \texttt{tipo\_\allowbreak{}cuenta} = \texttt{REGISTRADA}, \texttt{estado\_\allowbreak{}cuenta} = \texttt{PENDIENTE}, \texttt{rol} = \texttt{JUGADOR}, \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}nacimiento}, \texttt{idioma\_\allowbreak{}preferido}, un \texttt{codigo\_\allowbreak{}amigo} único y \texttt{fecha\_\allowbreak{}registro}; \texttt{intentos\_\allowbreak{}fallidos} en cero, \texttt{bloqueada\_\allowbreak{}hasta} en nulo y \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} en falso. El \texttt{id\_\allowbreak{}icono} toma el primero de los treinta y dos predefinidos (\mbox{CU-05} \mbox{RN-06}).
+    \item \textbf{\textit{Usuario}:} \texttt{tipo\_\allowbreak{}cuenta} = \texttt{REGISTRADA}, \texttt{estado\_\allowbreak{}cuenta} = \texttt{PENDIENTE}, \texttt{rol} = \texttt{JUGADOR}, \texttt{nickname}, \texttt{correo}, \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{fecha\_\allowbreak{}nacimiento}, \texttt{idioma\_\allowbreak{}preferido}, un \texttt{codigo\_\allowbreak{}amigo} único y \texttt{fecha\_\allowbreak{}registro}; \texttt{intentos\_\allowbreak{}fallidos} en cero, \texttt{bloqueada\_\allowbreak{}hasta} en nulo y \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} en falso. El \texttt{id\_\allowbreak{}icono} toma el primero de los treinta y dos predefinidos (\mbox{CU-06} \mbox{RN-06}).
     \item \textbf{\textit{EstadisticaModo}:} una por cada \textit{Modo} activo, con los contadores en cero y el elo inicial.
     \item \textbf{Términos aceptados, en \textit{Usuario}:} \texttt{version\_\allowbreak{}terminos}, \texttt{idioma\_\allowbreak{}terminos} en que se mostró el texto y \texttt{fecha\_\allowbreak{}aceptacion\_\allowbreak{}terminos} (\mbox{D-23}).
     \item \textbf{\textit{CodigoVerificacion}:} \texttt{codigo\_\allowbreak{}hash}, \texttt{proposito} = \texttt{ALTA}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{estado} = \texttt{PENDIENTE}.
@@ -267,7 +267,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
 %--- F-06 Consultar perfil de un jugador
 \begin{prototipocrud}{F-06}{Consultar perfil de un jugador}
   \crudFila{Operación}{Consulta (R)}
-  \crudFila{Caso de uso}{\mbox{CU-06}. El perfil propio, con nivel, divisiones y evolución del elo, es el \mbox{DES-08} (requisito deseable) y no se describe en esta ficha.}
+  \crudFila{Caso de uso}{\mbox{CU-07}. El perfil propio, con nivel, divisiones y evolución del elo, es el \mbox{DES-08} (requisito deseable) y no se describe en esta ficha.}
   \crudFila{Actor}{Jugador o invitado}
   \crudFila{Prototipos}{5b, Perfil de otro jugador · historial común. Las pantallas 5a y 16c muestran el perfil propio y la evolución del elo, del \mbox{DES-08}; se conservan aquí porque se seleccionaron para esta funcionalidad antes del recorte.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -285,11 +285,11 @@ La cuenta es el objeto de información central: casi todas las demás estructura
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Se muestran solo datos públicos: nunca el \texttt{correo}, la \texttt{fecha\_\allowbreak{}nacimiento}, las sesiones ni las sanciones (\mbox{CU-06} \mbox{RN-01}).
-    \item El marcador se calcula en la consulta y cuenta todas las partidas finalizadas que jugaron juntos, clasificatorias y amistosas; las estadísticas por modo solo reflejan las clasificatorias (\mbox{CU-06} \mbox{RN-02}).
-    \item Una cuenta eliminada no tiene perfil consultable y responde como jugador no encontrado (\mbox{CU-06} \mbox{RN-03}, \mbox{FA-03}).
-    \item Los enlaces se muestran con su dirección completa y se abren fuera del juego tras confirmarlo, porque se publican sin revisión (\mbox{CU-06} \mbox{RN-05}, \mbox{D-08}).
-    \item De una cuenta de invitado solo se muestran el \texttt{nickname} provisional y el icono (\mbox{CU-06} \mbox{FA-07}).
+    \item Se muestran solo datos públicos: nunca el \texttt{correo}, la \texttt{fecha\_\allowbreak{}nacimiento}, las sesiones ni las sanciones (\mbox{CU-07} \mbox{RN-01}).
+    \item El marcador se calcula en la consulta y cuenta todas las partidas finalizadas que jugaron juntos, clasificatorias y amistosas; las estadísticas por modo solo reflejan las clasificatorias (\mbox{CU-07} \mbox{RN-02}).
+    \item Una cuenta eliminada no tiene perfil consultable y responde como jugador no encontrado (\mbox{CU-07} \mbox{RN-03}, \mbox{FA-03}).
+    \item Los enlaces se muestran con su dirección completa y se abren fuera del juego tras confirmarlo, porque se publican sin revisión (\mbox{CU-07} \mbox{RN-05}, \mbox{D-08}).
+    \item De una cuenta de invitado solo se muestran el \texttt{nickname} provisional y el icono (\mbox{CU-07} \mbox{FA-07}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Se muestra el perfil público del otro jugador —icono, enlaces a redes sociales y estadísticas por modo—, el marcador entre ambos, sus últimas partidas juntos y las acciones disponibles según la relación: retar, añadir o eliminar amigo y reportar.}
 \end{prototipocrud}
@@ -314,7 +314,7 @@ La cuenta es el objeto de información central: casi todas las demás estructura
 %--- F-07 Editar perfil
 \begin{prototipocrud}{F-07}{Editar perfil}
   \crudFila{Operación}{Actualización (U), Creación (C), Eliminación (D)}
-  \crudFila{Caso de uso}{\mbox{CU-05}}
+  \crudFila{Caso de uso}{\mbox{CU-06}}
   \crudFila{Actor}{Jugador}
   \crudFila{Prototipos}{9c, Editar perfil · foto, nombre y título; 12c, Ajustes · idioma. La pantalla 9c muestra además la foto, el cambio de nombre y el título, que ya no están en el caso (ver \textit{Diferencias entre prototipos y casos de uso}).}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -337,14 +337,14 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item \textbf{\textit{EnlaceRed}:} los que el jugador quitó; los enlaces del \textit{Usuario} se sustituyen por los recibidos. Borrado físico.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item El \texttt{nickname} no se modifica aquí (\mbox{CU-05} \mbox{RN-01}).
-    \item Máximo cuatro enlaces y ninguno de un acortador (\mbox{CU-05} \mbox{RN-02}, \mbox{RN-03}).
-    \item Todas las validaciones del cliente se repiten en el servidor (\mbox{CU-05} \mbox{RN-04}).
-    \item El \texttt{idioma\_\allowbreak{}preferido} se guarda en la cuenta y viaja con el jugador; el que se elige en la pantalla de inicio de sesión es configuración local (\mbox{CU-05} \mbox{RN-05}).
-    \item El icono es uno de los treinta y dos predefinidos y toda cuenta nace con el primero (\mbox{CU-05} \mbox{RN-06}).
+    \item El \texttt{nickname} no se modifica aquí (\mbox{CU-06} \mbox{RN-01}).
+    \item Máximo cuatro enlaces y ninguno de un acortador (\mbox{CU-06} \mbox{RN-02}, \mbox{RN-03}).
+    \item Todas las validaciones del cliente se repiten en el servidor (\mbox{CU-06} \mbox{RN-04}).
+    \item El \texttt{idioma\_\allowbreak{}preferido} se guarda en la cuenta y viaja con el jugador; el que se elige en la pantalla de inicio de sesión es configuración local (\mbox{CU-06} \mbox{RN-05}).
+    \item El icono es uno de los treinta y dos predefinidos y toda cuenta nace con el primero (\mbox{CU-06} \mbox{RN-06}).
     \item Los enlaces se publican sin revisión (\mbox{D-08}).
   \end{crudlista}}
-  \crudFila{Resultado esperado}{El perfil muestra el icono, los enlaces y el idioma elegidos. La identidad de acceso no cambió (\mbox{CU-05} \mbox{POST-03}).}
+  \crudFila{Resultado esperado}{El perfil muestra el icono, los enlaces y el idioma elegidos. La identidad de acceso no cambió (\mbox{CU-06} \mbox{POST-03}).}
 \end{prototipocrud}
 \par\nopagebreak\smallskip
 \begin{center}
@@ -445,16 +445,15 @@ La cuenta es el objeto de información central: casi todas las demás estructura
 \par\medskip
 \end{center}
 
-%--- F-10 Cambiar contraseña o segundo factor
-\begin{prototipocrud}{F-10}{Cambiar contraseña o segundo factor}
+%--- F-10 Cambiar la contraseña
+\begin{prototipocrud}{F-10}{Cambiar la contraseña}
   \crudFila{Operación}{Actualización (U)}
-  \crudFila{Caso de uso}{\mbox{CU-04}, flujo normal y \mbox{FA-10}}
+  \crudFila{Caso de uso}{\mbox{CU-04}}
   \crudFila{Actor}{Jugador con cuenta registrada}
   \crudFila{Prototipos}{9f, Ajustes de cuenta · sesión y baja. Las sesiones activas y la baja que también muestra son requisitos deseables (\mbox{DES-04}, \mbox{DES-05}).}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item Contraseña actual.
     \item \textbf{Contraseña nueva y su confirmación:} al menos 8 caracteres.
-    \item \textbf{O bien:} el valor deseado de \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} y, al activar, un código de prueba.
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
@@ -462,25 +461,24 @@ La cuenta es el objeto de información central: casi todas las demás estructura
     \item \textbf{\textit{Usuario}:} \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{correo}, \texttt{idioma\_\allowbreak{}preferido}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textbf{\textit{BitacoraAcceso}:} \texttt{CAMBIO\_\allowbreak{}CONTRASENA}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}ACTIVADO}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}DESACTIVADO}, o \texttt{CONTRASENA\_\allowbreak{}INCORRECTA} si la actual no coincide.
-    \item \textbf{\textit{CodigoVerificacion}:} el código de prueba, con \texttt{proposito} = \texttt{SEGUNDO\_\allowbreak{}FACTOR}, al activar el segundo factor.
+    \item \textbf{\textit{BitacoraAcceso}:} \texttt{CAMBIO\_\allowbreak{}CONTRASENA}, o \texttt{CONTRASENA\_\allowbreak{}INCORRECTA} si la actual no coincide.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textbf{\textit{Usuario}:} \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal}, o \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}; si la actual es incorrecta, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido} y \texttt{bloqueada\_\allowbreak{}hasta}.
-    \item \textbf{\textit{Sesion}:} al cambiar la contraseña, todas las abiertas salvo la que hace el cambio reciben \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}; si una contraseña incorrecta bloquea la cuenta, se cierran todas (\mbox{CU-04} \mbox{FA-05}).
-    \item \textbf{\textit{CodigoVerificacion}:} al cambiar la contraseña, los pendientes quedan invalidados, incluido un cambio de correo sin confirmar.
+    \item \textbf{\textit{Usuario}:} \texttt{contrasena\_\allowbreak{}hash} y \texttt{contrasena\_\allowbreak{}sal}; si la actual es incorrecta, \texttt{intentos\_\allowbreak{}fallidos}, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}intento\_\allowbreak{}fallido} y \texttt{bloqueada\_\allowbreak{}hasta}.
+    \item \textbf{\textit{Sesion}:} todas las abiertas salvo la que hace el cambio reciben \texttt{fecha\_\allowbreak{}fin} y \texttt{motivo\_\allowbreak{}cierre} = \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}; si una contraseña incorrecta bloquea la cuenta, se cierran todas (\mbox{CU-04} \mbox{FA-04}).
+    \item \textbf{\textit{CodigoVerificacion}:} los pendientes quedan invalidados.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item Exige la contraseña actual aunque haya sesión abierta (\mbox{CU-04} \mbox{RN-01}).
-    \item La contraseña nueva cumple la política del alta y es distinta de la actual (\mbox{CU-04} \mbox{RN-03}, \mbox{RN-08}).
-    \item Cambiar la contraseña cierra las demás sesiones pero conserva la actual (\mbox{CU-04} \mbox{RN-04}); activar el segundo factor no cierra ninguna.
-    \item Una contraseña actual incorrecta cuenta para el bloqueo escalonado (\mbox{CU-04} \mbox{RN-09}).
+    \item La contraseña nueva cumple la política del alta y es distinta de la actual (\mbox{CU-04} \mbox{RN-03}, \mbox{RN-06}).
+    \item Cambiar la contraseña cierra las demás sesiones pero conserva la actual (\mbox{CU-04} \mbox{RN-04}).
+    \item Una contraseña actual incorrecta cuenta para el bloqueo escalonado (\mbox{CU-04} \mbox{RN-07}).
     \item El cambio se avisa al correo de la cuenta, fuera de la transacción (\mbox{CU-04} \mbox{RN-05}).
-    \item El segundo factor se activa solo tras comprobar un código de prueba (\mbox{CU-04} \mbox{RN-11}).
-    \item Los invitados no usan esta funcionalidad (\mbox{CU-04} \mbox{RN-10}).
+    \item El correo de la cuenta no se puede cambiar (\mbox{CU-04} \mbox{RN-09}, \mbox{D-28}).
+    \item Los invitados no usan esta funcionalidad (\mbox{CU-04} \mbox{RN-08}).
   \end{crudlista}}
-  \crudFila{Resultado esperado}{La cuenta tiene una contraseña nueva y solo sigue abierta la sesión desde la que se cambió; o bien el segundo factor quedó activado o desactivado.}
+  \crudFila{Resultado esperado}{La cuenta tiene una contraseña nueva y solo sigue abierta la sesión desde la que se cambió.}
 \end{prototipocrud}
 \par\nopagebreak\smallskip
 \begin{center}
@@ -491,40 +489,40 @@ La cuenta es el objeto de información central: casi todas las demás estructura
 \par\medskip
 \end{center}
 
-%--- F-11 Cambiar correo
-\begin{prototipocrud}{F-11}{Cambiar correo}
+%--- F-11 Activar o desactivar el segundo factor
+\begin{prototipocrud}{F-11}{Activar o desactivar el segundo factor}
   \crudFila{Operación}{Actualización (U)}
-  \crudFila{Caso de uso}{\mbox{CU-04}, \mbox{FA-01}, \mbox{FA-09} y \mbox{FA-11}}
+  \crudFila{Caso de uso}{\mbox{CU-05}, flujo normal y \mbox{FA-01}}
   \crudFila{Actor}{Jugador con cuenta registrada}
-  \crudFila{Prototipos}{9f, la fila de correo (\mbox{F-10}).}
+  \crudFila{Prototipos}{9f, la fila del segundo factor (\mbox{F-10}); 22d, en \textit{Prototipos corregidos}.}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item \textbf{Correo nuevo:} hasta 254 caracteres con formato de correo.
     \item Contraseña actual.
-    \item Token de sesión; después, el código enviado al correo nuevo, o la orden de cancelar el cambio pendiente.
+    \item \textbf{Al activar:} el código de prueba entregado por el Proveedor del segundo factor.
+    \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
-    \item \textbf{\textit{Usuario}:} \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{correo} de todas las cuentas, \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion}, \texttt{idioma\_\allowbreak{}preferido}.
-    \item \textbf{\textit{CodigoVerificacion}:} el pendiente con \texttt{proposito} = \texttt{CAMBIO\_\allowbreak{}CORREO}, al confirmar: \texttt{codigo\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}expiracion}, \texttt{intentos} y \texttt{correo\_\allowbreak{}destino}, que se vuelve a comprobar libre.
+    \item \textbf{\textit{Sesion}:} la del token.
+    \item \textbf{\textit{Usuario}:} \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}, \texttt{correo}, \texttt{idioma\_\allowbreak{}preferido}.
+    \item \textbf{\textit{CodigoVerificacion}:} el de prueba pendiente: \texttt{codigo\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}expiracion} e \texttt{intentos}.
   \end{crudlista}}
   \crudFila{Datos que se crean}{\begin{crudlista}
-    \item \textbf{\textit{CodigoVerificacion}:} \texttt{proposito} = \texttt{CAMBIO\_\allowbreak{}CORREO}, \texttt{correo\_\allowbreak{}destino}, \texttt{codigo\_\allowbreak{}hash}, \texttt{fecha\_\allowbreak{}expiracion}.
-    \item \textbf{\textit{BitacoraAcceso}:} \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}SOLICITADO} y \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}CONFIRMADO}, o \texttt{CONTRASENA\_\allowbreak{}INCORRECTA}.
+    \item \textbf{\textit{CodigoVerificacion}:} el código de prueba, con \texttt{proposito} = \texttt{SEGUNDO\_\allowbreak{}FACTOR}, al activar.
+    \item \textbf{\textit{BitacoraAcceso}:} \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}ACTIVADO}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}DESACTIVADO}, o \texttt{CONTRASENA\_\allowbreak{}INCORRECTA} si la actual no coincide.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textbf{\textit{Usuario}:} \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}envio\_\allowbreak{}verificacion} al solicitar; \texttt{correo} al confirmar; los datos del bloqueo escalonado si la contraseña actual es incorrecta, como en la \mbox{F-10}.
-    \item \textbf{\textit{CodigoVerificacion}:} los pendientes pasan a \texttt{INVALIDADO} al solicitar; el del cambio incrementa \texttt{intentos} ante un código incorrecto, pasa a \texttt{USADO} al confirmar y a \texttt{INVALIDADO} si expira, se agotan los intentos o el jugador cancela.
+    \item \textbf{\textit{Usuario}:} \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}; si la contraseña actual es incorrecta, los datos del bloqueo escalonado, como en la \mbox{F-10}.
+    \item \textbf{\textit{CodigoVerificacion}:} los pendientes de \texttt{SEGUNDO\_\allowbreak{}FACTOR} pasan a \texttt{INVALIDADO} al generar uno nuevo o al desactivar; el de prueba incrementa \texttt{intentos} ante un código incorrecto, pasa a \texttt{USADO} al confirmar y a \texttt{INVALIDADO} si expira, se agotan los intentos o el jugador cancela.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Exige la contraseña actual aunque haya sesión abierta (\mbox{CU-04} \mbox{RN-01}).
-    \item El correo vigente no se sustituye hasta confirmar el nuevo (\mbox{CU-04} \mbox{RN-07}).
-    \item Se avisa al correo actual y se confirma desde el nuevo (\mbox{CU-04} \mbox{RN-06}).
-    \item El código vale veinticuatro horas, admite tres intentos y es de un solo uso (\mbox{CU-04} \mbox{RN-12}).
-    \item El cambio puede solicitarse a lo sumo una vez cada cinco minutos (\mbox{CU-04} \mbox{FA-08}).
-    \item El correo pendiente vive en el \textit{CodigoVerificacion}, no en \textit{Usuario} (\mbox{D-20}).
-    \item Cambiar el correo no devuelve la cuenta a \texttt{PENDIENTE} (\mbox{CU-04} \mbox{POST-04}).
+    \item Exige la contraseña actual aunque haya sesión abierta (\mbox{CU-05} \mbox{RN-02}).
+    \item El segundo factor se activa solo tras comprobar un código de prueba (\mbox{CU-05} \mbox{RN-08}).
+    \item El código vale cinco minutos, admite tres intentos y es de un solo uso (\mbox{CU-05} \mbox{RN-04}); se reenvía a lo sumo cada sesenta segundos (\mbox{RN-05}).
+    \item Toda activación o desactivación se avisa al correo, fuera de la transacción (\mbox{CU-05} \mbox{RN-06}).
+    \item Activar el segundo factor no cierra las sesiones abiertas (\mbox{CU-05} \mbox{RN-09}).
+    \item Los invitados no usan esta funcionalidad (\mbox{CU-05} \mbox{RN-10}).
   \end{crudlista}}
-  \crudFila{Resultado esperado}{Tras capturar el código enviado al correo nuevo, la cuenta tiene ese correo; hasta entonces, el anterior sigue vigente y el nuevo aparece como pendiente.}
+  \crudFila{Resultado esperado}{El segundo factor queda activado, y el próximo inicio de sesión pide el código; o queda desactivado.}
 \end{prototipocrud}
 
 %--- F-12 Eliminar cuenta
@@ -618,7 +616,7 @@ Una cuenta puede tener varias sesiones abiertas, una por dispositivo (\mbox{D-01
     \item Se permiten varias sesiones simultáneas (\mbox{CU-01} \mbox{RN-06}, \mbox{D-01}).
     \item Los invitados no inician sesión por esta vía (\mbox{CU-01} \mbox{RN-15}).
   \end{crudlista}}
-  \crudFila{Resultado esperado}{Existe una sesión abierta para ese dispositivo y el cliente muestra el menú principal o, si el jugador tiene una partida sin terminar, la reconexión del \mbox{CU-17}. Una cuenta pendiente pasa a capturar su código de verificación (\mbox{F-04}).}
+  \crudFila{Resultado esperado}{Existe una sesión abierta para ese dispositivo y el cliente muestra el menú principal o, si el jugador tiene una partida sin terminar, la reconexión del \mbox{CU-18}. Una cuenta pendiente pasa a capturar su código de verificación (\mbox{F-04}).}
 \end{prototipocrud}
 \par\nopagebreak\smallskip
 \begin{center}
@@ -679,7 +677,7 @@ Una cuenta puede tener varias sesiones abiertas, una por dispositivo (\mbox{D-01
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item El token se invalida en el servidor y el cliente descarta el token y los datos del perfil (\mbox{CU-01} \mbox{RN-17}).
     \item Cerrar sesión solo cierra la del dispositivo en uso (\mbox{CU-01} \mbox{RN-17}).
-    \item Cerrar sesión no retira al jugador de una partida en curso: su participación sigue abierta, su reloj corre y puede volver con el \mbox{CU-17} (\mbox{CU-01} \mbox{RN-17}).
+    \item Cerrar sesión no retira al jugador de una partida en curso: su participación sigue abierta, su reloj corre y puede volver con el \mbox{CU-18} (\mbox{CU-01} \mbox{RN-17}).
     \item El token vale como mucho veinticuatro horas (\mbox{CU-01} \mbox{RN-07}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{La sesión del dispositivo queda cerrada, su token deja de ser válido y el cliente vuelve a la pantalla de inicio de sesión.}
@@ -688,12 +686,12 @@ Una cuenta puede tener varias sesiones abiertas, una por dispositivo (\mbox{D-01
 \subsection*{Emparejamiento y salas}
 \addcontentsline{toc}{subsection}{Emparejamiento y salas}
 
-Hay tres formas de reunir a los jugadores de una partida en línea: la cola clasificatoria, la sala privada con código y la invitación directa, que usa una sala. Todas respetan la regla de una sola participación sin terminar por jugador (\mbox{D-11}). Solo la cola crea partidas clasificatorias; las de sala son amistosas y no cambian el elo ni las estadísticas de nadie. La cola, las plazas de cada sala y su lista de expulsados viven en la memoria del Servidor de partidas (\mbox{D-24}, \mbox{D-27}); en la base de datos quedan la \textit{Sala}, sus mensajes, las invitaciones y la partida que se crea. Por eso expulsar a un jugador de la sala (\mbox{CU-10}) no tiene ficha.
+Hay tres formas de reunir a los jugadores de una partida en línea: la cola clasificatoria, la sala privada con código y la invitación directa, que usa una sala. Todas respetan la regla de una sola participación sin terminar por jugador (\mbox{D-11}). Solo la cola crea partidas clasificatorias; las de sala son amistosas y no cambian el elo ni las estadísticas de nadie. La cola, las plazas de cada sala y su lista de expulsados viven en la memoria del Servidor de partidas (\mbox{D-24}, \mbox{D-27}); en la base de datos quedan la \textit{Sala}, sus mensajes, las invitaciones y la partida que se crea. Por eso expulsar a un jugador de la sala (\mbox{CU-11}) no tiene ficha.
 
 %--- F-16 Buscar partida clasificatoria
 \begin{prototipocrud}{F-16}{Buscar partida clasificatoria}
   \crudFila{Operación}{Creación (C), Eliminación (D)}
-  \crudFila{Caso de uso}{\mbox{CU-07}}
+  \crudFila{Caso de uso}{\mbox{CU-08}}
   \crudFila{Actor}{Jugador con cuenta registrada}
   \crudFila{Prototipos}{16a, Elegir modo · pantalla propia; 1g, Emparejamiento · rival encontrado (VS).}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -720,13 +718,13 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
     \item \textbf{\textit{ColaEmparejamiento}, en memoria:} las entradas de los jugadores emparejados, una vez confirmada la transacción.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Un jugador no puede tener más de una participación sin terminar (\mbox{CU-07} \mbox{RN-01}, \mbox{D-11}).
-    \item El modo fija tablero, jugadores y muros (\mbox{CU-07} \mbox{RN-02}).
-    \item La ventana de elo se amplía con la espera (\mbox{CU-07} \mbox{RN-03}).
-    \item El elo con el que cada jugador entra se guarda en su participación (\mbox{CU-07} \mbox{RN-04}).
-    \item Partida y participaciones se escriben en una transacción; la salida de la cola no forma parte de ella porque la cola vive en memoria (\mbox{CU-07} \mbox{RN-08}, \mbox{D-24}).
-    \item Solo estas partidas son clasificatorias (\mbox{CU-07} \mbox{RN-09}).
-    \item Solo una cuenta registrada busca partida clasificatoria (\mbox{CU-07} \mbox{RN-10}).
+    \item Un jugador no puede tener más de una participación sin terminar (\mbox{CU-08} \mbox{RN-01}, \mbox{D-11}).
+    \item El modo fija tablero, jugadores y muros (\mbox{CU-08} \mbox{RN-02}).
+    \item La ventana de elo se amplía con la espera (\mbox{CU-08} \mbox{RN-03}).
+    \item El elo con el que cada jugador entra se guarda en su participación (\mbox{CU-08} \mbox{RN-04}).
+    \item Partida y participaciones se escriben en una transacción; la salida de la cola no forma parte de ella porque la cola vive en memoria (\mbox{CU-08} \mbox{RN-08}, \mbox{D-24}).
+    \item Solo estas partidas son clasificatorias (\mbox{CU-08} \mbox{RN-09}).
+    \item Solo una cuenta registrada busca partida clasificatoria (\mbox{CU-08} \mbox{RN-10}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Existe una partida clasificatoria en curso con todos sus participantes y su elo de entrada, y los jugadores ya no están en la cola.}
 \end{prototipocrud}
@@ -746,7 +744,7 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
 %--- F-17 Cancelar búsqueda de partida
 \begin{prototipocrud}{F-17}{Cancelar búsqueda de partida}
   \crudFila{Operación}{Eliminación (D)}
-  \crudFila{Caso de uso}{\mbox{CU-07} (\mbox{FA-03})}
+  \crudFila{Caso de uso}{\mbox{CU-08} (\mbox{FA-03})}
   \crudFila{Actor}{Jugador con cuenta registrada}
   \crudFila{Prototipos}{1f, Emparejamiento · modal sobre el menú.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -762,7 +760,7 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item La cola es transitoria, vive en la memoria del Servidor de partidas y no conserva historial (\mbox{D-24}). Esta ficha se conserva porque la cola es un objeto de información del análisis, aunque su operación no llegue a la base de datos.
-    \item La entrada también se elimina si el jugador pierde la conexión (\mbox{CU-07} \mbox{EX-04}).
+    \item La entrada también se elimina si el jugador pierde la conexión (\mbox{CU-08} \mbox{EX-04}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{El jugador sale de la cola sin que se haya creado ninguna partida.}
 \end{prototipocrud}
@@ -778,7 +776,7 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
 %--- F-18 Crear sala privada e iniciar su partida
 \begin{prototipocrud}{F-18}{Crear sala privada e iniciar su partida}
   \crudFila{Operación}{Creación (C), Actualización (U), Eliminación (D)}
-  \crudFila{Caso de uso}{\mbox{CU-08}}
+  \crudFila{Caso de uso}{\mbox{CU-09}}
   \crudFila{Actor}{Jugador o invitado, como anfitrión}
   \crudFila{Prototipos}{1h, Privada · crear o unirse, con ajustes de sala; 5d, Sala de espera · 2 jugadores.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -809,15 +807,15 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
     \item \textbf{\textit{SalaParticipante}, en memoria:} la de cada miembro que sale y todas al cerrar la sala.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item El código tiene seis caracteres sin ambiguos y es único entre las salas abiertas (\mbox{CU-08} \mbox{RN-01}).
-    \item Un jugador está en una sola sala abierta, y nunca a la vez en sala y en cola o partida (\mbox{CU-08} \mbox{RN-02}).
-    \item Las partidas de sala son amistosas: no cambian el elo ni la \textit{EstadisticaModo} de nadie (\mbox{CU-08} \mbox{RN-03}).
-    \item El anfitrión elige de uno a veinte muros y el reloj; el modo fija el tablero y las plazas (\mbox{CU-08} \mbox{RN-04}).
-    \item Solo se inicia con todas las plazas ocupadas y todos listos (\mbox{CU-08} \mbox{RN-05}).
-    \item Cambiar los ajustes retira la marca de listo a todos salvo al anfitrión (\mbox{CU-08} \mbox{RN-06}).
-    \item Si el anfitrión sale, la sala se cierra; no se transfiere (\mbox{CU-08} \mbox{RN-07}).
-    \item Una sala inactiva treinta minutos se cierra sola (\mbox{CU-08} \mbox{RN-08}).
-    \item Mientras la sala espera, el anfitrión puede expulsar a un miembro (\mbox{CU-10}); la plaza liberada y la lista de expulsados viven en memoria y no llegan a la base de datos (\mbox{D-27}).
+    \item El código tiene seis caracteres sin ambiguos y es único entre las salas abiertas (\mbox{CU-09} \mbox{RN-01}).
+    \item Un jugador está en una sola sala abierta, y nunca a la vez en sala y en cola o partida (\mbox{CU-09} \mbox{RN-02}).
+    \item Las partidas de sala son amistosas: no cambian el elo ni la \textit{EstadisticaModo} de nadie (\mbox{CU-09} \mbox{RN-03}).
+    \item El anfitrión elige de uno a veinte muros y el reloj; el modo fija el tablero y las plazas (\mbox{CU-09} \mbox{RN-04}).
+    \item Solo se inicia con todas las plazas ocupadas y todos listos (\mbox{CU-09} \mbox{RN-05}).
+    \item Cambiar los ajustes retira la marca de listo a todos salvo al anfitrión (\mbox{CU-09} \mbox{RN-06}).
+    \item Si el anfitrión sale, la sala se cierra; no se transfiere (\mbox{CU-09} \mbox{RN-07}).
+    \item Una sala inactiva treinta minutos se cierra sola (\mbox{CU-09} \mbox{RN-08}).
+    \item Mientras la sala espera, el anfitrión puede expulsar a un miembro (\mbox{CU-11}); la plaza liberada y la lista de expulsados viven en memoria y no llegan a la base de datos (\mbox{D-27}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Existe una partida privada en curso con todos los miembros de la sala, que queda asociada a ella. La partida no modificará el elo ni las estadísticas de nadie.}
 \end{prototipocrud}
@@ -837,7 +835,7 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
 %--- F-19 Unirse a una sala con código
 \begin{prototipocrud}{F-19}{Unirse a una sala con código}
   \crudFila{Operación}{Creación (C), Actualización (U), Eliminación (D)}
-  \crudFila{Caso de uso}{\mbox{CU-09}}
+  \crudFila{Caso de uso}{\mbox{CU-10}}
   \crudFila{Actor}{Jugador o invitado}
   \crudFila{Prototipos}{5e, Sala de espera · 4 plazas y chat de sala.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -859,15 +857,15 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
     \item \textbf{\textit{SalaParticipante}, en memoria:} \texttt{listo}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{\begin{crudlista}
-    \item \textbf{\textit{SalaParticipante}, en memoria:} al salir de la sala, o si el jugador no reconecta en sesenta segundos (\mbox{CU-09} \mbox{EX-03}).
+    \item \textbf{\textit{SalaParticipante}, en memoria:} al salir de la sala, o si el jugador no reconecta en sesenta segundos (\mbox{CU-10} \mbox{EX-03}).
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Solo se entra a salas \texttt{ABIERTA} (\mbox{CU-09} \mbox{RN-01}).
-    \item La última plaza se ocupa dentro de una transacción que vuelve a contar las libres (\mbox{CU-09} \mbox{RN-02}).
-    \item Nadie está listo hasta que lo declara (\mbox{CU-09} \mbox{RN-03}).
-    \item Los códigos fallidos por jugador están acotados (\mbox{CU-09} \mbox{RN-04}).
-    \item Un jugador expulsado de la sala no puede volver a entrar a ella mientras exista (\mbox{CU-09} \mbox{RN-05}, \mbox{CU-10} \mbox{RN-03}).
-    \item Las cuentas de invitado pueden unirse a salas privadas (\mbox{CU-09} \mbox{RN-06}).
+    \item Solo se entra a salas \texttt{ABIERTA} (\mbox{CU-10} \mbox{RN-01}).
+    \item La última plaza se ocupa dentro de una transacción que vuelve a contar las libres (\mbox{CU-10} \mbox{RN-02}).
+    \item Nadie está listo hasta que lo declara (\mbox{CU-10} \mbox{RN-03}).
+    \item Los códigos fallidos por jugador están acotados (\mbox{CU-10} \mbox{RN-04}).
+    \item Un jugador expulsado de la sala no puede volver a entrar a ella mientras exista (\mbox{CU-10} \mbox{RN-05}, \mbox{CU-11} \mbox{RN-03}).
+    \item Las cuentas de invitado pueden unirse a salas privadas (\mbox{CU-10} \mbox{RN-06}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{El jugador ocupa una plaza en la sala, ve los ajustes y queda listo para que el anfitrión inicie.}
 \end{prototipocrud}
@@ -883,14 +881,14 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
 %--- F-20 Invitar a un jugador a una partida
 \begin{prototipocrud}{F-20}{Invitar a un jugador a una partida}
   \crudFila{Operación}{Creación (C), Actualización (U)}
-  \crudFila{Caso de uso}{\mbox{CU-21}}
+  \crudFila{Caso de uso}{\mbox{CU-22}}
   \crudFila{Actor}{Jugador; para invitar por correo, el anfitrión de la sala con cuenta registrada}
   \crudFila{Prototipos}{2b, el botón ``invitar'' (\mbox{F-40}), y 10a, la opción ``retar'' (\mbox{F-38}).}
   \crudFila{Datos de entrada}{\begin{crudlista}
     \item \texttt{id\_\allowbreak{}usuario} del invitado.
     \item Ajustes de la sala, si no existe.
     \item \textbf{Respuesta del invitado:} aceptar o rechazar.
-    \item \textbf{Para invitar por correo:} el correo del destinatario y el \texttt{id\_\allowbreak{}sala} (\mbox{CU-21} \mbox{FA-10}).
+    \item \textbf{Para invitar por correo:} el correo del destinatario y el \texttt{id\_\allowbreak{}sala} (\mbox{CU-22} \mbox{FA-10}).
     \item Token de sesión.
   \end{crudlista}}
   \crudFila{Datos que se consultan}{\begin{crudlista}
@@ -911,14 +909,14 @@ Hay tres formas de reunir a los jugadores de una partida en línea: la cola clas
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item La invitación crea o usa una sala privada; la partida que salga de ella es amistosa (\mbox{CU-21} \mbox{RN-01}).
-    \item Se puede retar a cualquier jugador, sea o no amigo (\mbox{CU-21} \mbox{RN-02}).
-    \item Una invitación dentro del juego expira a los sesenta segundos y no se duplica (\mbox{CU-21} \mbox{RN-03}).
-    \item Aceptar da acceso a la sala sin conocer su código (\mbox{CU-21} \mbox{RN-04}).
-    \item Solo se invita dentro del juego a jugadores conectados que no estén en una partida en línea ni en la cola (\mbox{CU-21} \mbox{RN-05}).
-    \item Un jugador envía a lo sumo diez invitaciones por correo en una hora, y solo el anfitrión con cuenta registrada puede enviarlas (\mbox{CU-21} \mbox{RN-06}, \mbox{RN-07}).
-    \item La invitación por correo solo lleva el código de la sala: no reserva plaza, y el destinatario entra con el \mbox{CU-09} (\mbox{CU-21} \mbox{RN-08}).
-    \item El correo capturado no se asocia a ninguna cuenta ni se muestra a otros jugadores (\mbox{CU-21} \mbox{RN-09}).
+    \item La invitación crea o usa una sala privada; la partida que salga de ella es amistosa (\mbox{CU-22} \mbox{RN-01}).
+    \item Se puede retar a cualquier jugador, sea o no amigo (\mbox{CU-22} \mbox{RN-02}).
+    \item Una invitación dentro del juego expira a los sesenta segundos y no se duplica (\mbox{CU-22} \mbox{RN-03}).
+    \item Aceptar da acceso a la sala sin conocer su código (\mbox{CU-22} \mbox{RN-04}).
+    \item Solo se invita dentro del juego a jugadores conectados que no estén en una partida en línea ni en la cola (\mbox{CU-22} \mbox{RN-05}).
+    \item Un jugador envía a lo sumo diez invitaciones por correo en una hora, y solo el anfitrión con cuenta registrada puede enviarlas (\mbox{CU-22} \mbox{RN-06}, \mbox{RN-07}).
+    \item La invitación por correo solo lleva el código de la sala: no reserva plaza, y el destinatario entra con el \mbox{CU-10} (\mbox{CU-22} \mbox{RN-08}).
+    \item El correo capturado no se asocia a ninguna cuenta ni se muestra a otros jugadores (\mbox{CU-22} \mbox{RN-09}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Emisor e invitado están en la misma sala privada, o la invitación quedó rechazada o expirada. Por correo, el destinatario recibió el código de la sala y la invitación queda registrada como enviada.}
 \end{prototipocrud}
@@ -931,7 +929,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 %--- F-21 Registrar jugada
 \begin{prototipocrud}{F-21}{Registrar jugada}
   \crudFila{Operación}{Creación (C)}
-  \crudFila{Caso de uso}{\mbox{CU-11}, \mbox{CU-12}}
+  \crudFila{Caso de uso}{\mbox{CU-12}, \mbox{CU-13}}
   \crudFila{Actor}{Jugador}
   \crudFila{Prototipos}{20a, Partida · peón seleccionado; 21a, Partida · muro cogido con cartel flotante.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -952,20 +950,20 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
     \item \textbf{\textit{Jugada}:} \texttt{id\_\allowbreak{}partida}, \texttt{numero\_\allowbreak{}jugada}, \texttt{id\_\allowbreak{}usuario}, \texttt{tipo}, \texttt{casilla\_\allowbreak{}origen}, \texttt{casilla\_\allowbreak{}destino}, \texttt{surco}, \texttt{orientacion}, \texttt{tiempo\_\allowbreak{}consumido}, \texttt{fecha\_\allowbreak{}jugada}.
   \end{crudlista}}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textbf{\textit{Participacion}:} \texttt{casilla\_\allowbreak{}actual} o \texttt{muros\_\allowbreak{}restantes}, \texttt{reloj\_\allowbreak{}restante} y, si llega a meta en cuatro jugadores, su clasificación (\mbox{CU-11} \mbox{FA-08}).
+    \item \textbf{\textit{Participacion}:} \texttt{casilla\_\allowbreak{}actual} o \texttt{muros\_\allowbreak{}restantes}, \texttt{reloj\_\allowbreak{}restante} y, si llega a meta en cuatro jugadores, su clasificación (\mbox{CU-12} \mbox{FA-08}).
     \item \textbf{\textit{Partida}:} \texttt{turno\_\allowbreak{}actual}.
-    \item \textbf{\textit{OfertaTablas} pendiente del rival:} \texttt{estado} = \texttt{CADUCADA} (\mbox{CU-13} \mbox{RN-05}).
+    \item \textbf{\textit{OfertaTablas} pendiente del rival:} \texttt{estado} = \texttt{CADUCADA} (\mbox{CU-14} \mbox{RN-05}).
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguna. Las jugadas no se borran y los muros no se retiran.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item El servidor es la única autoridad sobre el estado del tablero (\mbox{CU-11} \mbox{RN-01}).
-    \item El peón se mueve una casilla en ortogonal o salta al rival adyacente (\mbox{CU-11} \mbox{RN-02}, \mbox{RN-03}).
-    \item El muro mide dos casillas, no se solapa ni se cruza y nunca deja a un jugador sin camino (\mbox{CU-12} \mbox{RN-03}, \mbox{RN-04}, \mbox{RN-05}).
-    \item Las jugadas llevan número consecutivo; una fuera de orden se rechaza (\mbox{CU-11} \mbox{RN-06}).
-    \item En cada turno se hace exactamente una acción (\mbox{CU-11} \mbox{RN-05}).
-    \item Un muro colocado no se retira ni se mueve (\mbox{CU-12} \mbox{RN-07}).
-    \item El servidor lleva el reloj, y nada de lo que haga el jugador lo detiene (\mbox{CU-11} \mbox{RN-10}, \mbox{RN-11}).
-    \item Jugada, participación y turno se escriben en una transacción (\mbox{CU-11} \mbox{RN-12}, \mbox{CU-12} \mbox{RN-12}).
+    \item El servidor es la única autoridad sobre el estado del tablero (\mbox{CU-12} \mbox{RN-01}).
+    \item El peón se mueve una casilla en ortogonal o salta al rival adyacente (\mbox{CU-12} \mbox{RN-02}, \mbox{RN-03}).
+    \item El muro mide dos casillas, no se solapa ni se cruza y nunca deja a un jugador sin camino (\mbox{CU-13} \mbox{RN-03}, \mbox{RN-04}, \mbox{RN-05}).
+    \item Las jugadas llevan número consecutivo; una fuera de orden se rechaza (\mbox{CU-12} \mbox{RN-06}).
+    \item En cada turno se hace exactamente una acción (\mbox{CU-12} \mbox{RN-05}).
+    \item Un muro colocado no se retira ni se mueve (\mbox{CU-13} \mbox{RN-07}).
+    \item El servidor lleva el reloj, y nada de lo que haga el jugador lo detiene (\mbox{CU-12} \mbox{RN-10}, \mbox{RN-11}).
+    \item Jugada, participación y turno se escriben en una transacción (\mbox{CU-12} \mbox{RN-12}, \mbox{CU-13} \mbox{RN-12}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{La jugada queda registrada, el tablero y el reloj reflejan su efecto y el turno pasa al siguiente jugador activo. Si el peón llega a meta o el reloj se agota, la partida continúa en su cierre (\mbox{F-27}).}
 \end{prototipocrud}
@@ -985,7 +983,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 %--- F-22 Ofrecer y responder tablas
 \begin{prototipocrud}{F-22}{Ofrecer y responder tablas}
   \crudFila{Operación}{Creación (C), Actualización (U)}
-  \crudFila{Caso de uso}{\mbox{CU-13}}
+  \crudFila{Caso de uso}{\mbox{CU-14}}
   \crudFila{Actor}{Jugador, y su rival al responder}
   \crudFila{Prototipos}{19d, Menú de partida · rendirse y tablas.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -1005,12 +1003,12 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Solo en partidas de dos jugadores (\mbox{CU-13} \mbox{RN-01}, \mbox{D-14}).
-    \item Ofrecer no detiene la partida ni el reloj (\mbox{CU-13} \mbox{RN-02}).
-    \item Una oferta cada cinco jugadas propias como máximo (\mbox{CU-13} \mbox{RN-03}).
-    \item Dos ofertas cruzadas son un acuerdo (\mbox{CU-13} \mbox{RN-04}).
-    \item La oferta caduca en cuanto el rival juega (\mbox{CU-13} \mbox{RN-05}).
-    \item Las tablas aceptadas solo mueven el elo si la partida es clasificatoria (\mbox{CU-13} \mbox{RN-07}).
+    \item Solo en partidas de dos jugadores (\mbox{CU-14} \mbox{RN-01}, \mbox{D-14}).
+    \item Ofrecer no detiene la partida ni el reloj (\mbox{CU-14} \mbox{RN-02}).
+    \item Una oferta cada cinco jugadas propias como máximo (\mbox{CU-14} \mbox{RN-03}).
+    \item Dos ofertas cruzadas son un acuerdo (\mbox{CU-14} \mbox{RN-04}).
+    \item La oferta caduca en cuanto el rival juega (\mbox{CU-14} \mbox{RN-05}).
+    \item Las tablas aceptadas solo mueven el elo si la partida es clasificatoria (\mbox{CU-14} \mbox{RN-07}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Si se acepta, la partida continúa en su cierre con \texttt{forma\_\allowbreak{}termino} = \texttt{TABLAS} (\mbox{F-27}); si no, la oferta queda rechazada o caducada y la partida sigue.}
 \end{prototipocrud}
@@ -1026,7 +1024,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 %--- F-23 Rendirse
 \begin{prototipocrud}{F-23}{Rendirse}
   \crudFila{Operación}{Actualización (U)}
-  \crudFila{Caso de uso}{\mbox{CU-14}}
+  \crudFila{Caso de uso}{\mbox{CU-15}}
   \crudFila{Actor}{Jugador}
   \crudFila{Prototipos}{19d, la opción ``rendirse'' (\mbox{F-22}).}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -1046,11 +1044,11 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Se puede rendir en cualquier momento, sea o no su turno (\mbox{CU-14} \mbox{RN-01}).
-    \item La confirmación muestra el elo que se perderá, calculado igual que en el cierre; en una partida que no es clasificatoria no menciona elo (\mbox{CU-14} \mbox{RN-02}, \mbox{FA-01}).
-    \item Confirmar la rendición no detiene el reloj (\mbox{CU-14} \mbox{RN-03}).
-    \item En cuatro jugadores retira al jugador; sus muros se quedan (\mbox{CU-14} \mbox{RN-04}).
-    \item En una partida clasificatoria cuenta como derrota en la \textit{EstadisticaModo} (\mbox{CU-14} \mbox{RN-05}).
+    \item Se puede rendir en cualquier momento, sea o no su turno (\mbox{CU-15} \mbox{RN-01}).
+    \item La confirmación muestra el elo que se perderá, calculado igual que en el cierre; en una partida que no es clasificatoria no menciona elo (\mbox{CU-15} \mbox{RN-02}, \mbox{FA-01}).
+    \item Confirmar la rendición no detiene el reloj (\mbox{CU-15} \mbox{RN-03}).
+    \item En cuatro jugadores retira al jugador; sus muros se quedan (\mbox{CU-15} \mbox{RN-04}).
+    \item En una partida clasificatoria cuenta como derrota en la \textit{EstadisticaModo} (\mbox{CU-15} \mbox{RN-05}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{El jugador pierde la partida; en dos jugadores la partida continúa en su cierre (\mbox{F-27}), y en cuatro sigue para los demás.}
 \end{prototipocrud}
@@ -1058,7 +1056,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 %--- F-24 Abandonar la partida o reclamar la victoria
 \begin{prototipocrud}{F-24}{Abandonar la partida o reclamar la victoria}
   \crudFila{Operación}{Actualización (U)}
-  \crudFila{Caso de uso}{\mbox{CU-15}}
+  \crudFila{Caso de uso}{\mbox{CU-16}}
   \crudFila{Actor}{Jugador, o el rival de un jugador desconectado}
   \crudFila{Prototipos}{8e, 4 jugadores · eliminado y abandono; 6f, Rival desconectado · esperando.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -1073,19 +1071,19 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \end{crudlista}}
   \crudFila{Datos que se crean}{Ninguno.}
   \crudFila{Datos que se modifican}{\begin{crudlista}
-    \item \textbf{\textit{EstadisticaModo} del que abandona:} \texttt{abandonos} del modo de la partida, solo si es clasificatoria (\mbox{CU-15} \mbox{RN-05}).
+    \item \textbf{\textit{EstadisticaModo} del que abandona:} \texttt{abandonos} del modo de la partida, solo si es clasificatoria (\mbox{CU-16} \mbox{RN-05}).
     \item \textbf{\textit{OfertaTablas} pendiente:} \texttt{estado} = \texttt{CADUCADA}.
     \item \textbf{\textit{Participacion} del que abandona en cuatro jugadores:} \texttt{resultado} = \texttt{PERDIDA}, la última \texttt{posicion} entre los activos y \texttt{forma\_\allowbreak{}termino} = \texttt{ABANDONO}.
     \item \textbf{En dos jugadores:} el cierre de la partida con \texttt{forma\_\allowbreak{}termino} = \texttt{ABANDONO}.
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Abandonar cuenta como derrota a todos los efectos: elo y contadores (\mbox{CU-15} \mbox{RN-01}, \mbox{D-15}).
-    \item Exige escribir la palabra de confirmación (\mbox{CU-15} \mbox{RN-02}).
-    \item Cerrar el juego o perder la conexión no es abandonar (\mbox{CU-15} \mbox{RN-03}).
-    \item El peón del que abandona se retira; sus muros permanecen (\mbox{CU-15} \mbox{RN-04}).
-    \item Los abandonos se cuentan por modo y solo en partidas clasificatorias (\mbox{CU-15} \mbox{RN-05}).
-    \item El rival puede reclamar la victoria a los sesenta segundos de desconexión, con las mismas consecuencias que un abandono voluntario (\mbox{CU-15} \mbox{RN-06}, \mbox{RN-07}).
+    \item Abandonar cuenta como derrota a todos los efectos: elo y contadores (\mbox{CU-16} \mbox{RN-01}, \mbox{D-15}).
+    \item Exige escribir la palabra de confirmación (\mbox{CU-16} \mbox{RN-02}).
+    \item Cerrar el juego o perder la conexión no es abandonar (\mbox{CU-16} \mbox{RN-03}).
+    \item El peón del que abandona se retira; sus muros permanecen (\mbox{CU-16} \mbox{RN-04}).
+    \item Los abandonos se cuentan por modo y solo en partidas clasificatorias (\mbox{CU-16} \mbox{RN-05}).
+    \item El rival puede reclamar la victoria a los sesenta segundos de desconexión, con las mismas consecuencias que un abandono voluntario (\mbox{CU-16} \mbox{RN-06}, \mbox{RN-07}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{El que abandona pierde la partida, su contador de abandonos aumenta si la partida es clasificatoria y su peón sale del tablero; sus muros permanecen.}
 \end{prototipocrud}
@@ -1105,7 +1103,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 %--- F-25 Reconectar a una partida en curso
 \begin{prototipocrud}{F-25}{Reconectar a una partida en curso}
   \crudFila{Operación}{Actualización (U)}
-  \crudFila{Caso de uso}{\mbox{CU-17}}
+  \crudFila{Caso de uso}{\mbox{CU-18}}
   \crudFila{Actor}{Jugador}
   \crudFila{Prototipos}{6e, Reconexión · la partida sigue viva.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -1124,11 +1122,11 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item La desconexión no detiene el reloj (\mbox{CU-17} \mbox{RN-01}).
-    \item Toda jugada se escribe antes de notificarse, así que no hay nada que recuperar del cliente (\mbox{CU-17} \mbox{RN-02}).
-    \item Una partida admite una conexión por participante: reconectar desde otro dispositivo toma el control sin cerrar la otra sesión (\mbox{CU-17} \mbox{RN-04}).
-    \item Si el que se cae es el servidor, ese tiempo no se descuenta de ningún reloj (\mbox{CU-17} \mbox{RN-05}).
-    \item El cliente nunca reconstruye el tablero con un estado parcial (\mbox{CU-17} \mbox{RN-06}).
+    \item La desconexión no detiene el reloj (\mbox{CU-18} \mbox{RN-01}).
+    \item Toda jugada se escribe antes de notificarse, así que no hay nada que recuperar del cliente (\mbox{CU-18} \mbox{RN-02}).
+    \item Una partida admite una conexión por participante: reconectar desde otro dispositivo toma el control sin cerrar la otra sesión (\mbox{CU-18} \mbox{RN-04}).
+    \item Si el que se cae es el servidor, ese tiempo no se descuenta de ningún reloj (\mbox{CU-18} \mbox{RN-05}).
+    \item El cliente nunca reconstruye el tablero con un estado parcial (\mbox{CU-18} \mbox{RN-06}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{El jugador vuelve a la partida en el mismo estado que tiene el servidor, o ve el resultado si terminó mientras estaba fuera.}
 \end{prototipocrud}
@@ -1197,7 +1195,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 %--- F-27 Finalizar partida
 \begin{prototipocrud}{F-27}{Finalizar partida}
   \crudFila{Operación}{Actualización (U)}
-  \crudFila{Caso de uso}{\mbox{CU-16}}
+  \crudFila{Caso de uso}{\mbox{CU-17}}
   \crudFila{Actor}{Servidor de partidas}
   \crudFila{Prototipos}{2g, Fin de partida · tarjeta sobre el tablero. Las pantallas 11a y 11b muestran la subida de nivel y de división, que el cierre de la partida ya no aplica (ver \textit{Diferencias entre prototipos y casos de uso}).}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -1221,13 +1219,13 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
     \item \textbf{\textit{SalaParticipante}, en memoria:} los miembros de la sala de origen.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Una partida termina de cinco formas, y la forma de término se guarda (\mbox{CU-16} \mbox{RN-01}).
-    \item En cuatro jugadores, quien llega a meta queda clasificado y la partida sigue para los demás (\mbox{CU-16} \mbox{RN-02}).
-    \item Solo las partidas clasificatorias cambian el elo y la \textit{EstadisticaModo}; las de sala son amistosas (\mbox{CU-16} \mbox{RN-03}, \mbox{FA-01}).
-    \item El elo se calcula desde \texttt{elo\_\allowbreak{}inicial}, y el cambio se guarda en la participación (\mbox{CU-16} \mbox{RN-04}, \mbox{RN-05}).
-    \item Cerrar la partida cierra todas sus participaciones, para que sus jugadores puedan entrar a otra (\mbox{CU-16} \mbox{RN-07}).
-    \item Una victoria por reloj se distingue de una por llegada a meta (\mbox{CU-16} \mbox{RN-09}).
-    \item Todo el cierre, incluido el de la sala de origen, ocurre en una sola transacción; si falla, la partida queda \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} y se reintenta (\mbox{CU-16} \mbox{RN-10}, \mbox{RN-11}).
+    \item Una partida termina de cinco formas, y la forma de término se guarda (\mbox{CU-17} \mbox{RN-01}).
+    \item En cuatro jugadores, quien llega a meta queda clasificado y la partida sigue para los demás (\mbox{CU-17} \mbox{RN-02}).
+    \item Solo las partidas clasificatorias cambian el elo y la \textit{EstadisticaModo}; las de sala son amistosas (\mbox{CU-17} \mbox{RN-03}, \mbox{FA-01}).
+    \item El elo se calcula desde \texttt{elo\_\allowbreak{}inicial}, y el cambio se guarda en la participación (\mbox{CU-17} \mbox{RN-04}, \mbox{RN-05}).
+    \item Cerrar la partida cierra todas sus participaciones, para que sus jugadores puedan entrar a otra (\mbox{CU-17} \mbox{RN-07}).
+    \item Una victoria por reloj se distingue de una por llegada a meta (\mbox{CU-17} \mbox{RN-09}).
+    \item Todo el cierre, incluido el de la sala de origen, ocurre en una sola transacción; si falla, la partida queda \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} y se reintenta (\mbox{CU-17} \mbox{RN-10}, \mbox{RN-11}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{La partida queda finalizada y cada jugador tiene su resultado. Si era clasificatoria, cada uno tiene además su cambio de elo y sus estadísticas del modo actualizadas; si nació de una sala, la sala queda cerrada y sin miembros.}
 \end{prototipocrud}
@@ -1252,7 +1250,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 %--- F-28 Consultar historial de partidas
 \begin{prototipocrud}{F-28}{Consultar historial de partidas}
   \crudFila{Operación}{Consulta (R)}
-  \crudFila{Caso de uso}{\mbox{CU-24}}
+  \crudFila{Caso de uso}{\mbox{CU-25}}
   \crudFila{Actor}{Jugador o invitado}
   \crudFila{Prototipos}{17f, Historial · filtros por modo y final.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -1271,11 +1269,11 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Se muestran las partidas clasificatorias y las de sala privada; estas últimas, marcadas como partidas sin elo (\mbox{CU-24} \mbox{RN-01}).
-    \item La duración se calcula; no se almacena (\mbox{CU-24} \mbox{RN-02}).
-    \item El cambio de elo es el guardado en la participación (\mbox{CU-24} \mbox{RN-03}).
-    \item La victoria por reloj se distingue de la victoria por llegar a meta (\mbox{CU-24} \mbox{RN-05}).
-    \item Una partida pendiente de cierre aparece como tal (\mbox{CU-24} \mbox{FA-04}).
+    \item Se muestran las partidas clasificatorias y las de sala privada; estas últimas, marcadas como partidas sin elo (\mbox{CU-25} \mbox{RN-01}).
+    \item La duración se calcula; no se almacena (\mbox{CU-25} \mbox{RN-02}).
+    \item El cambio de elo es el guardado en la participación (\mbox{CU-25} \mbox{RN-03}).
+    \item La victoria por reloj se distingue de la victoria por llegar a meta (\mbox{CU-25} \mbox{RN-05}).
+    \item Una partida pendiente de cierre aparece como tal (\mbox{CU-25} \mbox{FA-04}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Lista paginada de partidas con resultado, forma de término, duración y cambio de elo.}
 \end{prototipocrud}
@@ -1374,7 +1372,7 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
 %--- F-31 Consultar ranking
 \begin{prototipocrud}{F-31}{Consultar ranking}
   \crudFila{Operación}{Consulta (R)}
-  \crudFila{Caso de uso}{\mbox{CU-23}}
+  \crudFila{Caso de uso}{\mbox{CU-24}}
   \crudFila{Actor}{Jugador o invitado}
   \crudFila{Prototipos}{2c, Ranking · tabla con tu fila fijada. La pantalla 2d muestra la vista por divisiones, que el ranking ya no tiene (ver \textit{Diferencias entre prototipos y casos de uso}).}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -1394,12 +1392,12 @@ La partida concentra el mayor volumen de escrituras del sistema. Se registra jug
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Hacen falta cinco partidas clasificatorias en un modo para clasificar (\mbox{CU-23} \mbox{RN-01}, \mbox{CU-16} \mbox{RN-12}).
-    \item Solo aparecen cuentas registradas en \texttt{ACTIVA}: ni invitados, ni cuentas suspendidas, baneadas o eliminadas (\mbox{CU-23} \mbox{RN-02}).
-    \item El ranking por omisión es el del modo clásico 9×9 (\mbox{CU-23} \mbox{RN-03}, \mbox{D-04}).
-    \item La fila del jugador se muestra siempre, aunque esté fuera de la página o no clasifique (\mbox{CU-23} \mbox{RN-04}).
-    \item A igualdad de elo ordena primero la \texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}partida} más antigua (\mbox{CU-23} \mbox{RN-05}).
-    \item No hay temporadas, y las posiciones se calculan en la consulta; no se almacenan (\mbox{CU-23} \mbox{RN-06}, \mbox{POST-03}).
+    \item Hacen falta cinco partidas clasificatorias en un modo para clasificar (\mbox{CU-24} \mbox{RN-01}, \mbox{CU-17} \mbox{RN-12}).
+    \item Solo aparecen cuentas registradas en \texttt{ACTIVA}: ni invitados, ni cuentas suspendidas, baneadas o eliminadas (\mbox{CU-24} \mbox{RN-02}).
+    \item El ranking por omisión es el del modo clásico 9×9 (\mbox{CU-24} \mbox{RN-03}, \mbox{D-04}).
+    \item La fila del jugador se muestra siempre, aunque esté fuera de la página o no clasifique (\mbox{CU-24} \mbox{RN-04}).
+    \item A igualdad de elo ordena primero la \texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}partida} más antigua (\mbox{CU-24} \mbox{RN-05}).
+    \item No hay temporadas, y las posiciones se calculan en la consulta; no se almacenan (\mbox{CU-24} \mbox{RN-06}, \mbox{POST-03}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Clasificación ordenada por elo con la posición del jugador fijada, o las partidas que le faltan para clasificar, o los resultados de la búsqueda.}
 \end{prototipocrud}
@@ -1686,11 +1684,11 @@ Amistades y solicitudes se eliminan físicamente desde la aplicación, igual que
 %--- F-38 Enviar solicitud de amistad
 \begin{prototipocrud}{F-38}{Enviar solicitud de amistad}
   \crudFila{Operación}{Creación (C)}
-  \crudFila{Caso de uso}{\mbox{CU-19}}
+  \crudFila{Caso de uso}{\mbox{CU-20}}
   \crudFila{Actor}{Jugador con cuenta registrada}
   \crudFila{Prototipos}{10a, Menú de un jugador. Silenciar, bloquear y ver su partida, que también ofrece, son requisitos deseables (\mbox{DES-10}, \mbox{DES-11}).}
   \crudFila{Datos de entrada}{\begin{crudlista}
-    \item \texttt{nickname} o \texttt{codigo\_\allowbreak{}amigo} para buscar; no hace falta si se añade desde el fin de partida o desde un perfil (\mbox{CU-19} \mbox{FA-03}).
+    \item \texttt{nickname} o \texttt{codigo\_\allowbreak{}amigo} para buscar; no hace falta si se añade desde el fin de partida o desde un perfil (\mbox{CU-20} \mbox{FA-03}).
     \item \texttt{id\_\allowbreak{}usuario} del destinatario.
     \item Token de sesión.
   \end{crudlista}}
@@ -1708,13 +1706,13 @@ Amistades y solicitudes se eliminan físicamente desde la aplicación, igual que
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item La amistad es recíproca: por eso hace falta una solicitud que la otra parte acepte (\mbox{CU-19} \mbox{RN-01}).
-    \item Máximo cien amigos, comprobado en los dos jugadores (\mbox{CU-19} \mbox{RN-02}).
-    \item No puede haber dos amistades ni dos solicitudes pendientes entre el mismo par, en ningún sentido (\mbox{CU-19} \mbox{RN-03}, \mbox{POST-05}).
-    \item Una solicitud cruzada se resuelve como aceptación de la primera, en la \mbox{F-39} (\mbox{CU-19} \mbox{RN-04}, \mbox{FA-08}).
-    \item El código de amigo es único por cuenta y permite encontrar a alguien sin conocer su \texttt{nickname} (\mbox{CU-19} \mbox{RN-05}).
-    \item Las sugerencias salen de las partidas compartidas recientemente (\mbox{CU-19} \mbox{RN-06}).
-    \item Los invitados no tienen amigos (\mbox{CU-19} \mbox{RN-07}).
+    \item La amistad es recíproca: por eso hace falta una solicitud que la otra parte acepte (\mbox{CU-20} \mbox{RN-01}).
+    \item Máximo cien amigos, comprobado en los dos jugadores (\mbox{CU-20} \mbox{RN-02}).
+    \item No puede haber dos amistades ni dos solicitudes pendientes entre el mismo par, en ningún sentido (\mbox{CU-20} \mbox{RN-03}, \mbox{POST-05}).
+    \item Una solicitud cruzada se resuelve como aceptación de la primera, en la \mbox{F-39} (\mbox{CU-20} \mbox{RN-04}, \mbox{FA-08}).
+    \item El código de amigo es único por cuenta y permite encontrar a alguien sin conocer su \texttt{nickname} (\mbox{CU-20} \mbox{RN-05}).
+    \item Las sugerencias salen de las partidas compartidas recientemente (\mbox{CU-20} \mbox{RN-06}).
+    \item Los invitados no tienen amigos (\mbox{CU-20} \mbox{RN-07}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Existe una solicitud pendiente que el destinatario ve en su pestaña de entrantes y el solicitante en la de enviadas.}
 \end{prototipocrud}
@@ -1730,7 +1728,7 @@ Amistades y solicitudes se eliminan físicamente desde la aplicación, igual que
 %--- F-39 Responder o cancelar una solicitud de amistad
 \begin{prototipocrud}{F-39}{Responder o cancelar una solicitud de amistad}
   \crudFila{Operación}{Creación (C), Eliminación (D)}
-  \crudFila{Caso de uso}{\mbox{CU-20}}
+  \crudFila{Caso de uso}{\mbox{CU-21}}
   \crudFila{Actor}{Jugador con cuenta registrada}
   \crudFila{Prototipos}{5c, Solicitudes · entrantes y enviadas.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -1752,12 +1750,12 @@ Amistades y solicitudes se eliminan físicamente desde la aplicación, igual que
     \item \textbf{\textit{Solicitud}:} se elimina al aceptar, rechazar o cancelar. Borrado físico.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Solo el destinatario acepta o rechaza, y solo el solicitante cancela (\mbox{CU-20} \mbox{RN-01}).
-    \item El límite de cien amigos se vuelve a comprobar al aceptar (\mbox{CU-20} \mbox{RN-02}).
-    \item Cada amistad se guarda una sola vez por par ordenado, con una restricción en la tabla (\mbox{CU-20} \mbox{RN-03}).
-    \item Rechazar no notifica al solicitante (\mbox{CU-20} \mbox{RN-04}).
-    \item Una solicitud sin responder caduca a los treinta días (\mbox{CU-20} \mbox{RN-05}).
-    \item Responder elimina la solicitud en todos los casos (\mbox{CU-20} \mbox{RN-06}).
+    \item Solo el destinatario acepta o rechaza, y solo el solicitante cancela (\mbox{CU-21} \mbox{RN-01}).
+    \item El límite de cien amigos se vuelve a comprobar al aceptar (\mbox{CU-21} \mbox{RN-02}).
+    \item Cada amistad se guarda una sola vez por par ordenado, con una restricción en la tabla (\mbox{CU-21} \mbox{RN-03}).
+    \item Rechazar no notifica al solicitante (\mbox{CU-21} \mbox{RN-04}).
+    \item Una solicitud sin responder caduca a los treinta días (\mbox{CU-21} \mbox{RN-05}).
+    \item Responder elimina la solicitud en todos los casos (\mbox{CU-21} \mbox{RN-06}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Si se aceptó, ambos jugadores se ven en su lista de amigos; en cualquier caso, la solicitud desaparece.}
 \end{prototipocrud}
@@ -1773,7 +1771,7 @@ Amistades y solicitudes se eliminan físicamente desde la aplicación, igual que
 %--- F-40 Consultar lista de amigos
 \begin{prototipocrud}{F-40}{Consultar lista de amigos}
   \crudFila{Operación}{Consulta (R)}
-  \crudFila{Caso de uso}{\mbox{CU-19}, \mbox{CU-20}; es el panel de amigos desde el que parten también el \mbox{CU-21} y el \mbox{CU-22}}
+  \crudFila{Caso de uso}{\mbox{CU-20}, \mbox{CU-21}; es el panel de amigos desde el que parten también el \mbox{CU-22} y el \mbox{CU-23}}
   \crudFila{Actor}{Jugador con cuenta registrada}
   \crudFila{Prototipos}{2b, Amigos · pantalla completa con pestañas; 13a, Desde amigos · quién está jugando. El acceso a ver la partida de un amigo que ofrece 13a es el \mbox{DES-11}.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -1792,7 +1790,7 @@ Amistades y solicitudes se eliminan físicamente desde la aplicación, igual que
   \crudFila{Reglas de negocio}{\begin{crudlista}
     \item Un amigo está jugando si tiene una participación sin terminar (\mbox{D-11}).
     \item Las cuentas \texttt{ELIMINADA} no aparecen en la lista.
-    \item Los invitados no tienen panel de amigos (\mbox{CU-19} \mbox{FA-01}).
+    \item Los invitados no tienen panel de amigos (\mbox{CU-20} \mbox{FA-01}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Lista de amigos con su estado de conexión, un bloque de quién está jugando ahora, la opción de invitarlos a jugar (\mbox{F-20}) y las solicitudes pendientes.}
 \end{prototipocrud}
@@ -1812,7 +1810,7 @@ Amistades y solicitudes se eliminan físicamente desde la aplicación, igual que
 %--- F-41 Eliminar a un amigo
 \begin{prototipocrud}{F-41}{Eliminar a un amigo}
   \crudFila{Operación}{Eliminación (D)}
-  \crudFila{Caso de uso}{\mbox{CU-22}}
+  \crudFila{Caso de uso}{\mbox{CU-23}}
   \crudFila{Actor}{Jugador con cuenta registrada}
   \crudFila{Prototipos}{Sin prototipo. El menú de un jugador (10a, \mbox{F-38}) no incluye la opción de eliminar amigo.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -1830,11 +1828,11 @@ Amistades y solicitudes se eliminan físicamente desde la aplicación, igual que
     \item \textbf{\textit{Amistad}:} la fila del par. Borrado físico.
   \end{crudlista}}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item La eliminación es recíproca (\mbox{CU-22} \mbox{RN-01}).
-    \item No se notifica al otro jugador (\mbox{CU-22} \mbox{RN-03}).
-    \item No afecta a salas, partidas ni invitaciones en curso (\mbox{CU-22} \mbox{RN-04}).
-    \item No restringe nada más: pueden seguir jugando juntos y volver a enviarse solicitud (\mbox{CU-22} \mbox{RN-05}).
-    \item La amistad se elimina físicamente (\mbox{CU-22} \mbox{RN-06}).
+    \item La eliminación es recíproca (\mbox{CU-23} \mbox{RN-01}).
+    \item No se notifica al otro jugador (\mbox{CU-23} \mbox{RN-03}).
+    \item No afecta a salas, partidas ni invitaciones en curso (\mbox{CU-23} \mbox{RN-04}).
+    \item No restringe nada más: pueden seguir jugando juntos y volver a enviarse solicitud (\mbox{CU-23} \mbox{RN-05}).
+    \item La amistad se elimina físicamente (\mbox{CU-23} \mbox{RN-06}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Ninguno de los dos ve al otro en su lista de amigos, y su historial de partidas juntos se conserva.}
 \end{prototipocrud}
@@ -1888,7 +1886,7 @@ Amistades y solicitudes se eliminan físicamente desde la aplicación, igual que
 %--- F-43 Enviar mensaje de chat
 \begin{prototipocrud}{F-43}{Enviar mensaje de chat}
   \crudFila{Operación}{Creación (C)}
-  \crudFila{Caso de uso}{\mbox{CU-18}}
+  \crudFila{Caso de uso}{\mbox{CU-19}}
   \crudFila{Actor}{Jugador o invitado}
   \crudFila{Prototipos}{20c, Chat desplegado desde el icono.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -1908,14 +1906,14 @@ Amistades y solicitudes se eliminan físicamente desde la aplicación, igual que
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Todo mensaje se filtra en el servidor y el rechazo no dice qué término saltó (\mbox{CU-18} \mbox{RN-01}, \mbox{RN-02}).
-    \item El mensaje no puede estar vacío ni exceder el largo máximo, y el servidor repite las validaciones (\mbox{CU-18} \mbox{RN-03}, \mbox{RN-06}).
-    \item El ritmo de envío está acotado por canal (\mbox{CU-18} \mbox{RN-04}).
-    \item Una sanción de chat, que el sistema aplica con el primer strike, impide escribir pero no leer, jugar ni iniciar sesión (\mbox{CU-18} \mbox{RN-05}, \mbox{D-05}).
-    \item Si el filtro no puede aplicarse, el mensaje se rechaza (\mbox{CU-18} \mbox{RN-08}).
-    \item Un mensaje rechazado no se guarda (\mbox{CU-18} \mbox{POST-03}).
-    \item Hay dos canales, el de la sala y el de la partida, y cada uno lo escriben solo sus miembros (\mbox{CU-18} \mbox{RN-10}).
-    \item Los emotes no son mensajes y no se guardan (\mbox{CU-18} \mbox{FA-09}, \mbox{RN-13}, \mbox{D-10}).
+    \item Todo mensaje se filtra en el servidor y el rechazo no dice qué término saltó (\mbox{CU-19} \mbox{RN-01}, \mbox{RN-02}).
+    \item El mensaje no puede estar vacío ni exceder el largo máximo, y el servidor repite las validaciones (\mbox{CU-19} \mbox{RN-03}, \mbox{RN-06}).
+    \item El ritmo de envío está acotado por canal (\mbox{CU-19} \mbox{RN-04}).
+    \item Una sanción de chat, que el sistema aplica con el primer strike, impide escribir pero no leer, jugar ni iniciar sesión (\mbox{CU-19} \mbox{RN-05}, \mbox{D-05}).
+    \item Si el filtro no puede aplicarse, el mensaje se rechaza (\mbox{CU-19} \mbox{RN-08}).
+    \item Un mensaje rechazado no se guarda (\mbox{CU-19} \mbox{POST-03}).
+    \item Hay dos canales, el de la sala y el de la partida, y cada uno lo escriben solo sus miembros (\mbox{CU-19} \mbox{RN-10}).
+    \item Los emotes no son mensajes y no se guardan (\mbox{CU-19} \mbox{FA-09}, \mbox{RN-13}, \mbox{D-10}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{El mensaje queda guardado, asociado a su partida o a su sala, y llega a los demás participantes de la partida o miembros de la sala.}
 \end{prototipocrud}
@@ -1931,7 +1929,7 @@ Amistades y solicitudes se eliminan físicamente desde la aplicación, igual que
 %--- F-44 Consultar mensajes de un canal
 \begin{prototipocrud}{F-44}{Consultar mensajes de un canal}
   \crudFila{Operación}{Consulta (R)}
-  \crudFila{Caso de uso}{\mbox{CU-18} (paso 2), \mbox{CU-09} (paso 11)}
+  \crudFila{Caso de uso}{\mbox{CU-19} (paso 2), \mbox{CU-10} (paso 11)}
   \crudFila{Actor}{Jugador o invitado}
   \crudFila{Prototipos}{5f, Chat global expandido. El canal global que muestra ya no existe (ver \textit{Diferencias entre prototipos y casos de uso}).}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -1948,8 +1946,8 @@ Amistades y solicitudes se eliminan físicamente desde la aplicación, igual que
   \crudFila{Datos que se modifican}{Ninguno.}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Los mensajes no se traducen: se muestran tal como se escribieron (\mbox{CU-18} \mbox{RN-09}).
-    \item Cada canal lo leen solo sus miembros, y al iniciarse la partida el chat de partida sustituye al de sala (\mbox{CU-18} \mbox{RN-10}).
+    \item Los mensajes no se traducen: se muestran tal como se escribieron (\mbox{CU-19} \mbox{RN-09}).
+    \item Cada canal lo leen solo sus miembros, y al iniciarse la partida el chat de partida sustituye al de sala (\mbox{CU-19} \mbox{RN-10}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Los mensajes del canal, con indicador de nuevos.}
 \end{prototipocrud}
@@ -1970,7 +1968,7 @@ En el alcance la moderación es automática: el reporte (\mbox{F-45}) suma strik
 %--- F-45 Reportar a un jugador
 \begin{prototipocrud}{F-45}{Reportar a un jugador}
   \crudFila{Operación}{Creación (C), Actualización (U)}
-  \crudFila{Caso de uso}{\mbox{CU-25}}
+  \crudFila{Caso de uso}{\mbox{CU-26}}
   \crudFila{Actor}{Jugador con cuenta registrada; el Servidor de partidas aplica el strike}
   \crudFila{Prototipos}{10b, Reportar · motivo y pruebas.}
   \crudFila{Datos de entrada}{\begin{crudlista}
@@ -2001,16 +1999,16 @@ En el alcance la moderación es automática: el reporte (\mbox{F-45}) suma strik
   \end{crudlista}}
   \crudFila{Datos que se eliminan}{Ninguno.}
   \crudFila{Reglas de negocio}{\begin{crudlista}
-    \item Las pruebas se adjuntan por referencia a la partida o a la sala, no por copia (\mbox{CU-25} \mbox{RN-01}).
-    \item No se reporta dos veces al mismo jugador por la misma partida o sala (\mbox{CU-25} \mbox{RN-03}).
-    \item Un reporte por sí solo no sanciona; la única consecuencia automática es el strike, sin revisión de un moderador ni apelación (\mbox{CU-25} \mbox{RN-04}, \mbox{D-26}).
-    \item Al denunciante no se le informa del resultado (\mbox{CU-25} \mbox{RN-05}).
-    \item El número de reportes por periodo está acotado (\mbox{CU-25} \mbox{RN-06}).
-    \item Los invitados no reportan, pero sí pueden ser reportados (\mbox{CU-25} \mbox{RN-07}).
-    \item Solo se adjunta una partida o una sala que compartieron ambos (\mbox{CU-25} \mbox{RN-09}).
-    \item Tres reportes pendientes de denunciantes distintos suman un strike, en la misma transacción que crea el último, y todos pasan a \texttt{ATENDIDO} (\mbox{CU-25} \mbox{RN-10}).
-    \item Cada strike tiene una sanción fija y creciente; los strikes no caducan y una cuenta \texttt{BANEADA} no recibe más (\mbox{CU-25} \mbox{RN-11}, \mbox{RN-12}).
-    \item Una sanción de cuenta surte efecto de inmediato; una de chat solo impide escribir (\mbox{CU-25} \mbox{RN-13}).
+    \item Las pruebas se adjuntan por referencia a la partida o a la sala, no por copia (\mbox{CU-26} \mbox{RN-01}).
+    \item No se reporta dos veces al mismo jugador por la misma partida o sala (\mbox{CU-26} \mbox{RN-03}).
+    \item Un reporte por sí solo no sanciona; la única consecuencia automática es el strike, sin revisión de un moderador ni apelación (\mbox{CU-26} \mbox{RN-04}, \mbox{D-26}).
+    \item Al denunciante no se le informa del resultado (\mbox{CU-26} \mbox{RN-05}).
+    \item El número de reportes por periodo está acotado (\mbox{CU-26} \mbox{RN-06}).
+    \item Los invitados no reportan, pero sí pueden ser reportados (\mbox{CU-26} \mbox{RN-07}).
+    \item Solo se adjunta una partida o una sala que compartieron ambos (\mbox{CU-26} \mbox{RN-09}).
+    \item Tres reportes pendientes de denunciantes distintos suman un strike, en la misma transacción que crea el último, y todos pasan a \texttt{ATENDIDO} (\mbox{CU-26} \mbox{RN-10}).
+    \item Cada strike tiene una sanción fija y creciente; los strikes no caducan y una cuenta \texttt{BANEADA} no recibe más (\mbox{CU-26} \mbox{RN-11}, \mbox{RN-12}).
+    \item Una sanción de cuenta surte efecto de inmediato; una de chat solo impide escribir (\mbox{CU-26} \mbox{RN-13}).
   \end{crudlista}}
   \crudFila{Resultado esperado}{Existe un reporte que referencia la partida o la sala de la que se habla. Si con él el reportado reúne reportes de tres jugadores distintos, tiene además una sanción automática según su número de strike, sus reportes quedan atendidos y la sanción consta en la bitácora; si es de cuenta, está suspendido o expulsado, sin sesiones abiertas y fuera de su sala o su partida.}
 \end{prototipocrud}
@@ -2310,9 +2308,9 @@ Valores que los casos de uso y los requisitos deseables escriben en cada atribut
 \textit{Usuario} & \texttt{idioma\_\allowbreak{}preferido} & \texttt{es-MX}, español de México, por omisión; \texttt{en}, inglés (\mbox{D-21}) \\ \hline
 \textit{Usuario} & \texttt{idioma\_\allowbreak{}terminos} & \texttt{es-MX}, \texttt{en} (\mbox{D-23}); nulo en las cuentas de invitado \\ \hline
 \textit{Sesion} & \texttt{motivo\_\allowbreak{}cierre} & \texttt{CIERRE\_\allowbreak{}VOLUNTARIO}, \texttt{EXPIRACION}, \texttt{CAMBIO\_\allowbreak{}CREDENCIALES}, \texttt{SANCION}, \texttt{CIERRE\_\allowbreak{}REMOTO}\textdagger{}, \texttt{BAJA\_\allowbreak{}CUENTA}\textdagger{}; nulo mientras está abierta \\ \hline
-\textit{Codigo\-Verificacion} & \texttt{proposito} & \texttt{ALTA}, \texttt{CAMBIO\_\allowbreak{}CORREO}, \texttt{SEGUNDO\_\allowbreak{}FACTOR}, \texttt{RECUPERACION}\textdagger{} (\mbox{D-23}) \\ \hline
+\textit{Codigo\-Verificacion} & \texttt{proposito} & \texttt{ALTA}, \texttt{SEGUNDO\_\allowbreak{}FACTOR}, \texttt{RECUPERACION}\textdagger{} (\mbox{D-23}) \\ \hline
 \textit{Codigo\-Verificacion} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{USADO}, \texttt{INVALIDADO} \\ \hline
-\textit{BitacoraAcceso} & \texttt{resultado} & \texttt{EXITO}, \texttt{USUARIO\_\allowbreak{}INEXISTENTE}, \texttt{BLOQUEO\_\allowbreak{}VIGENTE}, \texttt{CONTRASENA\_\allowbreak{}INCORRECTA}, \texttt{CUENTA\_\allowbreak{}PENDIENTE}, \texttt{CUENTA\_\allowbreak{}SANCIONADA}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}FALLIDO}, \texttt{ABANDONADO}, \texttt{SUSPENSION\_\allowbreak{}VENCIDA}, \texttt{REGISTRO\_\allowbreak{}EXITOSO}, \texttt{REGISTRO\_\allowbreak{}RECHAZADO}, \texttt{REGISTRO\_\allowbreak{}SIN\_\allowbreak{}CORREO}, \texttt{ALTA\_\allowbreak{}INVITADO}, \texttt{CUENTA\_\allowbreak{}VERIFICADA}, \texttt{CIERRE\_\allowbreak{}VOLUNTARIO}, \texttt{CAMBIO\_\allowbreak{}CONTRASENA}, \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}SOLICITADO}, \texttt{CAMBIO\_\allowbreak{}CORREO\_\allowbreak{}CONFIRMADO}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}ACTIVADO}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}DESACTIVADO}, \texttt{VINCULACION\_\allowbreak{}EXITOSA}\textdagger{}, \texttt{RECUPERACION\_\allowbreak{}SOLICITADA}\textdagger{}, \texttt{RECUPERACION\_\allowbreak{}CORREO\_\allowbreak{}INEXISTENTE}\textdagger{}, \texttt{RECUPERACION\_\allowbreak{}EXITOSA}\textdagger{}, \texttt{CIERRE\_\allowbreak{}REMOTO}\textdagger{}, \texttt{CUENTA\_\allowbreak{}ELIMINADA}\textdagger{} \\ \hline
+\textit{BitacoraAcceso} & \texttt{resultado} & \texttt{EXITO}, \texttt{USUARIO\_\allowbreak{}INEXISTENTE}, \texttt{BLOQUEO\_\allowbreak{}VIGENTE}, \texttt{CONTRASENA\_\allowbreak{}INCORRECTA}, \texttt{CUENTA\_\allowbreak{}PENDIENTE}, \texttt{CUENTA\_\allowbreak{}SANCIONADA}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}FALLIDO}, \texttt{ABANDONADO}, \texttt{SUSPENSION\_\allowbreak{}VENCIDA}, \texttt{REGISTRO\_\allowbreak{}EXITOSO}, \texttt{REGISTRO\_\allowbreak{}RECHAZADO}, \texttt{REGISTRO\_\allowbreak{}SIN\_\allowbreak{}CORREO}, \texttt{ALTA\_\allowbreak{}INVITADO}, \texttt{CUENTA\_\allowbreak{}VERIFICADA}, \texttt{CIERRE\_\allowbreak{}VOLUNTARIO}, \texttt{CAMBIO\_\allowbreak{}CONTRASENA}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}ACTIVADO}, \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}DESACTIVADO}, \texttt{VINCULACION\_\allowbreak{}EXITOSA}\textdagger{}, \texttt{RECUPERACION\_\allowbreak{}SOLICITADA}\textdagger{}, \texttt{RECUPERACION\_\allowbreak{}CORREO\_\allowbreak{}INEXISTENTE}\textdagger{}, \texttt{RECUPERACION\_\allowbreak{}EXITOSA}\textdagger{}, \texttt{CIERRE\_\allowbreak{}REMOTO}\textdagger{}, \texttt{CUENTA\_\allowbreak{}ELIMINADA}\textdagger{} \\ \hline
 \textit{BitacoraModeracion} & \texttt{accion} & \texttt{SANCION\_\allowbreak{}APLICADA}, \texttt{REPORTE\_\allowbreak{}TOMADO}\textdagger{}, \texttt{REPORTE\_\allowbreak{}LIBERADO}\textdagger{}, \texttt{REPORTE\_\allowbreak{}RESUELTO}\textdagger{}, \texttt{APELACION\_\allowbreak{}RESUELTA}\textdagger{}, \texttt{ROL\_\allowbreak{}OTORGADO}\textdagger{}, \texttt{ROL\_\allowbreak{}RETIRADO}\textdagger{}, \texttt{CONSULTA\_\allowbreak{}BITACORA}\textdagger{}, \texttt{INTENTO\_\allowbreak{}SIN\_\allowbreak{}PERMISO}\textdagger{} \\ \hline
 \textit{Partida} & \texttt{tipo} & \texttt{CLASIFICATORIA}, \texttt{PRIVADA}, \texttt{IA}\textdagger{} \\ \hline
 \textit{Partida} & \texttt{estado} & \texttt{EN\_\allowbreak{}CURSO}, \texttt{FINALIZADA}, \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} \\ \hline
@@ -2331,7 +2329,7 @@ Valores que los casos de uso y los requisitos deseables escriben en cada atribut
 \textit{MovimientoMoneda}\textdagger{} & \texttt{tipo} & \texttt{PARTIDA}, \texttt{NIVEL}, \texttt{COMPRA}, \texttt{COMPRA\_\allowbreak{}CAJA}, \texttt{CONVERSION}, \texttt{DEVOLUCION} \\ \hline
 \textit{Sancion} & \texttt{ambito} & \texttt{CUENTA}, \texttt{CHAT} \\ \hline
 \textit{Sancion} & \texttt{tipo} & \texttt{TEMPORAL}, \texttt{PERMANENTE} \\ \hline
-\textit{Reporte} & \texttt{motivo} & \texttt{LENGUAJE\_\allowbreak{}OFENSIVO}, \texttt{ACOSO}, \texttt{NOMBRE\_\allowbreak{}INAPROPIADO}, \texttt{TRAMPAS}, \texttt{JUEGO\_\allowbreak{}ANTIDEPORTIVO} (\mbox{CU-25} \mbox{RN-08}, \mbox{D-23}) \\ \hline
+\textit{Reporte} & \texttt{motivo} & \texttt{LENGUAJE\_\allowbreak{}OFENSIVO}, \texttt{ACOSO}, \texttt{NOMBRE\_\allowbreak{}INAPROPIADO}, \texttt{TRAMPAS}, \texttt{JUEGO\_\allowbreak{}ANTIDEPORTIVO} (\mbox{CU-26} \mbox{RN-08}, \mbox{D-23}) \\ \hline
 \textit{Reporte} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{ATENDIDO}, \texttt{EN\_\allowbreak{}REVISION}\textdagger{}, \texttt{RESUELTO\_\allowbreak{}SIN\_\allowbreak{}SANCION}\textdagger{}, \texttt{RESUELTO\_\allowbreak{}CON\_\allowbreak{}SANCION}\textdagger{} \\ \hline
 \textit{Apelacion}\textdagger{} & \texttt{estado} & \texttt{PENDIENTE}, \texttt{EN\_\allowbreak{}REVISION}, \texttt{ACEPTADA}, \texttt{RECHAZADA} \\ \hline
 \textit{PalabraProhibida} & \texttt{ambito} & \texttt{NICKNAME}, \texttt{CHAT}, \texttt{AMBOS} \\ \hline
@@ -2438,7 +2436,7 @@ Cada pantalla descartada indica el motivo y, cuando existe, la pantalla seleccio
 1e & Partida rápida · 7×7, HUD mínimo & Variante de modo del HUD anterior. El modo cambia el tablero y el número de jugadores, no los datos que se escriben. & 20a \\ \hline
 2a & Amigos · panel lateral & Variante de disposición de una pantalla ya seleccionada. 2b incluye además la pestaña de solicitudes. & 2b \\ \hline
 2e & Historial · lista con cambio de elo & Versión anterior del historial, sin filtros por modo ni por forma de término. & 17f \\ \hline
-2h & Fin de partida · pantalla completa a dos columnas & Variante de disposición de una pantalla ya seleccionada. El \mbox{CU-16} adopta la tarjeta sobre el tablero. & 2g \\ \hline
+2h & Fin de partida · pantalla completa a dos columnas & Variante de disposición de una pantalla ya seleccionada. El \mbox{CU-17} adopta la tarjeta sobre el tablero. & 2g \\ \hline
 2i & Ajustes · secciones y opciones & Configuración local del cliente: no llega a la base de datos. & — \\ \hline
 3a & Menú · boceto con chat a la derecha & Variante de disposición de una pantalla ya seleccionada. Se prefiere 3b por ser más limpia: menos elementos simultáneos y el tablero 3D de fondo como identidad del juego. & 3b \\ \hline
 3c & Menú · barra lateral de navegación & Variante de disposición de una pantalla ya seleccionada. & 3b \\ \hline
@@ -2543,7 +2541,7 @@ A continuación se muestran las pantallas descartadas, en el mismo orden de la t
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{Prototipos/2h}\par\smallskip
-{\footnotesize\RaggedRight \textbf{2h: Fin de partida · pantalla completa a dos columnas}\par \textbf{Motivo:} Variante de disposición de una pantalla ya seleccionada. El \mbox{CU-16} adopta la tarjeta sobre el tablero.\par \textbf{Sustituida por:} 2g, Fin de partida · tarjeta sobre el tablero.\par}
+{\footnotesize\RaggedRight \textbf{2h: Fin de partida · pantalla completa a dos columnas}\par \textbf{Motivo:} Variante de disposición de una pantalla ya seleccionada. El \mbox{CU-17} adopta la tarjeta sobre el tablero.\par \textbf{Sustituida por:} 2g, Fin de partida · tarjeta sobre el tablero.\par}
 \end{minipage}
 \par
 \par\medskip\noindent
@@ -2864,22 +2862,22 @@ Al revisar las pantallas se encontraron diferencias con lo especificado en los c
 9e & La vinculación solo pide correo y contraseña. El caso pide además el nickname definitivo y la fecha de nacimiento. & \mbox{DES-02} \\ \hline
 9f & Incluye ``descargar mis datos'', retirado del alcance. & \mbox{DES-05} \\ \hline
 7e & El nombre admite de 3 a 16 caracteres y el bloqueo por intentos es de 60 segundos. Los casos fijan de 3 a 30 caracteres y un bloqueo escalonado de 5, 30 y 60 minutos. & \mbox{CU-01}, \mbox{CU-02} \\ \hline
-7d & El código de sala tiene la forma K4M-93. El caso fija seis caracteres alfanuméricos. & \mbox{CU-09} \\ \hline
-2c, 16c & Mencionan temporadas. El ranking no tiene temporadas. & \mbox{CU-23} \\ \hline
-18f & Limita las sugerencias contra la IA a cinco y menciona perfiles privados; ninguna de las dos cosas está en los casos. & \mbox{DES-09}, \mbox{CU-06} \\ \hline
-19d & Solo permite ofrecer tablas desde la jugada 10. El caso permite ofrecerlas en cualquier momento, una vez cada cinco jugadas propias. & \mbox{CU-13} \\ \hline
-10a & El menú de un jugador no incluye ``eliminar amigo''. & \mbox{CU-22} \\ \hline
-9c & Permite subir una foto, cambiar el nombre y equipar un título, y dice que los enlaces se revisan antes de publicarse. El caso solo elige uno de los treinta y dos iconos, los enlaces sin revisión y el idioma, y no edita el nombre. & \mbox{CU-05} \\ \hline
-2d & Ofrece una vista del ranking por divisiones. El ranking no tiene divisiones. & \mbox{CU-23} \\ \hline
-11a, 11b & Muestran la subida de nivel y la de división al terminar la partida. El cierre de la partida no otorga experiencia ni cambia divisiones; solo actualiza el elo y las estadísticas del modo. & \mbox{CU-16} \\ \hline
-5f & Muestra un chat global. Solo hay dos canales: el de la sala y el de la partida. & \mbox{CU-18} \\ \hline
-13a & Ofrece ver la partida de un amigo, que es un requisito deseable. & \mbox{CU-21}, \mbox{DES-11} \\ \hline
+7d & El código de sala tiene la forma K4M-93. El caso fija seis caracteres alfanuméricos. & \mbox{CU-10} \\ \hline
+2c, 16c & Mencionan temporadas. El ranking no tiene temporadas. & \mbox{CU-24} \\ \hline
+18f & Limita las sugerencias contra la IA a cinco y menciona perfiles privados; ninguna de las dos cosas está en los casos. & \mbox{DES-09}, \mbox{CU-07} \\ \hline
+19d & Solo permite ofrecer tablas desde la jugada 10. El caso permite ofrecerlas en cualquier momento, una vez cada cinco jugadas propias. & \mbox{CU-14} \\ \hline
+10a & El menú de un jugador no incluye ``eliminar amigo''. & \mbox{CU-23} \\ \hline
+9c & Permite subir una foto, cambiar el nombre y equipar un título, y dice que los enlaces se revisan antes de publicarse. El caso solo elige uno de los treinta y dos iconos, los enlaces sin revisión y el idioma, y no edita el nombre. & \mbox{CU-06} \\ \hline
+2d & Ofrece una vista del ranking por divisiones. El ranking no tiene divisiones. & \mbox{CU-24} \\ \hline
+11a, 11b & Muestran la subida de nivel y la de división al terminar la partida. El cierre de la partida no otorga experiencia ni cambia divisiones; solo actualiza el elo y las estadísticas del modo. & \mbox{CU-17} \\ \hline
+5f & Muestra un chat global. Solo hay dos canales: el de la sala y el de la partida. & \mbox{CU-19} \\ \hline
+13a & Ofrece ver la partida de un amigo, que es un requisito deseable. & \mbox{CU-22}, \mbox{DES-11} \\ \hline
 10a & Ofrece silenciar, bloquear y ver la partida del jugador, que son requisitos deseables. & \mbox{DES-10}, \mbox{DES-11} \\ \hline
 9f & Incluye las sesiones activas y la baja de la cuenta, que son requisitos deseables. & \mbox{CU-04}, \mbox{DES-04}, \mbox{DES-05} \\ \hline
 \end{longtable}
 \end{center}
 
-Las diez primeras diferencias están corregidas en la subsección siguiente salvo las de 6d, 9e, 2c, 16c, 18f y 10a, que entonces pertenecían a casos de fase posterior. Con el recorte, 6d, 9e, 16c y la parte de 18f sobre la IA ilustran requisitos deseables y se corregirán al retomarlos; 2c, la parte de 18f sobre los perfiles privados y la opción ``eliminar amigo'' de 10a ya pertenecen al alcance (\mbox{CU-23}, \mbox{CU-06}, \mbox{CU-22}). Estas tres, y las siete que aparecieron con el recorte, quedan pendientes para la revisión de pantallas que pide la subsección siguiente.
+Las diez primeras diferencias están corregidas en la subsección siguiente salvo las de 6d, 9e, 2c, 16c, 18f y 10a, que entonces pertenecían a casos de fase posterior. Con el recorte, 6d, 9e, 16c y la parte de 18f sobre la IA ilustran requisitos deseables y se corregirán al retomarlos; 2c, la parte de 18f sobre los perfiles privados y la opción ``eliminar amigo'' de 10a ya pertenecen al alcance (\mbox{CU-24}, \mbox{CU-07}, \mbox{CU-23}). Estas tres, y las siete que aparecieron con el recorte, quedan pendientes para la revisión de pantallas que pide la subsección siguiente.
 
 \input{prototipos-corregidos}
 
