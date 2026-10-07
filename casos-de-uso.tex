@@ -201,7 +201,8 @@
   xleftmargin=4pt, xrightmargin=4pt, aboveskip=8pt, belowskip=8pt, upquote=true, showstringspaces=false,
   % listings no entiende UTF-8 con pdflatex: los caracteres de los scripts se traducen aquí.
   % pdflatex no tiene fuente para el emoji de los datos de prueba: se muestra su punto de código.
-  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  % Los scripts empiezan con la marca de orden de bytes (U+FEFF, la que guarda SQL Server): no se imprime.
+  literate={﻿}{}0 {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
            {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
            {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {ü}{{\"u}}1 {¿}{{\textquestiondown}}1 {¡}{{\textexclamdown}}1
            {×}{{$\times$}}1 {«}{{\guillemotleft}}1 {»}{{\guillemotright}}1 {—}{{\textemdash}}1
