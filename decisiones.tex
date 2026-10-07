@@ -22,10 +22,10 @@ Consecuencias, por caso de uso:
 \textbf{Caso} & \textbf{Qué cambia} \\ \hline
 \endhead
 \mbox{CU-01} & Reescrito: la \mbox{RN-06} pasa a permitir varias sesiones por cuenta y desaparece el flujo alterno de sesión ya abierta \\ \hline
-\mbox{CU-10} & Deja de ser imposible: ya hay varias sesiones que listar y cerrar \\ \hline
-\mbox{CU-17}, \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-27} & Nueva precondición: el jugador no participa en ninguna partida sin terminar. Nuevo flujo alterno con el aviso \\ \hline
-\mbox{CU-31} & Igual, al aceptar una invitación a jugar \\ \hline
-\mbox{CU-26} & Es la salida natural del aviso: si ya estás en una partida, lo que quieres es volver a ella \\ \hline
+\mbox{DES-04} & Deja de ser imposible: ya hay varias sesiones que listar y cerrar \\ \hline
+\mbox{CU-07}, \mbox{CU-08}, \mbox{CU-09}, \mbox{DES-09} & Nueva precondición: el jugador no participa en ninguna partida sin terminar. Nuevo flujo alterno con el aviso \\ \hline
+\mbox{CU-20} & Igual, al aceptar una invitación a jugar \\ \hline
+\mbox{CU-17} & Es la salida natural del aviso: si ya estás en una partida, lo que quieres es volver a ella \\ \hline
 \end{longtable}
 \end{center}
 
@@ -35,7 +35,7 @@ Consecuencias en el modelo:
   \item \texttt{Sesion.motivo\_\allowbreak{}cierre} pierde \texttt{DESPLAZADA\_\allowbreak{}POR\_\allowbreak{}NUEVO\_\allowbreak{}ACCESO} y gana \texttt{CIERRE\_\allowbreak{}REMOTO},
 \end{reglas}
 
-que es lo que escribe el \mbox{CU-10}.
+que es lo que escribe el \mbox{DES-04}.
 
 \begin{reglas}
   \item El índice único filtrado que garantizaba la regla se mueve de \texttt{Sesion} a \texttt{Participacion}:
@@ -47,7 +47,7 @@ a lo sumo una participación sin terminar por jugador.
   \item \texttt{Sesion} necesita \texttt{fecha\_\allowbreak{}ultimo\_\allowbreak{}uso}, para poder mostrar ``hace tres días'' en la pantalla
 \end{reglas}
 
-del \mbox{CU-10}, y un nombre legible del dispositivo: una huella criptográfica no le dice nada a nadie.
+del \mbox{DES-04}, y un nombre legible del dispositivo: una huella criptográfica no le dice nada a nadie.
 
 \flujoTitulo{\mbox{D-02} a \mbox{D-21}. Decisiones adoptadas para poder redactar}
 Resuelven los pendientes 1 a 9. Están tomadas con el criterio que ya se discutió y se aplican en los casos redactados; \textbf{confirmar con José Eduardo} antes de dar el documento por cerrado. Las decisiones \mbox{D-12} a \mbox{D-20} se tomaron al detallar los casos que faltaban. Cambiarlas obliga a reescribir flujos, no solo tablas.
@@ -60,7 +60,7 @@ Resuelven los pendientes 1 a 9. Están tomadas con el criterio que ya se discuti
 \hline
 \textbf{ID} & \textbf{Decisión} \\ \hline
 \endhead
-\mbox{D-02} & \textbf{Invitado.} El \texttt{Usuario} nace en el \mbox{CU-06} con \texttt{tipo\_\allowbreak{}cuenta = INVITADO}, sin correo ni contraseña. El \mbox{CU-07} lo convierte a \texttt{REGISTRADA} \textbf{conservando el mismo \texttt{id\_\allowbreak{}usuario}}: por eso conserva elo, monedas, objetos y partidas sin copiar nada. El \mbox{CU-02} crea directamente una cuenta registrada \\ \hline
+\mbox{D-02} & \textbf{Invitado.} El \texttt{Usuario} nace en el \mbox{CU-03} con \texttt{tipo\_\allowbreak{}cuenta = INVITADO}, sin correo ni contraseña. El \mbox{DES-02} lo convierte a \texttt{REGISTRADA} \textbf{conservando el mismo \texttt{id\_\allowbreak{}usuario}}: por eso conserva elo, monedas, objetos y partidas sin copiar nada. El \mbox{CU-02} crea directamente una cuenta registrada \\ \hline
 \mbox{D-03} & \textbf{Seis ranuras.} Se sustituye \texttt{Usuario.id\_\allowbreak{}skin\_\allowbreak{}equipada} y \texttt{Skin.es\_\allowbreak{}inicial} por cuatro estructuras: \texttt{Ranura} (catálogo de las seis), \texttt{ObjetoCosmetico} (pertenece a una ranura), \texttt{UsuarioObjeto} (lo que posee) y \texttt{Equipamiento} (una fila por usuario y ranura) \\ \hline
 \mbox{D-04} & \textbf{Elo por modo.} \texttt{Estadisticas} deja de ser 1:1. Se parte en \texttt{Modo} (catálogo: clásico 9×9, cuatro jugadores, rápida 7×7) y \texttt{EstadisticaModo}, 1:N por usuario y modo. El elo del menú y del ranking global es el de clásico 9×9 \\ \hline
 \mbox{D-05} & \textbf{Sanciones con ámbito.} \texttt{Baneo} se sustituye por \texttt{Sancion}, con \texttt{ambito} (\texttt{CUENTA}, \texttt{CHAT}), \texttt{tipo} (\texttt{TEMPORAL}, \texttt{PERMANENTE}), \texttt{fecha\_\allowbreak{}fin} nulable y motivo. La de ámbito \texttt{CHAT} no impide jugar ni iniciar sesión \\ \hline
@@ -68,18 +68,18 @@ Resuelven los pendientes 1 a 9. Están tomadas con el criterio que ya se discuti
 \mbox{D-07} & \textbf{Borrado lógico.} El documento de diseño del juego manda sobre el prototipo 9f: la cuenta pasa a \texttt{ELIMINADA} con \texttt{fecha\_\allowbreak{}baja}. Se descarta el periodo de recuperación de catorce días que preveía \texttt{descripcion.md}: la baja es definitiva, como dice el prototipo 9f. La fila de \texttt{Usuario} nunca se borra físicamente (ver \mbox{D-17}) \\ \hline
 \mbox{D-08} & \textbf{Sin revisión de avatares ni enlaces.} Se publican directos. El filtro de palabras cubre el riesgo real, que está en el nickname y en el chat \\ \hline
 \mbox{D-09} & \textbf{Catálogos precargados.} \texttt{Ranura}, \texttt{ObjetoCosmetico}, \texttt{Modo}, \texttt{NivelIA}, \texttt{Division}, \texttt{Leccion}, \texttt{TipoCaja}, \texttt{TipoCajaObjeto}, \texttt{PalabraProhibida} y \texttt{MotivoReporte} no los escribe ningún caso de uso: se cargan en \texttt{insertar\_\allowbreak{}datos\_\allowbreak{}prueba.sql} y se mantienen por SQL. Las cuentas de administración se crean del mismo modo \\ \hline
-\mbox{D-10} & \textbf{Los emotes no se persisten.} Viajan por red y se pintan; no dejan fila. El \mbox{CU-29} no escribe en la base de datos \\ \hline
+\mbox{D-10} & \textbf{Los emotes no se persisten.} Viajan por red y se pintan; no dejan fila. El envío de un emote, que hoy es un flujo alterno del \mbox{CU-18} (\mbox{D-25}), no escribe en la base de datos \\ \hline
 \mbox{D-11} & \textbf{Una sola participación sin terminar, incluida la IA.} Un jugador tiene como mucho una \textit{Participacion} sin terminar en total. Una partida contra la IA pendiente nunca impide entrar a otra: se cierra sola, sin consecuencias, en la misma transacción que crea la nueva. Así el índice único filtrado sobre \textit{Participacion} no necesita saber el tipo de partida \\ \hline
 \mbox{D-12} & \textbf{Partidas contra la IA en el servidor.} Se guardan como \textit{Partida} con \texttt{tipo} = \texttt{IA} y \texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia}. La IA no es un \textit{Usuario}: no tiene \textit{Participacion} y sus \textit{Jugada} llevan \texttt{id\_\allowbreak{}usuario} nulo. Deshacer marca las jugadas como \texttt{deshecha} en lugar de borrarlas \\ \hline
-\mbox{D-13} & \textbf{Primera vez: peón e icono.} El \texttt{nickname} se sigue eligiendo en el registro. El alta otorga todos los objetos iniciales y equipa el predeterminado de cada ranura; el \mbox{CU-08} permite cambiar el peón y el icono una vez, y marca \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} \\ \hline
+\mbox{D-13} & \textbf{Primera vez: peón e icono.} El \texttt{nickname} se sigue eligiendo en el registro. El alta otorga todos los objetos iniciales y equipa el predeterminado de cada ranura; el \mbox{DES-03} permite cambiar el peón y el icono una vez, y marca \texttt{fecha\_\allowbreak{}configuracion\_\allowbreak{}inicial} \\ \hline
 \mbox{D-14} & \textbf{Tablas solo entre dos jugadores.} En el modo de cuatro no hay empate que acordar. Las ofertas se guardan en \textit{OfertaTablas} y caducan al jugar el rival \\ \hline
 \mbox{D-15} & \textbf{Abandono y desconexión.} Abandonar cuenta como derrota normal y suma \texttt{abandonos} en \textit{EstadisticaModo}. Perder la conexión no es abandonar: la partida espera con el reloj corriendo, y el rival puede reclamar la victoria a los sesenta segundos \\ \hline
 \mbox{D-16} & \textbf{Salas privadas.} No otorgan elo ni monedas. Si el anfitrión sale, la sala se cierra. Las invitaciones a jugar usan una sala en lugar de crear la partida directamente \\ \hline
-\mbox{D-17} & \textbf{Anonimización inmediata.} La cuenta se anonimiza en la misma transacción de la baja (\mbox{CU-11}): se liberan \texttt{nickname} y \texttt{correo}, la contraseña queda en nulo y se borran enlaces, historial de nombres, amistades, silencios y bloqueos, pero la fila se conserva. No hace falta un proceso programado ni un flujo de recuperación \\ \hline
+\mbox{D-17} & \textbf{Anonimización inmediata.} La cuenta se anonimiza en la misma transacción de la baja (\mbox{DES-05}): se liberan \texttt{nickname} y \texttt{correo}, la contraseña queda en nulo y se borran enlaces, historial de nombres, amistades, silencios y bloqueos, pero la fila se conserva. No hace falta un proceso programado ni un flujo de recuperación \\ \hline
 \mbox{D-18} & \textbf{Tutorial en la cuenta, validado en el cliente.} El progreso se guarda en \textit{ProgresoTutorial} para continuar en cualquier dispositivo. Como no otorga nada, el servidor acepta el avance que declara el cliente y el tutorial funciona sin conexión \\ \hline
 \mbox{D-19} & \textbf{Espectadores sin persistencia.} Solo se guarda el \textit{EnlaceEspectador} compartido. El aforo se lleva en memoria. El retraso de ocho segundos se aplica siempre, también entre amigos \\ \hline
 \mbox{D-20} & \textbf{Cambio de correo por token.} El correo nuevo viaja en el \textit{CodigoVerificacion}, con \texttt{proposito} = \texttt{CAMBIO\_\allowbreak{}CORREO} y \texttt{correo\_\allowbreak{}destino}. El correo vigente no se sustituye hasta confirmar el nuevo \\ \hline
-\mbox{D-21} & \textbf{Internacionalización con diccionarios de recursos y texto en UTF-8.} Los idiomas admitidos son \texttt{es-MX}, por omisión, y \texttt{en}. Todo texto que se muestra se traduce con diccionarios de recursos: los del cliente para la interfaz, los términos de uso, los valores de dominio y los nombres de los catálogos, y los del servidor de partidas para los correos. Si a un diccionario le falta una clave, se usa la de \texttt{es-MX}. La base de datos no guarda traducciones: cada fila de catálogo guarda un \texttt{codigo}, como \texttt{CLASICO} o \texttt{PEON\_\allowbreak{}CLASICO}, que es la clave de su nombre en los diccionarios. Sí guarda el \texttt{idioma\_\allowbreak{}preferido} de cada cuenta, el idioma en que se aceptaron los términos y el de cada término prohibido, nulo si se filtra en todos, con un \texttt{CHECK} de los idiomas admitidos. La base se crea con la intercalación \texttt{Modern\_\allowbreak{}Spanish\_\allowbreak{}100\_\allowbreak{}CI\_\allowbreak{}AS\_\allowbreak{}SC\_\allowbreak{}UTF8}, para que todo texto admita la ñ, los acentos y cualquier carácter Unicode. Lo que escriben las personas no se traduce (\mbox{CU-28} \mbox{RN-12}) \\ \hline
+\mbox{D-21} & \textbf{Internacionalización con diccionarios de recursos y texto en UTF-8.} Los idiomas admitidos son \texttt{es-MX}, por omisión, y \texttt{en}. Todo texto que se muestra se traduce con diccionarios de recursos: los del cliente para la interfaz, los términos de uso, los valores de dominio y los nombres de los catálogos, y los del servidor de partidas para los correos. Si a un diccionario le falta una clave, se usa la de \texttt{es-MX}. La base de datos no guarda traducciones: cada fila de catálogo guarda un \texttt{codigo}, como \texttt{CLASICO} o \texttt{PEON\_\allowbreak{}CLASICO}, que es la clave de su nombre en los diccionarios. Sí guarda el \texttt{idioma\_\allowbreak{}preferido} de cada cuenta, el idioma en que se aceptaron los términos y el de cada término prohibido, nulo si se filtra en todos, con un \texttt{CHECK} de los idiomas admitidos. La base se crea con la intercalación \texttt{Modern\_\allowbreak{}Spanish\_\allowbreak{}100\_\allowbreak{}CI\_\allowbreak{}AS\_\allowbreak{}SC\_\allowbreak{}UTF8}, para que todo texto admita la ñ, los acentos y cualquier carácter Unicode. Lo que escriben las personas no se traduce (\mbox{CU-18} \mbox{RN-09}) \\ \hline
 \end{longtable}
 \end{center}
 
@@ -94,9 +94,26 @@ Se tomaron al priorizar los casos de uso y revisar la base de datos (secciones \
 \hline
 \textbf{ID} & \textbf{Decisión} \\ \hline
 \endhead
-\mbox{D-22} & \textbf{Núcleo y fase posterior.} El esquema se divide en dos scripts. \texttt{bd/crear\_\allowbreak{}tablas.sql} crea solo las tablas que escriben los casos \textit{Must}, \textit{Should} y \textit{Could}. Las 22 tablas que solo escriben los agregados del equipo, y las columnas que estos añadían a \textit{Usuario}, \textit{EstadisticaModo}, \textit{Partida}, \textit{Jugada} y \textit{Sala}, pasan a \texttt{bd/fase\_\allowbreak{}posterior/\allowbreak{}crear\_\allowbreak{}tablas\_\allowbreak{}fase\_\allowbreak{}posterior.sql}, que se ejecuta encima del núcleo sin rehacerlo. Los pasos de los casos del núcleo que tocan esas estructuras se omiten hasta entonces (tabla \textit{Partes de casos del núcleo que se difieren}) \\ \hline
+\mbox{D-22} & \textbf{Núcleo y fase posterior.} El esquema se divide en dos scripts. \texttt{bd/crear\_\allowbreak{}tablas.sql} crea solo las tablas que escriben los casos \textit{Must}, \textit{Should} y \textit{Could}. Las 22 tablas que solo escriben los agregados del equipo, y las columnas que estos añadían a \textit{Usuario}, \textit{EstadisticaModo}, \textit{Partida}, \textit{Jugada} y \textit{Sala}, pasan a \texttt{bd/fase\_\allowbreak{}posterior/\allowbreak{}crear\_\allowbreak{}tablas\_\allowbreak{}fase\_\allowbreak{}posterior.sql}, que se ejecuta encima del núcleo sin rehacerlo. Los pasos de los casos del núcleo que tocan esas estructuras se omiten hasta entonces. La \mbox{D-25} cambia qué casos forman el alcance y, con ello, qué tablas pertenecen al núcleo \\ \hline
 \mbox{D-23} & \textbf{Menos tablas para lo mismo.} \texttt{TokenVerificacionCorreo}, \texttt{TokenRecuperacion} y \texttt{CodigoSegundoFactor} se funden en \textit{CodigoVerificacion}, con \texttt{proposito} = \texttt{ALTA}, \texttt{CAMBIO\_\allowbreak{}CORREO}, \texttt{RECUPERACION} o \texttt{SEGUNDO\_\allowbreak{}FACTOR}; el estado \texttt{CONSUMIDO} del código del segundo factor pasa a llamarse \texttt{USADO}, como el de los demás. \texttt{AceptacionTerminos} pasa a tres columnas de \textit{Usuario} con la última versión aceptada. El catálogo \texttt{MotivoReporte} pasa a la columna \texttt{motivo} de \textit{Reporte}, con \texttt{CHECK}; su texto sigue en los diccionarios de recursos (\mbox{D-21}). Donde los casos de uso nombraban las tablas anteriores se escribe ya la nueva \\ \hline
-\mbox{D-24} & \textbf{Quién espera, en memoria.} La cola de emparejamiento y las plazas de cada sala dejan de ser tablas (\texttt{ColaEmparejamiento}, \texttt{SalaParticipante}) y las lleva el Servidor de partidas en memoria. Describen jugadores conectados por TCP: si el servidor se reinicia, las conexiones se caen con él y guardarlas no permite avisar ni emparejar a nadie. La regla de un jugador en una sola cola y en una sola sala la garantiza la estructura en memoria, y los mensajes de la sala siguen guardándose en \textit{Mensaje}. Donde los casos de uso escriben o leen \textit{ColaEmparejamiento} o \textit{SalaParticipante} (\mbox{CU-11}, \mbox{CU-17}, \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-27}, \mbox{CU-32}, \mbox{CU-33}), la operación es sobre esa estructura en memoria y no llega a la base \\ \hline
+\mbox{D-24} & \textbf{Quién espera, en memoria.} La cola de emparejamiento y las plazas de cada sala dejan de ser tablas (\texttt{ColaEmparejamiento}, \texttt{SalaParticipante}) y las lleva el Servidor de partidas en memoria. Describen jugadores conectados por TCP: si el servidor se reinicia, las conexiones se caen con él y guardarlas no permite avisar ni emparejar a nadie. La regla de un jugador en una sola cola y en una sola sala la garantiza la estructura en memoria, y los mensajes de la sala siguen guardándose en \textit{Mensaje}. Donde los casos de uso escriben o leen \textit{ColaEmparejamiento} o \textit{SalaParticipante} (\mbox{DES-05}, \mbox{CU-07}, \mbox{CU-08}, \mbox{CU-09}, \mbox{DES-09}, \mbox{CU-21}, \mbox{DES-10}), la operación es sobre esa estructura en memoria y no llega a la base \\ \hline
+\end{longtable}
+\end{center}
+
+\flujoTitulo{\mbox{D-25} a \mbox{D-27}. Decisiones del recorte del alcance}
+Se tomaron cuando el cliente pidió reducir el número de casos de uso (sección \textit{Priorización de requisitos y casos de uso}). Sustituyen a las anteriores en lo que se contradigan.
+
+\begin{center}\small
+\begin{longtable}{|L{0.082\textwidth}|L{0.818\textwidth}|}
+\hline
+\textbf{ID} & \textbf{Decisión} \\ \hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Decisión} \\ \hline
+\endhead
+\mbox{D-25} & \textbf{Alcance por requisitos del cliente.} Entran los casos que cubren una de las trece características o una restricción obligatoria del cliente, y los del núcleo de jugabilidad. Los demás pasan a requisitos deseables (\mbox{DES-xx}), que conservan su análisis en \texttt{casos/deseables/} y ya no son \textit{Won't} dentro del documento sino una sección propia. Tres casos se absorben en otros porque no son metas del jugador: verificar el correo pasa a ser un paso del \mbox{CU-02}, cerrar sesión una regla de negocio del \mbox{CU-01} y enviar un emote un flujo alterno del \mbox{CU-18}. Los casos del alcance ya no llevan pasos diferidos: lo que dependía de un deseable se quitó del caso. Con ello cambian las tablas del núcleo: \textit{Amistad}, \textit{Solicitud}, \textit{Invitacion} y \textit{EnlaceRed}, y las columnas \texttt{id\_\allowbreak{}icono} y \texttt{codigo\_\allowbreak{}amigo} de \textit{Usuario}, pasan al núcleo porque las usan casos del alcance; \textit{Silencio}, \textit{Bloqueo} y \textit{Apelacion} solo las usan deseables \\ \hline
+\mbox{D-26} & \textbf{Moderación por strikes, sin moderadores.} El cliente pide una moderación simple. Tres reportes de jugadores distintos suman un strike, y el sistema aplica la sanción sin intervención humana: el primero restringe el chat veinticuatro horas, el segundo suspende la cuenta siete días y el tercero la expulsa de forma permanente (\mbox{CU-25} \mbox{RN-10} a \mbox{RN-13}). La \textit{Sancion} deja de exigir un moderador. La cola de reportes, la sanción manual, la apelación y la gestión de moderadores pasan a deseables. El filtro de palabras del chat (\mbox{CU-18}) sigue siendo parte de la moderación \\ \hline
+\mbox{D-27} & \textbf{Expulsados de la sala, en memoria.} La lista de jugadores expulsados de una sala (\mbox{CU-10}) vive con las plazas de la sala en la memoria del Servidor de partidas, igual que ellas (\mbox{D-24}), y desaparece cuando la sala se cierra. La expulsión no es una sanción: no genera reporte ni strike \\ \hline
 \end{longtable}
 \end{center}
 

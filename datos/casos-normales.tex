@@ -14,7 +14,7 @@ La partida 1 enfrenta a \at{luis\_quo} y \at{marta\_muros} en el modo clásico, 
 \consulta{normalpartida}
 \input{bd/tex/datos/normalpartida}
 
-Los dos empezaron con el elo inicial de 1000 (\mbox{CU-02} \mbox{RN-06}). Con elos iguales, la victoria vale 16 puntos y la derrota los mismos 16 en contra, y la diferencia la calcula la columna \at{diferencia\_elo}. Cada participante recibe un movimiento de monedas de tipo \at{PARTIDA}: 100 el ganador y 25 el perdedor (\mbox{CU-25} \mbox{RN-08}). Las quince jugadas de la partida alternan los turnos, mezclan movimientos y muros y terminan con luis en la fila 9, la meta del jugador que sale de la fila 1:
+Los dos empezaron con el elo inicial de 1000 (\mbox{CU-02} \mbox{RN-06}). Con elos iguales, la victoria vale 16 puntos y la derrota los mismos 16 en contra, y la diferencia la calcula la columna \at{diferencia\_elo}. Cada participante recibe un movimiento de monedas de tipo \at{PARTIDA}: 100 el ganador y 25 el perdedor (\mbox{CU-16} \mbox{RN-08}). Las quince jugadas de la partida alternan los turnos, mezclan movimientos y muros y terminan con luis en la fila 9, la meta del jugador que sale de la fila 1:
 
 \consulta{normaljugadas}
 \input{bd/tex/datos/normaljugadas}
@@ -24,9 +24,9 @@ En un movimiento, la jugada tiene casilla de origen y de destino y no tiene surc
 \subsubsection*{Compras en la tienda}
 \addcontentsline{toc}{subsubsection}{Compras en la tienda}
 
-Una compra deja dos registros en la misma transacción: un movimiento de monedas de tipo \at{COMPRA}, con importe negativo, y el objeto en el inventario de la cuenta, con origen \at{COMPRA} (\mbox{CU-38} \mbox{RN-08}). La consulta los une y comprueba además si el objeto quedó equipado:
+Una compra deja dos registros en la misma transacción: un movimiento de monedas de tipo \at{COMPRA}, con importe negativo, y el objeto en el inventario de la cuenta, con origen \at{COMPRA} (\mbox{DES-13} \mbox{RN-08}). La consulta los une y comprueba además si el objeto quedó equipado:
 
 \consulta{normalcompra}
 \input{bd/tex/datos/normalcompra}
 
-El importe de cada compra es el precio del objeto en el catálogo, y no el que envía el cliente (\mbox{CU-38} \mbox{RN-03}). Los cuatro objetos comprados quedaron equipados en su ranura (\mbox{CU-14}).
+El importe de cada compra es el precio del objeto en el catálogo, y no el que envía el cliente (\mbox{DES-13} \mbox{RN-03}). Los cuatro objetos comprados quedaron equipados en su ranura (\mbox{DES-07}).

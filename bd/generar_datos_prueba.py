@@ -122,7 +122,7 @@ def construir():
     tabla("TipoCaja", "id_tipo_caja codigo precio activo", cat.TIPOS_CAJA)
     tabla("TipoCajaObjeto", "id_tipo_caja id_objeto probabilidad", cat.CONTENIDO_CAJA)
     tabla("PalabraProhibida", "id_palabra termino idioma ambito", [(i,) + p for i, p in enumerate(cat.PALABRAS, 1)], True,
-          "Un término sin idioma se filtra en todos (CU-28 RN-01).")
+          "Un término sin idioma se filtra en todos (CU-18 RN-01).")
     tabla("MotivoReporte", "id_motivo codigo", cat.MOTIVOS)
 
     part = de.partidas()
@@ -184,7 +184,7 @@ def construir():
     tabla("ParticipacionObjeto", "id_partida id_usuario id_ranura id_objeto",
           [(x["partida"], x["usuario"], r, o) for x in part["participaciones"]
            for r, o in sorted(de.equipamiento_en(x["usuario"], f(pa.PARTIDAS[x["partida"]]["inicio"])).items())],
-          comentario="El aspecto que cada jugador tenía equipado al empezar (CU-14 RN-03).")
+          comentario="El aspecto que cada jugador tenía equipado al empezar (DES-07 RN-03).")
     tabla("Jugada", "id_partida numero_jugada id_usuario tipo casilla_origen casilla_destino surco orientacion "
           "tiempo_consumido fecha_jugada deshecha",
           [(pid, j["n"], None if j["actor"] == "IA" else j["actor"], "MOVIMIENTO" if j["clase"] == "M" else "MURO",
@@ -244,7 +244,7 @@ def construir():
     tabla("Sancion", "id_sancion id_usuario id_moderador id_reporte ambito tipo motivo fecha_inicio fecha_fin fecha_retiro "
           "id_sancion_sustituta",
           [(i, s[0], s[1], s[2], s[3], s[4], s[5], f(s[6]), f(s[7]), f(s[8]), None) for i, s in com.SANCIONES.items()], True,
-          "La sustituta se enlaza después con UPDATE, cuando ya existe (CU-44 RN-09).")
+          "La sustituta se enlaza después con UPDATE, cuando ya existe (DES-18 RN-09).")
     tabla("Apelacion", "id_apelacion id_sancion texto marca_lenguaje fecha_apelacion estado id_moderador fecha_asignacion "
           "nota_resolucion fecha_resolucion",
           [(i, a[0], a[1], a[2], f(a[3]), a[4], a[5], f(a[6]), a[7], f(a[8])) for i, a in com.APELACIONES.items()], True)
@@ -429,7 +429,7 @@ SELECT comprobacion, incoherencias FROM (
     FROM dbo.Partida AS pa JOIN dbo.Modo AS mo ON mo.id_modo = pa.id_modo
     WHERE (SELECT COUNT(*) FROM dbo.Participacion AS p WHERE p.id_partida = pa.id_partida) <> mo.num_jugadores
     UNION ALL
-    SELECT 9, N'Segundo factor activado con un código emitido (CU-09 FA-10)', COUNT(*)
+    SELECT 9, N'Segundo factor activado con un código emitido (CU-04 FA-10)', COUNT(*)
     FROM dbo.Usuario AS u
     WHERE u.doble_factor_habilitado = 1
       AND NOT EXISTS (SELECT 1 FROM dbo.CodigoVerificacion AS c WHERE c.id_usuario = u.id_usuario AND c.proposito = 'SEGUNDO_FACTOR')
@@ -455,7 +455,7 @@ COMPROBACIONES_FASE = r"""
   Comprobación de la fase posterior: cada fila debe mostrar 0.
 ---------------------------------------------------------------------*/
 SELECT comprobacion, incoherencias FROM (
-    SELECT 1 AS n, N'Saldo igual a la suma de movimientos (CU-40 RN-02)' AS comprobacion, COUNT(*) AS incoherencias
+    SELECT 1 AS n, N'Saldo igual a la suma de movimientos (DES-15 RN-02)' AS comprobacion, COUNT(*) AS incoherencias
     FROM dbo.Usuario AS u
     WHERE u.saldo_monedas <> ISNULL((SELECT SUM(m.importe) FROM dbo.MovimientoMoneda AS m WHERE m.id_usuario = u.id_usuario), 0)
     UNION ALL
@@ -465,11 +465,11 @@ SELECT comprobacion, incoherencias FROM (
                                    WHERE j.id_usuario = e.id_usuario AND pa.id_modo = e.id_modo AND pa.tipo = 'CLASIFICATORIA'
                                      AND pa.estado = 'FINALIZADA' AND j.tipo = 'MURO' AND j.deshecha = 0)
     UNION ALL
-    SELECT 3, N'División solo a partir de cinco partidas (CU-25 RN-14)', COUNT(*)
+    SELECT 3, N'División solo a partir de cinco partidas (CU-16 RN-12)', COUNT(*)
     FROM dbo.EstadisticaModo AS e
     WHERE (e.id_division IS NULL AND e.partidas_jugadas >= 5) OR (e.id_division IS NOT NULL AND e.partidas_jugadas < 5)
     UNION ALL
-    SELECT 4, N'Un objeto equipado en cada ranura (CU-14 RN-01)', COUNT(*)
+    SELECT 4, N'Un objeto equipado en cada ranura (DES-07 RN-01)', COUNT(*)
     FROM dbo.Usuario AS u
     WHERE (SELECT COUNT(*) FROM dbo.Equipamiento AS e WHERE e.id_usuario = u.id_usuario) <> (SELECT COUNT(*) FROM dbo.Ranura)
     UNION ALL
@@ -485,7 +485,7 @@ SELECT comprobacion, incoherencias FROM (
     SELECT 7, N'Probabilidades de cada tipo de caja que suman 100', COUNT(*)
     FROM (SELECT id_tipo_caja FROM dbo.TipoCajaObjeto GROUP BY id_tipo_caja HAVING SUM(probabilidad) <> 100) AS x
     UNION ALL
-    SELECT 8, N'Tres objetos en cada caja abierta (CU-39 RN-07)', COUNT(*)
+    SELECT 8, N'Tres objetos en cada caja abierta (DES-14 RN-07)', COUNT(*)
     FROM dbo.Caja AS c
     WHERE c.estado = 'ABIERTA' AND (SELECT COUNT(*) FROM dbo.CajaContenido AS x WHERE x.id_caja = c.id_caja) <> 3
     UNION ALL

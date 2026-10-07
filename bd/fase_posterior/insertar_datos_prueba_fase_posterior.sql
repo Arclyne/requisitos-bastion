@@ -375,7 +375,7 @@ INSERT INTO dbo.Equipamiento (id_usuario, id_ranura, id_objeto) VALUES
   Aspecto en partida y espectador
 ---------------------------------------------------------------------*/
 
--- El aspecto que cada jugador tenía equipado al empezar (CU-14 RN-03).
+-- El aspecto que cada jugador tenía equipado al empezar (DES-07 RN-03).
 INSERT INTO dbo.ParticipacionObjeto (id_partida, id_usuario, id_ranura, id_objeto) VALUES
     (1, 3, 1, 101),
     (1, 3, 2, 201),
@@ -634,7 +634,7 @@ GO
   Comprobación de la fase posterior: cada fila debe mostrar 0.
 ---------------------------------------------------------------------*/
 SELECT comprobacion, incoherencias FROM (
-    SELECT 1 AS n, N'Saldo igual a la suma de movimientos (CU-40 RN-02)' AS comprobacion, COUNT(*) AS incoherencias
+    SELECT 1 AS n, N'Saldo igual a la suma de movimientos (DES-15 RN-02)' AS comprobacion, COUNT(*) AS incoherencias
     FROM dbo.Usuario AS u
     WHERE u.saldo_monedas <> ISNULL((SELECT SUM(m.importe) FROM dbo.MovimientoMoneda AS m WHERE m.id_usuario = u.id_usuario), 0)
     UNION ALL
@@ -644,11 +644,11 @@ SELECT comprobacion, incoherencias FROM (
                                    WHERE j.id_usuario = e.id_usuario AND pa.id_modo = e.id_modo AND pa.tipo = 'CLASIFICATORIA'
                                      AND pa.estado = 'FINALIZADA' AND j.tipo = 'MURO' AND j.deshecha = 0)
     UNION ALL
-    SELECT 3, N'División solo a partir de cinco partidas (CU-25 RN-14)', COUNT(*)
+    SELECT 3, N'División solo a partir de cinco partidas (CU-16 RN-12)', COUNT(*)
     FROM dbo.EstadisticaModo AS e
     WHERE (e.id_division IS NULL AND e.partidas_jugadas >= 5) OR (e.id_division IS NOT NULL AND e.partidas_jugadas < 5)
     UNION ALL
-    SELECT 4, N'Un objeto equipado en cada ranura (CU-14 RN-01)', COUNT(*)
+    SELECT 4, N'Un objeto equipado en cada ranura (DES-07 RN-01)', COUNT(*)
     FROM dbo.Usuario AS u
     WHERE (SELECT COUNT(*) FROM dbo.Equipamiento AS e WHERE e.id_usuario = u.id_usuario) <> (SELECT COUNT(*) FROM dbo.Ranura)
     UNION ALL
@@ -664,7 +664,7 @@ SELECT comprobacion, incoherencias FROM (
     SELECT 7, N'Probabilidades de cada tipo de caja que suman 100', COUNT(*)
     FROM (SELECT id_tipo_caja FROM dbo.TipoCajaObjeto GROUP BY id_tipo_caja HAVING SUM(probabilidad) <> 100) AS x
     UNION ALL
-    SELECT 8, N'Tres objetos en cada caja abierta (CU-39 RN-07)', COUNT(*)
+    SELECT 8, N'Tres objetos en cada caja abierta (DES-14 RN-07)', COUNT(*)
     FROM dbo.Caja AS c
     WHERE c.estado = 'ABIERTA' AND (SELECT COUNT(*) FROM dbo.CajaContenido AS x WHERE x.id_caja = c.id_caja) <> 3
     UNION ALL

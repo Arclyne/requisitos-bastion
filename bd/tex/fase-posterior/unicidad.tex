@@ -17,12 +17,12 @@
 \textit{Leccion} & (\texttt{codigo}) & Dos lecciones no tienen la misma clave. \\ \hline
 \textit{Leccion} & (\texttt{orden}) & Dos lecciones no ocupan la misma posición. \\ \hline
 \textit{Tipo\-Caja} & (\texttt{codigo}) & Dos tipos de caja no tienen la misma clave. \\ \hline
-\textit{Avatar} & (\texttt{id\_\allowbreak{}usuario}), si \texttt{vigente = 1} & A lo sumo un avatar vigente por cuenta (\mbox{CU-12} \mbox{RN-06}). \\ \hline
-\textit{Enlace\-Red} & (\texttt{id\_\allowbreak{}usuario}, \texttt{orden}) & Junto con el CHECK del orden, limita a cuatro enlaces por cuenta (\mbox{CU-12} \mbox{RN-03}). \\ \hline
+\textit{Avatar} & (\texttt{id\_\allowbreak{}usuario}), si \texttt{vigente = 1} & A lo sumo un avatar vigente por cuenta (\mbox{CU-05} \mbox{RN-06}). \\ \hline
+\textit{Enlace\-Red} & (\texttt{id\_\allowbreak{}usuario}, \texttt{orden}) & Junto con el CHECK del orden, limita a cuatro enlaces por cuenta (\mbox{CU-05} \mbox{RN-02}). \\ \hline
 \textit{Equipamiento} & (\texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & Llave candidata: como el objeto determina su ranura, la cuenta y el objeto también identifican la fila. \\ \hline
 \textit{Participacion\-Objeto} & (\texttt{id\_\allowbreak{}partida}, \texttt{id\_\allowbreak{}usuario}, \texttt{id\_\allowbreak{}objeto}) & Llave candidata: como el objeto determina su ranura, también identifica la fila. \\ \hline
 \textit{Enlace\-Espectador} & (\texttt{token\_\allowbreak{}hash}) & El token identifica un solo enlace. \\ \hline
-\textit{Invitacion} & (\texttt{id\_\allowbreak{}emisor}, \texttt{id\_\allowbreak{}destinatario}), si \texttt{estado = PENDIENTE} & Una sola invitación pendiente del mismo emisor al mismo destinatario (\mbox{CU-32} \mbox{RN-04}). \\ \hline
-\textit{Solicitud} & (\texttt{id\_\allowbreak{}solicitante}, \texttt{id\_\allowbreak{}destinatario}) & No hay dos solicitudes iguales entre el mismo par (\mbox{CU-30} \mbox{RN-03}). \\ \hline
+\textit{Invitacion} & (\texttt{id\_\allowbreak{}emisor}, \texttt{id\_\allowbreak{}destinatario}), si \texttt{estado = PENDIENTE} & Una sola invitación pendiente del mismo emisor al mismo destinatario (\mbox{CU-21} \mbox{RN-03}). \\ \hline
+\textit{Solicitud} & (\texttt{id\_\allowbreak{}solicitante}, \texttt{id\_\allowbreak{}destinatario}) & No hay dos solicitudes iguales entre el mismo par (\mbox{CU-19} \mbox{RN-03}). \\ \hline
 \end{longtable}
 \end{center}

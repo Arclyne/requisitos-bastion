@@ -24,15 +24,15 @@ DECLARE @pruebas TABLE (
     sentencia  NVARCHAR(MAX)  NOT NULL
 );
 INSERT INTO @pruebas VALUES
-    (1,  N'Saldo de monedas negativo',                   N'CU-40 RN-02',
+    (1,  N'Saldo de monedas negativo',                   N'DES-15 RN-02',
          N'UPDATE dbo.Usuario SET saldo_monedas = -50 WHERE id_usuario = 3;'),
     (2,  N'Amistad con una cuenta que no existe',        N'Llave foránea',
          N'INSERT INTO dbo.Amistad (id_usuario_a, id_usuario_b) VALUES (3, 99);'),
-    (3,  N'Equipar un objeto que no se posee',           N'CU-14 RN-02',
+    (3,  N'Equipar un objeto que no se posee',           N'DES-07 RN-02',
          N'UPDATE dbo.Equipamiento SET id_objeto = 105 WHERE id_usuario = 5 AND id_ranura = 1;'),
-    (4,  N'Equipar un objeto en otra ranura',            N'D-03, CU-14 RN-01',
+    (4,  N'Equipar un objeto en otra ranura',            N'D-03, DES-07 RN-01',
          N'UPDATE dbo.Equipamiento SET id_objeto = 202 WHERE id_usuario = 3 AND id_ranura = 1;'),
-    (5,  N'Compra que no dice qué objeto',               N'CU-38 RN-08',
+    (5,  N'Compra que no dice qué objeto',               N'DES-13 RN-08',
          N'INSERT INTO dbo.MovimientoMoneda (id_usuario, tipo, importe) VALUES (3, ''COMPRA'', -100);');
 
 DECLARE @resultados TABLE (n INT, error INT, mensaje NVARCHAR(4000));

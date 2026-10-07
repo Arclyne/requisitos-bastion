@@ -51,7 +51,7 @@ INSERT INTO dbo.Modo (id_modo, codigo, tamano_tablero, num_jugadores, muros_por_
     (2, N'CUATRO_JUGADORES', 9, 4, 5, 1),
     (3, N'RAPIDA', 7, 2, 6, 1);
 
--- Un término sin idioma se filtra en todos (CU-28 RN-01).
+-- Un término sin idioma se filtra en todos (CU-18 RN-01).
 SET IDENTITY_INSERT dbo.PalabraProhibida ON;
 INSERT INTO dbo.PalabraProhibida (id_palabra, termino, idioma, ambito) VALUES
     (1, N'tonto', N'es-MX', N'AMBOS'),
@@ -392,10 +392,10 @@ INSERT INTO dbo.Reporte (id_reporte, id_denunciante, id_reportado, motivo, descr
     (2, 4, 9, N'ACOSO', N'Molesta a todos en el chat global.', NULL, '2026-08-25T21:06:00', N'PENDIENTE', NULL, NULL, NULL, NULL),
     (3, 6, 3, N'JUEGO_ANTIDEPORTIVO', N'Creo que esperó a que abandonáramos.', 7, '2026-08-15T19:30:00', N'EN_REVISION', 2, '2026-09-01T17:40:00', NULL, NULL),
     (4, 3, 11, N'NOMBRE_INAPROPIADO', N'Su nickname imita al del administrador.', NULL, '2026-08-22T20:30:00', N'RESUELTO_CON_SANCION', 2, '2026-08-23T09:55:00', N'El nickname suplanta al equipo del juego.', '2026-08-23T10:00:00'),
-    (5, 4, 3, N'TRAMPAS', N'Me saltó y llegó a la meta muy rápido; creo que usa un programa.', 5, '2026-07-26T17:40:00', N'RESUELTO_SIN_SANCION', 2, '2026-07-27T09:00:00', N'La repetición muestra jugadas legales; el salto es válido (CU-20 RN-03).', '2026-07-27T09:20:00');
+    (5, 4, 3, N'TRAMPAS', N'Me saltó y llegó a la meta muy rápido; creo que usa un programa.', 5, '2026-07-26T17:40:00', N'RESUELTO_SIN_SANCION', 2, '2026-07-27T09:00:00', N'La repetición muestra jugadas legales; el salto es válido (CU-11 RN-03).', '2026-07-27T09:20:00');
 SET IDENTITY_INSERT dbo.Reporte OFF;
 
--- La sustituta se enlaza después con UPDATE, cuando ya existe (CU-44 RN-09).
+-- La sustituta se enlaza después con UPDATE, cuando ya existe (DES-18 RN-09).
 SET IDENTITY_INSERT dbo.Sancion ON;
 INSERT INTO dbo.Sancion (id_sancion, id_usuario, id_moderador, id_reporte, ambito, tipo, motivo, fecha_inicio, fecha_fin, fecha_retiro, id_sancion_sustituta) VALUES
     (1, 9, 2, 1, N'CUENTA', N'TEMPORAL', N'Insultos en el chat de una partida.', '2026-08-27T10:00:00', '2026-08-28T10:00:00', '2026-08-27T16:00:00', NULL),
@@ -425,7 +425,7 @@ INSERT INTO dbo.BitacoraModeracion (id_bitacora, id_moderador, accion, id_usuari
     (9, 2, N'SANCION_APLICADA', 11, N'Sanción 5: cuenta, permanente.', '2026-08-23T10:00:00'),
     (10, 2, N'REPORTE_RESUELTO', 11, N'Reporte 4 resuelto con sanción.', '2026-08-23T10:00:00'),
     (11, 2, N'REPORTE_TOMADO', 9, N'Reporte 2.', '2026-08-26T10:00:00'),
-    (12, 2, N'REPORTE_LIBERADO', 9, N'Reporte 2: vuelve a la cola a los treinta minutos (CU-43 RN-03).', '2026-08-26T10:30:00'),
+    (12, 2, N'REPORTE_LIBERADO', 9, N'Reporte 2: vuelve a la cola a los treinta minutos (DES-17 RN-03).', '2026-08-26T10:30:00'),
     (13, 2, N'REPORTE_TOMADO', 9, N'Reporte 1.', '2026-08-27T09:50:00'),
     (14, 2, N'SANCION_APLICADA', 9, N'Sanción 1: cuenta, temporal.', '2026-08-27T10:00:00'),
     (15, 2, N'REPORTE_RESUELTO', 9, N'Reporte 1 resuelto con sanción.', '2026-08-27T10:00:00'),
@@ -556,7 +556,7 @@ SELECT comprobacion, incoherencias FROM (
     FROM dbo.Partida AS pa JOIN dbo.Modo AS mo ON mo.id_modo = pa.id_modo
     WHERE (SELECT COUNT(*) FROM dbo.Participacion AS p WHERE p.id_partida = pa.id_partida) <> mo.num_jugadores
     UNION ALL
-    SELECT 9, N'Segundo factor activado con un código emitido (CU-09 FA-10)', COUNT(*)
+    SELECT 9, N'Segundo factor activado con un código emitido (CU-04 FA-10)', COUNT(*)
     FROM dbo.Usuario AS u
     WHERE u.doble_factor_habilitado = 1
       AND NOT EXISTS (SELECT 1 FROM dbo.CodigoVerificacion AS c WHERE c.id_usuario = u.id_usuario AND c.proposito = 'SEGUNDO_FACTOR')
@@ -584,7 +584,7 @@ SELECT comprobacion, incoherencias FROM (
           WHERE NOT EXISTS (SELECT 1 FROM dbo.Reporte AS t WHERE t.descripcion = e.v COLLATE Latin1_General_100_BIN2)
           UNION ALL
           SELECT e.v FROM (VALUES
-                  (N'La repetici' + NCHAR(243) + N'n muestra jugadas legales; el salto es v' + NCHAR(225) + N'lido (CU-20 RN-03).')) AS e(v)
+                  (N'La repetici' + NCHAR(243) + N'n muestra jugadas legales; el salto es v' + NCHAR(225) + N'lido (CU-11 RN-03).')) AS e(v)
           WHERE NOT EXISTS (SELECT 1 FROM dbo.Reporte AS t WHERE t.nota_resolucion = e.v COLLATE Latin1_General_100_BIN2)
           UNION ALL
           SELECT e.v FROM (VALUES

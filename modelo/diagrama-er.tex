@@ -22,10 +22,10 @@ Un solo dibujo con \bdNumTablas{} entidades y \bdNumColumnas{} atributos no se p
   \item \textbf{Pares de cardinalidad.} Junto a cada entidad van dos cifras. La de arriba se lee siguiendo la frase del rombo, del sujeto al objeto; la de abajo, al revés. El sujeto lleva arriba siempre 1.
   \item \textbf{Participación.} La doble línea marca participación total: toda fila de esa entidad participa en la relación. Del lado de la hija corresponde a una llave foránea obligatoria; del lado del padre, a una regla de negocio, como las estadísticas de cada modo y los objetos iniciales que el alta crea para todo usuario en la fase posterior (\mbox{CU-02} \mbox{RN-06}). La línea simple marca participación parcial. En el archivo \at{.drawio} la doble línea oculta la flecha, porque draw.io no dibuja las dos cosas a la vez.
   \item \textbf{Papeles.} Cuando una entidad participa dos veces en relaciones con la misma otra entidad, cada línea lleva su papel en cursiva: el emisor y el destinatario de una invitación, el reportante y el reportado de un reporte.
-  \item \textbf{Relación recursiva.} La única relación de una entidad consigo misma, la sanción que sustituye a otra (\mbox{CU-44} \mbox{RN-09}), se dibuja con dos líneas paralelas hacia \textit{Sancion}, una por papel.
+  \item \textbf{Relación recursiva.} La única relación de una entidad consigo misma, la sanción que sustituye a otra (\mbox{DES-18} \mbox{RN-09}), se dibuja con dos líneas paralelas hacia \textit{Sancion}, una por papel.
 \end{reglas}
 
-Hay restricciones que ninguna notación de cardinalidad expresa y que el esquema garantiza de otro modo. Que una partida tenga dos o cuatro participantes según su modo, y nunca tres, lo garantiza la transacción que la crea (\mbox{CU-17} \mbox{RN-10}); que un usuario tenga una sola participación sin terminar (\mbox{D-11}), el índice único filtrado de \textit{Participacion}.
+Hay restricciones que ninguna notación de cardinalidad expresa y que el esquema garantiza de otro modo. Que una partida tenga dos o cuatro participantes según su modo, y nunca tres, lo garantiza la transacción que la crea (\mbox{CU-07} \mbox{RN-08}); que un usuario tenga una sola participación sin terminar (\mbox{D-11}), el índice único filtrado de \textit{Participacion}.
 
 %---------------------------------------------------------------------
 % Vista general
@@ -82,7 +82,7 @@ Las estadísticas y el elo de cada jugador en cada modo, y los silencios y bloqu
 \clearpage
 \subsubsection*{Moderación y bitácoras}
 \addcontentsline{toc}{subsubsection}{Diagrama: moderación y bitácoras}
-Reportes, sanciones, apelaciones y las dos bitácoras. El reporte se relaciona dos veces con \textit{Participacion} porque la partida adjunta tuvo que jugarla tanto el reportante como el reportado (\mbox{CU-42} \mbox{RN-09}).
+Reportes, sanciones, apelaciones y las dos bitácoras. El reporte se relaciona dos veces con \textit{Participacion} porque la partida adjunta tuvo que jugarla tanto el reportante como el reportado (\mbox{CU-25} \mbox{RN-09}).
 \begin{center}
 \includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{er/salida/moderacion}
 \end{center}

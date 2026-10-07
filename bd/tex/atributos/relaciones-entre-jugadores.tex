@@ -6,14 +6,14 @@ Relaciones entre jugadores
 Relaciones entre jugadores
 }
 
-\atributosde{Silencio}{Jugador silenciado por otro; solo lo consulta quien silenció (\mbox{CU-33}).}
+\atributosde{Silencio}{Jugador silenciado por otro; solo lo consulta quien silenció (\mbox{DES-10}).}
 \begin{tablaatributos}
 \texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Jugador que silencia. \\ \hline
 \texttt{id\_\allowbreak{}silenciado} & \texttt{INT} & No & PK, FK & Jugador silenciado. \\ \hline
 \texttt{fecha\_\allowbreak{}silencio} & \texttt{DATETIME2(0)} & No &  & Momento del silencio. Por omisión, la fecha actual. \\ \hline
 \end{tablaatributos}
 
-\atributosde{Bloqueo}{Bloqueo entre dos jugadores; impide emparejar, invitar, buscar, solicitar y compartir sala (\mbox{CU-33} \mbox{RN-05}).}
+\atributosde{Bloqueo}{Bloqueo entre dos jugadores; impide emparejar, invitar, buscar, solicitar y compartir sala (\mbox{DES-10} \mbox{RN-05}).}
 \begin{tablaatributos}
 \texttt{id\_\allowbreak{}bloqueador} & \texttt{INT} & No & PK, FK & Jugador que bloquea. \\ \hline
 \texttt{id\_\allowbreak{}bloqueado} & \texttt{INT} & No & PK, FK & Jugador bloqueado. \\ \hline

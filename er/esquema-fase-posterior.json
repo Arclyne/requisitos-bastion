@@ -533,7 +533,7 @@
         ],
         "ref": "UsuarioObjeto",
         "card": "1:0..1",
-        "texto": "Solo se equipa lo que se posee (CU-14 RN-02); un objeto poseído está equipado a lo sumo en una ranura.",
+        "texto": "Solo se equipa lo que se posee (DES-07 RN-02); un objeto poseído está equipado a lo sumo en una ranura.",
         "opcional": false
       },
       {

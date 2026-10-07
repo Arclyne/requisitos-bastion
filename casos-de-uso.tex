@@ -268,10 +268,11 @@
 \section*{Lista de Casos de Uso}
 \addcontentsline{toc}{section}{Lista de Casos de Uso}
 
-Un caso de uso forma parte de este documento si cambia el estado persistente del sistema
-o si es el único que justifica una estructura de datos. Todos los casos de la lista se
-desarrollan completos en la sección de casos de uso; la columna de la derecha indica la
-página donde empieza cada uno.
+Los veinticinco casos de la lista forman el alcance de esta versión: cubren las trece
+características generales que pide el cliente, sus restricciones obligatorias y el núcleo
+de jugabilidad de Quoridor. Todos se desarrollan completos en la sección de casos de uso;
+la columna de la derecha indica la página donde empieza cada uno. Lo que queda fuera del
+alcance se lista en la sección \textit{Requisitos deseables}.
 
 \input{lista-casos}
 \newpage
@@ -286,59 +287,37 @@ página donde empieza cada uno.
 % SECCIÓN 4: CASOS DE USO
 %   Un archivo por caso en casos/. Para agregar uno, crear
 %   casos/CU-nn-descripcion.tex y añadir su \input en orden.
+%   Los requisitos deseables (casos/deseables/) y los casos que se
+%   fusionaron en otros (casos/absorbidos/) no se incluyen.
 %---------------------------------------------------------------------
 \section*{Casos de uso}
 \addcontentsline{toc}{section}{Casos de uso}
 
 \input{casos/CU-01-iniciar-sesion}
 \input{casos/CU-02-registrar-cuenta}
-\input{casos/CU-03-recuperar-contrasena}
-\input{casos/CU-04-verificar-correo}
-\input{casos/CU-05-cerrar-sesion}
-\input{casos/CU-06-jugar-como-invitado}
-\input{casos/CU-07-vincular-cuenta-invitado}
-\input{casos/CU-08-configurar-cuenta-primera-vez}
-\input{casos/CU-09-cambiar-contrasena-o-correo}
-\input{casos/CU-10-gestionar-sesiones-activas}
-\input{casos/CU-11-borrar-la-cuenta}
-\input{casos/CU-12-editar-perfil}
-\input{casos/CU-13-cambiar-nickname}
-\input{casos/CU-14-equipar-objeto-cosmetico}
-\input{casos/CU-15-consultar-perfil-propio}
-\input{casos/CU-16-consultar-perfil-otro-jugador}
-\input{casos/CU-17-buscar-partida}
-\input{casos/CU-18-crear-sala-privada}
-\input{casos/CU-19-unirse-sala-con-codigo}
-\input{casos/CU-20-mover-el-peon}
-\input{casos/CU-21-colocar-un-muro}
-\input{casos/CU-22-ofrecer-aceptar-tablas}
-\input{casos/CU-23-rendirse}
-\input{casos/CU-24-abandonar-partida}
-\input{casos/CU-25-finalizar-partida}
-\input{casos/CU-26-reconectar-partida}
-\input{casos/CU-27-jugar-contra-ia}
-\input{casos/CU-28-enviar-mensaje-chat}
-\input{casos/CU-29-enviar-emote}
-\input{casos/CU-30-agregar-amigo}
-\input{casos/CU-31-responder-solicitud-amistad}
-\input{casos/CU-32-invitar-amigo-a-jugar}
-\input{casos/CU-33-silenciar-o-bloquear}
-\input{casos/CU-34-ver-partida-espectador}
-\input{casos/CU-35-consultar-ranking}
-\input{casos/CU-36-consultar-historial-partidas}
-\input{casos/CU-37-ver-repeticion-partida}
-\input{casos/CU-38-comprar-objeto-tienda}
-\input{casos/CU-39-comprar-y-abrir-caja}
-\input{casos/CU-40-consultar-historial-monedas}
-\input{casos/CU-41-avanzar-tutorial}
-\input{casos/CU-42-reportar-jugador}
-\input{casos/CU-43-revisar-reporte}
-\input{casos/CU-44-aplicar-sancion}
-\input{casos/CU-45-apelar-sancion}
-\input{casos/CU-46-agregar-moderador}
-\input{casos/CU-47-retirar-moderador}
-\input{casos/CU-48-consultar-bitacoras}
-\input{casos/CU-49-eliminar-amigo}
+\input{casos/CU-03-jugar-como-invitado}
+\input{casos/CU-04-cambiar-contrasena-o-correo}
+\input{casos/CU-05-editar-perfil}
+\input{casos/CU-06-consultar-perfil-otro-jugador}
+\input{casos/CU-07-buscar-partida}
+\input{casos/CU-08-crear-sala-privada}
+\input{casos/CU-09-unirse-sala-con-codigo}
+\input{casos/CU-10-expulsar-jugador-sala}
+\input{casos/CU-11-mover-el-peon}
+\input{casos/CU-12-colocar-un-muro}
+\input{casos/CU-13-ofrecer-aceptar-tablas}
+\input{casos/CU-14-rendirse}
+\input{casos/CU-15-abandonar-partida}
+\input{casos/CU-16-finalizar-partida}
+\input{casos/CU-17-reconectar-partida}
+\input{casos/CU-18-enviar-mensaje-chat}
+\input{casos/CU-19-agregar-amigo}
+\input{casos/CU-20-responder-solicitud-amistad}
+\input{casos/CU-21-invitar-amigo-a-jugar}
+\input{casos/CU-22-eliminar-amigo}
+\input{casos/CU-23-consultar-ranking}
+\input{casos/CU-24-consultar-historial-partidas}
+\input{casos/CU-25-reportar-jugador}
 
 %---------------------------------------------------------------------
 % SECCIÓN 5: MATRIZ DE TRAZABILIDAD
@@ -374,6 +353,5 @@ página donde empieza cada uno.
 %   las genera bd/exportar_datos.py consultando la base cargada; las
 %   capturas de datos/capturas se tomaron en la consola de Windows.
 %---------------------------------------------------------------------
-\input{datos}
 
 \end{document}

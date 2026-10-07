@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Reglas del tablero para validar las jugadas de prueba (CU-20, CU-21) y cálculo del elo."""
+"""Reglas del tablero para validar las jugadas de prueba (CU-11, CU-12) y cálculo del elo."""
 
 COLUMNAS = "abcdefghi"
 
@@ -54,7 +54,7 @@ class Tablero:
             if self.cortado(o, d):
                 raise JugadaInvalida(f"un muro corta {origen}-{destino}")
         elif abs(dc) + abs(df) == 2 and (dc == 0 or df == 0):
-            medio = (o[0] + dc // 2, o[1] + df // 2)          # salto en recto (CU-20 RN-03)
+            medio = (o[0] + dc // 2, o[1] + df // 2)          # salto en recto (CU-11 RN-03)
             if not self.ocupada(medio) or self.cortado(o, medio) or self.cortado(medio, d):
                 raise JugadaInvalida(f"salto {origen}-{destino} no permitido")
         elif abs(dc) == 1 and abs(df) == 1:

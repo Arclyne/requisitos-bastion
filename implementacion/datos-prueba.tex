@@ -10,7 +10,7 @@
 \subsubsection*{Catálogos}
 \addcontentsline{toc}{subsubsection}{Catálogos}
 
-Los catálogos toman de los casos de uso todo lo que estos fijan. En el núcleo: los tres modos con sus tableros, plazas y muros (\mbox{CU-21} \mbox{RN-02}) y las palabras del filtro. En la fase posterior: las seis ranuras (\mbox{D-03}), los cuatro niveles de la IA con su fuerza (\mbox{CU-27} \mbox{RN-02}), las siete lecciones (\mbox{CU-41} \mbox{RN-01}) y las divisiones bronce, plata, oro y muro de piedra de la tabla de dominios. Los cinco motivos de reporte (\mbox{CU-42} \mbox{RN-08}) ya no son catálogo sino un dominio de \textit{Reporte} (\mbox{D-23}). Cada fila lleva su \at{codigo}, como \at{CLASICO} o \at{PEON\_CLASICO}, y no su nombre, que está en los diccionarios de recursos (\mbox{D-21}). Lo que ningún caso fija es de prueba y conviene confirmarlo: los códigos, los objetos y sus precios, los umbrales de las divisiones, los tipos de caja y sus probabilidades, y las palabras del filtro.
+Los catálogos toman de los casos de uso todo lo que estos fijan. En el núcleo: los tres modos con sus tableros, plazas y muros (\mbox{CU-12} \mbox{RN-02}) y las palabras del filtro. En la fase posterior: las seis ranuras (\mbox{D-03}), los cuatro niveles de la IA con su fuerza (\mbox{DES-09} \mbox{RN-02}), las siete lecciones (\mbox{DES-16} \mbox{RN-01}) y las divisiones bronce, plata, oro y muro de piedra de la tabla de dominios. Los cinco motivos de reporte (\mbox{CU-25} \mbox{RN-08}) ya no son catálogo sino un dominio de \textit{Reporte} (\mbox{D-23}). Cada fila lleva su \at{codigo}, como \at{CLASICO} o \at{PEON\_CLASICO}, y no su nombre, que está en los diccionarios de recursos (\mbox{D-21}). Lo que ningún caso fija es de prueba y conviene confirmarlo: los códigos, los objetos y sus precios, los umbrales de las divisiones, los tipos de caja y sus probabilidades, y las palabras del filtro.
 
 \subsubsection*{Cuentas}
 \addcontentsline{toc}{subsubsection}{Cuentas}
@@ -35,14 +35,14 @@ Las \dpNumUsuarios{} cuentas cubren todos los tipos, estados y roles:
 8 & \at{nico\_nuevo} & Registrada, pendiente, jugador & No verificó su correo: tiene un token vigente y otro invalidado por el reenvío. \\ \hline
 9 & \at{rayo\_veloz} & Registrada, suspendida, jugador & Reportado y suspendido; su suspensión se amplió con una segunda sanción y apeló. \\ \hline
 10 & \at{anonimo\_10} & Registrada, eliminada, jugador & Dada de baja y anonimizada en la misma transacción (\mbox{D-17}). \\ \hline
-11 & \at{4dm1n\_oficial} & Registrada, baneada, jugador & Su nickname esquivó el filtro imitando al administrador; un reporte terminó en una sanción permanente de cuenta (\mbox{CU-42}, \mbox{CU-44}). \\ \hline
+11 & \at{4dm1n\_oficial} & Registrada, baneada, jugador & Su nickname esquivó el filtro imitando al administrador; un reporte terminó en una sanción permanente de cuenta (\mbox{CU-25}, \mbox{DES-18}). \\ \hline
 \end{longtable}
 \end{center}
 
 \subsubsection*{Partidas}
 \addcontentsline{toc}{subsubsection}{Partidas}
 
-Las \dpNumPartidas{} partidas, con \dpNumJugadas{} jugadas, recorren los tres tipos y las cinco formas de término (\mbox{CU-25} \mbox{RN-01}):
+Las \dpNumPartidas{} partidas, con \dpNumJugadas{} jugadas, recorren los tres tipos y las cinco formas de término (\mbox{CU-16} \mbox{RN-01}):
 
 \begin{center}\small
 \begin{longtable}{|L{0.05\textwidth}|L{0.25\textwidth}|L{0.19\textwidth}|L{0.40\textwidth}|}
@@ -52,13 +52,13 @@ Las \dpNumPartidas{} partidas, con \dpNumJugadas{} jugadas, recorren los tres ti
 \hline
 \textbf{Id} & \textbf{Tipo y modo} & \textbf{Jugadores} & \textbf{Cómo termina} \\ \hline
 \endhead
-1 a 5 & Clasificatorias, clásico & luis y marta & Cuatro a la meta y una rendición. Tras la quinta, los dos entran en una división (\mbox{CU-25} \mbox{RN-14}). \\ \hline
-6 & Clasificatoria, rápida & pedro y sofía & Tablas aceptadas, tras una oferta rechazada (\mbox{CU-22}). \\ \hline
-7 & Clasificatoria, cuatro jugadores & luis, marta, pedro y sofía & Tres abandonan uno tras otro y gana el que queda (\mbox{CU-25} \mbox{FA-04}). \\ \hline
+1 a 5 & Clasificatorias, clásico & luis y marta & Cuatro a la meta y una rendición. Tras la quinta, los dos entran en una división (\mbox{CU-16} \mbox{RN-12}). \\ \hline
+6 & Clasificatoria, rápida & pedro y sofía & Tablas aceptadas, tras una oferta rechazada (\mbox{CU-13}). \\ \hline
+7 & Clasificatoria, cuatro jugadores & luis, marta, pedro y sofía & Tres abandonan uno tras otro y gana el que queda (\mbox{CU-16} \mbox{FA-02}). \\ \hline
 8 & Contra la IA, clásico, sin reloj & pedro & Se rinde; antes deshizo una jugada, que queda marcada y no se borra (\mbox{D-12}). Se carga con la fase posterior. \\ \hline
 9 & Clasificatoria, clásico & luis y rayo & Luis llega a la meta; rayo lo insulta en el chat y es reportado. \\ \hline
-10 & Privada, rápida, desde una sala & sofía e invitado & Llegada a la meta. La anfitriona eligió ocho muros (\mbox{CU-18} \mbox{RN-04}). \\ \hline
-11 & Clasificatoria, rápida & marta y pedro & Pedro pierde por tiempo: su reloj llega a cero en su turno (\mbox{CU-20} \mbox{FA-06}). \\ \hline
+10 & Privada, rápida, desde una sala & sofía e invitado & Llegada a la meta. La anfitriona eligió ocho muros (\mbox{CU-08} \mbox{RN-04}). \\ \hline
+11 & Clasificatoria, rápida & marta y pedro & Pedro pierde por tiempo: su reloj llega a cero en su turno (\mbox{CU-11} \mbox{FA-06}). \\ \hline
 12 & Clasificatoria, clásico & luis y sofía & En curso, con una oferta de tablas pendiente, una desconexión ya resuelta y un enlace de espectador (este, de la fase posterior). \\ \hline
 \end{longtable}
 \end{center}
@@ -71,12 +71,12 @@ Las jugadas usan la notación del tablero: columnas de la \at{a} a la \at{i} y f
 El script no se escribió a mano. \at{bd/generar\_datos\_prueba.py} parte del escenario de \at{bd/datos\_prueba} (cuentas, partidas con sus jugadas, economía y comunidad) y deduce todo lo que el modelo guarda como consecuencia de otras filas, igual que lo harían los casos de uso:
 
 \begin{reglas}
-  \item \textbf{Las jugadas son legales.} Cada jugada se valida con las reglas del \mbox{CU-20} y el \mbox{CU-21}: pasos ortogonales, saltos al rival, muros de dos casillas que no se solapan ni se cruzan, turnos en orden y muros disponibles. La última jugada de una partida ganada por meta llega de verdad a la meta.
+  \item \textbf{Las jugadas son legales.} Cada jugada se valida con las reglas del \mbox{CU-11} y el \mbox{CU-12}: pasos ortogonales, saltos al rival, muros de dos casillas que no se solapan ni se cruzan, turnos en orden y muros disponibles. La última jugada de una partida ganada por meta llega de verdad a la meta.
   \item \textbf{El estado del tablero sale de las jugadas.} La casilla, los muros restantes y el reloj de cada participación, y el turno de la partida, se calculan aplicándolas en orden.
-  \item \textbf{La progresión sale de las partidas.} El elo de entrada de cada partida es el de salida de la anterior y las estadísticas de cada modo se acumulan partida a partida. En la fase posterior, la división y su historial también, y cada partida clasificatoria deja un movimiento de monedas por participante (\mbox{CU-25} \mbox{RN-08}).
-  \item \textbf{El saldo sale de los movimientos (fase posterior).} Compras, recompensas, cajas y conversiones se aplican en orden de fecha; el saldo nunca queda negativo y el que se guarda es la suma de los movimientos (\mbox{CU-40} \mbox{RN-02}).
+  \item \textbf{La progresión sale de las partidas.} El elo de entrada de cada partida es el de salida de la anterior y las estadísticas de cada modo se acumulan partida a partida. En la fase posterior, la división y su historial también, y cada partida clasificatoria deja un movimiento de monedas por participante (\mbox{D-22}).
+  \item \textbf{El saldo sale de los movimientos (fase posterior).} Compras, recompensas, cajas y conversiones se aplican en orden de fecha; el saldo nunca queda negativo y el que se guarda es la suma de los movimientos (\mbox{DES-15} \mbox{RN-02}).
   \item \textbf{El idioma de los términos aceptados sale de la cuenta.} Los términos se aceptan en el \at{idioma\_preferido} de cada cuenta (\mbox{D-21}), así que \at{sofia\_salto} los aceptó en inglés y las demás cuentas en español.
-  \item \textbf{Lo que exige el alta.} Toda cuenta tiene estadísticas en cada modo activo (\mbox{CU-02}) y, en la fase posterior, los objetos iniciales y un objeto equipado por ranura; cada participación, el aspecto que su jugador llevaba al empezar (\mbox{CU-14} \mbox{RN-03}).
+  \item \textbf{Lo que exige el alta.} Toda cuenta tiene estadísticas en cada modo activo (\mbox{CU-02}) y, en la fase posterior, los objetos iniciales y un objeto equipado por ranura; cada participación, el aspecto que su jugador llevaba al empezar (\mbox{DES-07} \mbox{RN-03}).
 \end{reglas}
 
 El script termina con \dpNumComprobaciones{} consultas que recalculan todo lo anterior en la propia base y cuentan las filas que no coinciden. La última compara en binario los \dpNumTextosUnicode{} textos con caracteres fuera de ASCII con su valor reconstruido carácter a carácter con \at{NCHAR}, de modo que no depende de cómo se leyó el archivo. En la ejecución de la versión anterior, con el esquema completo, todas devolvieron cero; los scripts actuales aún no se han ejecutado (ver \textit{Verificación en SQL Server}). El script de la fase posterior termina con sus propias \dpFpNumComprobaciones{} comprobaciones: el saldo, los muros colocados, las divisiones, el equipamiento, los objetos iniciales, las cajas y los textos. Las contraseñas y los tokens de prueba se guardan como resúmenes calculados con \at{HASHBYTES}, sin valores en claro, aunque el servidor de partidas usará su propio algoritmo de derivación (\mbox{CU-01} \mbox{RN-02}).

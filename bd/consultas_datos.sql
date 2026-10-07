@@ -331,7 +331,7 @@ FROM dbo.Jugada AS j JOIN dbo.Usuario AS u ON u.id_usuario = j.id_usuario
 WHERE j.id_partida = 1
 ORDER BY j.numero_jugada;
 
--- @consulta normalcompra | Compras en la tienda (CU-38)
+-- @consulta normalcompra | Compras en la tienda (DES-13)
 -- @columnas Movimiento | Usuario | Objeto | Rareza | Importe | Fecha | Origen en UsuarioObjeto | Equipado
 SELECT m.id_movimiento, u.nickname, o.codigo, o.rareza, m.importe, CONVERT(VARCHAR(16), m.fecha_movimiento, 120), x.origen,
        IIF(EXISTS (SELECT 1 FROM dbo.Equipamiento AS e WHERE e.id_usuario = m.id_usuario AND e.id_objeto = m.id_objeto), 'sí', 'no')

@@ -1,0 +1,120 @@
+\subsection*{CU-05: Editar el perfil y las preferencias}
+\addcontentsline{toc}{subsection}{CU-05: Editar el perfil y las preferencias}
+\label{cu-05}
+
+\begin{fichacu}{CU-05}{Editar el perfil y las preferencias}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{9c, 18d, 12c}
+  \crudFila{Prioridad}{Must (debe estar en la entrega). Categoría (a) Obligatorio: característica 3 del cliente (personalización de perfil), con los enlaces a redes sociales.}
+  \crudFila{Objetivo}{Permitir al Jugador cambiar lo que los demás ven de él —su icono y los enlaces a sus redes sociales— y sus preferencias de cuenta, como el idioma, sin tocar su identidad de acceso.}
+  \crudFila{Disparador}{El Jugador selecciona ``Editar perfil'' en la \texttt{GUI\_\allowbreak{}MainMenu} o entra a la sección de cuenta de la \texttt{GUI\_\allowbreak{}Settings}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}EditProfile} con el selector de los treinta y dos iconos predefinidos con el actual marcado (\mbox{RN-06}), hasta cuatro campos de enlace a redes sociales y el selector de \texttt{idioma\_\allowbreak{}preferido}. El \texttt{nickname} se muestra pero no se edita aquí (\mbox{RN-01}).
+      \item El Jugador modifica los campos que desee y da click en ``Guardar''. \textit{(Ver \mbox{FA-06})}
+      \item El SJM valida que los enlaces capturados tengan formato de dirección web y que ninguno pertenezca a un acortador (\mbox{RN-03}). \textit{(Ver \mbox{FA-01})}
+      \item El SJM valida que no haya más de cuatro enlaces (\mbox{RN-02}). \textit{(Ver \mbox{FA-02})}
+      \item El SJM envía el mensaje \texttt{UPDATE\_\allowbreak{}PROFILE\_\allowbreak{}REQUEST} con los campos modificados y el token de sesión. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas vuelve a aplicar las validaciones de los pasos 3 y 4, y verifica que el \texttt{id\_\allowbreak{}icono} recibido sea uno de los treinta y dos predefinidos (\mbox{RN-04}, \mbox{RN-06}). \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas verifica que el \texttt{idioma\_\allowbreak{}preferido} recibido sea uno de los idiomas admitidos: \texttt{es-MX} o \texttt{en} (\mbox{D-21}). \textit{(Ver \mbox{FA-05})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas inicia una transacción sobre la Base de datos.
+      \item El Servidor de partidas actualiza en el \textit{Usuario} el \texttt{id\_\allowbreak{}icono} y el \texttt{idioma\_\allowbreak{}preferido}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas reemplaza los \textit{EnlaceRed} del \textit{Usuario} por los recibidos, borrando los que ya no están y creando los nuevos (\mbox{RN-02}).
+      \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
+      \item El Servidor de partidas responde con \texttt{UPDATE\_\allowbreak{}PROFILE\_\allowbreak{}OK} y el perfil actualizado.
+      \item El SJM aplica el \texttt{idioma\_\allowbreak{}preferido} a los textos de la interfaz si cambió, muestra la \texttt{GUI\_\allowbreak{}MessageSuccess} y vuelve a la pantalla desde la que entró.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=15]
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: Un enlace tiene formato inválido o es un acortador}\par
+    \begin{cuenum}[start=1]
+      \item El SJM resalta el campo y escribe junto a él que debe ser una dirección web completa y que no se admiten acortadores.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: Se intenta añadir un quinto enlace}\par
+    \begin{cuenum}[start=1]
+      \item El SJM no habilita el campo adicional y escribe junto a la lista que el máximo son cuatro.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que la sesión terminó y despliega la \texttt{GUI\_\allowbreak{}Login}, conservando los cambios no guardados solo en memoria.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El servidor rechaza datos que el cliente había aceptado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la discrepancia en la bitácora del servidor con la \texttt{version\_\allowbreak{}cliente} y la dirección de red de origen.
+      \item El Servidor de partidas responde con \texttt{UPDATE\_\allowbreak{}PROFILE\_\allowbreak{}FAILED} y el motivo \texttt{DATOS\_\allowbreak{}INVALIDOS}, enumerando los campos rechazados.
+      \item El SJM los muestra y los resalta en el formulario.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El idioma recibido no está admitido}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas conserva el \texttt{idioma\_\allowbreak{}preferido} anterior y aplica el resto de los cambios.
+      \item El Servidor de partidas responde con \texttt{UPDATE\_\allowbreak{}PROFILE\_\allowbreak{}OK} señalando que el idioma no se aplicó.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} y el flujo continúa en el paso 14 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El Jugador descarta los cambios}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Cancelar'' con cambios sin guardar.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} preguntando si desea descartarlos, con las opciones ``Descartar'' y ``Seguir editando''.
+      \item Si selecciona ``Descartar'', el SJM vuelve a la pantalla desde la que entró sin enviar nada. Si selecciona ``Seguir editando'', el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que no queden aplicados unos cambios y otros no.
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador y conserva lo capturado.
+      \item El flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Fallo al confirmar la transacción}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas trata la transacción como fallida, registra la excepción señalando que el estado es indeterminado y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que recargue el perfil antes de volver a guardar.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM cierra la conexión y descarta el intercambio, sin suponer que el servidor no lo procesó.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que recargue el perfil para ver si los cambios se aplicaron.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene el \texttt{id\_\allowbreak{}icono} y el \texttt{idioma\_\allowbreak{}preferido} elegidos.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, los \textit{EnlaceRed} del \textit{Usuario} son exactamente los capturados, a lo sumo cuatro.
+      \item \textbf{\mbox{POST-03}} El \texttt{nickname}, el \texttt{correo} y la contraseña no cambiaron: este caso no toca la identidad de acceso.
+      \item \textbf{\mbox{POST-04}} Si el caso termina por cualquier excepción, el perfil conserva íntegro su estado anterior.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} El \texttt{nickname} no se edita en este caso: es identificador de acceso y en esta versión no se cambia.
+      \item \textbf{\mbox{RN-02}} Un \textit{Usuario} puede tener a lo sumo cuatro \textit{EnlaceRed}.
+      \item \textbf{\mbox{RN-03}} No se admiten acortadores de enlaces, porque ocultan el destino final y harían inútil cualquier revisión posterior.
+      \item \textbf{\mbox{RN-04}} Todas las validaciones del cliente se repiten en el servidor.
+      \item \textbf{\mbox{RN-05}} El \texttt{idioma\_\allowbreak{}preferido} se guarda en la cuenta y viaja con el Jugador a cualquier dispositivo. El idioma que se elige en la \texttt{GUI\_\allowbreak{}Login}, en cambio, es configuración local, porque en ese momento todavía no se sabe quién es.
+      \item \textbf{\mbox{RN-06}} El icono del jugador es uno de los treinta y dos predefinidos y se guarda como \texttt{id\_\allowbreak{}icono} en el \textit{Usuario}. Toda cuenta nace con el primero.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre la revisión de contenido.}\par
+    El documento de diseño del juego describe los enlaces como revisados antes de publicarse. La decisión \mbox{D-08} retira esa revisión del alcance: se publican directos. El motivo es que revisar enlaces a mano exige un flujo de moderación completo y una carga de trabajo continua que no está prevista, mientras que el riesgo mayor —el nombre visible y el chat— ya está cubierto por el filtro de \textit{PalabraProhibida}. Si más adelante se decide reponerla, el modelo lo admite sin cambios de fondo: basta añadir un estado de revisión a \textit{EnlaceRed}.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 6)}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{id\_\allowbreak{}icono}, \texttt{idioma\_\allowbreak{}preferido} \textit{(paso 10)}
+      \item \textbf{\textit{EnlaceRed}:} borra y crea \textit{(paso 11)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

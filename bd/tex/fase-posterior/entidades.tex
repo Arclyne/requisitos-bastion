@@ -11,29 +11,29 @@
 \textit{Ranura} & Catálogo & Catálogo de las seis ranuras de personalización: peón, muro, tablero, título, marco y emotes (\mbox{D-03}). \\ \hline
 \textit{Objeto\-Cosmetico} & Catálogo & Catálogo de objetos cosméticos. Cada objeto pertenece a una sola ranura (\mbox{D-03}). \\ \hline
 \textit{Division} & Catálogo & Catálogo de divisiones del ranking con sus umbrales de ascenso y descenso. \\ \hline
-\textit{Nivel\-IA} & Catálogo & Catálogo de los cuatro niveles de la IA (\mbox{CU-27} \mbox{RN-02}). \\ \hline
-\textit{Leccion} & Catálogo & Catálogo de las siete lecciones del tutorial (\mbox{CU-41} \mbox{RN-01}). \\ \hline
-\textit{Tipo\-Caja} & Catálogo & Catálogo de tipos de caja que se venden o se otorgan (\mbox{CU-39}). \\ \hline
+\textit{Nivel\-IA} & Catálogo & Catálogo de los cuatro niveles de la IA (\mbox{DES-09} \mbox{RN-02}). \\ \hline
+\textit{Leccion} & Catálogo & Catálogo de las siete lecciones del tutorial (\mbox{DES-16} \mbox{RN-01}). \\ \hline
+\textit{Tipo\-Caja} & Catálogo & Catálogo de tipos de caja que se venden o se otorgan (\mbox{DES-14}). \\ \hline
 \textit{Tipo\-Caja\-Objeto} & Catálogo asociativo & Objetos que puede contener cada tipo de caja y su probabilidad; es la relación N:M entre TipoCaja y ObjetoCosmetico. \\ \hline
 \multicolumn{3}{|l|}{\textbf{Perfil y personalización}} \\ \hline
-\textit{Historial\-Nickname} & Dependiente (1:0..1) & Cambio de nombre de una cuenta, para que un jugador reportado no se vuelva irreconocible (\mbox{CU-13} \mbox{RN-03}). Se borra al dar de baja la cuenta (\mbox{CU-11}). \\ \hline
-\textit{Avatar} & Fuerte & Imagen subida por el jugador como foto de perfil (\mbox{CU-12} \mbox{FA-01}). \\ \hline
-\textit{Enlace\-Red} & Fuerte & Enlace a una red social que el jugador muestra en su perfil (\mbox{CU-12}). \\ \hline
+\textit{Historial\-Nickname} & Dependiente (1:0..1) & Cambio de nombre de una cuenta, para que un jugador reportado no se vuelva irreconocible (\mbox{DES-06} \mbox{RN-03}). Se borra al dar de baja la cuenta (\mbox{DES-05}). \\ \hline
+\textit{Avatar} & Fuerte & Imagen subida por el jugador como foto de perfil (\mbox{CU-05} \mbox{FA-01}). \\ \hline
+\textit{Enlace\-Red} & Fuerte & Enlace a una red social que el jugador muestra en su perfil (\mbox{CU-05}). \\ \hline
 \textit{Usuario\-Objeto} & Asociativa (N:M) & Objetos cosméticos que posee cada cuenta; es la relación N:M entre Usuario y ObjetoCosmetico (relación Posee del diagrama). \\ \hline
-\textit{Equipamiento} & Asociativa (N:M) & Objeto que cada cuenta lleva equipado en cada ranura; siempre hay exactamente uno por ranura (\mbox{CU-14} \mbox{RN-01}). \\ \hline
+\textit{Equipamiento} & Asociativa (N:M) & Objeto que cada cuenta lleva equipado en cada ranura; siempre hay exactamente uno por ranura (\mbox{DES-07} \mbox{RN-01}). \\ \hline
 \multicolumn{3}{|l|}{\textbf{Aspecto en partida y espectador}} \\ \hline
-\textit{Participacion\-Objeto} & Asociativa (N:M) & Aspecto con el que cada jugador entró a la partida, una fila por ranura; no cambia aunque el jugador equipe otra cosa (\mbox{CU-14} \mbox{RN-03}, \mbox{CU-37} \mbox{RN-03}). \\ \hline
+\textit{Participacion\-Objeto} & Asociativa (N:M) & Aspecto con el que cada jugador entró a la partida, una fila por ranura; no cambia aunque el jugador equipe otra cosa (\mbox{DES-07} \mbox{RN-03}, \mbox{DES-12} \mbox{RN-03}). \\ \hline
 \textit{Enlace\-Espectador} & Fuerte & Enlace compartido para ver una partida desde fuera del juego. Es lo único que se guarda de los espectadores (\mbox{D-19}). \\ \hline
 \multicolumn{3}{|l|}{\textbf{Invitaciones}} \\ \hline
-\textit{Invitacion} & Fuerte & Invitación a jugar, que da acceso a una sala sin conocer su código (\mbox{CU-32}). \\ \hline
+\textit{Invitacion} & Fuerte & Invitación a jugar, que da acceso a una sala sin conocer su código (\mbox{CU-21}). \\ \hline
 \multicolumn{3}{|l|}{\textbf{Clasificación y economía}} \\ \hline
-\textit{Historial\-Division} & Fuerte & Cambio de división de una cuenta en un modo. No se deduce de una sola partida por las partidas de margen, así que se guarda (\mbox{CU-15}). \\ \hline
-\textit{Caja} & Fuerte & Caja comprada u obtenida al subir de nivel. Existe sin abrir entre la compra y la apertura (\mbox{CU-39} \mbox{RN-09}). \\ \hline
-\textit{Caja\-Contenido} & Débil & Los tres objetos que salieron al abrir una caja, registrados para poder comprobarlos después (\mbox{CU-39} \mbox{RN-07}). \\ \hline
-\textit{Movimiento\-Moneda} & Fuerte & Entrada o salida de monedas. El saldo verdadero es su suma; nunca se modifica ni se elimina (\mbox{CU-40} \mbox{RN-01}). \\ \hline
+\textit{Historial\-Division} & Fuerte & Cambio de división de una cuenta en un modo. No se deduce de una sola partida por las partidas de margen, así que se guarda (\mbox{DES-08}). \\ \hline
+\textit{Caja} & Fuerte & Caja comprada u obtenida al subir de nivel. Existe sin abrir entre la compra y la apertura (\mbox{DES-14} \mbox{RN-09}). \\ \hline
+\textit{Caja\-Contenido} & Débil & Los tres objetos que salieron al abrir una caja, registrados para poder comprobarlos después (\mbox{DES-14} \mbox{RN-07}). \\ \hline
+\textit{Movimiento\-Moneda} & Fuerte & Entrada o salida de monedas. El saldo verdadero es su suma; nunca se modifica ni se elimina (\mbox{DES-15} \mbox{RN-01}). \\ \hline
 \multicolumn{3}{|l|}{\textbf{Relaciones entre jugadores y tutorial}} \\ \hline
-\textit{Amistad} & Asociativa (N:M) & Amistad recíproca entre dos cuentas, guardada una sola vez por par ordenado (\mbox{CU-31} \mbox{RN-03}). \\ \hline
-\textit{Solicitud} & Fuerte & Solicitud de amistad pendiente. Tiene dirección, a diferencia de la amistad, y se borra al responderse (\mbox{CU-30}, \mbox{CU-31}). \\ \hline
-\textit{Progreso\-Tutorial} & Asociativa (N:M) & Avance de cada cuenta en cada lección del tutorial; es la relación N:M entre Usuario y Leccion (\mbox{CU-41}). \\ \hline
+\textit{Amistad} & Asociativa (N:M) & Amistad recíproca entre dos cuentas, guardada una sola vez por par ordenado (\mbox{CU-20} \mbox{RN-03}). \\ \hline
+\textit{Solicitud} & Fuerte & Solicitud de amistad pendiente. Tiene dirección, a diferencia de la amistad, y se borra al responderse (\mbox{CU-19}, \mbox{CU-20}). \\ \hline
+\textit{Progreso\-Tutorial} & Asociativa (N:M) & Avance de cada cuenta en cada lección del tutorial; es la relación N:M entre Usuario y Leccion (\mbox{DES-16}). \\ \hline
 \end{longtable}
 \end{center}
