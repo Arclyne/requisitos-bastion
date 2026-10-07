@@ -26,7 +26,7 @@ Casos: CU-02
 ## 22b · Código de segundo factor (nueva)
 Casos: CU-01
 
-- **Pantalla nueva: código de 6 dígitos, tiempo restante, intentos, reenviar y cancelar.** Motivo: GUI_SecondFactor de CU-01 (RN-09: 5 minutos, 3 intentos). Es la restricción CON-08 del profesor y no tenía prototipo.
+- **Pantalla nueva: código de 6 dígitos, tiempo restante, intentos, reenviar y cancelar.** Motivo: GUI_SecondFactor de CU-01 (RN-09: 5 minutos, 3 intentos). Es la restricción obligatoria CON-08 y no tenía prototipo.
 
 ## 22c · Cuenta pendiente de verificar (nueva)
 Casos: CU-01, CU-04
@@ -36,7 +36,7 @@ Casos: CU-01, CU-04
 ## 22d · Activar el segundo factor (nueva)
 Casos: CU-09
 
-- **Diálogo nuevo: contraseña actual y código de prueba para activar el segundo factor.** Motivo: CU-09 FA-10; el segundo factor lo exige el profesor y no había dónde activarlo.
+- **Diálogo nuevo: contraseña actual y código de prueba para activar el segundo factor.** Motivo: CU-09 FA-10; el segundo factor es obligatorio y no había dónde activarlo.
 
 ## 1f · Buscando rival
 Casos: CU-17

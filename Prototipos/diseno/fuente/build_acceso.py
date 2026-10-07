@@ -147,7 +147,7 @@ c.board("Completa", "1 · Las pantallas de acceso completas", 2200,
 N["Completa"] = """QUÉ RESUELVE
 
 1 Entrar (GUI_Login).
-2 Código del segundo factor (GUI_SecondFactor, CU-01 RN-09): 6 casillas, vigencia visible, intentos, reenviar y cancelar. No existía prototipo; es la restricción CON-08 del profesor.
+2 Código del segundo factor (GUI_SecondFactor, CU-01 RN-09): 6 casillas, vigencia visible, intentos, reenviar y cancelar. No existía prototipo; es la restricción obligatoria CON-08.
 3 Cuenta sin verificar (GUI_PendingVerification): el CU-01 no deja entrar a una cuenta PENDIENTE.
 4 Registro (CU-02): los campos exactos de CU-02 RN-01 a RN-05 y D-06; no se piden apellidos ni región."""
 

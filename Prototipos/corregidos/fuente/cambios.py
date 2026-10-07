@@ -24,13 +24,13 @@ CAMBIOS = [
         ("Pantalla nueva: nickname de 3 a 30, correo, contraseña con su regla, fecha de nacimiento (mínimo 8 años), idioma y términos.", "El formulario de registro no estaba prototipado (diferencia registrada); campos de CU-02 RN-01 a RN-05 y D-06."),
     ]),
     ("22b", "Código de segundo factor (nueva)", "CU-01", [
-        ("Pantalla nueva: código de 6 dígitos, tiempo restante, intentos, reenviar y cancelar.", "GUI_SecondFactor de CU-01 (RN-09: 5 minutos, 3 intentos). Es la restricción CON-08 del profesor y no tenía prototipo."),
+        ("Pantalla nueva: código de 6 dígitos, tiempo restante, intentos, reenviar y cancelar.", "GUI_SecondFactor de CU-01 (RN-09: 5 minutos, 3 intentos). Es la restricción obligatoria CON-08 y no tenía prototipo."),
     ]),
     ("22c", "Cuenta pendiente de verificar (nueva)", "CU-01, CU-04", [
         ("Pantalla nueva: aviso de correo enviado, reenviar con espera y entrar.", "GUI_PendingVerification de CU-01; sin verificar no se entra (Matriz 2)."),
     ]),
     ("22d", "Activar el segundo factor (nueva)", "CU-09", [
-        ("Diálogo nuevo: contraseña actual y código de prueba para activar el segundo factor.", "CU-09 FA-10; el segundo factor lo exige el profesor y no había dónde activarlo."),
+        ("Diálogo nuevo: contraseña actual y código de prueba para activar el segundo factor.", "CU-09 FA-10; el segundo factor es obligatorio y no había dónde activarlo."),
     ]),
     ("1f", "Buscando rival", "CU-17", [
         ("Se quita el botón \"ampliar rango\"; se explica que la ventana de elo se amplía sola.", "CU-17 RN-03: la ampliación es automática."),

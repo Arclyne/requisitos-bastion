@@ -11,7 +11,7 @@
      5. fase_posterior/insertar_datos_prueba_fase_posterior.sql
 
   Crea, en la base Bastion vacía, las tablas del núcleo: las que exigen
-  los casos obligatorios del profesor y los de jugabilidad (sección
+  los casos obligatorios del cliente y los de jugabilidad (sección
   "Priorización de requisitos y casos de uso"). Las de los agregados del
   equipo (cosméticos, tienda, cajas, monedas, divisiones, amigos,
   espectador, IA, tutorial, perfil) están en fase_posterior/ y no se

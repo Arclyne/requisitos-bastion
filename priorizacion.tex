@@ -9,18 +9,18 @@
 
 El proyecto tiene catorce semanas y debe entregar cada semana un incremento que pueda auditarse. Los 49 casos de uso no caben en ese plazo, así que esta sección decide cuáles se construyen primero. Ningún caso se elimina: los que no entran se marcan como \textbf{fase posterior} y conservan su redacción completa, para retomarlos sin rehacer el análisis.
 
-\subsection*{Qué pide el profesor}
-\addcontentsline{toc}{subsection}{Qué pide el profesor}
+\subsection*{Requisitos obligatorios del cliente}
+\addcontentsline{toc}{subsection}{Requisitos obligatorios del cliente}
 
-El repositorio no contiene el documento de requisitos del profesor, ni en la versión actual ni en el historial de git. Sus restricciones aparecen citadas con identificadores \mbox{CON-xx} en la trazabilidad de los casos \mbox{CU-01} y \mbox{CU-02}, y el equipo las confirmó por su cuenta. La tabla reúne las dos fuentes.
+Estas restricciones las fija el cliente y no son negociables: el sistema no se entrega sin cumplirlas todas, y el resto del alcance se prioriza alrededor de ellas. Los casos \mbox{CU-01} y \mbox{CU-02} las citan en su trazabilidad con identificadores \mbox{CON-xx}; las que no tienen identificador las confirmó el equipo.
 
 \begin{center}\small
 \begin{longtable}{|L{0.25\textwidth}|L{0.14\textwidth}|L{0.49\textwidth}|}
 \hline
-\textbf{Restricción del profesor} & \textbf{Identificador} & \textbf{Dónde se cumple} \\ \hline
+\textbf{Restricción obligatoria} & \textbf{Identificador} & \textbf{Dónde se cumple} \\ \hline
 \endfirsthead
 \hline
-\textbf{Restricción del profesor} & \textbf{Identificador} & \textbf{Dónde se cumple} \\ \hline
+\textbf{Restricción obligatoria} & \textbf{Identificador} & \textbf{Dónde se cumple} \\ \hline
 \endhead
 Programar en C\# & \mbox{CON-01} & Todo el sistema: cliente y Servidor de partidas. \\ \hline
 Conexión por TCP, sin WebSockets & \mbox{CON-02}, \mbox{CON-03} & Todo mensaje entre el cliente y el Servidor de partidas, como \texttt{MOVE\_\allowbreak{}PAWN\_\allowbreak{}REQUEST} del \mbox{CU-20}. \\ \hline
@@ -32,7 +32,7 @@ Catorce semanas con incrementos semanales auditables & sin identificador en el r
 \end{longtable}
 \end{center}
 
-Los casos citan además otras restricciones cuyo origen no pudo confirmarse: \mbox{CON-05} (texto Unicode), \mbox{CON-07} (respuesta en menos de un segundo), \mbox{CON-11} (cambio de idioma) y \mbox{CON-12} (comprensible para un niño de ocho años). Se tratan como restricciones del proyecto y se siguen cumpliendo en los casos que entran. Ningún caso cita \mbox{CON-06} ni \mbox{CON-10}; conviene recuperar su texto del documento del profesor.
+Los casos citan además otras restricciones cuyo origen no pudo confirmarse: \mbox{CON-05} (texto Unicode), \mbox{CON-07} (respuesta en menos de un segundo), \mbox{CON-11} (cambio de idioma) y \mbox{CON-12} (comprensible para un niño de ocho años). Se tratan como restricciones del proyecto y se siguen cumpliendo en los casos que entran. Ningún caso cita \mbox{CON-06} ni \mbox{CON-10}; conviene recuperar su texto del documento de requisitos del cliente.
 
 \subsection*{Criterio}
 \addcontentsline{toc}{subsection}{Criterio de priorización}
@@ -40,19 +40,19 @@ Los casos citan además otras restricciones cuyo origen no pudo confirmarse: \mb
 Cada caso recibe una \textbf{categoría}, que dice de dónde sale, y una \textbf{prioridad} con el método MoSCoW.
 
 \begin{reglas}
-  \item \textbf{(a) Obligatorio del profesor.} El caso existe porque lo exige una restricción de la tabla anterior, o porque otro caso obligatorio no funciona sin él: el \mbox{CU-04} entra porque el \mbox{CU-01} rechaza las cuentas sin verificar.
+  \item \textbf{(a) Obligatorio.} Requisito del cliente, no negociable. El caso existe porque lo exige una restricción de la tabla anterior, o porque otro caso obligatorio no funciona sin él: el \mbox{CU-04} entra porque el \mbox{CU-01} rechaza las cuentas sin verificar.
   \item \textbf{(b) Núcleo de jugabilidad.} Las reglas de Quoridor y lo mínimo para jugarlas en línea: mover el peón, el salto, colocar muros sin encerrar a nadie, turnos y reloj, condición de victoria, partidas de 2 y 4 jugadores, buscar partida, sala privada, reconexión y fin de partida.
   \item \textbf{(c) Agregado del equipo.} Todo lo demás: skins, cosméticos, tienda, cajas, monedas, niveles, divisiones, ranking, historial, repeticiones, espectador, emotes, perfil y enlaces de perfil, amigos, invitado, IA y tutorial.
 \end{reglas}
 
 \begin{reglas}
-  \item \textbf{Must.} Debe estar en la entrega. Sin él no se cumple una restricción del profesor o no se puede jugar una partida completa.
+  \item \textbf{Must.} Debe estar en la entrega. Sin él no se cumple una restricción obligatoria del cliente o no se puede jugar una partida completa.
   \item \textbf{Should.} Debería estar. Se construye en cuanto los \textit{Must} estén cerrados.
   \item \textbf{Could.} Podría estar. Es lo primero que se recorta si el plazo aprieta.
   \item \textbf{Won't (fase posterior).} No entra en las catorce semanas. Por regla, todo agregado del equipo cae aquí.
 \end{reglas}
 
-\textbf{La jugabilidad va primero.} Dentro de los \textit{Must}, los casos de jugabilidad preceden a los del profesor: una partida completa entre dos clientes por TCP es el primer incremento que demuestra algo, y el inicio de sesión con segundo factor, el chat moderado y los reportes se montan encima. Una partida nunca tiene tres jugadores: los modos admiten solo 2 o 4 (\mbox{CU-17} \mbox{RN-02}), y el modelo de datos lo fija con un \texttt{CHECK}.
+\textbf{La jugabilidad va primero.} Dentro de los \textit{Must}, los casos de jugabilidad preceden a los obligatorios del cliente: una partida completa entre dos clientes por TCP es el primer incremento que demuestra algo, y el inicio de sesión con segundo factor, el chat moderado y los reportes se montan encima. Una partida nunca tiene tres jugadores: los modos admiten solo 2 o 4 (\mbox{CU-17} \mbox{RN-02}), y el modelo de datos lo fija con un \texttt{CHECK}.
 
 \subsection*{Núcleo de jugabilidad}
 \addcontentsline{toc}{subsection}{Núcleo de jugabilidad}
@@ -104,31 +104,31 @@ La misma prioridad aparece en la lista de casos de uso y en la fila \textit{Prio
 \mbox{CU-24} & Abandonar la partida & Jugabilidad & Abandono y reclamo de victoria: sin él una partida con un jugador caído no termina. \\ \hline
 \mbox{CU-25} & Finalizar la partida y aplicar la progresión & Jugabilidad & Condición de victoria, tiempo agotado y cierre de la partida con su elo. \\ \hline
 \mbox{CU-26} & Reconectar a una partida en curso & Jugabilidad & Reconexión: una desconexión no debe costar la partida. \\ \hline
-\mbox{CU-01} & Iniciar sesión & Profesor & Inicio de sesión con segundo factor (\mbox{CON-08}); sin sesión no hay juego en línea. \\ \hline
-\mbox{CU-02} & Registrar cuenta & Profesor & Sin cuenta registrada no hay inicio de sesión ni segundo factor. \\ \hline
-\mbox{CU-04} & Verificar correo y activar la cuenta & Profesor & El \mbox{CU-01} rechaza las cuentas \texttt{PENDIENTE}: sin verificar el correo nadie entra (Matriz 2). \\ \hline
-\mbox{CU-05} & Cerrar sesión & Profesor & Cierra la sesión que abre el \mbox{CU-01}; es el mínimo del acceso. \\ \hline
-\mbox{CU-09} & Cambiar contraseña o correo & Profesor & Su \mbox{FA-10} activa el segundo factor (\mbox{Q-03}); cambiar contraseña y correo lo acompaña. \\ \hline
-\mbox{CU-28} & Enviar un mensaje de chat & Profesor & Moderación de chat (\mbox{CON-09}): el filtro de palabras se aplica aquí. \\ \hline
-\mbox{CU-42} & Reportar a un jugador & Profesor & Reportar (reportante y reportado): entrada de la moderación. \\ \hline
-\mbox{CU-43} & Revisar un reporte y resolverlo & Profesor & Revisar y resolver reportes: la moderación propiamente dicha. \\ \hline
-\mbox{CU-44} & Aplicar una sanción & Profesor & Aplicar la sanción de cuenta o de chat. \\ \hline
+\mbox{CU-01} & Iniciar sesión & Obligatorio & Inicio de sesión con segundo factor (\mbox{CON-08}); sin sesión no hay juego en línea. \\ \hline
+\mbox{CU-02} & Registrar cuenta & Obligatorio & Sin cuenta registrada no hay inicio de sesión ni segundo factor. \\ \hline
+\mbox{CU-04} & Verificar correo y activar la cuenta & Obligatorio & El \mbox{CU-01} rechaza las cuentas \texttt{PENDIENTE}: sin verificar el correo nadie entra (Matriz 2). \\ \hline
+\mbox{CU-05} & Cerrar sesión & Obligatorio & Cierra la sesión que abre el \mbox{CU-01}; es el mínimo del acceso. \\ \hline
+\mbox{CU-09} & Cambiar contraseña o correo & Obligatorio & Su \mbox{FA-10} activa el segundo factor (\mbox{Q-03}); cambiar contraseña y correo lo acompaña. \\ \hline
+\mbox{CU-28} & Enviar un mensaje de chat & Obligatorio & Moderación de chat (\mbox{CON-09}): el filtro de palabras se aplica aquí. \\ \hline
+\mbox{CU-42} & Reportar a un jugador & Obligatorio & Reportar (reportante y reportado): entrada de la moderación. \\ \hline
+\mbox{CU-43} & Revisar un reporte y resolverlo & Obligatorio & Revisar y resolver reportes: la moderación propiamente dicha. \\ \hline
+\mbox{CU-44} & Aplicar una sanción & Obligatorio & Aplicar la sanción de cuenta o de chat. \\ \hline
 \multicolumn{4}{|l|}{\textbf{Should: debería estar (5 casos)}} \\ \hline
 \mbox{CU-23} & Rendirse & Jugabilidad & Rendirse da una salida limpia sin forzar un abandono. \\ \hline
-\mbox{CU-03} & Recuperar contraseña & Profesor & Complementa el acceso: sin él una contraseña olvidada pierde la cuenta, pero el juego funciona. \\ \hline
-\mbox{CU-33} & Silenciar o bloquear a un jugador & Profesor & Silenciar y bloquear son la moderación que ejerce el propio jugador. \\ \hline
-\mbox{CU-45} & Apelar una sanción & Profesor & Apelar corrige errores de moderación; sin él un moderador decide sin revisión. \\ \hline
-\mbox{CU-46} & Agregar un moderador & Profesor & Sin él los moderadores se dan de alta por SQL, como los administradores (\mbox{D-09}). \\ \hline
+\mbox{CU-03} & Recuperar contraseña & Obligatorio & Complementa el acceso: sin él una contraseña olvidada pierde la cuenta, pero el juego funciona. \\ \hline
+\mbox{CU-33} & Silenciar o bloquear a un jugador & Obligatorio & Silenciar y bloquear son la moderación que ejerce el propio jugador. \\ \hline
+\mbox{CU-45} & Apelar una sanción & Obligatorio & Apelar corrige errores de moderación; sin él un moderador decide sin revisión. \\ \hline
+\mbox{CU-46} & Agregar un moderador & Obligatorio & Sin él los moderadores se dan de alta por SQL, como los administradores (\mbox{D-09}). \\ \hline
 \multicolumn{4}{|l|}{\textbf{Could: podría estar (4 casos)}} \\ \hline
 \mbox{CU-22} & Ofrecer y aceptar tablas & Jugabilidad & Las tablas no son regla de Quoridor; útiles pero prescindibles. \\ \hline
-\mbox{CU-10} & Gestionar sesiones activas & Profesor & Cerrar sesiones remotas es seguridad deseable, no exigida. \\ \hline
-\mbox{CU-47} & Retirar a un moderador & Profesor & Retirar el rol puede hacerse por SQL mientras tanto. \\ \hline
-\mbox{CU-48} & Consultar las bitácoras & Profesor & Las bitácoras se escriben siempre; consultarlas desde la aplicación es deseable. \\ \hline
+\mbox{CU-10} & Gestionar sesiones activas & Obligatorio & Cerrar sesiones remotas es seguridad deseable, no exigida. \\ \hline
+\mbox{CU-47} & Retirar a un moderador & Obligatorio & Retirar el rol puede hacerse por SQL mientras tanto. \\ \hline
+\mbox{CU-48} & Consultar las bitácoras & Obligatorio & Las bitácoras se escriben siempre; consultarlas desde la aplicación es deseable. \\ \hline
 \multicolumn{4}{|l|}{\textbf{Won't en esta fase: fase posterior (23 casos)}} \\ \hline
-\mbox{CU-06} & Jugar como invitado & Agregado & Jugar sin cuenta esquiva el segundo factor que exige el profesor. \\ \hline
+\mbox{CU-06} & Jugar como invitado & Agregado & Jugar sin cuenta esquiva el segundo factor, que es obligatorio. \\ \hline
 \mbox{CU-07} & Vincular la cuenta de invitado & Agregado & Solo existe si existe el invitado (\mbox{CU-06}). \\ \hline
 \mbox{CU-08} & Configurar la cuenta la primera vez & Agregado & Elegir peón e icono es personalización; el peón predeterminado basta. \\ \hline
-\mbox{CU-11} & Borrar la cuenta & Agregado & La baja de cuenta no la pide el profesor. \\ \hline
+\mbox{CU-11} & Borrar la cuenta & Agregado & La baja de cuenta no es un requisito obligatorio del cliente. \\ \hline
 \mbox{CU-12} & Editar el perfil: foto, icono, título y enlaces & Agregado & Foto, icono, título y enlaces de perfil son agregados. \\ \hline
 \mbox{CU-13} & Cambiar el nombre (una sola vez) & Agregado & Cambio de nombre: agregado; el nombre se elige en el registro. \\ \hline
 \mbox{CU-14} & Equipar un objeto cosmético en una ranura & Agregado & Cosméticos y skins. \\ \hline
@@ -183,7 +183,7 @@ Algunos casos que sí entran tocan estructuras de los agregados: el alta otorga 
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
 \textbf{Categoría} & \textbf{Must} & \textbf{Should} & \textbf{Could} & \textbf{Won\textquotesingle t} & \textbf{Total} \\ \hline
-(a) Obligatorio del profesor & 9 & 4 & 3 & --- & 16 \\ \hline
+(a) Obligatorio del cliente & 9 & 4 & 3 & --- & 16 \\ \hline
 (b) Núcleo de jugabilidad & 8 & 1 & 1 & --- & 10 \\ \hline
 (c) Agregado del equipo & --- & --- & --- & 23 & 23 \\ \hline
 \textbf{Total} & \textbf{17} & \textbf{5} & \textbf{4} & \textbf{23} & \textbf{49} \\ \hline
