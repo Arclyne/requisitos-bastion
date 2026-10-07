@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Mano;src:url('fonts/ArchitectsDaughter-Regular.ttf')}
+@font-face{font-family:Titulo;src:url('fonts/Kalam-Bold.ttf')}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Mano,sans-serif;color:#1b1b1b;background:#fff}
+.hoja{width:var(--w);height:var(--h);background:#000;padding-top:34px;position:relative}
+.hoja>.id{position:absolute;left:10px;top:6px;color:#555;font:600 15px monospace}
+.hoja>.id b{color:#c9c9c9}
+.pant{background:#fbfaf7;height:calc(100% - 0px);border-radius:10px 10px 0 0;padding:22px 24px;position:relative;overflow:hidden}
+h1{font-family:Mano;font-weight:400;font-size:26px;margin-bottom:10px}
+h2{font-family:Mano;font-weight:400;font-size:20px;margin-bottom:6px}
+.marca{font-family:Titulo;font-size:52px;text-align:center}
+.gris{color:#8a8a8a}.peq{font-size:13px}.mini{font-size:11px}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:3px solid #1b1b1b;border-radius:10px;padding:8px 18px;font-size:17px;background:#fbfaf7}
+.btn.prim{background:#1b1b1b;color:#fbfaf7}
+.btn.sec{border:3px dashed #a8a8a8;color:#8a8a8a}
+.btn.off{border-color:#c9c9c9;color:#b5b5b5;background:#f1f0ec}
+.btn.full{display:flex;width:100%}
+.campo{border:3px solid #1b1b1b;border-radius:10px;padding:10px 14px;font-size:17px;color:#9a9a9a;background:#fff}
+.campo.lleno{color:#1b1b1b}
+.campo.err{border-color:#1b1b1b;background:#f3f1ec}
+.lbl{font-size:13px;color:#8a8a8a;margin:10px 0 4px}
+.caja{border:3px solid #1b1b1b;border-radius:12px;padding:14px 16px;background:#fbfaf7}
+.caja.fina{border-width:2px}
+.dash{border:2px dashed #a8a8a8;border-radius:12px;padding:12px 14px}
+.chip{display:inline-block;border:2px solid #1b1b1b;border-radius:20px;padding:3px 12px;font-size:14px;margin-right:6px}
+.chip.on{background:#1b1b1b;color:#fbfaf7}
+.chip.sec{border:2px dashed #a8a8a8;color:#8a8a8a}
+.fila{display:flex;align-items:center;gap:12px}
+.entre{justify-content:space-between}
+.col{display:flex;flex-direction:column;gap:10px}
+.aviso{display:flex;gap:10px;align-items:flex-start;border-bottom:1px dashed #bdbdbd;padding:9px 0;font-size:14px}
+.aviso i{flex:none;width:18px;height:18px;border:2px solid #1b1b1b;border-radius:4px;font-style:normal;font-size:11px;text-align:center;line-height:14px}
+.circ{width:52px;height:52px;border:3px solid #1b1b1b;border-radius:50%;flex:none}
+.item{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #cfcfcf;padding:10px 4px;font-size:18px}
+.velo{position:absolute;inset:0;background:rgba(236,234,229,.72)}
+.modal{position:absolute;background:#fbfaf7;border:4px solid #1b1b1b;border-radius:16px;padding:22px 26px}
+.tab{display:inline-block;padding:6px 16px;font-size:15px}
+.tab.on{background:#1b1b1b;color:#fbfaf7}
+.digitos{display:flex;gap:10px}
+.digitos span{width:48px;height:58px;border:3px solid #1b1b1b;border-radius:10px;font-size:28px;display:flex;align-items:center;justify-content:center}
+.tabla{width:100%;border-collapse:collapse;font-size:14px}
+.tabla td,.tabla th{border-bottom:2px dashed #cfcfcf;padding:7px 6px;text-align:left;font-weight:400}
+.tabla th{color:#8a8a8a;font-size:12px}
+.sel{background:#ecebe6}
+</style></head>
+<body><div class="hoja" style="--w:760px;--h:900px"><div class="id"><b>10b</b> · corregido</div>
+<div class="pant">
+<div class="fila"><div class="circ"></div><div><h2 style="margin:0">reportar a kobo</h2><div class="peq gris">partida de hace 4 min · clásico 9×9</div></div></div>
+<div class="lbl">motivo</div>
+<div class="col" style="gap:8px">
+  <div class="caja fila" style="padding:8px 12px"><span class="chip on" style="width:18px;height:18px;padding:0"></span><div><div>lenguaje ofensivo</div><div class="mini gris">insultos o groserías en el chat</div></div></div>
+  <div class="caja fina fila" style="padding:8px 12px"><span class="chip" style="width:18px;height:18px;padding:0"></span><div><div>acoso</div><div class="mini gris">te molesta una y otra vez</div></div></div>
+  <div class="caja fina fila" style="padding:8px 12px"><span class="chip" style="width:18px;height:18px;padding:0"></span><div><div>nombre inapropiado</div><div class="mini gris">su nickname ofende o se hace pasar por otro</div></div></div>
+  <div class="caja fina fila" style="padding:8px 12px"><span class="chip" style="width:18px;height:18px;padding:0"></span><div><div>trampas</div><div class="mini gris">juega con ayuda externa</div></div></div>
+  <div class="caja fina fila" style="padding:8px 12px"><span class="chip" style="width:18px;height:18px;padding:0"></span><div><div>juego antideportivo</div><div class="mini gris">abandona o alarga la partida a propósito</div></div></div>
+</div>
+<div class="lbl">cuéntalo (opcional, máx. 500)</div><div class="campo" style="height:64px">…</div>
+<div class="dash" style="margin-top:10px"><div class="peq gris">se adjunta por referencia</div><span class="chip">jugadas de la partida</span><span class="chip">chat de la partida</span></div>
+<div class="peq gris" style="margin-top:8px">un reporte falso repetido puede sancionarte a ti</div>
+<div class="fila entre" style="position:absolute;left:24px;right:24px;bottom:24px"><span class="btn">cancelar</span><span class="btn prim">enviar reporte</span></div>
+</div></div></body></html>
