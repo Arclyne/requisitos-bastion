@@ -42,7 +42,34 @@ NAVEGADORES = [
     r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
     r"C:\Program Files\Google\Chrome\Application\chrome.exe",
     "/usr/bin/microsoft-edge", "/usr/bin/google-chrome", "/usr/bin/chromium",
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
 ]
+
+
+def esquema_fase(nucleo):
+    """El núcleo más la fase posterior (D-22), para los diagramas de la fase posterior.
+
+    bd/generar_tablas.ps1 escribe la fase posterior en er/esquema-fase-posterior.json.
+    Las llaves foráneas que la fase posterior agrega a tablas del núcleo con ALTER TABLE
+    no están en ninguno de los dos archivos; se añaden aquí para que sus diagramas las
+    dibujen."""
+    ruta = AQUI / "esquema-fase-posterior.json"
+    if not ruta.exists():
+        return nucleo
+    fase = json.loads(ruta.read_text(encoding="utf-8-sig"))
+    todo = json.loads(json.dumps(nucleo)) + fase
+    por_nombre = {t["nombre"]: t for t in todo}
+    agregadas = [
+        ("EstadisticaModo", dict(nombre="FK_EstadisticaModo_Division", cols=["id_division"], ref="Division", card="1:N",
+                                 texto="En una división hay muchos jugadores de cada modo.", opcional=True)),
+        ("Partida", dict(nombre="FK_Partida_NivelIA", cols=["id_nivel_ia"], ref="NivelIA", card="1:N",
+                         texto="Un nivel de IA se enfrenta en muchas partidas.", opcional=True)),
+    ]
+    for tabla, fk in agregadas:
+        por_nombre[tabla]["fks"].append(fk)
+        por_nombre[tabla]["columnas"].append(dict(nombre=fk["cols"][0], pk=False, fk=True, calculada=False))
+    return todo
 
 
 def escribir_modelo(ruta, diag, m):
@@ -103,8 +130,10 @@ def _html(svg, css, cuerpo):
 
 
 def _correr(exe, args, perfil):
+    # Chromium se niega a arrancar como root sin --no-sandbox (contenedores Linux).
+    extra = ["--no-sandbox"] if hasattr(os, "geteuid") and os.geteuid() == 0 else []
     subprocess.run([exe, "--headless", "--disable-gpu", "--no-first-run",
-                    f"--user-data-dir={perfil}"] + args,
+                    f"--user-data-dir={perfil}"] + extra + args,
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=180)
 
 
@@ -123,6 +152,13 @@ def convertir(svg, exe, ancho_pdf_in=11.0, ancho_png=2600):
         _correr(exe, ["--no-pdf-header-footer", "--print-to-pdf-no-header",
                       f"--print-to-pdf={svg.with_suffix('.pdf')}", pagina.as_uri()], perfil)
         pagina.unlink()
+        if shutil.which("pdftoppm"):
+            # El PNG sale del PDF: la captura de Chromium sin ventana recorta el borde inferior
+            # en algunas versiones, porque descuenta del alto la barra del navegador.
+            dpi = round(ancho_png / ancho_pdf_in)
+            subprocess.run(["pdftoppm", "-png", "-r", str(dpi), "-singlefile", str(svg.with_suffix(".pdf")),
+                            str(svg.with_suffix(""))], check=True)
+            return
         alto_png = round(ancho_png * h / w)
         pagina = svg.with_suffix(".png.html")
         pagina.write_text(_html(
@@ -163,6 +199,7 @@ def main(argv):
         revision = Path(argv[argv.index("--revision") + 1])
     ids = [a for a in argv if not a.startswith("--") and (revision is None or Path(a) != revision)]
     esquema = json.loads((AQUI / "esquema.json").read_text(encoding="utf-8-sig"))
+    esquemas = {"nucleo": esquema, "fase": esquema_fase(esquema)}
     MODELOS.mkdir(exist_ok=True)
     SALIDA.mkdir(exist_ok=True)
     exe = navegador()
@@ -171,7 +208,7 @@ def main(argv):
             continue
         ruta = MODELOS / f"{diag['id']}.py"
         if not sin_disposicion and not diag.get("fijo"):
-            m = construir(esquema, diag, VERBOS, PADRE_TOTAL)
+            m = construir(esquemas[diag.get("esquema", "nucleo")], diag, VERBOS, PADRE_TOTAL)
             escribir_modelo(ruta, diag, m)
             print(f"{diag['id']:<11} {len(m['ENTITIES']):>2} entidades, {len(m['RELATIONS']):>2} relaciones, "
                   f"{len(m['ATTRS']):>3} atributos, índice de cruces {m['cruces']}, "

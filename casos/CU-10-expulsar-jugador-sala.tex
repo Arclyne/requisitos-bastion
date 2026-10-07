@@ -1,0 +1,115 @@
+\subsection*{CU-10: Expulsar a un jugador de la sala}
+\addcontentsline{toc}{subsection}{CU-10: Expulsar a un jugador de la sala}
+\label{cu-10}
+
+\begin{fichacu}{CU-10}{Expulsar a un jugador de la sala}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador o Invitado, como anfitrión}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{Sin prototipo. La acción se agrega al menú de cada miembro en la \texttt{GUI\_\allowbreak{}WaitingRoom}.}
+  \crudFila{Prioridad}{Must (debe estar en la entrega). Categoría (a) Obligatorio: característica 7 del cliente (jugadores expulsados).}
+  \crudFila{Objetivo}{Permitir que el anfitrión saque de su sala a un jugador que entró con el código y que no quiere en la partida, antes de iniciarla, y que ese jugador no pueda volver a entrar a la misma sala.}
+  \crudFila{Disparador}{El anfitrión selecciona ``Expulsar'' en el menú de un miembro de la sala, en la \texttt{GUI\_\allowbreak{}WaitingRoom}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El anfitrión tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El anfitrión creó la \textit{Sala} con el \mbox{CU-08} y la \textit{Sala} está en estado \texttt{ABIERTA}.
+      \item \textbf{\mbox{PRE-03}} Al menos otro jugador ocupa una plaza de la sala, porque entró con el \mbox{CU-09}.
+      \item \textbf{\mbox{PRE-04}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El anfitrión abre el menú de un miembro en la \texttt{GUI\_\allowbreak{}WaitingRoom} y selecciona ``Expulsar''. El SJM no muestra la opción junto al propio anfitrión (\mbox{RN-05}).
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} preguntando si desea expulsar al jugador por su \texttt{nickname} y advirtiendo que no podrá volver a entrar a esta sala, con las opciones ``Expulsar'' y ``Cancelar''. \textit{(Ver \mbox{FA-01})}
+      \item El anfitrión selecciona ``Expulsar''.
+      \item El SJM envía el mensaje \texttt{KICK\_\allowbreak{}PLAYER\_\allowbreak{}REQUEST} con el token de sesión, la sala y el jugador que se expulsa. \textit{(Ver \mbox{EX-01}, \mbox{EX-02}, \mbox{EX-03})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta y que quien la tiene sea el anfitrión de la \textit{Sala} (\mbox{RN-01}). \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas verifica que la \textit{Sala} siga en estado \texttt{ABIERTA} (\mbox{RN-02}). \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas verifica que el jugador siga ocupando una plaza de la sala. \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas libera la plaza del jugador, descarta su marca de listo y agrega su cuenta a la lista de expulsados de la sala (\mbox{RN-03}).
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas registra la expulsión en la bitácora del servidor, con la sala, el anfitrión y el jugador expulsado.
+      \item El Servidor de partidas envía al jugador expulsado el mensaje \texttt{ROOM\_\allowbreak{}KICKED}.
+      \item El Servidor de partidas notifica a los demás miembros con \texttt{ROOM\_\allowbreak{}UPDATED}.
+      \item El Servidor de partidas responde al anfitrión con \texttt{KICK\_\allowbreak{}PLAYER\_\allowbreak{}OK}.
+      \item El SJM del anfitrión actualiza la \texttt{GUI\_\allowbreak{}WaitingRoom} con la plaza libre.
+      \item El SJM del jugador expulsado despliega la \texttt{GUI\_\allowbreak{}MainMenu} con la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que el anfitrión lo expulsó de la sala.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El anfitrión cancela la expulsión}\par
+    \begin{cuenum}[start=1]
+      \item El anfitrión selecciona ``Cancelar''.
+      \item El SJM cierra la \texttt{GUI\_\allowbreak{}MessageConfirm} sin enviar nada al Servidor de partidas y vuelve a la \texttt{GUI\_\allowbreak{}WaitingRoom}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: Quien pide la expulsión no es el anfitrión}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas comprueba que el solicitante no es el anfitrión de la \textit{Sala}, o que pide expulsarse a sí mismo. Solo puede ocurrir con un cliente modificado, porque el SJM no ofrece la opción en esos casos.
+      \item El Servidor de partidas registra el intento en la bitácora del servidor y responde con \texttt{KICK\_\allowbreak{}PLAYER\_\allowbreak{}FAILED} y el motivo \texttt{OPERACION\_\allowbreak{}NO\_\allowbreak{}PERMITIDA}, sin modificar la sala.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que la operación no está permitida.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: La partida de la sala ya empezó}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra la \textit{Sala} en estado \texttt{EN\_\allowbreak{}PARTIDA}: el anfitrión inició la partida mientras se confirmaba la expulsión.
+      \item El Servidor de partidas responde con \texttt{KICK\_\allowbreak{}PLAYER\_\allowbreak{}FAILED} y el motivo \texttt{PARTIDA\_\allowbreak{}INICIADA}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que ya no se puede expulsar porque la partida empezó, y que la conducta de un jugador durante la partida se atiende con un reporte (\mbox{CU-25}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El jugador ya salió de la sala}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas comprueba que el jugador ya no ocupa ninguna plaza: salió por su cuenta o perdió la conexión mientras el anfitrión confirmaba.
+      \item El Servidor de partidas agrega de todos modos la cuenta del jugador a la lista de expulsados de la sala, porque la intención del anfitrión era que no volviera (\mbox{RN-03}).
+      \item El Servidor de partidas responde con \texttt{KICK\_\allowbreak{}PLAYER\_\allowbreak{}OK} y el SJM del anfitrión actualiza la \texttt{GUI\_\allowbreak{}WaitingRoom}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El jugador expulsado intenta volver a entrar}\par
+    \begin{cuenum}[start=1]
+      \item El jugador expulsado captura de nuevo el código de la sala en el \mbox{CU-09}.
+      \item El Servidor de partidas encuentra su cuenta en la lista de expulsados de la sala y rechaza la entrada conforme al \mbox{CU-09} (\mbox{RN-03}).
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que transcurrió el tiempo límite sin recibir un mensaje completo.
+      \item El SJM no reenvía la solicitud y consulta con \texttt{ROOM\_\allowbreak{}STATE\_\allowbreak{}REQUEST} el estado de la sala.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}WaitingRoom} con los miembros que devuelva el servidor, de modo que el anfitrión ve si la expulsión se aplicó.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: La conexión del anfitrión se interrumpe durante el intercambio}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta el cierre inesperado del socket antes de recibir la respuesta.
+      \item El SJM registra el fallo en la bitácora local del cliente y muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que se perdió la conexión.
+      \item La sala sigue el \mbox{EX-04} del \mbox{CU-08}: el Servidor de partidas espera sesenta segundos a que el anfitrión reconecte antes de cerrarla.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local del cliente el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta del servidor no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN o por el \mbox{FA-04}, el jugador no ocupa ninguna plaza de la sala y su cuenta está en la lista de expulsados de esa sala.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por el FN, todos los miembros que siguen en la sala saben que la plaza quedó libre, y el jugador expulsado está en el menú principal.
+      \item \textbf{\mbox{POST-03}} Si el caso termina por el \mbox{FA-01}, el \mbox{FA-02} o el \mbox{FA-03}, la sala y sus miembros quedan como estaban.
+      \item \textbf{\mbox{POST-04}} En ningún caso cambia la cuenta del jugador expulsado: la expulsión no genera un reporte, un strike ni una sanción (\mbox{RN-04}).
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Solo el anfitrión de la sala puede expulsar. El servidor lo comprueba en cada solicitud; no basta con que el cliente oculte la opción.
+      \item \textbf{\mbox{RN-02}} Solo se expulsa mientras la sala está en estado \texttt{ABIERTA}. Una vez iniciada la partida, nadie la saca de ella: la conducta de un jugador se atiende con el reporte del \mbox{CU-25}.
+      \item \textbf{\mbox{RN-03}} Un jugador expulsado no puede volver a entrar a esa sala mientras exista, aunque conserve el código. La lista de expulsados vive con las plazas de la sala en la memoria del Servidor de partidas (\mbox{D-24}) y desaparece cuando la sala se cierra; no impide entrar a otras salas del mismo anfitrión.
+      \item \textbf{\mbox{RN-04}} La expulsión no es una sanción. No genera un \textit{Reporte}, no suma strikes y no afecta la cuenta del expulsado; si el anfitrión considera que hubo una falta, puede además reportarlo con el \mbox{CU-25}.
+      \item \textbf{\mbox{RN-05}} El anfitrión no puede expulsarse a sí mismo. Para dejar la sala, la cierra con el \mbox{CU-08}.
+      \item \textbf{\mbox{RN-06}} Todos los textos visibles de este caso provienen de los catálogos de recursos y se muestran en el idioma de cada jugador, también el aviso que recibe el expulsado.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué es un caso propio y no un flujo alterno del \mbox{CU-08}.}\par
+    Mientras el \mbox{CU-08} crea la sala, todavía no hay nadie a quien expulsar: los jugadores entran después, con el \mbox{CU-09}. Expulsar ocurre en otro momento, con su propia precondición, la de que haya un miembro en la sala, y persigue una meta distinta de la de crearla. Por eso se describe aparte.} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué la expulsión no se guarda en la base de datos.}\par
+    Las plazas de la sala viven en la memoria del Servidor de partidas (\mbox{D-24}), y la lista de expulsados solo tiene sentido mientras la sala exista. Guardarla en una tabla obligaría a limpiarla cuando la sala se cierra, sin que nadie vuelva a consultarla. La expulsión queda en la bitácora del servidor para poder rastrearla.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 5)}
+      \item \textbf{\textit{Sala}:} lee \texttt{id\_\allowbreak{}anfitrion} y \texttt{estado} \textit{(pasos 5, 6)}
+      \item \textbf{Plazas y lista de expulsados de la sala, en memoria:} libera la plaza y agrega al expulsado \textit{(paso 8, \mbox{FA-04})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

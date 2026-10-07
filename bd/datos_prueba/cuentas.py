@@ -69,7 +69,7 @@ USUARIOS = {
             intentos=0, ultimo_intento=None, bloqueada=None, doble_factor=0,
             registro="2026-06-20 15:00:00", configuracion="2026-06-20 15:02:00",
             envio_verificacion="2026-06-20 15:00:00", envio_recuperacion=None, baja=None),
-    # Cuenta dada de baja: anonimizada en la misma transacción (D-17, CU-11).
+    # Cuenta dada de baja: anonimizada en la misma transacción (D-17, DES-05).
     10: dict(nickname="anonimo_10", tipo="REGISTRADA", estado="ELIMINADA", rol="JUGADOR",
              correo="anonimo_10", clave=None, nacimiento=None, idioma="es-MX",
              codigo=None, icono=1, espectadores=1, nivel=1, experiencia=200,
@@ -77,7 +77,7 @@ USUARIOS = {
              registro="2026-06-22 11:00:00", configuracion="2026-06-22 11:05:00",
              envio_verificacion="2026-06-22 11:00:00", envio_recuperacion=None, baja="2026-08-02 13:00:00"),
     # Cuenta baneada: su nickname esquivó el filtro imitando al administrador y un
-    # reporte terminó en una sanción permanente de cuenta (CU-42, CU-44).
+    # reporte terminó en una sanción permanente de cuenta (CU-25, DES-18).
     11: dict(nickname="4dm1n_oficial", tipo="REGISTRADA", estado="BANEADA", rol="JUGADOR",
              correo="cuatro.admin@correo.mx", clave="Adm1n#Falso6", nacimiento="2006-01-10", idioma="es-MX",
              codigo="FK4D9M2N", icono=2, espectadores=1, nivel=1, experiencia=0,
@@ -107,7 +107,7 @@ SESIONES = {
     15: (11, "2026-08-22 19:15:00", "2026-08-23 10:00:00", "SANCION", "201.141.33.8", "hw-once-01", "PC", "2026-08-22 21:00:00"),
 }
 
-# id_token: usuario, proposito, correo_destino, fecha_generacion, estado (vigencia de 24 h, CU-04 RN-02).
+# id_token: usuario, proposito, correo_destino, fecha_generacion, estado (vigencia de 24 h, CU-02 RN-02).
 # Los de alta usados se verificaron diez minutos después de generarse.
 TOKENS_VERIFICACION = {
     1: (1, "ALTA", None, "2026-06-01 10:00:00", "USADO"),
@@ -124,9 +124,9 @@ TOKENS_VERIFICACION = {
     12: (11, "ALTA", None, "2026-08-22 19:00:00", "USADO"),
 }
 
-# id_token: usuario, fecha_generacion, intentos, estado (vigencia de 30 min, CU-03 RN-04).
+# id_token: usuario, fecha_generacion, intentos, estado (vigencia de 30 min, DES-01 RN-04).
 # El administrador pidió el código dos veces, con cinco minutos de diferencia: el
-# segundo invalidó el primero y sigue vigente (CU-03 RN-05, RN-06).
+# segundo invalidó el primero y sigue vigente (DES-01 RN-05, RN-06).
 TOKENS_RECUPERACION = {
     1: (6, "2026-08-20 10:55:00", 1, "USADO"),
     2: (1, "2026-09-01 17:40:00", 0, "INVALIDADO"),
@@ -141,7 +141,7 @@ CODIGOS_2FA = {
     4: (4, "CORREO", "2026-09-01 17:58:00", 0, "PENDIENTE"),    # entra desde otro dispositivo (D-01)
 }
 
-# usuario, version_terminos, fecha_aceptacion, ip. El invitado acepta al vincularse (CU-07).
+# usuario, version_terminos, fecha_aceptacion, ip. El invitado acepta al vincularse (DES-02).
 ACEPTACIONES = [
     (1, "2026.1", "2026-06-01 10:00:00", "189.203.14.20"),
     (2, "2026.1", "2026-06-02 09:00:00", "201.141.22.7"),

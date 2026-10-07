@@ -1,0 +1,66 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/fase_posterior/crear_tablas_fase_posterior.sql. No editar a mano.
+\subsubsection*{
+Catálogos precargados de la fase posterior (\mbox{D-09})
+}
+\addcontentsline{toc}{subsubsection}{
+Catálogos precargados de la fase posterior (\mbox{D-09})
+}
+
+\atributosde{Ranura}{Catálogo de las seis ranuras de personalización: peón, muro, tablero, título, marco y emotes (\mbox{D-03}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}ranura} & \texttt{TINYINT} & No & PK & Identificador de la ranura. \\ \hline
+\texttt{codigo} & \texttt{VARCHAR(20)} & No & UQ & Clave de la ranura en los diccionarios de recursos (\mbox{D-21}): \texttt{PEON}, \texttt{MURO}, \texttt{TABLERO}, \texttt{TITULO}, \texttt{MARCO} o \texttt{EMOTES}. Sin CHECK: añadir una ranura es insertar una fila (\mbox{DES-07}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{ObjetoCosmetico}{Catálogo de objetos cosméticos. Cada objeto pertenece a una sola ranura (\mbox{D-03}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & PK & Identificador del objeto. \\ \hline
+\texttt{id\_\allowbreak{}ranura} & \texttt{TINYINT} & No & FK & Ranura en la que se equipa. \\ \hline
+\texttt{codigo} & \texttt{VARCHAR(40)} & No & UQ & Clave del objeto en los diccionarios de recursos, como \texttt{PEON\_\allowbreak{}CLASICO}; con ella el cliente muestra su nombre en el idioma del usuario (\mbox{D-21}). \\ \hline
+\texttt{rareza} & \texttt{VARCHAR(10)} & No &  & \texttt{COMUN}, \texttt{RARO}, \texttt{EPICO} o \texttt{LEGENDARIO}. \\ \hline
+\texttt{precio} & \texttt{INT} & No &  & Precio en monedas del juego; el válido es este y no el del cliente (\mbox{DES-13} \mbox{RN-03}). Por omisión, \texttt{0}. \\ \hline
+\texttt{nivel\_\allowbreak{}requerido} & \texttt{SMALLINT} & No &  & Nivel mínimo para comprarlo (\mbox{DES-13} \mbox{RN-04}). Por omisión, \texttt{1}. \\ \hline
+\texttt{a\_\allowbreak{}la\_\allowbreak{}venta} & \texttt{BIT} & No &  & Si se ofrece en la tienda. Por omisión, \texttt{0}. \\ \hline
+\texttt{activo} & \texttt{BIT} & No &  & En falso, retirado del catálogo; quien lo tiene equipado lo conserva (\mbox{DES-07} \mbox{RN-04}). Por omisión, \texttt{1}. \\ \hline
+\texttt{es\_\allowbreak{}inicial} & \texttt{BIT} & No &  & Se otorga al dar de alta la cuenta. Por omisión, \texttt{0}. \\ \hline
+\texttt{es\_\allowbreak{}predeterminado} & \texttt{BIT} & No &  & Se equipa al dar de alta; exactamente uno por ranura. Por omisión, \texttt{0}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Division}{Catálogo de divisiones del ranking con sus umbrales de ascenso y descenso.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}division} & \texttt{TINYINT} & No & PK & Identificador de la división. \\ \hline
+\texttt{codigo} & \texttt{VARCHAR(40)} & No & UQ & Clave de la división en los diccionarios de recursos (\mbox{D-21}), como \texttt{BRONCE} o \texttt{MURO\_\allowbreak{}PIEDRA}. \\ \hline
+\texttt{elo\_\allowbreak{}minimo} & \texttt{SMALLINT} & No & UQ & Elo con el que se asciende a esta división; ordena las divisiones de la más baja a la más alta. \\ \hline
+\texttt{elo\_\allowbreak{}descenso} & \texttt{SMALLINT} & No &  & Elo por debajo del cual se desciende; es el umbral visible (\mbox{CU-16} \mbox{RN-07}). \\ \hline
+\end{tablaatributos}
+
+\atributosde{NivelIA}{Catálogo de los cuatro niveles de la IA (\mbox{DES-09} \mbox{RN-02}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}nivel\_\allowbreak{}ia} & \texttt{TINYINT} & No & PK & Identificador del nivel. \\ \hline
+\texttt{codigo} & \texttt{VARCHAR(40)} & No & UQ & Clave del nivel en los diccionarios de recursos (\mbox{D-21}): \texttt{APRENDIZ}, \texttt{CONSTRUCTOR}, \texttt{ARQUITECTO} o \texttt{BASTION}. \\ \hline
+\texttt{elo\_\allowbreak{}aproximado} & \texttt{SMALLINT} & No &  & Fuerza aproximada: 1000, 1500, 1900 o 2300. \\ \hline
+\end{tablaatributos}
+
+\atributosde{Leccion}{Catálogo de las siete lecciones del tutorial (\mbox{DES-16} \mbox{RN-01}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}leccion} & \texttt{TINYINT} & No & PK & Identificador de la lección. \\ \hline
+\texttt{codigo} & \texttt{VARCHAR(40)} & No & UQ & Clave de la lección en los diccionarios de recursos (\mbox{D-21}), como \texttt{MOVER\_\allowbreak{}PEON}; los textos de sus pasos también están en ellos. \\ \hline
+\texttt{orden} & \texttt{TINYINT} & No & UQ & Posición en el índice del tutorial. \\ \hline
+\texttt{num\_\allowbreak{}pasos} & \texttt{TINYINT} & No &  & Pasos de la lección. \\ \hline
+\end{tablaatributos}
+
+\atributosde{TipoCaja}{Catálogo de tipos de caja que se venden o se otorgan (\mbox{DES-14}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja} & \texttt{TINYINT} & No & PK & Identificador del tipo de caja. \\ \hline
+\texttt{codigo} & \texttt{VARCHAR(40)} & No & UQ & Clave del tipo de caja en los diccionarios de recursos (\mbox{D-21}), como \texttt{CAJA\_\allowbreak{}MADERA}. \\ \hline
+\texttt{precio} & \texttt{INT} & No &  & Precio en monedas del juego. \\ \hline
+\texttt{activo} & \texttt{BIT} & No &  & En falso, ya no se vende. Por omisión, \texttt{1}. \\ \hline
+\end{tablaatributos}
+
+\atributosde{TipoCajaObjeto}{Objetos que puede contener cada tipo de caja y su probabilidad; es la relación N:M entre TipoCaja y ObjetoCosmetico.}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}tipo\_\allowbreak{}caja} & \texttt{TINYINT} & No & PK, FK & Tipo de caja. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & PK, FK & Objeto que puede salir. \\ \hline
+\texttt{probabilidad} & \texttt{DECIMAL(6,3)} & No &  & Porcentaje exacto que se muestra antes de comprar (\mbox{DES-14} \mbox{RN-01}). \\ \hline
+\end{tablaatributos}
+

@@ -1,0 +1,51 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/fase_posterior/crear_tablas_fase_posterior.sql. No editar a mano.
+\begin{center}\small
+\begin{longtable}{|L{0.2\textwidth}|L{0.2\textwidth}|L{0.1\textwidth}|L{0.38\textwidth}|}
+\hline
+\textbf{Entidad padre} & \textbf{Entidad hija} & \textbf{Card.} & \textbf{Significado} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad padre} & \textbf{Entidad hija} & \textbf{Card.} & \textbf{Significado} \\ \hline
+\endhead
+\multicolumn{4}{|l|}{\textbf{Catálogos precargados de la fase posterior (\mbox{D-09})}} \\ \hline
+\textit{Ranura} & \textit{Objeto\-Cosmetico} & 1:N & Una ranura agrupa muchos objetos; cada objeto pertenece a una ranura. \\ \hline
+\textit{Tipo\-Caja} & \textit{Tipo\-Caja\-Objeto} & 1:N & Un tipo de caja tiene muchos objetos posibles. \\ \hline
+\textit{Objeto\-Cosmetico} & \textit{Tipo\-Caja\-Objeto} & 1:N & Un objeto puede salir en muchos tipos de caja. \\ \hline
+\multicolumn{4}{|l|}{\textbf{Perfil y personalización}} \\ \hline
+\textit{Usuario} & \textit{Historial\-Nickname} & 1:1 & Un usuario tiene a lo sumo un cambio de nombre registrado. \\ \hline
+\textit{Usuario} & \textit{Avatar} & 1:N & Un usuario sube muchos avatares; solo uno está vigente. \\ \hline
+\textit{Usuario} & \textit{Enlace\-Red} & 1:N & Un usuario publica hasta cuatro enlaces. \\ \hline
+\textit{Usuario} & \textit{Usuario\-Objeto} & 1:N & Un usuario posee muchos objetos. \\ \hline
+\textit{Objeto\-Cosmetico} & \textit{Usuario\-Objeto} & 1:N & Un objeto lo poseen muchos usuarios. \\ \hline
+\textit{Usuario\-Objeto} & \textit{Equipamiento} & 1:0..1 & Solo se equipa lo que se posee (\mbox{DES-07} \mbox{RN-02}); un objeto poseído está equipado a lo sumo en una ranura. \\ \hline
+\textit{Objeto\-Cosmetico} & \textit{Equipamiento} & 1:N & El objeto equipado pertenece a la ranura de la fila. \\ \hline
+\textit{Ranura} & \textit{Equipamiento} & 1:N & Cada usuario tiene una fila por ranura del catálogo. \\ \hline
+\multicolumn{4}{|l|}{\textbf{Aspecto en partida y espectador}} \\ \hline
+\textit{Participacion} & \textit{Participacion\-Objeto} & 1:N & Una participación fija un objeto por cada ranura. \\ \hline
+\textit{Objeto\-Cosmetico} & \textit{Participacion\-Objeto} & 1:N & Un objeto aparece en muchas participaciones, siempre en su ranura. \\ \hline
+\textit{Participacion} & \textit{Enlace\-Espectador} & 1:N & Un participante comparte uno o más enlaces de su partida. \\ \hline
+\multicolumn{4}{|l|}{\textbf{Invitaciones}} \\ \hline
+\textit{Sala} & \textit{Invitacion} & 1:N & Una sala recibe muchas invitaciones. \\ \hline
+\textit{Usuario} & \textit{Invitacion} & 1:N & Un usuario envía muchas invitaciones (rol emisor). \\ \hline
+\textit{Usuario} & \textit{Invitacion} & 1:N & Un usuario recibe muchas invitaciones (rol destinatario). \\ \hline
+\multicolumn{4}{|l|}{\textbf{Clasificación y economía}} \\ \hline
+\textit{Estadistica\-Modo} & \textit{Historial\-Division} & 1:N & Las estadísticas de un modo acumulan muchos cambios de división. \\ \hline
+\textit{Division} & \textit{Historial\-Division} & 0..1:N & Una división es el origen de muchos cambios (rol anterior). \\ \hline
+\textit{Division} & \textit{Historial\-Division} & 1:N & Una división es el destino de muchos cambios (rol nueva). \\ \hline
+\textit{Usuario} & \textit{Caja} & 1:N & Un usuario tiene muchas cajas. \\ \hline
+\textit{Tipo\-Caja} & \textit{Caja} & 1:N & Un tipo de caja se concreta en muchas cajas. \\ \hline
+\textit{Caja} & \textit{Caja\-Contenido} & 1:N & Una caja abierta tiene tres objetos. \\ \hline
+\textit{Objeto\-Cosmetico} & \textit{Caja\-Contenido} & 1:N & Un objeto sale en muchas cajas. \\ \hline
+\textit{Usuario} & \textit{Movimiento\-Moneda} & 1:N & Un usuario acumula muchos movimientos. \\ \hline
+\textit{Partida} & \textit{Movimiento\-Moneda} & 0..1:N & Una partida clasificatoria genera un movimiento por participante. \\ \hline
+\textit{Objeto\-Cosmetico} & \textit{Movimiento\-Moneda} & 0..1:N & Un objeto aparece en muchos movimientos de compra o conversión. \\ \hline
+\textit{Caja} & \textit{Movimiento\-Moneda} & 0..1:N & Una caja genera su cobro y sus conversiones. \\ \hline
+\multicolumn{4}{|l|}{\textbf{Relaciones entre jugadores y tutorial}} \\ \hline
+\textit{Usuario} & \textit{Amistad} & 1:N & Un usuario es amigo de muchos (como el menor del par). \\ \hline
+\textit{Usuario} & \textit{Amistad} & 1:N & Un usuario es amigo de muchos (como el mayor del par). \\ \hline
+\textit{Usuario} & \textit{Solicitud} & 1:N & Un usuario envía muchas solicitudes (rol solicitante). \\ \hline
+\textit{Usuario} & \textit{Solicitud} & 1:N & Un usuario recibe muchas solicitudes (rol destinatario). \\ \hline
+\textit{Usuario} & \textit{Progreso\-Tutorial} & 1:N & Un usuario avanza en muchas lecciones. \\ \hline
+\textit{Leccion} & \textit{Progreso\-Tutorial} & 1:N & Una lección la cursan muchos usuarios. \\ \hline
+\end{longtable}
+\end{center}

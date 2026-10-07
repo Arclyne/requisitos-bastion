@@ -1,0 +1,127 @@
+\subsection*{CU-06: Consultar el perfil de otro jugador}
+\addcontentsline{toc}{subsection}{CU-06: Consultar el perfil de otro jugador}
+\label{cu-06}
+
+\begin{fichacu}{CU-06}{Consultar el perfil de otro jugador}
+  \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
+  \crudFila{Actor principal}{Jugador o Invitado}
+  \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
+  \crudFila{Prototipos}{5b, 10a}
+  \crudFila{Prioridad}{Must (debe estar en la entrega). Categoría (a) Obligatorio: característica 3 del cliente. Hace visibles para los demás los enlaces a redes sociales que el jugador personaliza en el \mbox{CU-05}.}
+  \crudFila{Objetivo}{Mostrar el perfil público de otro jugador —su icono, sus enlaces a redes sociales y sus estadísticas por modo— junto con lo que ambos tienen en común —el marcador entre ellos y sus últimas partidas juntos— y dar acceso a las acciones que pueden hacerse sobre él.}
+  \crudFila{Disparador}{El jugador selecciona a otro jugador en el chat, el ranking, la lista de amigos, el historial o el fin de partida, y elige ``ver perfil'' en su menú.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El jugador abre el menú de otro jugador y selecciona ``ver perfil''.
+      \item El SJM envía el mensaje \texttt{PROFILE\_\allowbreak{}REQUEST} con el \texttt{id\_\allowbreak{}usuario} del jugador consultado y el token de sesión. \textit{(Ver \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-01})}
+      \item El Servidor de partidas verifica que el \texttt{id\_\allowbreak{}usuario} recibido sea distinto del propio. \textit{(Ver \mbox{FA-02})}
+      \item El Servidor de partidas recupera el \textit{Usuario} consultado y verifica que su \texttt{estado\_\allowbreak{}cuenta} no sea \texttt{ELIMINADA}. \textit{(Ver \mbox{FA-03}, \mbox{EX-01})}
+      \item El Servidor de partidas recupera los datos públicos del consultado: del \textit{Usuario}, el \texttt{nickname}, el \texttt{id\_\allowbreak{}icono} y el \texttt{tipo\_\allowbreak{}cuenta}; sus \textit{EnlaceRed} en su \texttt{orden}, y su \textit{EstadisticaModo} de cada \textit{Modo}, con \texttt{puntos\_\allowbreak{}elo}, \texttt{partidas\_\allowbreak{}jugadas}, \texttt{partidas\_\allowbreak{}ganadas} y \texttt{partidas\_\allowbreak{}perdidas} (\mbox{RN-01}).
+      \item El Servidor de partidas recupera las \textit{Partida} finalizadas en las que ambos jugadores tienen \textit{Participacion}, con su resultado para cada uno, y calcula el marcador entre ellos: victorias de uno, victorias del otro y tablas (\mbox{RN-02}).
+      \item El Servidor de partidas recupera las cinco más recientes de esas partidas con su \textit{Modo}, su forma de término y su fecha.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas comprueba la relación entre ambos: si existe \textit{Amistad} y si hay una \textit{Solicitud} pendiente en cualquiera de los dos sentidos.
+      \item El Servidor de partidas responde con \texttt{PROFILE\_\allowbreak{}OK}, el perfil público, el marcador, las últimas partidas juntos y la relación.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}PlayerCard} con el icono y el \texttt{nickname}, los enlaces a redes sociales, las estadísticas de cada modo, el marcador entre ambos, las últimas partidas juntos y las acciones disponibles: retar, añadir o eliminar amigo según la relación, y reportar. \textit{(Ver \mbox{FA-04}, \mbox{FA-05}, \mbox{FA-06}, \mbox{FA-07}, \mbox{FA-08})}
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que la sesión terminó y despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: El jugador consultado es el propio}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas recupera solo los datos públicos, conforme a los pasos 5 y 6 del FN, y responde con \texttt{PROFILE\_\allowbreak{}OK} sin marcador, partidas juntos ni relación.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}PlayerCard} sin acciones, como vista de lo que los demás ven de su perfil.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: El jugador consultado no está disponible}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas no encuentra la cuenta o la encuentra \texttt{ELIMINADA} (\mbox{RN-03}).
+      \item El Servidor de partidas responde con \texttt{PLAYER\_\allowbreak{}NOT\_\allowbreak{}FOUND}.
+      \item El SJM muestra el estado vacío de jugador no encontrado.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: El jugador ejecuta una acción sobre el perfil}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona una de las acciones de la tarjeta.
+      \item El flujo continúa en el caso de uso correspondiente: retar en el \mbox{CU-21}, añadir amigo en el \mbox{CU-19}, eliminar amigo en el \mbox{CU-22} y reportar en el \mbox{CU-25}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: No tienen partidas en común}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el marcador en cero y un estado vacío en la sección de partidas juntos, con la acción ``retar'', que continúa en el \mbox{CU-21}.
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El consultante es un invitado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el perfil y el marcador con normalidad.
+      \item El SJM deshabilita las acciones que exigen cuenta registrada —añadir amigo, eliminar amigo y reportar— e indica junto a ellas que requieren una cuenta registrada.
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El consultado es un invitado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra el \texttt{nickname} provisional y el icono, sin enlaces a redes, que solo publican las cuentas registradas, ni estadísticas por modo, que una cuenta de invitado no tiene porque no busca partida clasificatoria (\mbox{CU-07}, \mbox{RN-06} del \mbox{CU-03}).
+      \item El SJM no ofrece ``añadir amigo'', porque las cuentas de invitado no tienen amistades (\mbox{RN-07} del \mbox{CU-19}).
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-08}: El jugador abre uno de los enlaces a redes sociales}\par
+    \begin{cuenum}[start=1]
+      \item El jugador selecciona uno de los enlaces de la tarjeta.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageConfirm} con la dirección completa del enlace, advirtiendo que se abrirá fuera del juego, con las opciones ``Abrir'' y ``Cancelar'' (\mbox{RN-05}).
+      \item Si selecciona ``Abrir'', el SJM abre la dirección en el navegador predeterminado del sistema operativo, sin que intervenga el Servidor de partidas.
+      \item El flujo continúa en el paso 11 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor con un identificador de incidencia y responde con \texttt{SERVER\_\allowbreak{}ERROR}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} con el identificador y la opción ``Reintentar''.
+      \item Si el jugador selecciona ``Reintentar'', el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que transcurrió el tiempo límite sin recibir un mensaje completo.
+      \item El SJM muestra el esqueleto de la tarjeta con la opción ``Reintentar''.
+      \item Si el jugador selecciona ``Reintentar'', el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe durante el intercambio}\par
+    \begin{cuenum}[start=1]
+      \item El SJM muestra la barra de conexión perdida.
+      \item Al recuperar la conexión, el flujo continúa en el paso 2 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} El jugador ve el perfil público del otro jugador —icono, enlaces a redes sociales y estadísticas por modo—, el marcador entre ambos y sus últimas partidas juntos.
+      \item \textbf{\mbox{POST-02}} Ninguna estructura de la base de datos se modificó.
+      \item \textbf{\mbox{POST-03}} Si la cuenta consultada no existe o está eliminada, el jugador no obtuvo ningún dato del perfil.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} El perfil de otro jugador muestra solo datos públicos —el \texttt{nickname}, el icono, los enlaces a redes sociales y las estadísticas por modo— y nunca el \texttt{correo}, la \texttt{fecha\_\allowbreak{}nacimiento}, las sesiones ni las sanciones.
+      \item \textbf{\mbox{RN-02}} El marcador entre dos jugadores cuenta todas las partidas finalizadas que jugaron juntos, clasificatorias y amistosas. Las estadísticas por modo, en cambio, solo reflejan las clasificatorias.
+      \item \textbf{\mbox{RN-03}} Las cuentas eliminadas no tienen perfil consultable, aunque sigan apareciendo en el historial de sus rivales.
+      \item \textbf{\mbox{RN-04}} Este caso solo lee.
+      \item \textbf{\mbox{RN-05}} Los enlaces a redes sociales se muestran con su dirección completa y solo se abren fuera del juego, en el navegador del sistema operativo, después de que el jugador lo confirme, porque se publican sin revisión (\mbox{D-08}).
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué el marcador no se almacena.}\par
+    Guardar un marcador por cada par de jugadores obligaría a actualizar una fila en cada partida y a decidir qué hacer con los pares que nunca vuelven a jugar. El marcador es el recuento de las \textit{Participacion} que dos jugadores comparten, y esa consulta es barata: nadie tiene miles de partidas contra la misma persona. Se calcula al abrir la tarjeta y no deja rastro.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 3)}
+      \item \textbf{\textit{Usuario}:} lee el consultado: \texttt{estado\_\allowbreak{}cuenta}, \texttt{nickname}, \texttt{id\_\allowbreak{}icono} y \texttt{tipo\_\allowbreak{}cuenta} \textit{(pasos 5, 6)}
+      \item \textbf{\textit{EnlaceRed}, \textit{EstadisticaModo}:} lee los datos públicos \textit{(paso 6)}
+      \item \textbf{\textit{Participacion}, \textit{Partida}, \textit{Modo}:} lee las partidas en común y calcula el marcador \textit{(pasos 7, 8)}
+      \item \textbf{\textit{Amistad}, \textit{Solicitud}:} lee la relación entre ambos \textit{(paso 9)}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

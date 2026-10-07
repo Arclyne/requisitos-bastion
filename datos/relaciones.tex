@@ -19,7 +19,7 @@ Cada consulta de esta subsección une tablas por sus llaves foráneas. Si un reg
 \subsubsection*{Del jugador a su aspecto}
 \addcontentsline{toc}{subsubsection}{Del jugador a su aspecto}
 
-\textit{Equipamiento} tiene dos llaves foráneas compuestas: (\at{id\_usuario}, \at{id\_objeto}) hacia \textit{UsuarioObjeto}, que obliga a equipar solo lo que se posee (\mbox{CU-14} \mbox{RN-02}), e (\at{id\_objeto}, \at{id\_ranura}) hacia \textit{ObjetoCosmetico}, que obliga a que el objeto sea de esa ranura (\mbox{D-03}). La consulta recorre la cadena completa para \at{luis\_quo}, con una fila por ranura:
+\textit{Equipamiento} tiene dos llaves foráneas compuestas: (\at{id\_usuario}, \at{id\_objeto}) hacia \textit{UsuarioObjeto}, que obliga a equipar solo lo que se posee (\mbox{DES-07} \mbox{RN-02}), e (\at{id\_objeto}, \at{id\_ranura}) hacia \textit{ObjetoCosmetico}, que obliga a que el objeto sea de esa ranura (\mbox{D-03}). La consulta recorre la cadena completa para \at{luis\_quo}, con una fila por ranura:
 
 \consulta{relequipamiento}
 \input{bd/tex/datos/relequipamiento}
@@ -44,12 +44,12 @@ El reporte 1 produjo dos sanciones: la segunda sustituye a la primera, y es la q
 \consulta{relcajas}
 \input{bd/tex/datos/relcajas}
 
-Solo la caja abierta tiene contenido. El \at{EMOTE\_RISA} que salió en ella ya lo tenía luis, así que se convirtió en 40 monedas (\mbox{CU-39} \mbox{RN-03}) con el movimiento 28.
+Solo la caja abierta tiene contenido. El \at{EMOTE\_RISA} que salió en ella ya lo tenía luis, así que se convirtió en 40 monedas (\mbox{DES-14} \mbox{RN-03}) con el movimiento 28.
 
 \subsubsection*{Una sanción que sustituye a otra}
 \addcontentsline{toc}{subsubsection}{Una sanción que sustituye a otra}
 
-La única relación de una tabla consigo misma: \at{id\_sancion\_sustituta} de \textit{Sancion} apunta a otra fila de \textit{Sancion} (\mbox{CU-44} \mbox{RN-09}). La sanción sustituida queda retirada, con su fecha de retiro, y no se borra:
+La única relación de una tabla consigo misma: \at{id\_sancion\_sustituta} de \textit{Sancion} apunta a otra fila de \textit{Sancion} (\mbox{DES-18} \mbox{RN-09}). La sanción sustituida queda retirada, con su fecha de retiro, y no se borra:
 
 \consulta{relsustitucion}
 \input{bd/tex/datos/relsustitucion}

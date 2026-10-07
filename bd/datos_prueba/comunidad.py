@@ -7,7 +7,7 @@ SOLICITUDES = {1: (6, 5, "2026-08-29 20:00:00")}          # id: solicitante, des
 SILENCIOS = [(4, 9, "2026-08-25 21:05:00")]               # quien silencia, silenciado, fecha
 BLOQUEOS = [(3, 9, "2026-08-26 17:25:00")]                # bloqueador, bloqueado, fecha
 
-# usuario, lección, paso_actual, fecha_actualizacion, fecha_completada (CU-41).
+# usuario, lección, paso_actual, fecha_actualizacion, fecha_completada (DES-16).
 TUTORIAL = [
     (5, 1, 3, "2026-06-15 12:20:00", "2026-06-15 12:20:00"),
     (5, 2, 4, "2026-06-15 12:35:00", "2026-06-15 12:35:00"),
@@ -22,17 +22,17 @@ TUTORIAL = [
 # Plazas de la sala abierta: usuario, sala, plaza, listo, fecha_union (el anfitrión nace listo).
 SALA_PARTICIPANTES = [(5, 2, 1, 1, "2026-09-01 17:50:00"), (7, 2, 2, 0, "2026-09-01 17:52:00")]
 
-# id: sala, emisor, destinatario, fecha, estado (vigencia de 60 s, CU-32 RN-04).
+# id: sala, emisor, destinatario, fecha, estado (vigencia de 60 s, CU-21 RN-03).
 INVITACIONES = {
     1: (1, 6, 4, "2026-08-31 16:21:00", "EXPIRADA"),
     2: (1, 6, 4, "2026-08-31 16:23:00", "RECHAZADA"),
-    4: (1, 6, 7, "2026-08-31 16:24:00", "ACEPTADA"),     # el invitado entra sin el código (CU-32 RN-05)
+    4: (1, 6, 7, "2026-08-31 16:24:00", "ACEPTADA"),     # el invitado entra sin el código (CU-21 RN-04)
     3: (2, 5, 2, "2026-09-01 17:59:40", "PENDIENTE"),
 }
 
 COLA = [(4, 3, 3, "2026-09-01 17:55:00")]                  # usuario, modo, minutos_reloj, fecha_entrada
 
-# autor, canal, id_partida, id_sala, texto, fecha_envio (CU-28).
+# autor, canal, id_partida, id_sala, texto, fecha_envio (CU-18).
 MENSAJES = [
     (9, "GLOBAL", None, None, "Nadie aquí sabe jugar", "2026-08-25 21:00:00"),
     (9, "PARTIDA", 9, None, "Juegas horrible, mejor ni lo intentes", "2026-08-26 17:11:05"),
@@ -50,7 +50,7 @@ MENSAJES = [
 ENLACES_ESPECTADOR = {1: (12, 3, "2026-09-01 17:40:00")}   # id: partida, creador, fecha
 
 # id: denunciante, reportado, motivo, descripción, partida, fecha, estado, moderador,
-#     fecha_asignacion, nota_resolucion, fecha_resolucion (CU-42, CU-43).
+#     fecha_asignacion, nota_resolucion, fecha_resolucion (CU-25, DES-17).
 REPORTES = {
     1: (3, 9, 1, "Me insultó en el chat de la partida.", 9, "2026-08-26 17:20:00", "RESUELTO_CON_SANCION", 2,
         "2026-08-27 09:50:00", "Insultos comprobados en el chat de la partida.", "2026-08-27 10:00:00"),
@@ -62,10 +62,10 @@ REPORTES = {
         "2026-08-23 09:55:00", "El nickname suplanta al equipo del juego.", "2026-08-23 10:00:00"),
     5: (4, 3, 4, "Me saltó y llegó a la meta muy rápido; creo que usa un programa.", 5, "2026-07-26 17:40:00",
         "RESUELTO_SIN_SANCION", 2, "2026-07-27 09:00:00",
-        "La repetición muestra jugadas legales; el salto es válido (CU-20 RN-03).", "2026-07-27 09:20:00"),
+        "La repetición muestra jugadas legales; el salto es válido (CU-11 RN-03).", "2026-07-27 09:20:00"),
 }
 
-# id: sancionado, moderador, reporte, ámbito, tipo, motivo, inicio, fin, retiro, sustituta (CU-44).
+# id: sancionado, moderador, reporte, ámbito, tipo, motivo, inicio, fin, retiro, sustituta (DES-18).
 SANCIONES = {
     1: (9, 2, 1, "CUENTA", "TEMPORAL", "Insultos en el chat de una partida.",
         "2026-08-27 10:00:00", "2026-08-28 10:00:00", "2026-08-27 16:00:00", 2),
@@ -79,7 +79,7 @@ SANCIONES = {
         "2026-08-23 10:00:00", None, None, None),                           # la cuenta queda BANEADA
 }
 
-# id: sanción, texto, marca_lenguaje, fecha, estado, moderador, asignación, nota, resolución (CU-45).
+# id: sanción, texto, marca_lenguaje, fecha, estado, moderador, asignación, nota, resolución (DES-19).
 APELACIONES = {
     1: (4, "Fue un malentendido con una palabra en inglés.", 0, "2026-08-05 20:00:00", "ACEPTADA", 1,
         "2026-08-06 11:30:00", "La palabra no era un insulto en su contexto.", "2026-08-06 12:00:00"),
@@ -89,7 +89,7 @@ APELACIONES = {
         "2026-07-10 15:00:00", "Los mensajes repetidos para molestar constan en el chat.", "2026-07-10 15:10:00"),
 }
 
-# moderador, acción, afectado, detalle, fecha (CU-48 RN-04).
+# moderador, acción, afectado, detalle, fecha (DES-22 RN-04).
 BITACORA_MODERACION = [
     (1, "ROL_OTORGADO", 2, "Rol MODERADOR otorgado.", "2026-06-05 10:00:00"),
     (2, "SANCION_APLICADA", 5, "Sanción 3: chat, temporal.", "2026-07-10 12:00:00"),
@@ -102,7 +102,7 @@ BITACORA_MODERACION = [
     (2, "SANCION_APLICADA", 11, "Sanción 5: cuenta, permanente.", "2026-08-23 10:00:00"),
     (2, "REPORTE_RESUELTO", 11, "Reporte 4 resuelto con sanción.", "2026-08-23 10:00:00"),
     (2, "REPORTE_TOMADO", 9, "Reporte 2.", "2026-08-26 10:00:00"),
-    (2, "REPORTE_LIBERADO", 9, "Reporte 2: vuelve a la cola a los treinta minutos (CU-43 RN-03).", "2026-08-26 10:30:00"),
+    (2, "REPORTE_LIBERADO", 9, "Reporte 2: vuelve a la cola a los treinta minutos (DES-17 RN-03).", "2026-08-26 10:30:00"),
     (2, "REPORTE_TOMADO", 9, "Reporte 1.", "2026-08-27 09:50:00"),
     (2, "SANCION_APLICADA", 9, "Sanción 1: cuenta, temporal.", "2026-08-27 10:00:00"),
     (2, "REPORTE_RESUELTO", 9, "Reporte 1 resuelto con sanción.", "2026-08-27 10:00:00"),

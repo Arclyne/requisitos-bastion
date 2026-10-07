@@ -1,0 +1,56 @@
+% Archivo generado por Prototipos/corregidos/fuente/cambios.py. No editar a mano.
+\begin{center}\small
+\begin{longtable}{|L{0.1\textwidth}|L{0.13\textwidth}|L{0.335\textwidth}|L{0.32\textwidth}|}
+\hline
+\textbf{Pantalla} & \textbf{Casos} & \textbf{Qué cambió} & \textbf{Por qué} \\ \hline
+\endfirsthead
+\hline
+\textbf{Pantalla} & \textbf{Casos} & \textbf{Qué cambió} & \textbf{Por qué} \\ \hline
+\endhead
+\textbf{3b} Menú principal & \mbox{CU-01}, \mbox{CU-17}, \mbox{CU-18}, \mbox{CU-19} & Se quitan tienda, personalizar, ranking, historial, amigos, el chat global, las monedas y la racha. & Son agregados de fase posterior (\mbox{CU-12} a \mbox{CU-16}, \mbox{CU-29} a \mbox{CU-41}). \\ \cline{3-4}
+ &  & Quedan buscar partida, crear sala privada y unirse con código, más ajustes. & Son los casos Must de partida en línea. \\ \cline{3-4}
+ &  & Se añade ``cómo jugar'' y un acceso a moderación visible solo para ese rol. & El tutorial es fase posterior; las reglas en texto bastan. La moderación (\mbox{CU-43}) no tenía entrada. \\ \hline
+\textbf{6c} Inicio de sesión & \mbox{CU-01}, \mbox{CU-02}, \mbox{CU-03} & Se añaden los campos de nickname o correo y contraseña, y el enlace para recuperar la contraseña. & Diferencia registrada: la pantalla no tenía campos (\mbox{CU-01}). \\ \cline{3-4}
+ &  & Se quita ``jugar como invitado''. & \mbox{CU-06} es fase posterior y esquivaría el segundo factor. \\ \cline{3-4}
+ &  & Se añade el selector de idioma y el aviso del segundo factor. & \mbox{CU-05} \mbox{RN-03} y \mbox{CON-08}. \\ \hline
+\textbf{22a} Registro (nueva) & \mbox{CU-02} & Pantalla nueva: nickname de 3 a 30, correo, contraseña con su regla, fecha de nacimiento (mínimo 8 años), idioma y términos. & El formulario de registro no estaba prototipado (diferencia registrada); campos de \mbox{CU-02} \mbox{RN-01} a \mbox{RN-05} y \mbox{D-06}. \\ \hline
+\textbf{22b} Código de segundo factor (nueva) & \mbox{CU-01} & Pantalla nueva: código de 6 dígitos, tiempo restante, intentos, reenviar y cancelar. & GUI\_SecondFactor de \mbox{CU-01} (\mbox{RN-09}: 5 minutos, 3 intentos). Es la restricción obligatoria \mbox{CON-08} y no tenía prototipo. \\ \hline
+\textbf{22c} Cuenta pendiente de verificar (nueva) & \mbox{CU-01}, \mbox{CU-04} & Pantalla nueva: aviso de correo enviado, reenviar con espera y entrar. & GUI\_PendingVerification de \mbox{CU-01}; sin verificar no se entra (Matriz 2). \\ \hline
+\textbf{22d} Activar el segundo factor (nueva) & \mbox{CU-09} & Diálogo nuevo: contraseña actual y código de prueba para activar el segundo factor. & \mbox{CU-09} \mbox{FA-10}; el segundo factor es obligatorio y no había dónde activarlo. \\ \hline
+\textbf{1f} Buscando rival & \mbox{CU-17} & Se quita el botón ``ampliar rango''; se explica que la ventana de elo se amplía sola. & \mbox{CU-17} \mbox{RN-03}: la ampliación es automática. \\ \cline{3-4}
+ &  & Se muestra el reloj elegido. & El modo y el reloj definen la cola. \\ \hline
+\textbf{1h} Partida privada: crear o unirse & \mbox{CU-18}, \mbox{CU-19} & El código pasa a seis caracteres sin 0, O, 1 ni I (K7MTQ3). & \mbox{CU-18} \mbox{RN-01}; el prototipo usaba K4M-92. \\ \cline{3-4}
+ &  & El código aparece al crear la sala; muros de 1 a 20 y aviso de que no da elo. & \mbox{CU-18} \mbox{RN-04} y \mbox{D-16}. \\ \hline
+\textbf{5d} Sala de espera, 2 jugadores & \mbox{CU-18}, \mbox{CU-19} & Se quita ``invitar amigo''. & \mbox{CU-32} es fase posterior. \\ \cline{3-4}
+ &  & Código de seis caracteres; ``salir'' avisa que cierra la sala; ``empezar'' inactivo mientras falten listos. & \mbox{CU-18} \mbox{RN-01}, \mbox{RN-07} y \mbox{CU-19} \mbox{RN-03}. \\ \hline
+\textbf{5e} Sala de espera, 4 plazas & \mbox{CU-18}, \mbox{CU-19}, \mbox{CU-28} & Se quitan ``eligiendo peón'' y ``abrir a público''. & Los cosméticos son fase posterior y ningún caso abre una sala al público. \\ \cline{3-4}
+ &  & El chat de la sala avisa que se filtra y se puede reportar. & Moderación de chat (\mbox{CON-09}, \mbox{CU-28}). \\ \hline
+\textbf{19d} Menú de partida & \mbox{CU-22}, \mbox{CU-23} & Se quita ``emotes''. & \mbox{CU-29} es fase posterior. \\ \cline{3-4}
+ &  & ``Ofrecer tablas'' dice una vez cada cinco jugadas propias y solo en partidas de dos; se quita ``desde la jugada 10''. & Diferencia registrada; \mbox{CU-22} \mbox{RN-03} y \mbox{D-14}. \\ \hline
+\textbf{2g} Fin de partida & \mbox{CU-25} & Se quitan las monedas, la racha, ``ver repetición'' y ``revancha''. & Monedas, rachas y repeticiones son fase posterior; la revancha no está en ningún caso. \\ \cline{3-4}
+ &  & Quedan el resultado, la forma de término, el cambio de elo, ``buscar otra'', ``volver al menú'' y ``reportar''. & \mbox{CU-25} pasos 17 a 20 del núcleo y \mbox{CU-42}. \\ \hline
+\textbf{6f} Rival desconectado & \mbox{CU-24}, \mbox{CU-26} & ``Reclamar victoria'' queda inactivo con la cuenta atrás hasta los sesenta segundos. & \mbox{D-15} y \mbox{CU-24} \mbox{RN-06}: el rival puede reclamarla solo a los 60 s. \\ \hline
+\textbf{20c} Chat en partida & \mbox{CU-28}, \mbox{CU-33}, \mbox{CU-42} & Se quitan las pestañas global y amigos, y el aviso de espectador. & Canales y espectador de fase posterior. \\ \cline{3-4}
+ &  & Se añade el aviso de mensaje filtrado y el acceso a silenciar, bloquear y reportar. & \mbox{CU-28} \mbox{RN-02}, \mbox{CU-33} y \mbox{CU-42}. \\ \hline
+\textbf{10a} Menú de un jugador & \mbox{CU-33}, \mbox{CU-42} & Se quitan ver perfil, retar, añadir amigo y ver su partida. & Perfil, amigos y espectador son fase posterior. \\ \cline{3-4}
+ &  & Quedan silenciar, bloquear y reportar. & Moderación del núcleo. ``Eliminar amigo'' (\mbox{CU-49}) se añadirá con los amigos. \\ \hline
+\textbf{10b} Reportar & \mbox{CU-42} & Los motivos pasan a los cinco del dominio: lenguaje ofensivo, acoso, nombre inapropiado, trampas y juego antideportivo. & \mbox{CU-42} \mbox{RN-08} y \mbox{D-23}; el prototipo tenía ``abandono repetido'' y ``otro'' y no tenía acoso. \\ \cline{3-4}
+ &  & Se adjuntan las jugadas y el chat de la partida por referencia; se quita la repetición y los enlaces del perfil. & \mbox{CU-42} \mbox{RN-01}; repeticiones y enlaces son fase posterior. \\ \hline
+\textbf{10c} Silenciados y bloqueados & \mbox{CU-33} & La explicación dice que el bloqueo impide compartir sala en lugar de invitar. & Las invitaciones son fase posterior (\mbox{CU-32}). \\ \hline
+\textbf{10d} Chat restringido & \mbox{CU-28}, \mbox{CU-44} & La restricción se muestra sobre el chat de la partida; se quitan las pestañas global y amigos y la mención a los emotes. & Canales y emotes de fase posterior. \\ \hline
+\textbf{9a} Recuperar contraseña: pedir el código & \mbox{CU-03} & Se envía un código de 6 dígitos, no un enlace; se añade el aviso de que la respuesta es la misma exista o no la cuenta y el límite de 5 minutos. & \mbox{CU-03} \mbox{RN-01}, \mbox{RN-04} y \mbox{RN-06}. \\ \cline{3-4}
+ &  & Se quita el recuadro del invitado. & \mbox{CU-06} es fase posterior. \\ \hline
+\textbf{9b} Recuperar contraseña: código y nueva contraseña & \mbox{CU-03} & Se añade el campo del código con su vigencia y sus 3 intentos, y la confirmación de la contraseña. & \mbox{CU-03} \mbox{RN-04} y \mbox{RN-09}. \\ \hline
+\textbf{9f} Ajustes de cuenta & \mbox{CU-05}, \mbox{CU-09}, \mbox{CU-10} & Se añade el segundo factor con su estado. & \mbox{CU-09} \mbox{FA-10} y \mbox{CON-08}. \\ \cline{3-4}
+ &  & Se quitan código de amigo, descargar mis datos y borrar cuenta. & Amigos y baja son fase posterior; descargar datos se retiró del alcance (diferencia registrada). \\ \hline
+\textbf{12c} Ajustes: idioma & \mbox{CU-12} (solo idioma) & Solo quedan español (México) e inglés. & \mbox{D-21}: los idiomas admitidos son es-MX y en; el prototipo ofrecía portugués, francés, alemán y catalán. \\ \hline
+\textbf{7e} Errores de cuenta & \mbox{CU-01}, \mbox{CU-02} & El nickname admite de 3 a 30 caracteres; el bloqueo es de 5, 30 y 60 minutos. & Diferencia registrada; \mbox{CU-01} \mbox{RN-03} y \mbox{CU-02} \mbox{RN-01}. \\ \cline{3-4}
+ &  & Se quitan los errores de monedas, skins y amigos; se añaden los de cuenta sin activar, código incorrecto o vencido y edad mínima. & Agregados fuera; errores de \mbox{CU-01}, \mbox{CU-02} y \mbox{CU-04}. \\ \hline
+\textbf{7d} Errores de salas y emparejamiento & \mbox{CU-17}, \mbox{CU-19} & El código de ejemplo y el mensaje de formato pasan a seis caracteres sin 0, O, 1 ni I. & Diferencia registrada; \mbox{CU-18} \mbox{RN-01}. \\ \cline{3-4}
+ &  & ``Prueba a ampliar el rango'' pasa a ``ampliamos el rango mientras esperas''. & \mbox{CU-17} \mbox{RN-03}. \\ \hline
+\textbf{22e} Cola de moderación (nueva) & \mbox{CU-43} & Pantalla nueva: reportes y apelaciones pendientes, con motivo, reportado, reportes que acumula, antigüedad y estado. & GUI\_ModerationQueue; la moderación es obligatoria y no tenía prototipo. \\ \hline
+\textbf{22f} Revisar un reporte (nueva) & \mbox{CU-43} & Pantalla nueva: descripción, chat con el reportado resaltado, jugadas, sanciones previas, nota obligatoria y las tres salidas. & GUI\_ReportReview de \mbox{CU-43} (\mbox{RN-07}: nota obligatoria). \\ \hline
+\textbf{22g} Aplicar una sanción (nueva) & \mbox{CU-44} & Pantalla nueva: ámbito, tipo, duración, motivo y confirmación en una frase. & GUI\_ApplySanction de \mbox{CU-44} (\mbox{RN-03}, \mbox{RN-06} y \mbox{RN-08}) y \mbox{D-05}. \\ \hline
+\textbf{22h} Agregar un moderador (nueva) & \mbox{CU-46}, \mbox{CU-47} & Pantalla nueva: buscar la cuenta, requisitos, motivo obligatorio y la lista de moderadores con ``retirar rol''. & GUI\_AdminPanel de \mbox{CU-46} (\mbox{RN-02}, \mbox{RN-05}) y \mbox{CU-47}. \\ \hline
+\end{longtable}
+\end{center}

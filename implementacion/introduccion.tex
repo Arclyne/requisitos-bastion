@@ -15,12 +15,15 @@ La base de datos del modelo anterior se implementa en SQL Server, el motor que f
 \textbf{Archivo} & \textbf{Qué hace} \\ \hline
 \endhead
 1. \at{crear\_base\_datos.sql} & Elimina la base \textit{Bastion} si existe, la crea vacía con el texto en UTF-8 (\mbox{D-21}) y crea el inicio de sesión y el usuario \at{BastionServerConnection} con sus permisos. \\ \hline
-2. \at{crear\_tablas.sql} & Crea las \bdNumTablas{} tablas con sus llaves primarias y foráneas, sus restricciones \at{NOT NULL}, \at{UNIQUE}, \at{CHECK} y \at{DEFAULT}, los índices y los \bdNumProcedimientos{} procedimientos de las eliminaciones físicas. \\ \hline
+2. \at{crear\_tablas.sql} & Crea las \bdNumTablas{} tablas del núcleo con sus llaves primarias y foráneas, sus restricciones \at{NOT NULL}, \at{UNIQUE}, \at{CHECK} y \at{DEFAULT}, los índices y los \bdNumProcedimientos{} procedimientos de las eliminaciones físicas. \\ \hline
 3. \at{insertar\_datos\_prueba.sql} & Carga los catálogos precargados (\mbox{D-09}) y un escenario de prueba de \dpNumFilas{} filas, y termina con consultas que comprueban su coherencia. \\ \hline
+\multicolumn{2}{|l|}{\textit{Solo cuando empiece la fase posterior (\mbox{D-22}):}} \\ \hline
+4. \at{fase\_posterior/crear\_tablas\_fase\_posterior.sql} & Crea las \bdFpNumTablas{} tablas de los agregados y agrega sus columnas a las del núcleo. \\ \hline
+5. \at{fase\_posterior/insertar\_datos\_prueba\_fase\_posterior.sql} & Completa el escenario de prueba con \dpFpNumFilas{} filas de los agregados y lo comprueba con \dpFpNumComprobaciones{} consultas. \\ \hline
 \end{longtable}
 \end{center}
 
-Los scripts se probaron en SQL Server 2025, versión 17.0.4065.4, edición Developer, y usan solo lo que existe desde SQL Server 2019. Pueden abrirse y ejecutarse uno tras otro en SQL Server Management Studio, o desde la línea de órdenes con \at{sqlcmd}:
+La versión anterior de los scripts, con las 47 tablas en uno solo, se probó en SQL Server 2025, versión 17.0.4065.4, edición Developer. Los scripts actuales, separados en núcleo y fase posterior, \textbf{todavía no se han ejecutado en SQL Server}: la subsección \textit{Verificación en SQL Server} dice qué se comprobó sin él y qué falta. Usan solo lo que existe desde SQL Server 2019. Pueden abrirse y ejecutarse uno tras otro en SQL Server Management Studio, o desde la línea de órdenes con \at{sqlcmd}:
 
 \begin{lstlisting}[style=sql]
 sqlcmd -S localhost -E -b -I -f 65001 -i bd\crear_base_datos.sql
@@ -34,6 +37,9 @@ sqlcmd -S localhost -E -b -I -f 65001 -i bd\insertar_datos_prueba.sql
 
 \begin{lstlisting}[style=sql]
 powershell -ExecutionPolicy Bypass -File bd\generar_tablas.ps1
+powershell -ExecutionPolicy Bypass -File bd\generar_tablas.ps1 -Sql bd\fase_posterior\crear_tablas_fase_posterior.sql -Salida bd\tex\fase-posterior -Esquema er\esquema-fase-posterior.json -Prefijo bdFp
 python bd\generar_datos_prueba.py
 python er\generar.py
 \end{lstlisting}
+
+En macOS o Linux, el generador de tablas se ejecuta igual con PowerShell 7 (\at{pwsh -File bd/generar\_tablas.ps1}, con los mismos parámetros).

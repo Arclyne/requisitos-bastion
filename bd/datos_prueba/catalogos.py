@@ -2,8 +2,8 @@
 """Catálogos precargados (D-09). Ningún caso de uso los escribe; se cargan por SQL.
 
 Los valores que fijan los casos de uso se toman de ellos: seis ranuras (D-03),
-tres modos con sus muros (CU-21 RN-02), cuatro niveles de IA con su fuerza
-(CU-27 RN-02), siete lecciones (CU-41 RN-01), cinco motivos de reporte (CU-42
+tres modos con sus muros (CU-12 RN-02), cuatro niveles de IA con su fuerza
+(DES-09 RN-02), siete lecciones (DES-16 RN-01), cinco motivos de reporte (CU-25
 RN-08) y las divisiones de la tabla de dominios del análisis CRUD. Los códigos,
 precios, umbrales y probabilidades que ningún caso fija son de prueba.
 
@@ -81,7 +81,7 @@ CONTENIDO_CAJA = [  # id_tipo_caja, id_objeto, probabilidad (suman 100 por tipo)
     (3, 106, 60), (3, 603, 40),
 ]
 
-PALABRAS = [  # termino, idioma (None: todos los idiomas, CU-28 RN-01), ambito
+PALABRAS = [  # termino, idioma (None: todos los idiomas, CU-18 RN-01), ambito
     ("tonto", "es-MX", "AMBOS"),
     ("idiota", "es-MX", "AMBOS"),
     ("estúpido", "es-MX", "CHAT"),

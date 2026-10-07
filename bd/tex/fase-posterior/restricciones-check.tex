@@ -1,0 +1,42 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/fase_posterior/crear_tablas_fase_posterior.sql. No editar a mano.
+\begin{center}\small
+\begin{longtable}{|L{0.19\textwidth}|L{0.23\textwidth}|L{0.48\textwidth}|}
+\hline
+\textbf{Entidad} & \textbf{Restricción} & \textbf{Condición} \\ \hline
+\endfirsthead
+\hline
+\textbf{Entidad} & \textbf{Restricción} & \textbf{Condición} \\ \hline
+\endhead
+\multicolumn{3}{|l|}{\textbf{Catálogos precargados de la fase posterior (\mbox{D-09})}} \\ \hline
+\textit{Objeto\-Cosmetico} & \texttt{CK\_\allowbreak{}Objeto\allowbreak{}Cosmetico\_\allowbreak{}rareza} & \texttt{rareza IN (\textquotesingle{}COMUN\textquotesingle{},\allowbreak{}\textquotesingle{}RARO\textquotesingle{},\allowbreak{}\textquotesingle{}EPICO\textquotesingle{},\allowbreak{}\textquotesingle{}LEGENDARIO\textquotesingle{})} \\ \hline
+\textit{Objeto\-Cosmetico} & \texttt{CK\_\allowbreak{}Objeto\allowbreak{}Cosmetico\_\allowbreak{}rangos} & \texttt{precio >= 0 AND nivel\_\allowbreak{}requerido >= 1} \\ \hline
+\textit{Objeto\-Cosmetico} & \texttt{CK\_\allowbreak{}Objeto\allowbreak{}Cosmetico\_\allowbreak{}predeterminado} & \texttt{es\_\allowbreak{}predeterminado = 0 OR es\_\allowbreak{}inicial = 1} \\ \hline
+\textit{Objeto\-Cosmetico} & \texttt{CK\_\allowbreak{}Objeto\allowbreak{}Cosmetico\_\allowbreak{}venta} & \texttt{a\_\allowbreak{}la\_\allowbreak{}venta = 0 OR activo = 1} \\ \hline
+\textit{Division} & \texttt{CK\_\allowbreak{}Division\_\allowbreak{}umbral} & \texttt{elo\_\allowbreak{}descenso <= elo\_\allowbreak{}minimo} \\ \hline
+\textit{Leccion} & \texttt{CK\_\allowbreak{}Leccion\_\allowbreak{}pasos} & \texttt{num\_\allowbreak{}pasos > 0} \\ \hline
+\textit{Tipo\-Caja} & \texttt{CK\_\allowbreak{}Tipo\allowbreak{}Caja\_\allowbreak{}precio} & \texttt{precio >= 0} \\ \hline
+\textit{Tipo\-Caja\-Objeto} & \texttt{CK\_\allowbreak{}Tipo\allowbreak{}Caja\allowbreak{}Objeto\_\allowbreak{}probabilidad} & \texttt{probabilidad > 0 AND probabilidad <= 100} \\ \hline
+\multicolumn{3}{|l|}{\textbf{Perfil y personalización}} \\ \hline
+\textit{Avatar} & \texttt{CK\_\allowbreak{}Avatar\_\allowbreak{}formato} & \texttt{formato IN (\textquotesingle{}JPG\textquotesingle{},\allowbreak{}\textquotesingle{}PNG\textquotesingle{})} \\ \hline
+\textit{Avatar} & \texttt{CK\_\allowbreak{}Avatar\_\allowbreak{}tamano} & \texttt{tamano\_\allowbreak{}bytes BETWEEN 1 AND 2097152} \\ \hline
+\textit{Enlace\-Red} & \texttt{CK\_\allowbreak{}Enlace\allowbreak{}Red\_\allowbreak{}orden} & \texttt{orden BETWEEN 1 AND 4} \\ \hline
+\textit{Usuario\-Objeto} & \texttt{CK\_\allowbreak{}Usuario\allowbreak{}Objeto\_\allowbreak{}origen} & \texttt{origen IN (\textquotesingle{}INICIAL\textquotesingle{},\allowbreak{}\textquotesingle{}COMPRA\textquotesingle{},\allowbreak{}\textquotesingle{}CAJA\textquotesingle{},\allowbreak{}\textquotesingle{}NIVEL\textquotesingle{})} \\ \hline
+\multicolumn{3}{|l|}{\textbf{Invitaciones}} \\ \hline
+\textit{Invitacion} & \texttt{CK\_\allowbreak{}Invitacion\_\allowbreak{}estado} & \texttt{estado IN (\textquotesingle{}PENDIENTE\textquotesingle{},\allowbreak{}\textquotesingle{}ACEPTADA\textquotesingle{},\allowbreak{}\textquotesingle{}RECHAZADA\textquotesingle{},\allowbreak{}\textquotesingle{}EXPIRADA\textquotesingle{})} \\ \hline
+\textit{Invitacion} & \texttt{CK\_\allowbreak{}Invitacion\_\allowbreak{}distintos} & \texttt{id\_\allowbreak{}emisor <> id\_\allowbreak{}destinatario} \\ \hline
+\multicolumn{3}{|l|}{\textbf{Clasificación y economía}} \\ \hline
+\textit{Historial\-Division} & \texttt{CK\_\allowbreak{}Historial\allowbreak{}Division\_\allowbreak{}cambio} & \texttt{id\_\allowbreak{}division\_\allowbreak{}anterior IS NULL OR id\_\allowbreak{}division\_\allowbreak{}anterior <> id\_\allowbreak{}division\_\allowbreak{}nueva} \\ \hline
+\textit{Caja} & \texttt{CK\_\allowbreak{}Caja\_\allowbreak{}origen} & \texttt{origen IN (\textquotesingle{}COMPRA\textquotesingle{},\allowbreak{}\textquotesingle{}PARTIDA\textquotesingle{})} \\ \hline
+\textit{Caja} & \texttt{CK\_\allowbreak{}Caja\_\allowbreak{}estado} & \texttt{estado IN (\textquotesingle{}SIN\_\allowbreak{}ABRIR\textquotesingle{},\allowbreak{}\textquotesingle{}ABIERTA\textquotesingle{},\allowbreak{}\textquotesingle{}CADUCADA\textquotesingle{})} \\ \hline
+\textit{Caja} & \texttt{CK\_\allowbreak{}Caja\_\allowbreak{}caducidad} & \texttt{origen = \textquotesingle{}PARTIDA\textquotesingle{} OR fecha\_\allowbreak{}caducidad IS NULL} \\ \hline
+\textit{Caja} & \texttt{CK\_\allowbreak{}Caja\_\allowbreak{}apertura} & \texttt{(estado = \textquotesingle{}ABIERTA\textquotesingle{} AND fecha\_\allowbreak{}apertura IS NOT NULL) OR (estado <> \textquotesingle{}ABIERTA\textquotesingle{} AND fecha\_\allowbreak{}apertura IS NULL)} \\ \hline
+\textit{Caja\-Contenido} & \texttt{CK\_\allowbreak{}Caja\allowbreak{}Contenido\_\allowbreak{}rangos} & \texttt{numero BETWEEN 1 AND 3 AND (monedas\_\allowbreak{}conversion IS NULL OR monedas\_\allowbreak{}conversion > 0)} \\ \hline
+\textit{Movimiento\-Moneda} & \texttt{CK\_\allowbreak{}Movimiento\allowbreak{}Moneda\_\allowbreak{}tipo} & \texttt{tipo IN (\textquotesingle{}PARTIDA\textquotesingle{},\allowbreak{}\textquotesingle{}NIVEL\textquotesingle{},\allowbreak{}\textquotesingle{}COMPRA\textquotesingle{},\allowbreak{}\textquotesingle{}COMPRA\_\allowbreak{}CAJA\textquotesingle{},\allowbreak{}\textquotesingle{}CONVERSION\textquotesingle{},\allowbreak{}\textquotesingle{}DEVOLUCION\textquotesingle{})} \\ \hline
+\textit{Movimiento\-Moneda} & \texttt{CK\_\allowbreak{}Movimiento\allowbreak{}Moneda\_\allowbreak{}importe} & \texttt{(tipo IN (\textquotesingle{}COMPRA\textquotesingle{},\allowbreak{}\textquotesingle{}COMPRA\_\allowbreak{}CAJA\textquotesingle{}) AND importe < 0) OR (tipo IN (\textquotesingle{}PARTIDA\textquotesingle{},\allowbreak{}\textquotesingle{}NIVEL\textquotesingle{},\allowbreak{}\textquotesingle{}CONVERSION\textquotesingle{}) AND importe > 0) OR (tipo = \textquotesingle{}DEVOLUCION\textquotesingle{} AND importe <> 0)} \\ \hline
+\textit{Movimiento\-Moneda} & \texttt{CK\_\allowbreak{}Movimiento\allowbreak{}Moneda\_\allowbreak{}origen} & \texttt{(tipo = \textquotesingle{}PARTIDA\textquotesingle{} AND id\_\allowbreak{}partida IS NOT NULL) OR (tipo = \textquotesingle{}COMPRA\textquotesingle{} AND id\_\allowbreak{}objeto IS NOT NULL) OR (tipo = \textquotesingle{}COMPRA\_\allowbreak{}CAJA\textquotesingle{} AND id\_\allowbreak{}caja IS NOT NULL) OR (tipo = \textquotesingle{}CONVERSION\textquotesingle{} AND id\_\allowbreak{}caja IS NOT NULL AND id\_\allowbreak{}objeto IS NOT NULL) OR tipo IN (\textquotesingle{}NIVEL\textquotesingle{},\allowbreak{}\textquotesingle{}DEVOLUCION\textquotesingle{})} \\ \hline
+\multicolumn{3}{|l|}{\textbf{Relaciones entre jugadores y tutorial}} \\ \hline
+\textit{Amistad} & \texttt{CK\_\allowbreak{}Amistad\_\allowbreak{}par\_\allowbreak{}ordenado} & \texttt{id\_\allowbreak{}usuario\_\allowbreak{}a < id\_\allowbreak{}usuario\_\allowbreak{}b} \\ \hline
+\textit{Solicitud} & \texttt{CK\_\allowbreak{}Solicitud\_\allowbreak{}distintos} & \texttt{id\_\allowbreak{}solicitante <> id\_\allowbreak{}destinatario} \\ \hline
+\textit{Progreso\-Tutorial} & \texttt{CK\_\allowbreak{}Progreso\allowbreak{}Tutorial\_\allowbreak{}paso} & \texttt{paso\_\allowbreak{}actual >= 1} \\ \hline
+\end{longtable}
+\end{center}

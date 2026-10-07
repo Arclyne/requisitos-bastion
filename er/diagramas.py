@@ -23,10 +23,7 @@ VERBOS = {
     "FK_TipoCajaObjeto_ObjetoCosmetico":    ("Sortea", "hija", None, None),
     # Cuenta y acceso
     "FK_Sesion_Usuario":                    ("Abre", "padre", None, None),
-    "FK_CodigoSegundoFactor_Usuario":       ("Recibe", "padre", None, None),
-    "FK_TokenVerificacionCorreo_Usuario":   ("Verifica", "padre", None, None),
-    "FK_TokenRecuperacion_Usuario":         ("Recupera", "padre", None, None),
-    "FK_AceptacionTerminos_Usuario":        ("Acepta", "padre", None, None),
+    "FK_CodigoVerificacion_Usuario":        ("Recibe", "padre", None, None),
     # Perfil y personalización
     "FK_HistorialNickname_Usuario":         ("Cambia nombre", "padre", None, None),
     "FK_Avatar_Usuario":                    ("Sube", "padre", None, None),
@@ -48,13 +45,9 @@ VERBOS = {
     "FK_OfertaTablas_Participacion":        ("Ofrece", "padre", None, None),
     "FK_EnlaceEspectador_Participacion":    ("Comparte", "padre", None, None),
     # Emparejamiento, salas y chat
-    "FK_ColaEmparejamiento_Usuario":        ("Espera en", "padre", None, None),
-    "FK_ColaEmparejamiento_Modo":           ("Busca", "hija", None, None),
     "FK_Sala_Anfitrion":                    ("Crea", "padre", "anfitrión", None),
     "FK_Sala_Modo":                         ("Usa", "hija", None, None),
     "FK_Sala_Partida":                      ("Inicia", "hija", None, None),
-    "FK_SalaParticipante_Sala":             ("Admite", "padre", None, None),
-    "FK_SalaParticipante_Usuario":          ("Ocupa", "padre", None, None),
     "FK_Invitacion_Sala":                   ("Da acceso a", "hija", None, None),
     "FK_Invitacion_Emisor":                 ("Envía", "padre", "emisor", None),
     "FK_Invitacion_Destinatario":           ("Recibe", "padre", "destinatario", None),
@@ -90,7 +83,6 @@ VERBOS = {
     # Moderación y bitácoras
     "FK_Reporte_Denunciante":               ("Emite", "padre", "reportante", None),
     "FK_Reporte_Reportado":                 ("Señala", "hija", "reportado", None),
-    "FK_Reporte_MotivoReporte":             ("Clasifica", "padre", None, None),
     "FK_Reporte_ParticipacionDenunciante":  ("Sobre", "hija", "del reportante", None),
     "FK_Reporte_ParticipacionReportado":    ("Sobre", "hija", "del reportado", None),
     "FK_Reporte_Moderador":                 ("Revisa", "padre", "moderador", None),
@@ -113,7 +105,7 @@ PADRE_TOTAL = {
     "FK_UsuarioObjeto_Usuario",              # el alta otorga los objetos iniciales (CU-02 RN-08)
     "FK_EstadisticaModo_Usuario",            # una fila por modo desde el alta (CU-02 RN-06)
     "FK_Participacion_Partida",              # una partida tiene al menos un participante
-    "FK_ParticipacionObjeto_Participacion",  # una fila por ranura al empezar (CU-17 RN-06)
+    "FK_ParticipacionObjeto_Participacion",  # una fila por ranura al empezar (CU-07 RN-06)
 }
 
 # ---------------------------------------------------------------- diagramas
@@ -122,33 +114,68 @@ PADRE_TOTAL = {
 # rombos: posición fija para un rombo concreto (opcional).
 # pagina: orientación de la página del documento en que va el diagrama; la
 # compactación de disposicion.py busca el tamaño de texto mayor en ella.
+# esquema: "nucleo" (er/esquema.json) o "fase" (núcleo y fase posterior juntos; las
+# entidades del núcleo aparecen solo como frontera, sin atributos).
 DIAGRAMAS = [
     # El diagrama de partida, tal como se dibujó antes de los casos de uso. Su
     # modelo (modelos/original.py) está escrito a mano y no se recalcula.
     dict(id="original", titulo="Diagrama original", fijo=True),
+    # ------------------------------------------------------------ núcleo (D-22)
+    dict(id="general", pagina="vertical", titulo="Vista general del núcleo", areas=None, atributos=False,
+         posiciones=None),
     dict(
         id="catalogos", pagina="horizontal", titulo="Catálogos precargados",
         areas=["Catálogos precargados (D-09)"],
+        posiciones={"Modo": (0, 0), "PalabraProhibida": (2600, 0)},
+    ),
+    dict(
+        id="cuenta", pagina="horizontal", titulo="Cuenta y acceso",
+        areas=["Cuenta y acceso"],
+        posiciones={"Usuario": (0, 0), "Sesion": (2900, -900), "CodigoVerificacion": (2900, 1100)},
+    ),
+    dict(
+        id="partida", pagina="horizontal", titulo="Partida",
+        areas=["Partida"],
         posiciones={
-            "Ranura": (0, 0), "ObjetoCosmetico": (2300, 0), "TipoCajaObjeto": (4500, 0),
-            "TipoCaja": (6600, 0),
-            "Modo": (0, 2700), "Division": (2300, 2700), "NivelIA": (4500, 2700),
-            "Leccion": (6600, 2700),
-            "PalabraProhibida": (1150, 5000), "MotivoReporte": (4500, 5000),
+            "Partida": (0, 0), "Participacion": (2600, 0),
+            "Modo": (-1800, 1300), "Jugada": (1300, 2100), "Usuario": (3900, 1700),
+            "OfertaTablas": (4600, -600),
         },
     ),
     dict(
-        id="cuenta", pagina="vertical", titulo="Cuenta y acceso",
-        areas=["Cuenta y acceso"],
+        id="salas", pagina="horizontal", titulo="Salas y chat",
+        areas=["Salas y chat"],
+        posiciones={"Usuario": (0, 0), "Sala": (2600, 0), "Partida": (5200, 0), "Modo": (2600, -2000),
+                    "Mensaje": (2600, 2000)},
+    ),
+    dict(
+        id="jugadores", pagina="horizontal", titulo="Clasificación y relaciones entre jugadores",
+        areas=["Clasificación", "Relaciones entre jugadores"],
+        posiciones={"Usuario": (0, 0), "EstadisticaModo": (-2600, 0), "Modo": (-5000, 0),
+                    "Silencio": (2000, -1200), "Bloqueo": (2000, 1200)},
+    ),
+    dict(
+        id="moderacion", pagina="vertical", titulo="Moderación y bitácoras",
+        areas=["Moderación y bitácoras"],
         posiciones={
             "Usuario": (0, 0),
-            "Sesion": (2700, -2600), "CodigoSegundoFactor": (2900, -1300),
-            "TokenVerificacionCorreo": (2900, 0), "TokenRecuperacion": (2900, 1300),
-            "AceptacionTerminos": (2700, 2600),
+            "Reporte": (2600, -1700), "Participacion": (5200, -1700),
+            "Sancion": (2600, 1600), "Apelacion": (2600, 3700),
+            "BitacoraModeracion": (-2500, -1300), "BitacoraAcceso": (-2500, 1400),
+        },
+        rombos={"FK_Sancion_Sustituta": (4300, 1600)},
+    ),
+    # ------------------------------------------------------------ fase posterior (D-22)
+    dict(
+        id="fp-catalogos", esquema="fase", pagina="horizontal", titulo="Catálogos de la fase posterior",
+        areas=["Catálogos precargados de la fase posterior (D-09)"],
+        posiciones={
+            "Ranura": (0, 0), "ObjetoCosmetico": (2300, 0), "TipoCajaObjeto": (4500, 0), "TipoCaja": (6600, 0),
+            "Division": (1150, 2700), "NivelIA": (3400, 2700), "Leccion": (5600, 2700),
         },
     ),
     dict(
-        id="perfil", pagina="horizontal", titulo="Perfil y personalización",
+        id="fp-perfil", esquema="fase", pagina="horizontal", titulo="Perfil y personalización",
         areas=["Perfil y personalización"],
         posiciones={
             "Usuario": (0, 0),
@@ -158,32 +185,20 @@ DIAGRAMAS = [
         },
     ),
     dict(
-        id="partida", pagina="horizontal", titulo="Partida",
-        areas=["Partida"],
+        id="fp-partida", esquema="fase", pagina="horizontal", titulo="Aspecto en partida, espectador e invitaciones",
+        areas=["Aspecto en partida y espectador", "Invitaciones"],
         posiciones={
-            "Partida": (0, 0), "Participacion": (2600, 0),
-            "Modo": (-1800, 1300), "NivelIA": (-400, 2300),
-            "Jugada": (1300, 2100), "Usuario": (3000, 2300),
-            "ParticipacionObjeto": (4700, 1400), "ObjetoCosmetico": (6400, 1400),
-            "OfertaTablas": (5000, -500), "EnlaceEspectador": (4800, 2900),
+            "Participacion": (0, 0), "ParticipacionObjeto": (2400, -900), "ObjetoCosmetico": (4800, -900),
+            "EnlaceEspectador": (2400, 1000),
+            "Invitacion": (-2600, 1600), "Sala": (-2600, 3600), "Usuario": (-5000, 1600),
         },
     ),
     dict(
-        id="salas", pagina="vertical", titulo="Emparejamiento, salas y chat",
-        areas=["Emparejamiento, salas y chat"],
-        posiciones={
-            "Usuario": (0, 0), "Sala": (2600, 0), "Partida": (5200, 0),
-            "ColaEmparejamiento": (0, -2200), "Modo": (2600, -2200),
-            "Invitacion": (1300, -1200), "SalaParticipante": (1300, 1100),
-            "Mensaje": (1300, 2500),
-        },
-    ),
-    dict(
-        id="economia", pagina="horizontal", titulo="Clasificación y economía",
+        id="fp-economia", esquema="fase", pagina="horizontal", titulo="Clasificación y economía",
         areas=["Clasificación y economía"],
         posiciones={
             "Usuario": (0, 0),
-            "EstadisticaModo": (-2600, 0), "Modo": (-2600, -2200), "Division": (-5000, 0),
+            "EstadisticaModo": (-2600, 0), "Division": (-5000, 0),
             "HistorialDivision": (-3900, 1900),
             "Caja": (2500, 0), "TipoCaja": (2500, -2000), "CajaContenido": (4700, 0),
             "ObjetoCosmetico": (4700, 2300), "MovimientoMoneda": (2000, 2200),
@@ -191,28 +206,12 @@ DIAGRAMAS = [
         },
     ),
     dict(
-        id="social", pagina="vertical", titulo="Relaciones entre jugadores y tutorial",
+        id="fp-social", esquema="fase", pagina="vertical", titulo="Relaciones entre jugadores y tutorial",
         areas=["Relaciones entre jugadores y tutorial"],
         posiciones={
             "Usuario": (0, 0),
             "Amistad": (-1600, -1150), "Solicitud": (1600, -1150),
-            "Silencio": (-1600, 1150), "Bloqueo": (1600, 1150),
             "ProgresoTutorial": (0, 1500), "Leccion": (0, 2900),
         },
-    ),
-    dict(
-        id="moderacion", pagina="vertical", titulo="Moderación y bitácoras",
-        areas=["Moderación y bitácoras"],
-        posiciones={
-            "Usuario": (0, 0),
-            "Reporte": (2600, -1700), "MotivoReporte": (2600, -3700), "Participacion": (5200, -1700),
-            "Sancion": (2600, 1600), "Apelacion": (2600, 3700),
-            "BitacoraModeracion": (-2500, -1300), "BitacoraAcceso": (-2500, 1400),
-        },
-        rombos={"FK_Sancion_Sustituta": (4300, 1600)},
-    ),
-    dict(
-        id="general", pagina="vertical", titulo="Vista general", areas=None, atributos=False,
-        posiciones=None,        # disposición automática por fuerzas
     ),
 ]

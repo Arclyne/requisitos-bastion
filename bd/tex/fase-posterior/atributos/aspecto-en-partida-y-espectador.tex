@@ -1,0 +1,25 @@
+% Archivo generado por bd/generar_tablas.ps1 a partir de bd/fase_posterior/crear_tablas_fase_posterior.sql. No editar a mano.
+\subsubsection*{
+Aspecto en partida y espectador
+}
+\addcontentsline{toc}{subsubsection}{
+Aspecto en partida y espectador
+}
+
+\atributosde{ParticipacionObjeto}{Aspecto con el que cada jugador entró a la partida, una fila por ranura; no cambia aunque el jugador equipe otra cosa (\mbox{DES-07} \mbox{RN-03}, \mbox{DES-12} \mbox{RN-03}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & No & PK, FK & Partida. \\ \hline
+\texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Jugador. \\ \hline
+\texttt{id\_\allowbreak{}ranura} & \texttt{TINYINT} & No & PK, FK & Ranura. \\ \hline
+\texttt{id\_\allowbreak{}objeto} & \texttt{INT} & No & FK & Objeto que tenía equipado en esa ranura al empezar. \\ \hline
+\end{tablaatributos}
+
+\atributosde{EnlaceEspectador}{Enlace compartido para ver una partida desde fuera del juego. Es lo único que se guarda de los espectadores (\mbox{D-19}).}
+\begin{tablaatributos}
+\texttt{id\_\allowbreak{}enlace} & \texttt{INT}, identidad & No & PK & Identificador del enlace. \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & No & FK & Partida que se comparte; el enlace deja de valer cuando termina. \\ \hline
+\texttt{id\_\allowbreak{}creador} & \texttt{INT} & No & FK & Participante que lo compartió. \\ \hline
+\texttt{token\_\allowbreak{}hash} & \texttt{VARBINARY(32)} & No & UQ & Resumen del token del enlace. \\ \hline
+\texttt{fecha\_\allowbreak{}creacion} & \texttt{DATETIME2(0)} & No &  & Momento en que se compartió. Por omisión, la fecha actual. \\ \hline
+\end{tablaatributos}
+
