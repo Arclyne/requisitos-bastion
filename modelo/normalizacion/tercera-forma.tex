@@ -15,7 +15,7 @@ La tabla recoge las dependencias transitivas encontradas —un atributo no primo
 \textbf{Tabla} & \textbf{Dependencia o dato derivado} & \textbf{Transformación} \\ \hline
 \endhead
 \textit{Partida} & \at{id\_partida} $\rightarrow$ \at{id\_modo} $\rightarrow$ \at{num\_jugadores} & \at{num\_jugadores}, \at{tamano\_tablero} y \at{muros\_por\_jugador} pasan a \textit{Modo}. \\ \hline
-\textit{Partida} & (\at{fecha\_inicio}, \at{fecha\_fin}) $\rightarrow$ \at{duracion} & Se elimina \at{duracion}; se calcula al consultar (\mbox{CU-25} \mbox{RN-02}). \\ \hline
+\textit{Partida} & (\at{fecha\_inicio}, \at{fecha\_fin}) $\rightarrow$ \at{duracion} & Se elimina \at{duracion}; se calcula al consultar (\mbox{CU-26} \mbox{RN-02}). \\ \hline
 \textit{Usuario} & \at{fecha\_nacimiento} $\rightarrow$ \at{edad} & Se elimina \at{edad}; guardarla obligaría a actualizarla en cada cumpleaños (\mbox{CU-02}). \\ \hline
 \textit{Estadisticas} & (\at{partidas\_ganadas}, \at{partidas\_jugadas}) $\rightarrow$ \at{porcentaje\_victorias} & Se elimina; se calcula al mostrar el perfil (\mbox{DES-08} \mbox{RN-01}). \\ \hline
 \textit{Skin} & \at{id\_skin} $\rightarrow$ \at{tipo} $\rightarrow$ datos del tipo & El tipo pasa a ser la entidad \textit{Ranura}; \textit{ObjetoCosmetico} guarda solo \at{id\_ranura}. \\ \hline

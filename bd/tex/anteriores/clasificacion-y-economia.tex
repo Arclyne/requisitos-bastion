@@ -6,22 +6,22 @@ Clasificación y economía
 Clasificación y economía
 }
 
-\atributosde{EstadisticaModo}{Estadísticas y elo de cada cuenta en cada modo, solo de partidas clasificatorias (\mbox{CU-17} \mbox{RN-12}); es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, \mbox{D-04}).}
+\atributosde{EstadisticaModo}{Estadísticas y elo de cada cuenta en cada modo, solo de partidas clasificatorias (\mbox{CU-18} \mbox{RN-12}); es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, \mbox{D-04}).}
 \begin{tablaatributos}
 \texttt{id\_\allowbreak{}usuario} & \texttt{INT} & No & PK, FK & Cuenta. \\ \hline
 \texttt{id\_\allowbreak{}modo} & \texttt{TINYINT} & No & PK, FK & Modo. \\ \hline
-\texttt{puntos\_\allowbreak{}elo} & \texttt{SMALLINT} & No &  & Elo actual en el modo; lo escribe solo el \mbox{CU-17}. Por omisión, \texttt{1000}. \\ \hline
-\texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}partida} & \texttt{DATETIME2(0)} & Sí &  & Fin de la última partida clasificatoria del modo: cuándo se alcanzó el elo actual; desempata el ranking (\mbox{CU-24} \mbox{RN-05}). \\ \hline
+\texttt{puntos\_\allowbreak{}elo} & \texttt{SMALLINT} & No &  & Elo actual en el modo; lo escribe solo el \mbox{CU-18}. Por omisión, \texttt{1000}. \\ \hline
+\texttt{fecha\_\allowbreak{}ultima\_\allowbreak{}partida} & \texttt{DATETIME2(0)} & Sí &  & Fin de la última partida clasificatoria del modo: cuándo se alcanzó el elo actual; desempata el ranking (\mbox{CU-25} \mbox{RN-05}). \\ \hline
 \texttt{elo\_\allowbreak{}maximo} & \texttt{SMALLINT} & No &  & Elo más alto alcanzado. Por omisión, \texttt{1000}. \\ \hline
-\texttt{partidas\_\allowbreak{}jugadas} & \texttt{INT} & No &  & Partidas clasificatorias, incluidas las tablas, que no son victoria ni derrota (\mbox{CU-17} \mbox{FA-03}). Por omisión, \texttt{0}. \\ \hline
+\texttt{partidas\_\allowbreak{}jugadas} & \texttt{INT} & No &  & Partidas clasificatorias, incluidas las tablas, que no son victoria ni derrota (\mbox{CU-18} \mbox{FA-03}). Por omisión, \texttt{0}. \\ \hline
 \texttt{partidas\_\allowbreak{}ganadas} & \texttt{INT} & No &  & Victorias. El porcentaje se calcula y no se guarda (\mbox{DES-08} \mbox{RN-01}). Por omisión, \texttt{0}. \\ \hline
 \texttt{partidas\_\allowbreak{}perdidas} & \texttt{INT} & No &  & Derrotas, incluidas rendiciones y abandonos. Por omisión, \texttt{0}. \\ \hline
-\texttt{racha\_\allowbreak{}actual} & \texttt{SMALLINT} & No &  & Victorias seguidas por llegada a meta (\mbox{CU-17} \mbox{RN-09}). Por omisión, \texttt{0}. \\ \hline
+\texttt{racha\_\allowbreak{}actual} & \texttt{SMALLINT} & No &  & Victorias seguidas por llegada a meta (\mbox{CU-18} \mbox{RN-09}). Por omisión, \texttt{0}. \\ \hline
 \texttt{mejor\_\allowbreak{}racha} & \texttt{SMALLINT} & No &  & Racha más larga. Por omisión, \texttt{0}. \\ \hline
 \texttt{tiempo\_\allowbreak{}total\_\allowbreak{}jugado} & \texttt{INT} & No &  & Segundos jugados en partidas clasificatorias del modo. Por omisión, \texttt{0}. \\ \hline
 \texttt{barreras\_\allowbreak{}colocadas} & \texttt{INT} & No &  & Muros colocados, contados desde \textit{Jugada} al cerrar cada partida. Por omisión, \texttt{0}. \\ \hline
-\texttt{abandonos} & \texttt{INT} & No &  & Abandonos en partidas en línea, para la moderación (\mbox{CU-16} \mbox{RN-05}). Por omisión, \texttt{0}. \\ \hline
-\texttt{id\_\allowbreak{}division} & \texttt{TINYINT} & Sí & FK & División actual; nula hasta jugar cinco partidas en el modo (\mbox{CU-17} \mbox{RN-12}). \\ \hline
+\texttt{abandonos} & \texttt{INT} & No &  & Abandonos en partidas en línea, para la moderación (\mbox{CU-17} \mbox{RN-05}). Por omisión, \texttt{0}. \\ \hline
+\texttt{id\_\allowbreak{}division} & \texttt{TINYINT} & Sí & FK & División actual; nula hasta jugar cinco partidas en el modo (\mbox{CU-18} \mbox{RN-12}). \\ \hline
 \end{tablaatributos}
 
 \atributosde{HistorialDivision}{Cambio de división de una cuenta en un modo. No se deduce de una sola partida por las partidas de margen, así que se guarda (\mbox{DES-08}).}

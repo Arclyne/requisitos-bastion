@@ -17,18 +17,18 @@
 \multicolumn{3}{|l|}{\textbf{Partida}} \\ \hline
 \textit{Partida} & Fuerte & Partida clasificatoria o privada. Se guarda completa porque de ella dependen el historial, la repetición, la reconexión y los reportes. \\ \hline
 \textit{Participacion} & Asociativa (N:M) & Participación de un jugador en una partida; es la relación N:M entre Usuario y Partida (relación Participa del diagrama).  \\ \hline
-\textit{Jugada} & Débil & Movimiento de peón o colocación de muro, en orden. El tablero se reconstruye sumando las jugadas; los muros no tienen tabla propia (\mbox{CU-13}). \\ \hline
-\textit{Oferta\-Tablas} & Fuerte & Oferta de tablas en una partida de dos jugadores (\mbox{CU-14}). Se guarda para la reconexión y como prueba de acoso. \\ \hline
+\textit{Jugada} & Débil & Movimiento de peón o colocación de muro, en orden. El tablero se reconstruye sumando las jugadas; los muros no tienen tabla propia (\mbox{CU-14}). \\ \hline
+\textit{Oferta\-Tablas} & Fuerte & Oferta de tablas en una partida de dos jugadores (\mbox{CU-15}). Se guarda para la reconexión y como prueba de acoso. \\ \hline
 \multicolumn{3}{|l|}{\textbf{Salas y chat}} \\ \hline
-\textit{Sala} & Fuerte & Sala privada con código, con los ajustes que elige el anfitrión (\mbox{CU-09}). \\ \hline
-\textit{Mensaje} & Fuerte & Mensaje de chat. Se guarda porque el reporte lo adjunta como prueba (\mbox{CU-19}, \mbox{CU-26}). \\ \hline
+\textit{Sala} & Fuerte & Sala privada con código, con los ajustes que elige el anfitrión (\mbox{CU-10}). \\ \hline
+\textit{Mensaje} & Fuerte & Mensaje de chat. Se guarda porque el reporte lo adjunta como prueba (\mbox{CU-20}, \mbox{CU-27}). \\ \hline
 \multicolumn{3}{|l|}{\textbf{Clasificación}} \\ \hline
-\textit{Estadistica\-Modo} & Asociativa (N:M) & Estadísticas y elo de cada cuenta en cada modo, solo de partidas clasificatorias (\mbox{CU-17} \mbox{RN-12}); es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, \mbox{D-04}). \\ \hline
+\textit{Estadistica\-Modo} & Asociativa (N:M) & Estadísticas y elo de cada cuenta en cada modo, solo de partidas clasificatorias (\mbox{CU-18} \mbox{RN-12}); es la relación N:M entre Usuario y Modo (relación Tiene del diagrama, ahora por modo, \mbox{D-04}). \\ \hline
 \multicolumn{3}{|l|}{\textbf{Relaciones entre jugadores}} \\ \hline
 \textit{Silencio} & Asociativa (N:M) & Jugador silenciado por otro; solo lo consulta quien silenció (\mbox{DES-10}). \\ \hline
 \textit{Bloqueo} & Asociativa (N:M) & Bloqueo entre dos jugadores; impide emparejar, invitar, buscar, solicitar y compartir sala (\mbox{DES-10} \mbox{RN-05}). \\ \hline
 \multicolumn{3}{|l|}{\textbf{Moderación y bitácoras}} \\ \hline
-\textit{Reporte} & Fuerte & Denuncia de un jugador contra otro. Las pruebas se adjuntan por referencia a la partida, no por copia (\mbox{CU-26} \mbox{RN-01}). \\ \hline
+\textit{Reporte} & Fuerte & Denuncia de un jugador contra otro. Las pruebas se adjuntan por referencia a la partida, no por copia (\mbox{CU-27} \mbox{RN-01}). \\ \hline
 \textit{Sancion} & Fuerte & Sanción aplicada por un moderador, de ámbito de cuenta o de chat (\mbox{D-05}). Sustituye al Baneo del diagrama; al retirarse se desactiva, no se borra. \\ \hline
 \textit{Apelacion} & Fuerte & Apelación de una sanción por parte del sancionado; hay a lo sumo una por sanción (\mbox{DES-19} \mbox{RN-01}). \\ \hline
 \textit{Bitacora\-Moderacion} & Fuerte & Registro de cada acción de moderación y administración, incluida la consulta de las bitácoras (\mbox{DES-22} \mbox{RN-04}). Solo admite inserción. \\ \hline

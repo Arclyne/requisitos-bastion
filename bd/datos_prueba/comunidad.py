@@ -22,17 +22,17 @@ TUTORIAL = [
 # Plazas de la sala abierta: usuario, sala, plaza, listo, fecha_union (el anfitrión nace listo).
 SALA_PARTICIPANTES = [(5, 2, 1, 1, "2026-09-01 17:50:00"), (7, 2, 2, 0, "2026-09-01 17:52:00")]
 
-# id: sala, emisor, destinatario, fecha, estado (vigencia de 60 s, CU-22 RN-03).
+# id: sala, emisor, destinatario, fecha, estado (vigencia de 60 s, CU-23 RN-03).
 INVITACIONES = {
     1: (1, 6, 4, "2026-08-31 16:21:00", "EXPIRADA"),
     2: (1, 6, 4, "2026-08-31 16:23:00", "RECHAZADA"),
-    4: (1, 6, 7, "2026-08-31 16:24:00", "ACEPTADA"),     # el invitado entra sin el código (CU-22 RN-04)
+    4: (1, 6, 7, "2026-08-31 16:24:00", "ACEPTADA"),     # el invitado entra sin el código (CU-23 RN-04)
     3: (2, 5, 2, "2026-09-01 17:59:40", "PENDIENTE"),
 }
 
 COLA = [(4, 3, 3, "2026-09-01 17:55:00")]                  # usuario, modo, minutos_reloj, fecha_entrada
 
-# autor, canal, id_partida, id_sala, texto, fecha_envio (CU-19).
+# autor, canal, id_partida, id_sala, texto, fecha_envio (CU-20).
 MENSAJES = [
     (9, "GLOBAL", None, None, "Nadie aquí sabe jugar", "2026-08-25 21:00:00"),
     (9, "PARTIDA", 9, None, "Juegas horrible, mejor ni lo intentes", "2026-08-26 17:11:05"),
@@ -50,7 +50,7 @@ MENSAJES = [
 ENLACES_ESPECTADOR = {1: (12, 3, "2026-09-01 17:40:00")}   # id: partida, creador, fecha
 
 # id: denunciante, reportado, motivo, descripción, partida, fecha, estado, moderador,
-#     fecha_asignacion, nota_resolucion, fecha_resolucion (CU-26, DES-17).
+#     fecha_asignacion, nota_resolucion, fecha_resolucion (CU-27, DES-17).
 REPORTES = {
     1: (3, 9, 1, "Me insultó en el chat de la partida.", 9, "2026-08-26 17:20:00", "RESUELTO_CON_SANCION", 2,
         "2026-08-27 09:50:00", "Insultos comprobados en el chat de la partida.", "2026-08-27 10:00:00"),
@@ -62,7 +62,7 @@ REPORTES = {
         "2026-08-23 09:55:00", "El nickname suplanta al equipo del juego.", "2026-08-23 10:00:00"),
     5: (4, 3, 4, "Me saltó y llegó a la meta muy rápido; creo que usa un programa.", 5, "2026-07-26 17:40:00",
         "RESUELTO_SIN_SANCION", 2, "2026-07-27 09:00:00",
-        "La repetición muestra jugadas legales; el salto es válido (CU-12 RN-03).", "2026-07-27 09:20:00"),
+        "La repetición muestra jugadas legales; el salto es válido (CU-13 RN-03).", "2026-07-27 09:20:00"),
 }
 
 # id: sancionado, moderador, reporte, ámbito, tipo, motivo, inicio, fin, retiro, sustituta (DES-18).

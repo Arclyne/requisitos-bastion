@@ -1,8 +1,8 @@
-\subsection*{CU-09: Crear una sala privada}
-\addcontentsline{toc}{subsection}{CU-09: Crear una sala privada}
-\label{cu-09}
+\subsection*{CU-10: Crear una sala privada}
+\addcontentsline{toc}{subsection}{CU-10: Crear una sala privada}
+\label{cu-10}
 
-\begin{fichacu}{CU-09}{Crear una sala privada}
+\begin{fichacu}{CU-10}{Crear una sala privada}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador o Invitado, como anfitrión}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
@@ -31,7 +31,7 @@
       \item El Servidor de partidas crea la \textit{SalaParticipante} del anfitrión, con su plaza, \texttt{listo} en verdadero y la \texttt{fecha\_\allowbreak{}union}, y confirma la transacción. \textit{(Ver \mbox{EX-02})}
       \item El Servidor de partidas responde con \texttt{CREATE\_\allowbreak{}ROOM\_\allowbreak{}OK}, el \texttt{codigo} y el estado de la sala.
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}WaitingRoom} con el código grande y copiable, las plazas del modo con el anfitrión ocupando la primera y las demás libres, los ajustes, el chat de sala y la opción ``Iniciar partida'' deshabilitada. \textit{(Ver \mbox{FA-05}, \mbox{FA-06}, \mbox{FA-07})}
-      \item Los demás jugadores entran a la sala con el \mbox{CU-10} o por invitación con el \mbox{CU-22}, y se declaran listos; el Servidor de partidas notifica cada cambio a todos los miembros con \texttt{ROOM\_\allowbreak{}UPDATED}. Mientras esperan, el anfitrión puede expulsar a un jugador de la sala con el \mbox{CU-11}.
+      \item Los demás jugadores entran a la sala con el \mbox{CU-11} o por invitación con el \mbox{CU-23}, y se declaran listos; el Servidor de partidas notifica cada cambio a todos los miembros con \texttt{ROOM\_\allowbreak{}UPDATED}. Mientras esperan, el anfitrión puede expulsar a un jugador de la sala con el \mbox{CU-12}.
       \item Cuando todas las plazas están ocupadas y todos los miembros están listos, el SJM habilita ``Iniciar partida'' (\mbox{RN-05}).
       \item El anfitrión da click en ``Iniciar partida'' y el SJM envía el mensaje \texttt{START\_\allowbreak{}ROOM\_\allowbreak{}MATCH\_\allowbreak{}REQUEST}.
       \item El Servidor de partidas vuelve a verificar que todas las plazas estén ocupadas, que todos estén listos y que ningún miembro haya entrado mientras tanto a otra partida. \textit{(Ver \mbox{FA-08})}
@@ -40,19 +40,19 @@
       \item El Servidor de partidas inicia una transacción y crea la \textit{Partida} con \texttt{tipo} igual a \texttt{PRIVADA}, el \texttt{id\_\allowbreak{}modo}, los \texttt{minutos\_\allowbreak{}reloj}, \texttt{estado} igual a \texttt{EN\_\allowbreak{}CURSO} y la \texttt{fecha\_\allowbreak{}inicio}; y una \textit{Participacion} por miembro con su orden de turno, su símbolo, los \texttt{muros\_\allowbreak{}restantes} elegidos por el anfitrión y su reloj, sin elo de entrada porque la partida no lo modificará (\mbox{RN-03}). \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas cambia el \texttt{estado} de la \textit{Sala} a \texttt{EN\_\allowbreak{}PARTIDA}, le asocia el \texttt{id\_\allowbreak{}partida} y confirma la transacción. \textit{(Ver \mbox{EX-02})}
       \item El Servidor de partidas notifica a todos los miembros con \texttt{MATCH\_\allowbreak{}STARTED}.
-      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Match} y el flujo continúa en el \mbox{CU-12} o en el \mbox{CU-13}.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Match} y el flujo continúa en el \mbox{CU-13} o en el \mbox{CU-14}.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El anfitrión ya está en una partida, en la cola o en otra sala}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas responde con \texttt{CREATE\_\allowbreak{}ROOM\_\allowbreak{}FAILED} y el motivo \texttt{YA\_\allowbreak{}EN\_\allowbreak{}PARTIDA}, \texttt{YA\_\allowbreak{}EN\_\allowbreak{}COLA} o \texttt{YA\_\allowbreak{}EN\_\allowbreak{}SALA}.
-      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} con el motivo y la acción correspondiente: volver a la partida (\mbox{CU-18}), cancelar la búsqueda (\mbox{FA-03} del \mbox{CU-08}) o volver a la sala.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} con el motivo y la acción correspondiente: volver a la partida (\mbox{CU-19}), cancelar la búsqueda (\mbox{FA-03} del \mbox{CU-09}) o volver a la sala.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-02}: El jugador prefiere unirse a una sala existente}\par
     \begin{cuenum}[start=1]
       \item El jugador selecciona ``Unirse con código''.
-      \item El flujo continúa en el \mbox{CU-10} Unirse a una sala con código.
+      \item El flujo continúa en el \mbox{CU-11} Unirse a una sala con código.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-03}: La cuenta tiene una sanción de ámbito de cuenta}\par
@@ -125,7 +125,7 @@
     \begin{cuenum}[start=1]
       \item El Servidor de partidas detecta la pérdida de conexión del anfitrión con la sala abierta.
       \item El Servidor de partidas espera sesenta segundos a que reconecte; si no lo hace, cierra la sala conforme al \mbox{FA-06}.
-      \item Si la conexión se pierde con la partida ya creada, rige el \mbox{CU-18}.
+      \item Si la conexión se pierde con la partida ya creada, rige el \mbox{CU-19}.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{EX-05}: El mensaje recibido está malformado}\par
     \begin{cuenum}[start=1]
@@ -142,8 +142,8 @@
     \end{cureglas}} \\ \hline
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} El código de sala tiene seis caracteres alfanuméricos en mayúsculas, excluye los que se confunden a la vista —0 y O, 1 e I— y es único entre las salas abiertas. Puede reutilizarse una vez cerrada la sala.
-      \item \textbf{\mbox{RN-02}} Un jugador puede estar en una sola sala abierta a la vez, y no puede estar en una sala mientras está en la cola de emparejamiento (\mbox{CU-08}) o tiene una partida sin terminar.
-      \item \textbf{\mbox{RN-03}} Las partidas de sala privada son amistosas: no cambian el elo ni la \textit{EstadisticaModo} de nadie, juegue quien juegue y con los muros que haya elegido el anfitrión. Solo las partidas que crea el emparejamiento del \mbox{CU-08} son clasificatorias (\mbox{RN-03} del \mbox{CU-17}).
+      \item \textbf{\mbox{RN-02}} Un jugador puede estar en una sola sala abierta a la vez, y no puede estar en una sala mientras está en la cola de emparejamiento (\mbox{CU-09}) o tiene una partida sin terminar.
+      \item \textbf{\mbox{RN-03}} Las partidas de sala privada son amistosas: no cambian el elo ni la \textit{EstadisticaModo} de nadie, juegue quien juegue y con los muros que haya elegido el anfitrión. Solo las partidas que crea el emparejamiento del \mbox{CU-09} son clasificatorias (\mbox{RN-03} del \mbox{CU-18}).
       \item \textbf{\mbox{RN-04}} El anfitrión elige los muros por jugador entre uno y veinte, y el reloj entre tres, cinco y diez minutos. El tamaño del tablero y el número de plazas los fija el \textit{Modo}.
       \item \textbf{\mbox{RN-05}} La partida solo puede iniciarse con todas las plazas ocupadas y todos los miembros listos.
       \item \textbf{\mbox{RN-06}} Cambiar los ajustes de la sala retira la marca de listo a todos los miembros salvo al anfitrión.
@@ -153,7 +153,7 @@
       \item \textbf{\mbox{RN-08}} Una sala sin actividad durante treinta minutos se cierra sola.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué los muros de la sala se copian a la participación.}\par
-    El anfitrión puede elegir un número de muros distinto del que fija el \textit{Modo}. Ese valor se guarda en la \textit{Sala}, pero la partida no lo lee de allí: cada \textit{Participacion} nace con sus \texttt{muros\_\allowbreak{}restantes}, igual que en una partida clasificatoria. Así, la partida no depende de la sala una vez creada, y el \mbox{CU-13} descuenta muros sin saber si la partida vino del emparejamiento o de una sala.} \\ \hline
+    El anfitrión puede elegir un número de muros distinto del que fija el \textit{Modo}. Ese valor se guarda en la \textit{Sala}, pero la partida no lo lee de allí: cada \textit{Participacion} nace con sus \texttt{muros\_\allowbreak{}restantes}, igual que en una partida clasificatoria. Así, la partida no depende de la sala una vez creada, y el \mbox{CU-14} descuenta muros sin saber si la partida vino del emparejamiento o de una sala.} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre la cola y las plazas de sala en memoria (\mbox{D-24}).}\par
     Las plazas de la sala viven en la memoria del Servidor de partidas (\mbox{D-24}): donde el caso escribe o lee \textit{SalaParticipante}, la operación es sobre esa estructura. La \textit{Sala} sí se guarda, con sus ajustes y su código, y cerrarla es un cambio de estado (\texttt{usp\_\allowbreak{}Sala\_\allowbreak{}Cerrar}).} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}

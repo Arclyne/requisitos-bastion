@@ -6,14 +6,14 @@ Invitaciones
 Invitaciones
 }
 
-\atributosde{Invitacion}{Invitación a jugar, que da acceso a una sala sin conocer su código (\mbox{CU-22}).}
+\atributosde{Invitacion}{Invitación a jugar, que da acceso a una sala sin conocer su código (\mbox{CU-23}).}
 \begin{tablaatributos}
 \texttt{id\_\allowbreak{}invitacion} & \texttt{INT}, identidad & No & PK & Identificador de la invitación. \\ \hline
 \texttt{id\_\allowbreak{}sala} & \texttt{INT} & No & FK & Sala a la que se invita. \\ \hline
 \texttt{id\_\allowbreak{}emisor} & \texttt{INT} & No & FK & Jugador que invita. \\ \hline
 \texttt{id\_\allowbreak{}destinatario} & \texttt{INT} & No & FK & Jugador invitado. \\ \hline
 \texttt{fecha\_\allowbreak{}invitacion} & \texttt{DATETIME2(0)} & No &  & Envío. Por omisión, la fecha actual. \\ \hline
-\texttt{fecha\_\allowbreak{}expiracion} & \texttt{DATETIME2(0)} & No &  & Sesenta segundos después del envío (\mbox{CU-22} \mbox{RN-03}). \\ \hline
+\texttt{fecha\_\allowbreak{}expiracion} & \texttt{DATETIME2(0)} & No &  & Sesenta segundos después del envío (\mbox{CU-23} \mbox{RN-03}). \\ \hline
 \texttt{estado} & \texttt{VARCHAR(10)} & No &  & \texttt{PENDIENTE}, \texttt{ACEPTADA}, \texttt{RECHAZADA} o \texttt{EXPIRADA}. Por omisión, \texttt{PENDIENTE}. \\ \hline
 \end{tablaatributos}
 

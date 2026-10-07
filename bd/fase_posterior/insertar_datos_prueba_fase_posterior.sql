@@ -644,7 +644,7 @@ SELECT comprobacion, incoherencias FROM (
                                    WHERE j.id_usuario = e.id_usuario AND pa.id_modo = e.id_modo AND pa.tipo = 'CLASIFICATORIA'
                                      AND pa.estado = 'FINALIZADA' AND j.tipo = 'MURO' AND j.deshecha = 0)
     UNION ALL
-    SELECT 3, N'División solo a partir de cinco partidas (CU-17 RN-12)', COUNT(*)
+    SELECT 3, N'División solo a partir de cinco partidas (CU-18 RN-12)', COUNT(*)
     FROM dbo.EstadisticaModo AS e
     WHERE (e.id_division IS NULL AND e.partidas_jugadas >= 5) OR (e.id_division IS NOT NULL AND e.partidas_jugadas < 5)
     UNION ALL

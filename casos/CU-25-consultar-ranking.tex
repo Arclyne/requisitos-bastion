@@ -1,8 +1,8 @@
-\subsection*{CU-24: Consultar el ranking}
-\addcontentsline{toc}{subsection}{CU-24: Consultar el ranking}
-\label{cu-24}
+\subsection*{CU-25: Consultar el ranking}
+\addcontentsline{toc}{subsection}{CU-25: Consultar el ranking}
+\label{cu-25}
 
-\begin{fichacu}{CU-24}{Consultar el ranking}
+\begin{fichacu}{CU-25}{Consultar el ranking}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador o Invitado}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
@@ -36,7 +36,7 @@
    & \cuCelda{\textbf{\mbox{FA-02}: El jugador todavía no clasifica en ese modo}\par
     \begin{cuenum}[start=1]
       \item El Servidor de partidas encuentra menos de cinco \texttt{partidas\_\allowbreak{}jugadas} en la \textit{EstadisticaModo} del jugador, o que el jugador es un invitado (\mbox{RN-02}).
-      \item El SJM muestra la fila fijada con ``sin clasificar'' y cuántas partidas clasificatorias faltan, con la acción ``buscar partida'', que continúa en el \mbox{CU-08}. Si el jugador es un invitado, la fila indica que los invitados no clasifican y no ofrece ninguna acción.
+      \item El SJM muestra la fila fijada con ``sin clasificar'' y cuántas partidas clasificatorias faltan, con la acción ``buscar partida'', que continúa en el \mbox{CU-09}. Si el jugador es un invitado, la fila indica que los invitados no clasifican y no ofrece ninguna acción.
       \item El flujo continúa en el paso 8 del FN.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-03}: El jugador cambia el alcance a amigos}\par
@@ -44,7 +44,7 @@
       \item El jugador selecciona la pestaña ``amigos''.
       \item El SJM envía \texttt{RANKING\_\allowbreak{}REQUEST} con el alcance de amigos.
       \item El Servidor de partidas restringe el paso 4 del FN a los jugadores con los que el jugador tiene \textit{Amistad}, más el propio jugador, y responde.
-      \item Si no tiene amigos, el SJM muestra un estado vacío con la acción ``añadir amigo'', que continúa en el \mbox{CU-20}.
+      \item Si no tiene amigos, el SJM muestra un estado vacío con la acción ``añadir amigo'', que continúa en el \mbox{CU-21}.
       \item El flujo continúa en el paso 8 del FN.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-04}: El jugador cambia el modo}\par
@@ -63,7 +63,7 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-06}: El jugador abre el perfil de una fila o pasa de página}\par
     \begin{cuenum}[start=1]
-      \item Si el jugador selecciona una fila, el flujo continúa en el \mbox{CU-07}.
+      \item Si el jugador selecciona una fila, el flujo continúa en el \mbox{CU-08}.
       \item Si el jugador pasa de página, el SJM solicita la siguiente y el flujo continúa en el paso 4 del FN.
     \end{cuenum}} \\ \hline
   \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al consultar la base de datos}\par
@@ -93,7 +93,7 @@
       \item \textbf{\mbox{POST-03}} Las posiciones mostradas son las del momento de la consulta; no se almacenan.
     \end{cureglas}} \\ \hline
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
-      \item \textbf{\mbox{RN-01}} Hacen falta cinco partidas en un modo para aparecer en su clasificación (\mbox{RN-12} del \mbox{CU-17}).
+      \item \textbf{\mbox{RN-01}} Hacen falta cinco partidas en un modo para aparecer en su clasificación (\mbox{RN-12} del \mbox{CU-18}).
       \item \textbf{\mbox{RN-02}} Solo aparecen cuentas registradas en estado \texttt{ACTIVA}: los invitados y las cuentas eliminadas, suspendidas y baneadas no figuran en el ranking.
       \item \textbf{\mbox{RN-03}} El ranking global que se muestra por defecto es el del modo clásico 9×9 (\mbox{D-04}).
       \item \textbf{\mbox{RN-04}} La fila del jugador se muestra siempre, aunque esté fuera de la página visible o no clasifique.

@@ -6,14 +6,14 @@ Moderación y bitácoras
 Moderación y bitácoras
 }
 
-\atributosde{Reporte}{Denuncia de un jugador contra otro. Las pruebas se adjuntan por referencia a la partida, no por copia (\mbox{CU-26} \mbox{RN-01}).}
+\atributosde{Reporte}{Denuncia de un jugador contra otro. Las pruebas se adjuntan por referencia a la partida, no por copia (\mbox{CU-27} \mbox{RN-01}).}
 \begin{tablaatributos}
 \texttt{id\_\allowbreak{}reporte} & \texttt{INT}, identidad & No & PK & Identificador del reporte. \\ \hline
 \texttt{id\_\allowbreak{}denunciante} & \texttt{INT} & No & FK & Jugador que reporta (rol reportante del diagrama). \\ \hline
 \texttt{id\_\allowbreak{}reportado} & \texttt{INT} & No & FK & Jugador reportado. \\ \hline
-\texttt{motivo} & \texttt{VARCHAR(25)} & No &  & \texttt{LENGUAJE\_\allowbreak{}OFENSIVO}, \texttt{ACOSO}, \texttt{NOMBRE\_\allowbreak{}INAPROPIADO}, \texttt{TRAMPAS} o \texttt{JUEGO\_\allowbreak{}ANTIDEPORTIVO} (\mbox{CU-26} \mbox{RN-08}); es la clave de su descripción en los diccionarios de recursos (\mbox{D-21}, \mbox{D-23}). \\ \hline
+\texttt{motivo} & \texttt{VARCHAR(25)} & No &  & \texttt{LENGUAJE\_\allowbreak{}OFENSIVO}, \texttt{ACOSO}, \texttt{NOMBRE\_\allowbreak{}INAPROPIADO}, \texttt{TRAMPAS} o \texttt{JUEGO\_\allowbreak{}ANTIDEPORTIVO} (\mbox{CU-27} \mbox{RN-08}); es la clave de su descripción en los diccionarios de recursos (\mbox{D-21}, \mbox{D-23}). \\ \hline
 \texttt{descripcion} & \texttt{NVARCHAR(500)} & Sí &  & Texto opcional del denunciante. \\ \hline
-\texttt{id\_\allowbreak{}partida} & \texttt{INT} & Sí & FK & Partida de la que salen las pruebas, si se adjunta; la jugaron el denunciante y el reportado (\mbox{CU-26} \mbox{RN-09}). \\ \hline
+\texttt{id\_\allowbreak{}partida} & \texttt{INT} & Sí & FK & Partida de la que salen las pruebas, si se adjunta; la jugaron el denunciante y el reportado (\mbox{CU-27} \mbox{RN-09}). \\ \hline
 \texttt{fecha\_\allowbreak{}reporte} & \texttt{DATETIME2(0)} & No &  & Envío. Por omisión, la fecha actual. \\ \hline
 \texttt{estado} & \texttt{VARCHAR(20)} & No &  & \texttt{PENDIENTE}, \texttt{EN\_\allowbreak{}REVISION}, \texttt{RESUELTO\_\allowbreak{}SIN\_\allowbreak{}SANCION} o \texttt{RESUELTO\_\allowbreak{}CON\_\allowbreak{}SANCION}. Por omisión, \texttt{PENDIENTE}. \\ \hline
 \texttt{id\_\allowbreak{}moderador} & \texttt{INT} & Sí & FK & Moderador que lo tiene en revisión o lo resolvió. \\ \hline

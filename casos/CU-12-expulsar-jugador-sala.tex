@@ -1,8 +1,8 @@
-\subsection*{CU-11: Expulsar a un jugador de la sala}
-\addcontentsline{toc}{subsection}{CU-11: Expulsar a un jugador de la sala}
-\label{cu-11}
+\subsection*{CU-12: Expulsar a un jugador de la sala}
+\addcontentsline{toc}{subsection}{CU-12: Expulsar a un jugador de la sala}
+\label{cu-12}
 
-\begin{fichacu}{CU-11}{Expulsar a un jugador de la sala}
+\begin{fichacu}{CU-12}{Expulsar a un jugador de la sala}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador o Invitado, como anfitrión}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
@@ -12,8 +12,8 @@
   \crudFila{Disparador}{El anfitrión selecciona ``Expulsar'' en el menú de un miembro de la sala, en la \texttt{GUI\_\allowbreak{}WaitingRoom}.}
   \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{PRE-01}} El anfitrión tiene una \textit{Sesion} abierta y su token es válido.
-      \item \textbf{\mbox{PRE-02}} El anfitrión creó la \textit{Sala} con el \mbox{CU-09} y la \textit{Sala} está en estado \texttt{ABIERTA}.
-      \item \textbf{\mbox{PRE-03}} Al menos otro jugador ocupa una plaza de la sala, porque entró con el \mbox{CU-10}.
+      \item \textbf{\mbox{PRE-02}} El anfitrión creó la \textit{Sala} con el \mbox{CU-10} y la \textit{Sala} está en estado \texttt{ABIERTA}.
+      \item \textbf{\mbox{PRE-03}} Al menos otro jugador ocupa una plaza de la sala, porque entró con el \mbox{CU-11}.
       \item \textbf{\mbox{PRE-04}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
     \end{cureglas}} \\ \hline
   \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
@@ -52,7 +52,7 @@
     \begin{cuenum}[start=1]
       \item El Servidor de partidas encuentra la \textit{Sala} en estado \texttt{EN\_\allowbreak{}PARTIDA}: el anfitrión inició la partida mientras se confirmaba la expulsión.
       \item El Servidor de partidas responde con \texttt{KICK\_\allowbreak{}PLAYER\_\allowbreak{}FAILED} y el motivo \texttt{PARTIDA\_\allowbreak{}INICIADA}.
-      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que ya no se puede expulsar porque la partida empezó, y que la conducta de un jugador durante la partida se atiende con un reporte (\mbox{CU-26}).
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que ya no se puede expulsar porque la partida empezó, y que la conducta de un jugador durante la partida se atiende con un reporte (\mbox{CU-27}).
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-04}: El jugador ya salió de la sala}\par
@@ -64,8 +64,8 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-05}: El jugador expulsado intenta volver a entrar}\par
     \begin{cuenum}[start=1]
-      \item El jugador expulsado captura de nuevo el código de la sala en el \mbox{CU-10}.
-      \item El Servidor de partidas encuentra su cuenta en la lista de expulsados de la sala y rechaza la entrada conforme al \mbox{CU-10} (\mbox{RN-03}).
+      \item El jugador expulsado captura de nuevo el código de la sala en el \mbox{CU-11}.
+      \item El Servidor de partidas encuentra su cuenta en la lista de expulsados de la sala y rechaza la entrada conforme al \mbox{CU-11} (\mbox{RN-03}).
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Se agota el tiempo de espera de la respuesta}\par
@@ -79,7 +79,7 @@
     \begin{cuenum}[start=1]
       \item El SJM detecta el cierre inesperado del socket antes de recibir la respuesta.
       \item El SJM registra el fallo en la bitácora local del cliente y muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que se perdió la conexión.
-      \item La sala sigue el \mbox{EX-04} del \mbox{CU-09}: el Servidor de partidas espera sesenta segundos a que el anfitrión reconecte antes de cerrarla.
+      \item La sala sigue el \mbox{EX-04} del \mbox{CU-10}: el Servidor de partidas espera sesenta segundos a que el anfitrión reconecte antes de cerrarla.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{EX-03}: El mensaje recibido está malformado}\par
@@ -96,14 +96,14 @@
     \end{cureglas}} \\ \hline
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} Solo el anfitrión de la sala puede expulsar. El servidor lo comprueba en cada solicitud; no basta con que el cliente oculte la opción.
-      \item \textbf{\mbox{RN-02}} Solo se expulsa mientras la sala está en estado \texttt{ABIERTA}. Una vez iniciada la partida, nadie la saca de ella: la conducta de un jugador se atiende con el reporte del \mbox{CU-26}.
+      \item \textbf{\mbox{RN-02}} Solo se expulsa mientras la sala está en estado \texttt{ABIERTA}. Una vez iniciada la partida, nadie la saca de ella: la conducta de un jugador se atiende con el reporte del \mbox{CU-27}.
       \item \textbf{\mbox{RN-03}} Un jugador expulsado no puede volver a entrar a esa sala mientras exista, aunque conserve el código. La lista de expulsados vive con las plazas de la sala en la memoria del Servidor de partidas (\mbox{D-24}) y desaparece cuando la sala se cierra; no impide entrar a otras salas del mismo anfitrión.
-      \item \textbf{\mbox{RN-04}} La expulsión no es una sanción. No genera un \textit{Reporte}, no suma strikes y no afecta la cuenta del expulsado; si el anfitrión considera que hubo una falta, puede además reportarlo con el \mbox{CU-26}.
-      \item \textbf{\mbox{RN-05}} El anfitrión no puede expulsarse a sí mismo. Para dejar la sala, la cierra con el \mbox{CU-09}.
+      \item \textbf{\mbox{RN-04}} La expulsión no es una sanción. No genera un \textit{Reporte}, no suma strikes y no afecta la cuenta del expulsado; si el anfitrión considera que hubo una falta, puede además reportarlo con el \mbox{CU-27}.
+      \item \textbf{\mbox{RN-05}} El anfitrión no puede expulsarse a sí mismo. Para dejar la sala, la cierra con el \mbox{CU-10}.
       \item \textbf{\mbox{RN-06}} Todos los textos visibles de este caso provienen de los catálogos de recursos y se muestran en el idioma de cada jugador, también el aviso que recibe el expulsado.
     \end{cureglas}} \\ \hline
-  \textbf{Observación} & \cuCelda{\textit{Sobre por qué es un caso propio y no un flujo alterno del \mbox{CU-09}.}\par
-    Mientras el \mbox{CU-09} crea la sala, todavía no hay nadie a quien expulsar: los jugadores entran después, con el \mbox{CU-10}. Expulsar ocurre en otro momento, con su propia precondición, la de que haya un miembro en la sala, y persigue una meta distinta de la de crearla. Por eso se describe aparte.} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué es un caso propio y no un flujo alterno del \mbox{CU-10}.}\par
+    Mientras el \mbox{CU-10} crea la sala, todavía no hay nadie a quien expulsar: los jugadores entran después, con el \mbox{CU-11}. Expulsar ocurre en otro momento, con su propia precondición, la de que haya un miembro en la sala, y persigue una meta distinta de la de crearla. Por eso se describe aparte.} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué la expulsión no se guarda en la base de datos.}\par
     Las plazas de la sala viven en la memoria del Servidor de partidas (\mbox{D-24}), y la lista de expulsados solo tiene sentido mientras la sala exista. Guardarla en una tabla obligaría a limpiarla cuando la sala se cierra, sin que nadie vuelva a consultarla. La expulsión queda en la bitácora del servidor para poder rastrearla.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}

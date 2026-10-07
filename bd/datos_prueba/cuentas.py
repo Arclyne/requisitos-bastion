@@ -77,7 +77,7 @@ USUARIOS = {
              registro="2026-06-22 11:00:00", configuracion="2026-06-22 11:05:00",
              envio_verificacion="2026-06-22 11:00:00", envio_recuperacion=None, baja="2026-08-02 13:00:00"),
     # Cuenta baneada: su nickname esquivó el filtro imitando al administrador y un
-    # reporte terminó en una sanción permanente de cuenta (CU-26, DES-18).
+    # reporte terminó en una sanción permanente de cuenta (CU-27, DES-18).
     11: dict(nickname="4dm1n_oficial", tipo="REGISTRADA", estado="BANEADA", rol="JUGADOR",
              correo="cuatro.admin@correo.mx", clave="Adm1n#Falso6", nacimiento="2006-01-10", idioma="es-MX",
              codigo="FK4D9M2N", icono=2, espectadores=1, nivel=1, experiencia=0,

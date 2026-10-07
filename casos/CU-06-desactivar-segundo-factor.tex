@@ -1,0 +1,144 @@
+\subsection*{CU-06: Desactivar el segundo factor}
+\addcontentsline{toc}{subsection}{CU-06: Desactivar el segundo factor}
+\label{cu-06}
+
+\begin{fichacu}{CU-06}{Desactivar el segundo factor}
+  \crudFila{Responsable}{José Eduardo Prior Hernández}
+  \crudFila{Actor principal}{Jugador}
+  \crudFila{Actores de sistema}{Servidor de partidas, Proveedor del segundo factor, Servicio de correo, Base de datos}
+  \crudFila{Prototipos}{9f}
+  \crudFila{Prioridad}{Must (debe estar en la entrega). Categoría (a) Obligatorio: segundo factor de autenticación (\mbox{CON-08}). Sin este caso, un segundo factor activado con el \mbox{CU-05} no podría retirarse.}
+  \crudFila{Objetivo}{Permitir al Jugador con sesión abierta desactivar el segundo factor de su cuenta, exigiendo la contraseña actual y un código vigente del segundo factor, para que solo quien controla la cuenta y el canal del segundo factor pueda retirar esa protección.}
+  \crudFila{Disparador}{El Jugador selecciona ``desactivar'' junto al segundo factor en la \texttt{GUI\_\allowbreak{}AccountSettings}.}
+  \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{PRE-01}} El Jugador tiene una \textit{Sesion} abierta y su token es válido.
+      \item \textbf{\mbox{PRE-02}} El \textit{Usuario} tiene \texttt{tipo\_\allowbreak{}cuenta} en \texttt{REGISTRADA} y \texttt{estado\_\allowbreak{}cuenta} en \texttt{ACTIVA}.
+      \item \textbf{\mbox{PRE-03}} El \textit{Usuario} tiene \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} en verdadero, porque lo activó con el \mbox{CU-05}. \textit{(Ver \mbox{FA-05})}
+      \item \textbf{\mbox{PRE-04}} El Servidor de partidas está en ejecución y tiene conexión disponible con la Base de datos.
+    \end{cureglas}} \\ \hline
+  \textbf{Flujo normal} & \cuCelda{\begin{cuenum}[start=1]
+      \item El Jugador selecciona ``desactivar'' junto al segundo factor en la \texttt{GUI\_\allowbreak{}AccountSettings}, que muestra que está activado.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}DisableSecondFactor}, que advierte que la cuenta quedará protegida solo por la contraseña y solicita la contraseña actual, con las opciones ``Continuar'' y ``Cancelar''. \textit{(Ver \mbox{FA-01})}
+      \item El Jugador captura su contraseña y da click en ``Continuar''.
+      \item El SJM valida que el campo no esté vacío y envía el mensaje \texttt{DISABLE\_\allowbreak{}SECOND\_\allowbreak{}FACTOR\_\allowbreak{}REQUEST} con la contraseña y el token de sesión. \textit{(Ver \mbox{FA-02}, \mbox{EX-02}, \mbox{EX-03}, \mbox{EX-04})}
+      \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta. \textit{(Ver \mbox{FA-03})}
+      \item El Servidor de partidas deriva el resumen de la contraseña recibida con la \texttt{contrasena\_\allowbreak{}sal} del \textit{Usuario} y lo compara contra \texttt{contrasena\_\allowbreak{}hash} (\mbox{RN-01}). \textit{(Ver \mbox{FA-04})}
+      \item El Servidor de partidas verifica que \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} siga en verdadero. \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas invalida los \textit{CodigoVerificacion} pendientes del \textit{Usuario} con propósito \texttt{SEGUNDO\_\allowbreak{}FACTOR}, genera un código nuevo con su fecha de expiración y guarda únicamente su resumen criptográfico (\mbox{RN-03}, \mbox{RN-04}). \textit{(Ver \mbox{EX-01})}
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=9]
+      \item El Servidor de partidas entrega el código al Proveedor del segundo factor, por el mismo canal que lo entrega al iniciar sesión. \textit{(Ver \mbox{EX-05})}
+      \item El Servidor de partidas responde con \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}CODE\_\allowbreak{}SENT} y la fecha de expiración del código.
+      \item El SJM solicita el código del segundo factor, mostrando el tiempo restante de vigencia, con las opciones ``Desactivar'', ``Reenviar código'' y ``Cancelar''. \textit{(Ver \mbox{FA-01}, \mbox{FA-07})}
+      \item El Jugador captura el código y da click en ``Desactivar''; el SJM envía el mensaje \texttt{CONFIRM\_\allowbreak{}DISABLE\_\allowbreak{}SECOND\_\allowbreak{}FACTOR\_\allowbreak{}REQUEST} con el código y el token de sesión.
+      \item El Servidor de partidas verifica que el código no haya expirado ni se haya usado, y compara su resumen con el almacenado (\mbox{RN-04}). \textit{(Ver \mbox{FA-06})}
+      \item El Servidor de partidas, en una sola transacción, marca el \textit{CodigoVerificacion} como usado, escribe \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} en falso en el \textit{Usuario} y registra el cambio en la \textit{BitacoraAcceso} con el resultado \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}DESACTIVADO}. \textit{(Ver \mbox{EX-01})}
+      \item El Servidor de partidas solicita al Servicio de correo un aviso al \texttt{correo} del \textit{Usuario} informando de la desactivación, en su \texttt{idioma\_\allowbreak{}preferido} y fuera de la transacción (\mbox{RN-06}). \textit{(Ver \mbox{EX-05})}
+      \item El Servidor de partidas responde con \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}DISABLED}.
+    \end{cuenum}} \\
+   & \cuCelda{\begin{cuenum}[start=17]
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageSuccess} indicando que el segundo factor está desactivado, y vuelve a la \texttt{GUI\_\allowbreak{}AccountSettings}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\ \hline
+  \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador cancela}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Cancelar''.
+      \item Si ya se generó un código, el SJM envía el mensaje \texttt{CANCEL\_\allowbreak{}SECOND\_\allowbreak{}FACTOR\_\allowbreak{}REQUEST} y el Servidor de partidas invalida el \textit{CodigoVerificacion} pendiente.
+      \item El SJM vuelve a la \texttt{GUI\_\allowbreak{}AccountSettings} con el segundo factor activado.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-02}: La contraseña está vacía}\par
+    \begin{cuenum}[start=1]
+      \item El SJM resalta el campo e indica que la contraseña es obligatoria, sin enviar nada al Servidor de partidas.
+      \item El flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-03}: La sesión ya no es válida}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas responde con \texttt{SESSION\_\allowbreak{}INVALID}.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que la sesión terminó y despliega la \texttt{GUI\_\allowbreak{}Login}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-04}: La contraseña actual es incorrecta}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas aplica el mismo tratamiento que el \mbox{FA-04} del \mbox{CU-04}: cuenta el intento para el bloqueo escalonado y lo registra en la \textit{BitacoraAcceso} con el resultado \texttt{CONTRASENA\_\allowbreak{}INCORRECTA} (\mbox{RN-02}).
+      \item Si la cuenta quedó bloqueada, el Servidor de partidas cierra todas sus \textit{Sesion} y responde con \texttt{ACCOUNT\_\allowbreak{}LOCKED}; el SJM despliega la \texttt{GUI\_\allowbreak{}Login} con el aviso de bloqueo y termina el caso de uso.
+      \item En caso contrario, el Servidor de partidas responde con \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}FAILED} y el motivo \texttt{CONTRASENA\_\allowbreak{}ACTUAL\_\allowbreak{}INCORRECTA}; el SJM limpia el campo y el flujo continúa en el paso 3 del FN.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-05}: El segundo factor ya está desactivado}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas encuentra \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} en falso: se desactivó desde otro dispositivo mientras tanto.
+      \item El Servidor de partidas responde con \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}ALREADY\_\allowbreak{}DISABLED} sin generar ningún código.
+      \item El SJM muestra el segundo factor como desactivado en la \texttt{GUI\_\allowbreak{}AccountSettings}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-06}: El código es incorrecto o expiró}\par
+    \begin{cuenum}[start=1]
+      \item Si el código es incorrecto, el Servidor de partidas incrementa en uno el atributo \texttt{intentos} del \textit{CodigoVerificacion}. Si no alcanzó el máximo del \mbox{RN-04}, responde con \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}INVALID} y los intentos restantes, que el SJM muestra en la \texttt{GUI\_\allowbreak{}MessageWarning}, y el flujo continúa en el paso 12 del FN.
+      \item Si el código expiró o se agotaron los intentos, el Servidor de partidas lo marca como invalidado, registra el intento en la \textit{BitacoraAcceso} con el resultado \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}FALLIDO} (\mbox{RN-09}) y responde con \texttt{SECOND\_\allowbreak{}FACTOR\_\allowbreak{}EXPIRED}.
+      \item El SJM indica que el código ya no es válido y ofrece ``Reenviar código'', que continúa en el \mbox{FA-07}. El segundo factor sigue activado.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{FA-07}: El Jugador pide reenviar el código}\par
+    \begin{cuenum}[start=1]
+      \item El Jugador selecciona ``Reenviar código'' y el SJM envía el mensaje \texttt{RESEND\_\allowbreak{}SECOND\_\allowbreak{}FACTOR\_\allowbreak{}CODE\_\allowbreak{}REQUEST}.
+      \item El Servidor de partidas verifica que hayan transcurrido al menos sesenta segundos desde la generación del código vigente (\mbox{RN-05}). Si no, responde con los segundos que faltan y el flujo continúa en el paso 12 del FN.
+      \item El flujo continúa en el paso 8 del FN.
+    \end{cuenum}} \\ \hline
+  \textbf{Excepciones} & \cuCelda{\textbf{\mbox{EX-01}: Fallo al escribir en la base de datos}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas revierte la transacción, de modo que el segundo factor siga activado y no haya un código marcado como usado sin el cambio que confirmaba.
+      \item El Servidor de partidas registra la excepción en la bitácora del servidor con un identificador de incidencia, sin incluir la contraseña ni el código recibidos.
+      \item El Servidor de partidas responde con \texttt{SERVER\_\allowbreak{}ERROR} y el identificador, que el SJM muestra en la \texttt{GUI\_\allowbreak{}MessageError}.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-02}: Se agota el tiempo de espera de la respuesta}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta que transcurrió el tiempo límite sin recibir un mensaje completo.
+      \item El SJM no reenvía la solicitud, vuelve a la \texttt{GUI\_\allowbreak{}AccountSettings} y consulta el estado del segundo factor para mostrar si el cambio se aplicó.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-03}: La conexión se interrumpe durante el intercambio}\par
+    \begin{cuenum}[start=1]
+      \item El SJM detecta el cierre inesperado del socket antes de recibir respuesta.
+      \item El SJM registra el fallo en la bitácora local del cliente y muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que se perdió la conexión.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-04}: El mensaje recibido está malformado}\par
+    \begin{cuenum}[start=1]
+      \item El SJM descarta el mensaje, cierra la conexión y registra en la bitácora local el contenido truncado.
+      \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageError} indicando que la respuesta no pudo interpretarse.
+      \item Fin del caso de uso.
+    \end{cuenum}} \\
+   & \cuCelda{\textbf{\mbox{EX-05}: El servicio externo no está disponible}\par
+    \begin{cuenum}[start=1]
+      \item El Servidor de partidas agota los reintentos previstos hacia el Proveedor del segundo factor o el Servicio de correo.
+      \item Si falló la entrega del código, el Servidor de partidas lo invalida, responde con \texttt{EXTERNAL\_\allowbreak{}SERVICE\_\allowbreak{}UNAVAILABLE} y el segundo factor sigue activado; el SJM lo indica en la \texttt{GUI\_\allowbreak{}MessageError} y termina el caso de uso.
+      \item Si falló el aviso al correo, el Servidor de partidas conserva el cambio, que ya está confirmado, y registra el fallo del aviso en la bitácora del servidor (\mbox{RN-06}).
+    \end{cuenum}} \\ \hline
+  \textbf{Postcondiciones} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{POST-01}} Si el caso termina por el FN, el \textit{Usuario} tiene \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado} en falso, ningún código del segundo factor sigue pendiente y el siguiente inicio de sesión ya no pide código.
+      \item \textbf{\mbox{POST-02}} Si el caso termina por cualquier flujo alterno o excepción, el segundo factor sigue activado.
+      \item \textbf{\mbox{POST-03}} Las sesiones abiertas de la cuenta no se cierran en ningún flujo, salvo por el bloqueo del \mbox{FA-04}.
+      \item \textbf{\mbox{POST-04}} En todos los casos que llegan al servidor, el intento quedó registrado en la \textit{BitacoraAcceso}.
+    \end{cureglas}} \\ \hline
+  \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
+      \item \textbf{\mbox{RN-01}} Desactivar el segundo factor exige dos pruebas: la contraseña actual y un código vigente del segundo factor. Con solo la contraseña, quien la hubiera robado junto con una sesión abierta podría retirar la protección que existe justamente para ese caso.
+      \item \textbf{\mbox{RN-02}} Una contraseña actual incorrecta cuenta como intento fallido para el bloqueo escalonado (\mbox{RN-07} del \mbox{CU-04}).
+      \item \textbf{\mbox{RN-03}} Los códigos del segundo factor no se almacenan, transmiten ni registran en claro; en la base de datos se guarda solo su resumen criptográfico (\mbox{RN-02} del \mbox{CU-01}).
+      \item \textbf{\mbox{RN-04}} El código sigue las reglas del código de inicio de sesión: vigencia de cinco minutos, un máximo de tres intentos, un solo uso y uno vigente por cuenta (\mbox{RN-09} del \mbox{CU-01}).
+      \item \textbf{\mbox{RN-05}} El código puede reenviarse a lo sumo una vez cada sesenta segundos, como el del inicio de sesión.
+      \item \textbf{\mbox{RN-06}} Toda desactivación se avisa al correo de la cuenta. El aviso queda fuera de la transacción: que falle no deshace el cambio.
+      \item \textbf{\mbox{RN-07}} Desactivar el segundo factor no cierra las sesiones abiertas.
+      \item \textbf{\mbox{RN-08}} Los invitados no usan este caso: no tienen contraseña ni segundo factor.
+      \item \textbf{\mbox{RN-09}} Agotar los intentos del código se registra en la \textit{BitacoraAcceso} con el resultado \texttt{SEGUNDO\_\allowbreak{}FACTOR\_\allowbreak{}FALLIDO}, como en el inicio de sesión, para dejar rastro de los intentos de retirar la protección.
+    \end{cureglas}} \\ \hline
+  \textbf{Observación} & \cuCelda{\textit{Sobre por qué desactivar pide el código del segundo factor.}\par
+    Activar el segundo factor (\mbox{CU-05}) añade protección, así que basta con la contraseña y un código de prueba que confirma que el canal funciona. Desactivarlo la retira, así que se exige lo mismo que para iniciar sesión con el segundo factor: la contraseña y el código. Quien perdió el acceso al canal del segundo factor tampoco puede iniciar sesión (\mbox{FA-10} del \mbox{CU-01}); recuperar una cuenta en esa situación queda fuera de esta versión.} \\ \hline
+  \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
+      \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 5)}
+      \item \textbf{\textit{Usuario}:} lee \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}, \texttt{correo}, \texttt{idioma\_\allowbreak{}preferido} \textit{(pasos 6, 7, 15)}
+      \item \textbf{\textit{Usuario}:} escribe \texttt{doble\_\allowbreak{}factor\_\allowbreak{}habilitado}; \texttt{intentos\_\allowbreak{}fallidos} y el bloqueo \textit{(paso 14, \mbox{FA-04})}
+      \item \textbf{\textit{CodigoVerificacion}:} invalida los pendientes, crea el código, incrementa \texttt{intentos} y lo marca como usado o invalidado \textit{(pasos 8, 13, 14, \mbox{FA-01}, \mbox{FA-06})}
+      \item \textbf{\textit{BitacoraAcceso}:} inserta \textit{(paso 14, \mbox{FA-04}, \mbox{FA-06})}
+    \end{cudatos}} \\ \hline
+\end{fichacu}
+\clearpage

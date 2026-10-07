@@ -128,7 +128,7 @@
       \item \textbf{\mbox{RN-09}} El correo de la cuenta es el que se verificó en el registro (\mbox{CU-02}) y no puede cambiarse desde el juego (\mbox{D-28}). Es el canal que recibe los avisos de seguridad, como el del \mbox{RN-05}.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre por qué este caso solo cambia la contraseña.}\par
-    La versión anterior de este caso cambiaba también el correo y activaba el segundo factor. Eran tres metas distintas con flujos distintos, y el nombre ``Cambiar contraseña o correo'' no decía cuál se perseguía. El cambio de correo se eliminó del sistema (\mbox{D-28}) y la activación del segundo factor pasó a su propio caso, el \mbox{CU-05}.} \\ \hline
+    La versión anterior de este caso cambiaba también el correo y activaba el segundo factor. Eran tres metas distintas con flujos distintos, y el nombre ``Cambiar contraseña o correo'' no decía cuál se perseguía. El cambio de correo se eliminó del sistema (\mbox{D-28}) y el segundo factor pasó a dos casos propios: el \mbox{CU-05} lo activa y el \mbox{CU-06} lo desactiva.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}:} lee por token; cierra las demás \textit{(pasos 6, 11)}
       \item \textbf{\textit{Usuario}:} lee \texttt{contrasena\_\allowbreak{}hash}, \texttt{contrasena\_\allowbreak{}sal}, \texttt{correo}, \texttt{idioma\_\allowbreak{}preferido} \textit{(pasos 7, 15)}

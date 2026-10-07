@@ -55,7 +55,7 @@
    & \cuCelda{\textbf{\mbox{FA-04}: El jugador no tiene partidas en un modo, o tiene menos de cinco}\par
     \begin{cuenum}[start=1]
       \item El SJM muestra el desglose de ese modo con los contadores en cero o con las partidas jugadas, y en lugar de la división escribe cuántas partidas faltan para clasificar (\mbox{RN-02}).
-      \item Si no hay partidas clasificatorias en el modo de la gráfica, el SJM muestra un estado vacío con la acción ``buscar partida'', que continúa en el \mbox{CU-08}.
+      \item Si no hay partidas clasificatorias en el modo de la gráfica, el SJM muestra un estado vacío con la acción ``buscar partida'', que continúa en el \mbox{CU-09}.
       \item El flujo continúa en el paso 11 del FN.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-05}: El jugador es un invitado}\par
@@ -67,12 +67,12 @@
    & \cuCelda{\textbf{\mbox{FA-06}: El jugador quiere editar su perfil}\par
     \begin{cuenum}[start=1]
       \item El jugador selecciona ``editar''.
-      \item El flujo continúa en el \mbox{CU-06} Editar el perfil y las preferencias.
+      \item El flujo continúa en el \mbox{CU-07} Editar el perfil y las preferencias.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-07}: El jugador tiene una partida pendiente de cierre}\par
     \begin{cuenum}[start=1]
-      \item El Servidor de partidas detecta una \textit{Partida} del jugador en \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} (\mbox{RN-11} del \mbox{CU-17}).
+      \item El Servidor de partidas detecta una \textit{Partida} del jugador en \texttt{PENDIENTE\_\allowbreak{}DE\_\allowbreak{}CIERRE} (\mbox{RN-11} del \mbox{CU-18}).
       \item El Servidor de partidas responde con los datos actuales y una marca de estadísticas en proceso de actualización.
       \item El SJM muestra el perfil con un aviso discreto de que la última partida todavía no se refleja.
       \item El flujo continúa en el paso 11 del FN.
@@ -107,14 +107,14 @@
     \end{cureglas}} \\ \hline
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} El porcentaje de victorias se calcula como \texttt{partidas\_\allowbreak{}ganadas} entre \texttt{partidas\_\allowbreak{}jugadas}. No se almacena, porque sería un dato derivado que podría contradecir a los contadores de los que sale.
-      \item \textbf{\mbox{RN-02}} Hacen falta cinco partidas en un modo para tener división y aparecer en su clasificación (\mbox{RN-12} del \mbox{CU-17}).
+      \item \textbf{\mbox{RN-02}} Hacen falta cinco partidas en un modo para tener división y aparecer en su clasificación (\mbox{RN-12} del \mbox{CU-18}).
       \item \textbf{\mbox{RN-03}} El elo del encabezado del perfil y del menú es el del modo clásico 9×9 (\mbox{D-04}).
       \item \textbf{\mbox{RN-04}} La gráfica de evolución del elo usa solo partidas clasificatorias finalizadas: las privadas y las de la IA no mueven el elo y aplanarían la curva.
       \item \textbf{\mbox{RN-05}} Las series de la vista comparada se distinguen por color y por forma, nunca solo por color, conforme a los modos de accesibilidad.
       \item \textbf{\mbox{RN-06}} Este caso solo lee: ningún dato del perfil se modifica desde aquí.
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre de dónde sale la gráfica de elo.}\par
-    No existe una tabla de historial de elo. Cada punto de la gráfica es el \texttt{elo\_\allowbreak{}final} de una \textit{Participacion} clasificatoria, fechado con la \texttt{fecha\_\allowbreak{}fin} de su \textit{Partida}, y esos datos ya existen porque el \mbox{CU-17} los escribe al cerrar cada partida. Una tabla de historial aparte duplicaría esa información con el riesgo de que ambas diverjan. La única excepción son los cambios de división, que no se deducen de una sola partida porque dependen de las partidas de margen, y por eso se guardan en \textit{HistorialDivision}.} \\ \hline
+    No existe una tabla de historial de elo. Cada punto de la gráfica es el \texttt{elo\_\allowbreak{}final} de una \textit{Participacion} clasificatoria, fechado con la \texttt{fecha\_\allowbreak{}fin} de su \textit{Partida}, y esos datos ya existen porque el \mbox{CU-18} los escribe al cerrar cada partida. Una tabla de historial aparte duplicaría esa información con el riesgo de que ambas diverjan. La única excepción son los cambios de división, que no se deducen de una sola partida porque dependen de las partidas de margen, y por eso se guardan en \textit{HistorialDivision}.} \\ \hline
   \textbf{Datos que toca} & \cuCelda{\begin{cudatos}
       \item \textbf{\textit{Sesion}:} lee por token \textit{(paso 3)}
       \item \textbf{\textit{Usuario}:} lee \texttt{nickname}, \texttt{nivel}, \texttt{experiencia}, \texttt{id\_\allowbreak{}icono}, \texttt{fecha\_\allowbreak{}registro}, \texttt{tipo\_\allowbreak{}cuenta} \textit{(paso 4)}

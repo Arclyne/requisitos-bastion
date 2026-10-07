@@ -1,13 +1,13 @@
-\subsection*{CU-08: Elegir modo y buscar partida clasificatoria}
-\addcontentsline{toc}{subsection}{CU-08: Elegir modo y buscar partida clasificatoria}
-\label{cu-08}
+\subsection*{CU-09: Elegir modo y buscar partida clasificatoria}
+\addcontentsline{toc}{subsection}{CU-09: Elegir modo y buscar partida clasificatoria}
+\label{cu-09}
 
-\begin{fichacu}{CU-08}{Elegir modo y buscar partida clasificatoria}
+\begin{fichacu}{CU-09}{Elegir modo y buscar partida clasificatoria}
   \crudFila{Responsable}{Ángel Gabriel Aguilar Hernández}
   \crudFila{Actor principal}{Jugador}
   \crudFila{Actores de sistema}{Servidor de partidas, Base de datos}
   \crudFila{Prototipos}{16a, 16b, 1f, 1g, 7d}
-  \crudFila{Prioridad}{Must (debe estar en la entrega). Categoría (b) Núcleo de jugabilidad. Única fuente de partidas clasificatorias: alimenta el elo y el ranking del \mbox{CU-24}.}
+  \crudFila{Prioridad}{Must (debe estar en la entrega). Categoría (b) Núcleo de jugabilidad. Única fuente de partidas clasificatorias: alimenta el elo y el ranking del \mbox{CU-25}.}
   \crudFila{Objetivo}{Emparejar al Jugador con rivales de fuerza parecida en el modo y reloj que elija, y dejar creada la partida clasificatoria con todos sus participantes.}
   \crudFila{Disparador}{El Jugador selecciona ``Buscar partida'' en la \texttt{GUI\_\allowbreak{}MainMenu}.}
   \textbf{Precondiciones} & \cuCelda{\begin{cureglas}
@@ -23,8 +23,8 @@
       \item El Jugador elige modo y reloj y da click en ``Buscar''. \textit{(Ver \mbox{FA-03})}
       \item El SJM envía el mensaje \texttt{MATCHMAKING\_\allowbreak{}JOIN} con el modo, el reloj y el token de sesión. \textit{(Ver \mbox{EX-03}, \mbox{EX-04})}
       \item El Servidor de partidas verifica que el token corresponda a una \textit{Sesion} abierta de una cuenta registrada (\mbox{RN-10}). \textit{(Ver \mbox{FA-04}, \mbox{FA-08})}
-      \item El Servidor de partidas verifica que el \textit{Usuario} no tenga ninguna \textit{Participacion} sin terminar (\mbox{RN-01}) ni ocupe una plaza en una \textit{Sala} abierta (\mbox{RN-02} del \mbox{CU-09}). \textit{(Ver \mbox{FA-01}, \mbox{FA-09})}
-      \item El Servidor de partidas verifica que el \textit{Usuario} no tenga una \textit{Sancion} activa de ámbito de cuenta (\mbox{RN-11} del \mbox{CU-26}). \textit{(Ver \mbox{FA-05})}
+      \item El Servidor de partidas verifica que el \textit{Usuario} no tenga ninguna \textit{Participacion} sin terminar (\mbox{RN-01}) ni ocupe una plaza en una \textit{Sala} abierta (\mbox{RN-02} del \mbox{CU-10}). \textit{(Ver \mbox{FA-01}, \mbox{FA-09})}
+      \item El Servidor de partidas verifica que el \textit{Usuario} no tenga una \textit{Sancion} activa de ámbito de cuenta (\mbox{RN-11} del \mbox{CU-27}). \textit{(Ver \mbox{FA-05})}
       \item El Servidor de partidas recupera la \textit{EstadisticaModo} del \textit{Usuario} para el \textit{Modo} elegido y toma su \texttt{puntos\_\allowbreak{}elo}. \textit{(Ver \mbox{EX-01})}
       \item El Servidor de partidas inserta al \textit{Usuario} en la \textit{ColaEmparejamiento} del modo y reloj elegidos, con la fecha de entrada; su elo no se copia, porque ya está en su \textit{EstadisticaModo} y no cambia mientras espera.
     \end{cuenum}} \\
@@ -42,14 +42,14 @@
       \item El Servidor de partidas confirma la transacción. \textit{(Ver \mbox{EX-02})}
       \item El Servidor de partidas notifica a cada cliente con \texttt{MATCH\_\allowbreak{}FOUND}, incluyendo el identificador de la partida, los participantes con su \texttt{nickname} y su elo, y el orden de turno. \textit{(Ver \mbox{FA-07}, \mbox{EX-05})}
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}VersusScreen} con los participantes.
-      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Match} con el tablero, y el flujo continúa en el \mbox{CU-12} Mover el peón o en el \mbox{CU-13} Colocar un muro, según lo que el Jugador decida en su turno.
+      \item El SJM despliega la \texttt{GUI\_\allowbreak{}Match} con el tablero, y el flujo continúa en el \mbox{CU-13} Mover el peón o en el \mbox{CU-14} Colocar un muro, según lo que el Jugador decida en su turno.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
   \textbf{Flujos alternos} & \cuCelda{\textbf{\mbox{FA-01}: El Jugador ya participa en una partida sin terminar}\par
     \begin{cuenum}[start=1]
       \item El SJM o el Servidor de partidas, según dónde se detecte, impide la entrada a la cola.
       \item El SJM despliega la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que tiene una partida en curso, con las opciones ``Volver a la partida'' y ``Aceptar'' (\mbox{D-01}).
-      \item Si el Jugador selecciona ``Volver a la partida'', el flujo continúa en el \mbox{CU-18} Reconectar a una partida en curso. Si selecciona ``Aceptar'', continúa en el paso 1 del FN.
+      \item Si el Jugador selecciona ``Volver a la partida'', el flujo continúa en el \mbox{CU-19} Reconectar a una partida en curso. Si selecciona ``Aceptar'', continúa en el paso 1 del FN.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-02}: El Jugador abre la hoja rápida en lugar de la pantalla de modos}\par
@@ -76,7 +76,7 @@
     \begin{cuenum}[start=1]
       \item El Servidor de partidas responde con \texttt{MATCHMAKING\_\allowbreak{}FAILED} y el motivo \texttt{CUENTA\_\allowbreak{}SANCIONADA}, con el tipo de sanción y su fecha de término si es temporal.
       \item El SJM despliega la pantalla informativa de sanción.
-      \item Fin del caso de uso. Una sanción de ámbito de chat \textbf{no} llega a este flujo: no impide jugar (\mbox{D-05}, \mbox{RN-13} del \mbox{CU-26}).
+      \item Fin del caso de uso. Una sanción de ámbito de chat \textbf{no} llega a este flujo: no impide jugar (\mbox{D-05}, \mbox{RN-13} del \mbox{CU-27}).
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-06}: No se encuentra rival en un tiempo prolongado}\par
     \begin{cuenum}[start=1]
@@ -94,13 +94,13 @@
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-08}: El Jugador es un invitado}\par
     \begin{cuenum}[start=1]
-      \item El SJM no ofrece la opción ``Buscar partida'' a una cuenta de invitado e indica que las partidas clasificatorias requieren una cuenta registrada; el invitado juega en las salas del \mbox{CU-09} y el \mbox{CU-10} (\mbox{RN-10}).
+      \item El SJM no ofrece la opción ``Buscar partida'' a una cuenta de invitado e indica que las partidas clasificatorias requieren una cuenta registrada; el invitado juega en las salas del \mbox{CU-10} y el \mbox{CU-11} (\mbox{RN-10}).
       \item Si aun así llega una solicitud de una cuenta de invitado, el Servidor de partidas la rechaza en el paso 4 con \texttt{MATCHMAKING\_\allowbreak{}FAILED} y el motivo \texttt{CUENTA\_\allowbreak{}INVITADO}, y registra el intento en la bitácora del servidor como indicio de cliente modificado.
       \item Fin del caso de uso.
     \end{cuenum}} \\
    & \cuCelda{\textbf{\mbox{FA-09}: El Jugador ocupa una plaza en una sala abierta}\par
     \begin{cuenum}[start=1]
-      \item El Servidor de partidas responde con \texttt{MATCHMAKING\_\allowbreak{}FAILED} y el motivo \texttt{YA\_\allowbreak{}EN\_\allowbreak{}SALA} (\mbox{RN-02} del \mbox{CU-09}).
+      \item El Servidor de partidas responde con \texttt{MATCHMAKING\_\allowbreak{}FAILED} y el motivo \texttt{YA\_\allowbreak{}EN\_\allowbreak{}SALA} (\mbox{RN-02} del \mbox{CU-10}).
       \item El SJM muestra la \texttt{GUI\_\allowbreak{}MessageWarning} indicando que debe salir de la sala antes de buscar partida, con la opción de volver a ella.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
@@ -134,7 +134,7 @@
    & \cuCelda{\textbf{\mbox{EX-05}: La conexión se interrumpe justo después de crearse la partida}\par
     \begin{cuenum}[start=1]
       \item El SJM no llega a recibir \texttt{MATCH\_\allowbreak{}FOUND}, pero la \textit{Partida} y su \textit{Participacion} ya están escritas.
-      \item El Servidor de partidas mantiene la partida viva y el reloj del Jugador corriendo, conforme al \mbox{CU-18}.
+      \item El Servidor de partidas mantiene la partida viva y el reloj del Jugador corriendo, conforme al \mbox{CU-19}.
       \item Al recuperar la conexión, el SJM detecta la \textit{Participacion} sin terminar y ofrece volver a la partida.
       \item Fin del caso de uso.
     \end{cuenum}} \\ \hline
@@ -145,20 +145,20 @@
       \item \textbf{\mbox{POST-04}} Si el caso termina por el FN, ninguno de ellos puede entrar a otra búsqueda hasta que su \textit{Participacion} termine (\mbox{RN-01}).
       \item \textbf{\mbox{POST-05}} Si el caso termina por el \mbox{FA-03}, el \textit{Usuario} no está en la cola y no se creó ninguna partida.
       \item \textbf{\mbox{POST-06}} Si el caso termina por cualquier excepción, no existe ninguna \textit{Partida} con participantes incompletos.
-      \item \textbf{\mbox{POST-07}} El elo del \textit{Usuario} no cambió: el emparejamiento lo lee, y solo el \mbox{CU-17} lo modifica.
+      \item \textbf{\mbox{POST-07}} El elo del \textit{Usuario} no cambió: el emparejamiento lo lee, y solo el \mbox{CU-18} lo modifica.
     \end{cureglas}} \\ \hline
   \textbf{Reglas de negocio} & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-01}} Un \textit{Usuario} no puede tener más de una \textit{Participacion} sin terminar. Es la regla que sustituye a la sesión única del \mbox{CU-01} (\mbox{D-01}) y la que garantiza que dos clientes de la misma cuenta no manden jugadas a partidas distintas.
       \item \textbf{\mbox{RN-02}} Cada \textit{Modo} fija el tamaño del tablero, el número de jugadores y los muros por jugador: clásico 9×9 con dos jugadores y diez muros, cuatro jugadores 9×9 con cinco muros, rápida 7×7 con dos jugadores y seis muros.
       \item \textbf{\mbox{RN-03}} El emparejamiento busca rivales dentro de una ventana de elo que se amplía conforme crece la espera, para que nadie se quede sin partida por ser demasiado bueno o demasiado nuevo.
-      \item \textbf{\mbox{RN-04}} El elo con el que cada jugador entra se guarda en su \textit{Participacion}. Sin ese valor, el \mbox{CU-17} no podría calcular ni mostrar el cambio de elo de la partida.
+      \item \textbf{\mbox{RN-04}} El elo con el que cada jugador entra se guarda en su \textit{Participacion}. Sin ese valor, el \mbox{CU-18} no podría calcular ni mostrar el cambio de elo de la partida.
       \item \textbf{\mbox{RN-05}} El modo y el reloj de la última búsqueda se recuerdan en la configuración local del cliente, no en la cuenta: es una comodidad del dispositivo, no una preferencia del jugador.
       \item \textbf{\mbox{RN-06}} El Jugador puede seguir navegando por el juego mientras busca. La búsqueda es un panel, no una pantalla que secuestre la interfaz.
       \item \textbf{\mbox{RN-07}} Si un emparejamiento se deshace por culpa de otro jugador, los demás vuelven a la cola conservando su tiempo de espera acumulado.
     \end{cureglas}} \\
    & \cuCelda{\begin{cureglas}
       \item \textbf{\mbox{RN-08}} La creación de la \textit{Partida} y de todas sus \textit{Participacion} ocurre en una sola transacción: una partida a la que le falte un participante no es jugable. La salida de la cola no forma parte de esa transacción, porque la cola vive en memoria (\mbox{D-24}), y solo se da por hecha cuando la transacción se confirma.
-      \item \textbf{\mbox{RN-09}} Solo las partidas creadas por este caso son clasificatorias: nacen con \texttt{tipo} \texttt{CLASIFICATORIA}, y al cerrarlas el \mbox{CU-17} actualiza el elo y la \textit{EstadisticaModo} de sus participantes, que alimentan el ranking del \mbox{CU-24}. Las de sala privada del \mbox{CU-09} son amistosas y no otorgan elo.
+      \item \textbf{\mbox{RN-09}} Solo las partidas creadas por este caso son clasificatorias: nacen con \texttt{tipo} \texttt{CLASIFICATORIA}, y al cerrarlas el \mbox{CU-18} actualiza el elo y la \textit{EstadisticaModo} de sus participantes, que alimentan el ranking del \mbox{CU-25}. Las de sala privada del \mbox{CU-10} son amistosas y no otorgan elo.
       \item \textbf{\mbox{RN-10}} Solo una cuenta registrada puede buscar partida clasificatoria. Una cuenta de invitado juega únicamente en salas, no tiene \textit{EstadisticaModo} y no aparece en el ranking (\mbox{RN-05} y \mbox{RN-06} del \mbox{CU-03}).
     \end{cureglas}} \\ \hline
   \textbf{Observación} & \cuCelda{\textit{Sobre la cola y las plazas de sala en memoria (\mbox{D-24}).}\par
